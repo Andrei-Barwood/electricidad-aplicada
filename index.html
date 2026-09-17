@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="es-CL">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Electricidad Aplicada</title>
+  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, consumo 6 kW, TAN/AHF y color." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem("ea-theme"); } catch (e) { t = null; }
+      if (t !== "day" && t !== "night") {
+        t = window.matchMedia("(prefers-color-scheme: light)").matches ? "day" : "night";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+  <style>
+    /* Paleta Prince Blueblood — Friendship is Magic Color Guide (mlpvector.club/cg/pony/v/538) */
+    :root, html[data-theme="night"] {
+      color-scheme: dark;
+      --navy: #303030;
+      --navy-2: #3a3a48;
+      --panel: #4F4F4F;
+      --panel-2: #485199;
+      --line: rgba(195, 206, 222, 0.22);
+      --foam: #EAEEF4;
+      --muted: #ADBAD1;
+      --cyan: #0ED1FF;
+      --cyan-2: #A5E1FA;
+      --teal: #5A64BF;
+      --gold: #E3CA75;
+      --gold-deep: #CEB143;
+      --gold-dim: rgba(227, 202, 117, 0.22);
+      --ok: #92C21D;
+      --ok-text: #c8e86e;
+      --warn: #CEB143;
+      --hot: #ED4329;
+      --indigo: #5A64BF;
+      --indigo-deep: #485199;
+      --violet: #A6A4D7;
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
+      --bg0: #303030;
+      --bg1: #262636;
+      --bg2: #1c1c28;
+      --glow-cyan: rgba(14, 209, 255, 0.16);
+      --glow-gold: rgba(227, 202, 117, 0.10);
+      --grid-line: rgba(195, 206, 222, 0.07);
+      --nav-bg: rgba(48, 48, 48, 0.90);
+      --nav-hover: rgba(72, 81, 153, 0.45);
+      --nav-active: linear-gradient(180deg, rgba(14, 209, 255, 0.18), rgba(90, 100, 191, 0.22));
+      --nav-active-border: rgba(165, 225, 250, 0.35);
+      --card-bg: linear-gradient(180deg, rgba(79, 79, 79, 0.94), rgba(72, 81, 153, 0.52));
+      --input-bg: #303030;
+      --btn-bg: rgba(48, 48, 48, 0.65);
+      --result-bg: linear-gradient(180deg, rgba(14, 209, 255, 0.12), rgba(90, 100, 191, 0.12));
+      --result-border: rgba(165, 225, 250, 0.28);
+      --meta-bg: rgba(48, 48, 48, 0.55);
+      --focus: #0ED1FF;
+      --focus-ring: rgba(14, 209, 255, 0.16);
+      --ok-bg: rgba(146, 194, 29, 0.14);
+      --warn-bg: rgba(206, 177, 67, 0.16);
+      --hot-bg: rgba(237, 67, 41, 0.16);
+      --micro-bg: rgba(14, 209, 255, 0.12);
+      --serif: "Fraunces", "Iowan Old Style", Palatino, serif;
+      --sans: "IBM Plex Sans", "Avenir Next", "Segoe UI", sans-serif;
+      --mono: "IBM Plex Mono", "SF Mono", ui-monospace, monospace;
+      --radius: 16px;
+      --nav: 248px;
+    }
+    html[data-theme="day"] {
+      color-scheme: light;
+      --navy: #EAEEF4;
+      --navy-2: #D7E0EC;
+      --panel: #FFFFFF;
+      --panel-2: #EBF8FF;
+      --line: rgba(72, 81, 153, 0.18);
+      --foam: #303030;
+      --muted: #63627C;
+      --cyan: #0ED1FF;
+      --cyan-2: #5A64BF;
+      --teal: #485199;
+      --gold: #CEB143;
+      --gold-deep: #CCB244;
+      --gold-dim: rgba(206, 177, 67, 0.28);
+      --ok: #6A882F;
+      --ok-text: #275629;
+      --warn: #CEB143;
+      --hot: #DD100F;
+      --indigo: #5A64BF;
+      --indigo-deep: #485199;
+      --violet: #A6A4D7;
+      --shadow: 0 18px 40px rgba(72, 81, 153, 0.12);
+      --bg0: #FFFFFF;
+      --bg1: #EAEEF4;
+      --bg2: #D7E0EC;
+      --glow-cyan: rgba(14, 209, 255, 0.14);
+      --glow-gold: rgba(227, 202, 117, 0.22);
+      --grid-line: rgba(153, 171, 199, 0.38);
+      --nav-bg: rgba(255, 255, 255, 0.92);
+      --nav-hover: rgba(215, 224, 236, 0.95);
+      --nav-active: linear-gradient(180deg, rgba(14, 209, 255, 0.18), rgba(90, 100, 191, 0.10));
+      --nav-active-border: rgba(90, 100, 191, 0.35);
+      --card-bg: linear-gradient(180deg, #FFFFFF, #EAEEF4);
+      --input-bg: #FFFFFF;
+      --btn-bg: rgba(255, 255, 255, 0.85);
+      --result-bg: linear-gradient(180deg, rgba(14, 209, 255, 0.10), rgba(90, 100, 191, 0.08));
+      --result-border: rgba(90, 100, 191, 0.22);
+      --meta-bg: rgba(215, 224, 236, 0.6);
+      --focus: #5A64BF;
+      --focus-ring: rgba(90, 100, 191, 0.16);
+      --ok-bg: rgba(106, 136, 47, 0.12);
+      --warn-bg: rgba(206, 177, 67, 0.16);
+      --hot-bg: rgba(221, 16, 15, 0.10);
+      --micro-bg: rgba(90, 100, 191, 0.10);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(1200px 700px at 8% -10%, var(--glow-cyan), transparent 55%),
+        radial-gradient(900px 600px at 100% 0%, var(--glow-gold), transparent 46%),
+        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 48%, var(--bg2) 100%);
+      color: var(--foam);
+      font-family: var(--sans);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      transition: background 0.25s ease, color 0.25s ease;
+    }
+    body::before {
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: linear-gradient(180deg, rgba(0,0,0,.5), transparent 88%);
+    }
+    .app { position: relative; z-index: 1; display: grid; grid-template-columns: var(--nav) 1fr; min-height: 100vh; }
+    aside.nav {
+      position: sticky; top: 0; height: 100vh; padding: 22px 16px 18px;
+      border-right: 1px solid var(--line);
+      background: var(--nav-bg);
+      backdrop-filter: blur(10px);
+      display: flex; flex-direction: column; gap: 8px;
+      overflow: auto;
+    }
+    .brand { margin-bottom: 10px; }
+    .brand .kicker { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); }
+    .brand h1 { font-family: var(--serif); font-size: 26px; font-weight: 650; letter-spacing: -0.03em; line-height: 1.1; margin-top: 4px; }
+    .brand p { color: var(--muted); font-size: 12.5px; margin-top: 6px; }
+    .nav-btn {
+      appearance: none; border: 1px solid transparent; background: transparent;
+      color: var(--muted); text-align: left; padding: 9px 11px; border-radius: 12px;
+      font-family: var(--sans); font-size: 13.5px; cursor: pointer; display: flex; gap: 8px; align-items: center;
+    }
+    .nav-btn:hover { color: var(--foam); background: var(--nav-hover); border-color: var(--line); }
+    .nav-btn.active { color: var(--foam); background: var(--nav-active); border-color: var(--nav-active-border); }
+    .theme-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 8px 0 4px; }
+    .theme-switch .btn { border-radius: 10px; padding: 7px 8px; font-size: 12px; }
+    .nav-btn .ico { width: 1.4em; text-align: center; }
+    .nav-foot { margin-top: auto; font-size: 11.5px; color: var(--muted); padding-top: 12px; }
+    main { padding: 28px 28px 40px; min-width: 0; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .hero { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    h2 { font-family: var(--serif); font-size: clamp(26px, 3vw, 38px); font-weight: 650; letter-spacing: -0.03em; }
+    h2 span { color: var(--cyan-2); }
+    h3 { font-family: var(--serif); font-size: 22px; font-weight: 650; margin-bottom: 6px; }
+    .lede { color: var(--muted); max-width: 68ch; margin-top: 6px; }
+    .grid { display: grid; gap: 16px; }
+    .g2 { grid-template-columns: 1.15fr 0.85fr; }
+    .g3 { grid-template-columns: repeat(3, 1fr); }
+    .g4 { grid-template-columns: repeat(4, 1fr); }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 18px 16px; box-shadow: var(--shadow);
+    }
+    .card.home { cursor: pointer; transition: transform .15s ease, border-color .15s; }
+    .card.home:hover { transform: translateY(-2px); border-color: var(--cyan); }
+    .card .sub, .hint { color: var(--muted); font-size: 13.5px; margin-bottom: 12px; }
+    label.field, .mini-input label {
+      display: block; font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px;
+    }
+    input[type="number"], input[type="text"], input[type="color"], select, textarea {
+      width: 100%; background: var(--input-bg); border: 1px solid var(--line); color: var(--foam);
+      border-radius: 11px; padding: 10px 12px; font-family: var(--mono); font-size: 15px; outline: none;
+    }
+    textarea { min-height: 120px; resize: vertical; line-height: 1.4; }
+    input:focus, select:focus, textarea:focus { border-color: var(--focus); box-shadow: 0 0 0 4px var(--focus-ring); }
+    .fields { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .fields.two { grid-template-columns: 1fr 1fr; }
+    .fields.four { grid-template-columns: repeat(4, 1fr); }
+    .fields.five { grid-template-columns: repeat(5, 1fr); }
+    button.btn, .chip {
+      appearance: none; border: 1px solid var(--line); background: var(--btn-bg); color: var(--foam);
+      border-radius: 999px; padding: 8px 13px; font-family: var(--sans); font-size: 13px; cursor: pointer;
+    }
+    button.btn.primary {
+      background: var(--nav-active);
+      border-color: var(--nav-active-border); font-weight: 600;
+    }
+    button.btn:hover, .chip:hover { border-color: var(--cyan); color: var(--cyan-2); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+    .result {
+      margin-top: 12px; padding: 14px; border-radius: 14px;
+      background: var(--result-bg);
+      border: 1px solid var(--result-border);
+    }
+    .result .k { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cyan-2); }
+    .result .v { font-family: var(--mono); font-size: clamp(22px, 3vw, 34px); font-weight: 600; line-height: 1.15; margin: 4px 0 2px; }
+    .result .v small { font-size: 0.46em; color: var(--muted); font-weight: 500; }
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .meta { background: var(--meta-bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+    .meta dt { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+    .meta dd { font-family: var(--mono); font-size: 14.5px; margin-top: 2px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    th { color: var(--gold); font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; }
+    td.mono, .mono { font-family: var(--mono); }
+    .status { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; font-size: 12.5px; font-weight: 600; border: 1px solid var(--line); }
+    .ok { color: var(--ok-text); background: var(--ok-bg); }
+    .warn { color: var(--warn); background: var(--warn-bg); }
+    .bad { color: var(--hot); background: var(--hot-bg); }
+    .pico { color: var(--ok-text); background: var(--ok-bg); }
+    .micro { color: var(--cyan-2); background: var(--micro-bg); }
+    .over { color: var(--warn); background: var(--warn-bg); }
+    .out { color: var(--hot); background: var(--hot-bg); }
+    .formula { font-family: var(--mono); background: var(--input-bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; overflow-x: auto; }
+    canvas.chart { width: 100%; height: 280px; background: var(--input-bg); border: 1px solid var(--line); border-radius: 12px; display: block; }
+    canvas.tall { height: 340px; }
+    .callout { border-left: 3px solid var(--gold); padding: 10px 12px; background: var(--gold-dim); border-radius: 0 12px 12px 0; font-size: 13.5px; }
+    .callout.cyan { border-left-color: var(--cyan); background: var(--micro-bg); }
+    .row-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+    .swatch { height: 120px; border-radius: 16px; border: 1px solid var(--line); display: grid; place-items: center; }
+    .fill-bar { height: 12px; border-radius: 999px; background: var(--input-bg); border: 1px solid var(--line); overflow: hidden; margin-top: 10px; }
+    .fill-bar > span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--indigo), var(--cyan)); }
+    .table-wrap { overflow: auto; }
+    .check { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--foam); margin: 6px 0; }
+    .layer-row { display: grid; grid-template-columns: 40px 1fr 1fr 70px; gap: 8px; align-items: center; margin-bottom: 6px; }
+    footer.site {
+      margin-top: 28px; padding: 16px 0 8px; border-top: 1px solid var(--line);
+      color: var(--muted); font-size: 13px;
+    }
+    footer.site a { color: var(--cyan-2); }
+    .mobile-toggle { display: none; }
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      aside.nav { position: relative; height: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+      .nav-links { display: none; }
+      aside.nav.open .nav-links { display: grid; }
+      .mobile-toggle { display: inline-flex; }
+      .g2, .g3, .g4, .fields, .fields.two, .fields.four, .fields.five, .meta-grid { grid-template-columns: 1fr; }
+      main { padding: 18px 14px 32px; }
+    }
+    @media print {
+      aside.nav, .row-actions, .chips, .mobile-toggle, .theme-switch { display: none !important; }
+      .app { display: block; }
+      .panel { display: block !important; page-break-after: always; }
+      body { background: #FFFFFF; color: #303030; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="nav" id="sidebar">
+      <div class="brand">
+        <div class="kicker">Suite de taller</div>
+        <h1>Electricidad Aplicada</h1>
+        <p>Calculadoras de campo, tablero y recinto. Todo corre en el navegador.</p>
+        <div class="theme-switch" role="group" aria-label="Tema de color">
+          <button type="button" class="btn" id="theme-day">Día</button>
+          <button type="button" class="btn" id="theme-night">Noche</button>
+        </div>
+      </div>
+      <button class="btn mobile-toggle" type="button" id="nav-toggle">Menú</button>
+      <div class="nav-links" id="nav-links">
+        <button class="nav-btn active" data-panel="home"><span class="ico">⌂</span> Inicio</button>
+        <button class="nav-btn" data-panel="sev"><span class="ico">∿</span> SEV</button>
+        <button class="nav-btn" data-panel="malla"><span class="ico">▦</span> Malla de tierra</button>
+        <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
+        <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
+        <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo 6 kW</button>
+        <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
+        <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
+      </div>
+      <div class="nav-foot">Material de apoyo académico. No sustituye catálogo, ensayo de tipo ni memoria de cálculo del proyecto.</div>
+    </aside>
+
+    <main>
+      <section class="panel active" id="panel-home">
+        <div class="hero">
+          <div>
+            <h2>Electricidad <span>aplicada</span></h2>
+            <p class="lede">Siete herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo a 6 kW, prediseño TAN/AHF y conversor de color.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <article class="card home" data-go="sev"><h3>SEV · Schlumberger</h3><p class="sub">Problema directo Pekeris + filtro Ghosh de 9 puntos. Ajuste de capas, curva log-log y sección geoeléctrica.</p></article>
+          <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
+          <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
+          <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
+          <article class="card home" data-go="consumo"><h3>Consumo 6 kW</h3><p class="sub">Casa-granja a 220–230 V. Pinza True RMS, duty cycle, tarifa y simultaneidad del empalme.</p></article>
+          <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Prediseño IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
+          <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-sev">
+        <div class="hero">
+          <div>
+            <h2>Sondeo eléctrico <span>vertical</span></h2>
+            <p class="lede">Arreglo Schlumberger. Resistividad aparente por recurrencia de Pekeris y filtro digital de Ghosh (1971). Ajuste de modelo de capas en el navegador.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Datos de campo</h3>
+            <p class="sub">Dos columnas: L = AB/2 [m] y ρa [Ω·m]. También puedes pegar L, MN, R y convertir con K.</p>
+            <textarea id="sev-data" spellcheck="false">1	98
+2	92
+4	71
+8	38
+16	22
+32	31
+64	62
+128	88
+256	96</textarea>
+            <div class="fields two" style="margin-top:10px">
+              <div class="mini-input"><label for="sev-mn">MN [m] (si pegas R)</label><input id="sev-mn" type="number" min="0.01" step="any" value="1" /></div>
+              <div class="mini-input"><label for="sev-mode">Interpretar 2.ª columna como</label>
+                <select id="sev-mode"><option value="rho">ρa [Ω·m]</option><option value="r">R medida [Ω]</option></select>
+              </div>
+            </div>
+            <div class="row-actions">
+              <button class="btn primary" type="button" id="sev-parse">Leer datos</button>
+              <button class="btn" type="button" id="sev-synth">Sintetizar tipo H</button>
+            </div>
+            <p class="formula">K = π · [(AB/2)² − (MN/2)²] / MN &nbsp;·&nbsp; ρa = K · R</p>
+          </div>
+          <div class="card">
+            <h3>Modelo de capas</h3>
+            <p class="sub">Última capa infinita. Presets Mooney–Orellana.</p>
+            <label class="field" for="sev-preset">Curva de referencia</label>
+            <select id="sev-preset">
+              <option value="">Personalizado</option>
+              <option value="asc2">2 capas ascendente</option>
+              <option value="desc2">2 capas descendente</option>
+              <option value="H" selected>3 capas tipo H (mínimo)</option>
+              <option value="K">3 capas tipo K (máximo)</option>
+              <option value="A">3 capas tipo A</option>
+              <option value="Q">3 capas tipo Q</option>
+            </select>
+            <div id="sev-layers" style="margin-top:10px"></div>
+            <div class="row-actions">
+              <button class="btn" type="button" id="sev-add">+ Capa</button>
+              <button class="btn" type="button" id="sev-del">− Capa</button>
+              <button class="btn primary" type="button" id="sev-forward">Problema directo</button>
+              <button class="btn primary" type="button" id="sev-fit">Ajustar modelo</button>
+            </div>
+            <div class="meta-grid">
+              <div class="meta"><dt>Error medio</dt><dd id="sev-err">—</dd></div>
+              <div class="meta"><dt>RMSE / R² log</dt><dd id="sev-rmse">—</dd></div>
+              <div class="meta"><dt>Veredicto</dt><dd id="sev-verdict">—</dd></div>
+              <div class="meta"><dt>Puntos</dt><dd id="sev-npts">—</dd></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Curva log-log</h3>
+            <canvas class="chart tall" id="sev-chart" width="900" height="420"></canvas>
+          </div>
+          <div class="card">
+            <h3>Sección geoeléctrica</h3>
+            <canvas class="chart tall" id="sev-section" width="900" height="420"></canvas>
+            <div class="table-wrap" style="margin-top:10px"><table id="sev-table"></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-malla">
+        <div class="hero">
+          <div>
+            <h2>Malla de <span>tierra</span></h2>
+            <p class="lede">Motor IEEE Std 80: resistividad equivalente, Ig, Cs, tensiones tolerables y de malla, Rg (Sverak simplificado) y sección de conductor.</p>
+          </div>
+        </div>
+        <div class="card">
+          <h3>Parámetros</h3>
+          <div class="fields five">
+            <div class="mini-input"><label>ρ1 [Ω·m]</label><input id="m-rho1" type="number" value="170" /></div>
+            <div class="mini-input"><label>e1 [m]</label><input id="m-e1" type="number" value="1.5" step="any" /></div>
+            <div class="mini-input"><label>ρ2 [Ω·m]</label><input id="m-rho2" type="number" value="255" /></div>
+            <div class="mini-input"><label>e2 [m]</label><input id="m-e2" type="number" value="4.5" step="any" /></div>
+            <div class="mini-input"><label>ρ3 [Ω·m]</label><input id="m-rho3" type="number" value="34" /></div>
+            <div class="mini-input"><label>ρeq manual</label><input id="m-rhoeq" type="number" value="138" step="any" /></div>
+            <div class="mini-input"><label>h malla [m]</label><input id="m-h" type="number" value="0.6" step="any" /></div>
+            <div class="mini-input"><label>Lx [m]</label><input id="m-lx" type="number" value="8" step="any" /></div>
+            <div class="mini-input"><label>Ly [m]</label><input id="m-ly" type="number" value="6" step="any" /></div>
+            <div class="mini-input"><label>Dx [m]</label><input id="m-dx" type="number" value="1" step="any" /></div>
+            <div class="mini-input"><label>Dy [m]</label><input id="m-dy" type="number" value="1" step="any" /></div>
+            <div class="mini-input"><label>N varillas</label><input id="m-n" type="number" value="0" /></div>
+            <div class="mini-input"><label>Lb varilla [m]</label><input id="m-lb" type="number" value="3" step="any" /></div>
+            <div class="mini-input"><label>s cond [mm²]</label><input id="m-scond" type="number" value="67.4" step="any" /></div>
+            <div class="mini-input"><label>Icc1φ [A]</label><input id="m-icc1" type="number" value="2330" /></div>
+            <div class="mini-input"><label>S BT [kVA]</label><input id="m-sbt" type="number" value="315" step="any" /></div>
+            <div class="mini-input"><label>Vsec [V]</label><input id="m-vsec" type="number" value="400" /></div>
+            <div class="mini-input"><label>z% transfo</label><input id="m-z" type="number" value="6.34" step="any" /></div>
+            <div class="mini-input"><label>Escenario Ig</label>
+              <select id="m-esc"><option value="MT">MT</option><option value="BT">BT</option><option value="MAX">Máximo</option></select>
+            </div>
+            <div class="mini-input"><label>Cp</label><input id="m-cp" type="number" value="0.534" step="any" /></div>
+            <div class="mini-input"><label>Df</label><input id="m-df" type="number" value="1" step="any" /></div>
+            <div class="mini-input"><label>ts [s]</label><input id="m-top" type="number" value="0.5" step="any" /></div>
+            <div class="mini-input"><label>ρs superficie</label><input id="m-rhos" type="number" value="3000" /></div>
+            <div class="mini-input"><label>hg [m]</label><input id="m-hg" type="number" value="0.15" step="any" /></div>
+            <div class="mini-input"><label>Peso</label>
+              <select id="m-peso"><option value="70">70 kg</option><option value="50">50 kg</option></select>
+            </div>
+            <div class="mini-input"><label>I cond [kA]</label><input id="m-icond" type="number" value="1.245" step="any" /></div>
+            <div class="mini-input"><label>Tm [°C]</label><input id="m-tm" type="number" value="1084" /></div>
+            <div class="mini-input"><label>Ta [°C]</label><input id="m-ta" type="number" value="40" /></div>
+            <div class="mini-input"><label>Límite Rg [Ω]</label><input id="m-limrg" type="number" value="20" step="any" /></div>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Resultados IEEE 80</h3>
+            <div class="result"><div class="k">Estado</div><div class="v" id="m-estado">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>ρeq</dt><dd id="m-o-rho">—</dd></div>
+              <div class="meta"><dt>Área / Lt</dt><dd id="m-o-geo">—</dd></div>
+              <div class="meta"><dt>Ig</dt><dd id="m-o-ig">—</dd></div>
+              <div class="meta"><dt>Cs</dt><dd id="m-o-cs">—</dd></div>
+              <div class="meta"><dt>Vp / Vpt</dt><dd id="m-o-vp">—</dd></div>
+              <div class="meta"><dt>Vc / Vct</dt><dd id="m-o-vc">—</dd></div>
+              <div class="meta"><dt>Rg</dt><dd id="m-o-rg">—</dd></div>
+              <div class="meta"><dt>s min / s cond</dt><dd id="m-o-s">—</dd></div>
+            </dl>
+            <p class="hint" id="m-recs" style="margin-top:10px"></p>
+            <p class="formula" style="margin-top:10px">Rg = ρ (1/Lt + 1/√(20A)) · Vp,Vc = ρ Ig / Lt · Ki · Ks|Km · Vpt = (1000+6 Cs ρs) k / √ts</p>
+          </div>
+          <div class="card">
+            <h3>Vista de malla</h3>
+            <canvas class="chart tall" id="m-canvas" width="900" height="420"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-lux">
+        <div class="hero">
+          <div>
+            <h2>Alumbrado por <span>lúmenes</span></h2>
+            <p class="lede">Método de lúmenes con tablas CU, snap de κ «como en clases» (40 % del intervalo) y tablero de circuitos. Iluminancias de UNE-EN 12464-1:2012.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Recinto</h3>
+            <div class="fields two">
+              <div class="mini-input"><label>Plantilla</label>
+                <select id="lx-space">
+                  <option value="pasillo">Pasillo 100 lx</option>
+                  <option value="aula">Sala de clases 300 lx</option>
+                  <option value="oficina">Oficina 500 lx</option>
+                  <option value="taller">Taller 500 lx</option>
+                  <option value="sala-electricidad">Sala de electricidad 500 lx</option>
+                  <option value="almacen">Almacén 100 lx</option>
+                  <option value="banos">Baños 200 lx</option>
+                  <option value="cocina">Cocina 500 lx</option>
+                </select>
+              </div>
+              <div class="mini-input"><label>Ejemplo de clase</label>
+                <select id="lx-ex">
+                  <option value="">—</option>
+                  <option value="A">A · Habitación 3,2 × 4 m</option>
+                  <option value="B">B · Sala de electricidad</option>
+                </select>
+              </div>
+            </div>
+            <div class="fields" style="margin-top:10px">
+              <div class="mini-input"><label>Ancho a [m]</label><input id="lx-a" type="number" value="5.87" step="any" /></div>
+              <div class="mini-input"><label>Largo b [m]</label><input id="lx-b" type="number" value="7.24" step="any" /></div>
+              <div class="mini-input"><label>H recinto [m]</label><input id="lx-H" type="number" value="2.9" step="any" /></div>
+              <div class="mini-input"><label>Plano de tarea PT [m]</label><input id="lx-pt" type="number" value="1" step="any" /></div>
+              <div class="mini-input"><label>Colgado d [m]</label><input id="lx-d" type="number" value="0" step="any" /></div>
+              <div class="mini-input"><label>Ēm [lx]</label><input id="lx-em" type="number" value="500" /></div>
+              <div class="mini-input"><label>CM</label><input id="lx-cm" type="number" value="0.6" step="any" /></div>
+              <div class="mini-input"><label>ΦL [lm]</label><input id="lx-phi" type="number" value="5000" /></div>
+              <div class="mini-input"><label>W por luminaria</label><input id="lx-w" type="number" value="40" /></div>
+              <div class="mini-input"><label>ρ techo</label>
+                <select id="lx-ceil"><option>70</option><option>50</option><option>30</option></select>
+              </div>
+              <div class="mini-input"><label>ρ muros</label>
+                <select id="lx-wall"><option>50</option><option selected>30</option><option>10</option></select>
+              </div>
+              <div class="mini-input"><label>Familia CU</label>
+                <select id="lx-table">
+                  <option value="recessed-modular">Empotrado modular</option>
+                  <option value="industrial-reflector">Reflector industrial</option>
+                  <option value="suspended-opaque">Colgante opaca</option>
+                  <option value="diffusing-shallow">Plafón difusor</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Resultados</h3>
+            <div class="result"><div class="k">Flujo total ΦT</div><div class="v" id="lx-phiT">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>h útil / S / κ</dt><dd id="lx-geo">—</dd></div>
+              <div class="meta"><dt>CU (κ snap)</dt><dd id="lx-cu">—</dd></div>
+              <div class="meta"><dt>N calc / N inst</dt><dd id="lx-n">—</dd></div>
+              <div class="meta"><dt>Ēm real / potencia</dt><dd id="lx-real">—</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">h=H−PT−d · κ=(a·b)/[h(a+b)] · ΦT=(Em·S)/(CU·CM) · N=⌈ΦT/ΦL⌉</p>
+            <h3 style="margin-top:14px">Inversa</h3>
+            <p class="sub">Ēm a partir de N instalado.</p>
+            <div class="fields two">
+              <div class="mini-input"><label>N</label><input id="lx-inv-n" type="number" value="20" /></div>
+              <div class="mini-input"><label>Ēm resultante</label><div class="result" style="margin:0"><div class="v" id="lx-inv" style="font-size:22px">—</div></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Plano de luminarias</h3>
+            <canvas class="chart tall" id="lx-plan" width="900" height="420"></canvas>
+          </div>
+          <div class="card">
+            <h3>Tablero de alumbrado</h3>
+            <div class="fields two">
+              <div class="mini-input"><label>Alimentación</label>
+                <select id="lx-sup"><option value="1x220">1×220 V</option><option value="3x380">3×380 V</option></select>
+              </div>
+              <div class="mini-input"><label>Longitud [m]</label><input id="lx-len" type="number" value="15" /></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>P instalada</dt><dd id="lx-p">—</dd></div>
+              <div class="meta"><dt>I total / In general</dt><dd id="lx-i">—</dd></div>
+              <div class="meta"><dt>Alimentador</dt><dd id="lx-feed">—</dd></div>
+              <div class="meta"><dt>Circuitos / 30 mA</dt><dd id="lx-circ">—</dd></div>
+            </dl>
+            <div class="table-wrap" style="margin-top:8px"><table id="lx-board"></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-hydro">
+        <div class="hero">
+          <div>
+            <h2>De litros a <span>metros cúbicos</span></h2>
+            <p class="lede">El aforo del estero se mide en L/s; la turbina y la potencia se calculan en m³/s. 1 m³ = 1 000 L.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Conversor de volumen</h3>
+            <div class="chips">
+              <button class="chip btn primary" type="button" id="hy-dir-lm">Litros → m³</button>
+              <button class="chip btn" type="button" id="hy-dir-ml">m³ → litros</button>
+            </div>
+            <label class="field" id="hy-vol-label" for="hy-vol">Volumen en litros</label>
+            <input id="hy-vol" type="number" min="0" step="any" value="1000" />
+            <div class="chips">
+              <button class="chip" type="button" data-vol="200">200 L</button>
+              <button class="chip" type="button" data-vol="1000">1 000 L</button>
+              <button class="chip" type="button" data-vol="5000">5 000 L</button>
+            </div>
+            <div class="result"><div class="k" id="hy-vol-k">Equivalente</div><div class="v" id="hy-vol-out">—</div></div>
+            <div class="fill-bar"><span id="hy-fill"></span></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Masa de agua</dt><dd id="hy-mass">—</dd></div>
+              <div class="meta"><dt>Peso</dt><dd id="hy-weight">—</dd></div>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>Caudal</h3>
+            <div class="fields">
+              <div class="mini-input"><label>L/s</label><input id="hy-lps" type="number" min="0" step="any" value="80" /></div>
+              <div class="mini-input"><label>m³/s</label><input id="hy-cms" type="number" min="0" step="any" value="0.08" /></div>
+              <div class="mini-input"><label>m³/h</label><input id="hy-cmh" type="number" min="0" step="any" value="288" /></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>L/min</dt><dd id="hy-lpm">—</dd></div>
+              <div class="meta"><dt>Volumen 24 h</dt><dd id="hy-day">—</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Potencia de la central</h3>
+          <p class="sub">P(kW) = 9,81 × Q(m³/s) × H(m) × η. Pico &lt; 5 kW · microhidro 5–300 kW (RGR N°04). GD residencial tope 300 kW (Ley 21.118). Clase B en BT hasta 500 kW (D.S. N° 92).</p>
+          <div class="fields">
+            <div class="mini-input"><label>Q</label>
+              <div style="display:grid;grid-template-columns:1fr 110px;gap:8px">
+                <input id="hy-pq" type="number" min="0" step="any" value="80" />
+                <select id="hy-pqu"><option value="lps">L/s</option><option value="cms">m³/s</option></select>
+              </div>
+            </div>
+            <div class="mini-input"><label>Salto neto H [m]</label><input id="hy-ph" type="number" min="0" step="any" value="24" /></div>
+            <div class="mini-input"><label>η [%]</label><input id="hy-pn" type="number" min="1" max="100" step="any" value="70" /></div>
+          </div>
+          <div class="result"><div class="k">Potencia eléctrica</div><div class="v" id="hy-pout">—</div><div style="margin-top:8px"><span class="status" id="hy-pclass">—</span></div></div>
+          <dl class="meta-grid">
+            <div class="meta"><dt>Q SI</dt><dd id="hy-qsi">—</dd></div>
+            <div class="meta"><dt>P hidráulica</dt><dd id="hy-phyd">—</dd></div>
+            <div class="meta"><dt>Energía 24 h</dt><dd id="hy-kwh">—</dd></div>
+            <div class="meta"><dt>Agua 24 h</dt><dd id="hy-pvol">—</dd></div>
+          </dl>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Potencial hidráulico</h3>
+          <div class="fields four">
+            <div class="mini-input"><label>Cota captación</label><input id="hy-z1" type="number" value="144" step="any" /></div>
+            <div class="mini-input"><label>Cota casa máq.</label><input id="hy-z2" type="number" value="118" step="any" /></div>
+            <div class="mini-input"><label>ΔH pérdidas [m]</label><input id="hy-loss" type="number" value="2" step="any" /></div>
+            <div class="mini-input"><label>Factor de planta %</label><input id="hy-fp" type="number" value="50" step="any" /></div>
+          </div>
+          <div class="result"><div class="k">Energía anual</div><div class="v" id="hy-eout">—</div></div>
+          <dl class="meta-grid">
+            <div class="meta"><dt>H bruto / neto</dt><dd id="hy-heads">—</dd></div>
+            <div class="meta"><dt>P teórico / técnico</dt><dd id="hy-pteo">—</dd></div>
+            <div class="meta"><dt>Horas eq.</dt><dd id="hy-hours">—</dd></div>
+            <div class="meta"><dt>kWh/m³</dt><dd id="hy-spec">—</dd></div>
+          </dl>
+          <p class="formula" style="margin-top:10px">Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp</p>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-consumo">
+        <div class="hero">
+          <div>
+            <h2>Estudio de consumo <span>6 kW</span></h2>
+            <p class="lede">Vivienda-granja, 2 personas, empalme 6 kW, 220–230 V monofásico. Pinza True RMS: lee régimen a 30–60 s, no el pico. Tarifa de energía editable (referencia $252/kWh, sin cargo fijo).</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="fields four">
+            <div class="mini-input"><label>Tensión [V]</label><input id="c-v" type="number" value="230" /></div>
+            <div class="mini-input"><label>Empalme [kW]</label><input id="c-kw" type="number" value="6" step="any" /></div>
+            <div class="mini-input"><label>$ / kWh</label><input id="c-tarifa" type="number" value="252" /></div>
+            <div class="mini-input"><label>Escenario</label>
+              <select id="c-season"><option value="invierno">Invierno</option><option value="verano">Verano (sin calefactor)</option></select>
+            </div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Equipos de referencia</h3>
+          <p class="sub">Edita I medida, horas/día y duty. El freezer es el principal sospechoso si no cicla o I &gt; 2,4 A continua.</p>
+          <div class="table-wrap"><table id="c-table"></table></div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Totales</h3>
+            <div class="result"><div class="k">Consumo mensual estimado</div><div class="v" id="c-kwh">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Costo energía</dt><dd id="c-cost">—</dd></div>
+              <div class="meta"><dt>Promedio diario</dt><dd id="c-day">—</dd></div>
+              <div class="meta"><dt>Frío / térmico / resto</dt><dd id="c-split">—</dd></div>
+              <div class="meta"><dt>Freezer vs total</dt><dd id="c-fz">—</dd></div>
+            </dl>
+            <p class="hint" id="c-band" style="margin-top:10px"></p>
+          </div>
+          <div class="card">
+            <h3>Simultaneidad del empalme</h3>
+            <p class="sub">Marca cargas que podrían coincidir. El empalme 6 kW no cubre horno + calefactor 1 200 W + arranque de freezer.</p>
+            <div id="c-sim"></div>
+            <div class="result"><div class="k">P coincidente</div><div class="v" id="c-sim-p">—</div></div>
+            <p id="c-sim-note" class="hint"></p>
+            <h3 style="margin-top:14px">Criterios de pinza</h3>
+            <ul style="padding-left:18px;font-size:13.5px;color:var(--muted);display:grid;gap:6px">
+              <li>Carga resistiva: |I − In| / In ≤ 10 %. Desvío &gt; 15 %: revisar elemento.</li>
+              <li>Compresores: deben ciclar. 100 % ON = falla.</li>
+              <li>Motor DOL: arranque 5–8× In, &lt; 10× y &lt; 1 s.</li>
+              <li>Freezer sano: 1,3–2,2 A ON, 0 A OFF, duty 30–50 %, 90–140 kWh/mes.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-tan">
+        <div class="hero">
+          <div>
+            <h2>TAN-Telecom y <span>AHF</span></h2>
+            <p class="lede">Prediseño IEC 61439 de tablero para nodo de telecomunicaciones, DSP 3P+N (Clarke / THDi = Ih/I1) y banco 24 V · 120 W.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Prediseño de tablero</h3>
+            <div class="fields two">
+              <div class="mini-input"><label>Potencia [kW]</label><input id="t-p" type="number" value="45" step="any" /></div>
+              <div class="mini-input"><label>Tensión [V]</label><input id="t-v" type="number" value="400" /></div>
+              <div class="mini-input"><label>cos φ</label><input id="t-cos" type="number" value="0.9" step="any" /></div>
+              <div class="mini-input"><label>η</label><input id="t-eta" type="number" value="0.95" step="any" /></div>
+              <div class="mini-input"><label>Racks / salidas</label><input id="t-racks" type="number" value="8" /></div>
+              <div class="mini-input"><label>IP mínimo</label><input id="t-ip" type="number" value="30" /></div>
+              <div class="mini-input"><label>Redundancia</label>
+                <select id="t-red"><option value="N">N</option><option value="N+1" selected>N+1</option><option value="2N">2N</option></select>
+              </div>
+              <div class="mini-input"><label>Carga armónica</label>
+                <select id="t-h"><option value="0">No</option><option value="1" selected>Sí</option></select>
+              </div>
+            </div>
+            <label class="check"><input type="checkbox" id="t-sis" /> Requisito sísmico</label>
+            <p class="formula" style="margin-top:8px">In = (P·1000) / (√3 · V · cosφ · η)</p>
+          </div>
+          <div class="card">
+            <h3>Resultado IEC 61439</h3>
+            <div class="result"><div class="k">In de selección / envolvente</div><div class="v" id="t-insel">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>In base / diseño</dt><dd id="t-in">—</dd></div>
+              <div class="meta"><dt>Icc / Icw est.</dt><dd id="t-icc">—</dd></div>
+              <div class="meta"><dt>RDF / Ku / ΔT</dt><dd id="t-th">—</dd></div>
+              <div class="meta"><dt>Familia / forma</dt><dd id="t-fam">—</dd></div>
+            </dl>
+            <p class="hint" id="t-notes" style="margin-top:8px"></p>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>DSP 3P+N (señal patrón)</h3>
+            <p class="sub">THDi académico = 100 · √(H3²+H5²+H7²) / I1. No es IEC 61000-4-7.</p>
+            <div class="fields four">
+              <div class="mini-input"><label>I1 [A]</label><input id="d-i1" type="number" value="10" step="any" /></div>
+              <div class="mini-input"><label>H3 [A]</label><input id="d-h3" type="number" value="0.8" step="any" /></div>
+              <div class="mini-input"><label>H5 [A]</label><input id="d-h5" type="number" value="2.4" step="any" /></div>
+              <div class="mini-input"><label>H7 [A]</label><input id="d-h7" type="number" value="1.1" step="any" /></div>
+            </div>
+            <div class="result"><div class="k">THDi</div><div class="v" id="d-thdi">—</div></div>
+            <canvas class="chart" id="d-wave" width="900" height="280"></canvas>
+          </div>
+          <div class="card">
+            <h3>Banco 24 V · 120 W</h3>
+            <p class="sub">Alineado a fuente 0–30 V / 0–5 A. Simulación HIL, no conmuta hardware.</p>
+            <div class="fields">
+              <div class="mini-input"><label>V bus [V]</label><input id="b-v" type="number" value="24" step="any" /></div>
+              <div class="mini-input"><label>I carga [A]</label><input id="b-i" type="number" value="4" step="any" /></div>
+              <div class="mini-input"><label>Rizado máx %</label><input id="b-rip" type="number" value="2" step="any" /></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>P bus</dt><dd id="b-p">—</dd></div>
+              <div class="meta"><dt>Margen 5 A / 120 W</dt><dd id="b-m">—</dd></div>
+              <div class="meta"><dt>Ilim sugerida</dt><dd id="b-ilim">—</dd></div>
+              <div class="meta"><dt>Estado</dt><dd id="b-st">—</dd></div>
+            </dl>
+            <p class="callout cyan" style="margin-top:10px">Autoprueba → precarga lógica → E-stop → rearme enclavado. Physical outputs = false.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-color">
+        <div class="hero">
+          <div>
+            <h2>Conversor <span>HEX → HSB</span></h2>
+            <p class="lede">Genera valores HSB orgánicos y precisos a partir de un hexadecimal. Clic en una tarjeta para copiar.</p>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <label class="field" for="col-hex">Código hexadecimal</label>
+            <input id="col-hex" type="text" value="FF5733" maxlength="8" spellcheck="false" />
+            <div class="swatch" id="col-swatch"></div>
+            <p class="hint" id="col-err"></p>
+            <dl class="meta-grid">
+              <div class="meta"><dt>RGB 0–1</dt><dd id="col-rgb">—</dd></div>
+              <div class="meta"><dt>RGB 0–255</dt><dd id="col-rgb8">—</dd></div>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>HSB</h3>
+            <div class="grid g3" id="col-hsb"></div>
+            <div class="row-actions">
+              <button class="btn primary" type="button" id="col-copy">Copiar valores HSB</button>
+            </div>
+            <p class="hint" id="col-copied"></p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="site">
+        Andres Barbudo Rodriguez - CFT Paillaco - Todos los Derechos Reservados © - visit <a href="https://www.youtube.com/@kirtantegsingh" target="_blank" rel="noopener">https://www.youtube.com/@kirtantegsingh</a> - visit <a href="https://sacred-geometry.uk" target="_blank" rel="noopener">https://sacred-geometry.uk</a>
+      </footer>
+    </main>
+  </div>
+  <script>
+  (function () {
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n, d = 3) => Number.isFinite(n)
+      ? n.toLocaleString("es-CL", { maximumFractionDigits: d, minimumFractionDigits: 0 })
+      : "—";
+    const G = 9.81, RHO = 1000;
+    const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const themePaint = () => ({
+      canvas: cssVar("--input-bg") || "#303030",
+      cyan: cssVar("--cyan") || "#0ED1FF",
+      cyan2: cssVar("--cyan-2") || "#A5E1FA",
+      gold: cssVar("--gold") || "#E3CA75",
+      muted: cssVar("--muted") || "#ADBAD1",
+      foam: cssVar("--foam") || "#EAEEF4",
+      hot: cssVar("--hot") || "#ED4329",
+      teal: cssVar("--teal") || "#5A64BF",
+      ok: cssVar("--ok") || "#92C21D",
+      violet: cssVar("--violet") || "#A6A4D7",
+      line: cssVar("--line") || "rgba(195,206,222,0.22)",
+    });
+    function setTheme(t) {
+      document.documentElement.setAttribute("data-theme", t);
+      try { localStorage.setItem("ea-theme", t); } catch (e) {}
+      $("theme-day").classList.toggle("primary", t === "day");
+      $("theme-night").classList.toggle("primary", t === "night");
+      if (typeof parseSev === "function") { parseSev(); drawSev(); }
+      if (typeof calcMalla === "function") calcMalla();
+      if (typeof calcLux === "function") calcLux();
+      if (typeof calcDsp === "function") calcDsp();
+    }
+    $("theme-day").addEventListener("click", () => setTheme("day"));
+    $("theme-night").addEventListener("click", () => setTheme("night"));
+    $("theme-day").classList.toggle("primary", document.documentElement.getAttribute("data-theme") === "day");
+    $("theme-night").classList.toggle("primary", document.documentElement.getAttribute("data-theme") !== "day");
+
+    function showPanel(id) {
+      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
+      document.querySelectorAll(".nav-btn").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
+      history.replaceState(null, "", "#" + id);
+      window.scrollTo(0, 0);
+      if (id === "sev") { parseSev(); drawSev(); }
+      if (id === "malla") calcMalla();
+      if (id === "lux") calcLux();
+      if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "consumo") renderConsumo();
+      if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
+      if (id === "color") renderColor();
+    }
+    document.querySelectorAll(".nav-btn").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
+    document.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => showPanel(el.dataset.go)));
+    $("nav-toggle").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+    const start = (location.hash || "#home").slice(1);
+    if (start && start !== "home") showPanel(start);
+
+    /* ===================== SEV ===================== */
+    const GHOSH_C = [0.0225, -0.0499, 0.1064, 0.1854, 1.9720, -1.5716, 0.4018, -0.0814, 0.0148];
+    const GHOSH_K = [-3, -2, -1, 0, 1, 2, 3, 4, 5];
+    const PRESETS = {
+      asc2: { rho: [10, 100], h: [5] },
+      desc2: { rho: [100, 10], h: [5] },
+      H: { rho: [100, 10, 100], h: [2, 10] },
+      K: { rho: [10, 100, 10], h: [2, 10] },
+      A: { rho: [10, 50, 200], h: [2, 10] },
+      Q: { rho: [200, 50, 10], h: [2, 10] },
+    };
+    let sevLayers = { rho: [100, 10, 100], h: [5, 15] };
+    let sevPts = [];
+
+    function pekeris(lambdas, rho, h) {
+      const T = lambdas.map(() => rho[rho.length - 1]);
+      for (let i = rho.length - 2; i >= 0; i--) {
+        for (let j = 0; j < lambdas.length; j++) {
+          const x = Math.max(-40, Math.min(40, lambdas[j] * h[i]));
+          const th = Math.tanh(x);
+          const den = rho[i] + T[j] * th;
+          T[j] = Math.abs(den) < 1e-15 ? rho[i] : rho[i] * (T[j] + rho[i] * th) / den;
+        }
+      }
+      return T;
+    }
+    function rhoA(L, rho, h) {
+      if (!(L > 0)) return NaN;
+      const lam = GHOSH_K.map((k) => Math.pow(10, -k / 3) / L);
+      const T = pekeris(lam, rho, h);
+      return GHOSH_C.reduce((s, c, i) => s + c * T[i], 0);
+    }
+    function schlumbergerK(ab2, mn) {
+      mn = Math.max(mn, 1e-6);
+      return Math.PI * (ab2 * ab2 - Math.pow(mn / 2, 2)) / mn;
+    }
+    function renderLayerEditor() {
+      const box = $("sev-layers");
+      box.innerHTML = "";
+      sevLayers.rho.forEach((r, i) => {
+        const row = document.createElement("div");
+        row.className = "layer-row";
+        const last = i === sevLayers.rho.length - 1;
+        row.innerHTML = `<span class="mono">C${i + 1}</span>
+          <input type="number" min="0.01" step="any" value="${r}" data-k="rho" data-i="${i}" />
+          <input type="number" min="0.001" step="any" value="${last ? "" : sevLayers.h[i]}" ${last ? "disabled placeholder='∞'" : ""} data-k="h" data-i="${i}" />
+          <span class="hint">${last ? "∞ m" : "m"}</span>`;
+        box.appendChild(row);
+      });
+      box.querySelectorAll("input").forEach((inp) => {
+        inp.addEventListener("input", () => {
+          const i = +inp.dataset.i;
+          if (inp.dataset.k === "rho") sevLayers.rho[i] = +inp.value;
+          else if (!inp.disabled) sevLayers.h[i] = +inp.value;
+        });
+      });
+    }
+    function parseSev() {
+      const mode = $("sev-mode").value;
+      const mn = +$("sev-mn").value || 1;
+      const lines = $("sev-data").value.split(/\n+/);
+      const pts = [];
+      for (const line of lines) {
+        const nums = line.trim().split(/[,\s;\t]+/).map(Number).filter((n) => Number.isFinite(n));
+        if (nums.length < 2) continue;
+        const L = nums[0];
+        let rho = nums[1];
+        if (mode === "r") rho = schlumbergerK(L, nums[2] || mn) * nums[1];
+        if (L > 0 && rho > 0) pts.push({ L, rho });
+      }
+      sevPts = pts.sort((a, b) => a.L - b.L);
+      $("sev-npts").textContent = sevPts.length + " pares";
+    }
+    function metrics(pts, rho, h) {
+      if (!pts.length) return null;
+      const calc = pts.map((p) => rhoA(p.L, rho, h));
+      const err = pts.map((p, i) => Math.abs(p.rho - calc[i]) / p.rho * 100);
+      const mean = err.reduce((a, b) => a + b, 0) / err.length;
+      const rmse = Math.sqrt(pts.reduce((s, p, i) => s + (p.rho - calc[i]) ** 2, 0) / pts.length);
+      const logsM = pts.map((p) => Math.log10(Math.max(p.rho, 1e-6)));
+      const logsC = calc.map((v) => Math.log10(Math.max(v, 1e-6)));
+      const meanL = logsM.reduce((a, b) => a + b, 0) / logsM.length;
+      const ssTot = logsM.reduce((s, v) => s + (v - meanL) ** 2, 0);
+      const ssRes = logsM.reduce((s, v, i) => s + (v - logsC[i]) ** 2, 0);
+      const r2 = ssTot > 0 ? 1 - ssRes / ssTot : 0;
+      return { calc, err, mean, rmse, r2 };
+    }
+    function drawLogLog(canvas, pts, rho, h) {
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width, H = canvas.height, pad = 48;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, H);
+      if (!pts.length) return;
+      const Ls = pts.map((p) => p.L);
+      const Lmin = Math.min(...Ls), Lmax = Math.max(...Ls);
+      const dense = [];
+      const n = 80;
+      for (let i = 0; i < n; i++) {
+        const L = Math.pow(10, Math.log10(Lmin) + (Math.log10(Lmax / Lmin) * i) / (n - 1));
+        dense.push({ L, rho: rhoA(L, rho, h) });
+      }
+      const ys = pts.map((p) => p.rho).concat(dense.map((p) => p.rho)).filter((v) => v > 0);
+      const ymin = Math.min(...ys) * 0.7, ymax = Math.max(...ys) * 1.4;
+      const xOf = (L) => pad + (Math.log10(L) - Math.log10(Lmin)) / Math.log10(Lmax / Lmin) * (W - 2 * pad);
+      const yOf = (r) => H - pad - (Math.log10(r) - Math.log10(ymin)) / Math.log10(ymax / ymin) * (H - 2 * pad);
+      ctx.strokeStyle = tp.line; ctx.lineWidth = 1;
+      for (let e = Math.floor(Math.log10(Lmin)); e <= Math.ceil(Math.log10(Lmax)); e++) {
+        const x = xOf(Math.pow(10, e));
+        ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, H - pad); ctx.stroke();
+      }
+      ctx.strokeStyle = tp.cyan; ctx.lineWidth = 2; ctx.beginPath();
+      dense.forEach((p, i) => { const x = xOf(p.L), y = yOf(Math.max(p.rho, ymin)); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+      ctx.fillStyle = tp.gold;
+      pts.forEach((p) => { ctx.beginPath(); ctx.arc(xOf(p.L), yOf(p.rho), 4, 0, Math.PI * 2); ctx.fill(); });
+      ctx.fillStyle = tp.muted; ctx.font = "12px IBM Plex Sans";
+      ctx.fillText("AB/2 [m]", W / 2 - 20, H - 12);
+      ctx.save(); ctx.translate(14, H / 2); ctx.rotate(-Math.PI / 2); ctx.fillText("ρa [Ω·m]", 0, 0); ctx.restore();
+    }
+    function drawSection(canvas, rho, h) {
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width, Ht = canvas.height, pad = 24;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, Ht);
+      const depths = [];
+      let acc = 0;
+      h.forEach((hi) => { acc += hi; depths.push(acc); });
+      const last = acc * 0.35;
+      const total = acc + last;
+      const colors = [tp.teal, tp.cyan, tp.gold, tp.hot, tp.violet, tp.ok];
+      let y0 = pad;
+      rho.forEach((r, i) => {
+        const th = (i < h.length ? h[i] : last) / total * (Ht - 2 * pad);
+        ctx.fillStyle = colors[i % colors.length] + "55";
+        ctx.fillRect(pad, y0, W - 2 * pad, th);
+        ctx.strokeStyle = colors[i % colors.length]; ctx.strokeRect(pad, y0, W - 2 * pad, th);
+        ctx.fillStyle = tp.foam; ctx.font = "13px IBM Plex Mono";
+        ctx.fillText("ρ" + (i + 1) + " = " + fmt(r, 1) + " Ω·m" + (i < h.length ? " · h = " + fmt(h[i], 2) + " m" : " · ∞"), pad + 10, y0 + Math.max(16, th / 2 + 4));
+        y0 += th;
+      });
+    }
+    function drawSev() {
+      const m = metrics(sevPts, sevLayers.rho, sevLayers.h);
+      drawLogLog($("sev-chart"), sevPts, sevLayers.rho, sevLayers.h);
+      drawSection($("sev-section"), sevLayers.rho, sevLayers.h);
+      if (!m) return;
+      $("sev-err").textContent = fmt(m.mean, 2) + " %";
+      $("sev-rmse").textContent = fmt(m.rmse, 2) + " · R² " + fmt(m.r2, 3);
+      $("sev-verdict").textContent = m.mean <= 5 ? "Aceptable (≤ 5 %)" : "Revisar (> 5 %)";
+      const tb = $("sev-table");
+      tb.innerHTML = "<thead><tr><th>L</th><th>ρa campo</th><th>ρa modelo</th><th>Δ %</th></tr></thead>" +
+        "<tbody>" + sevPts.map((p, i) => `<tr><td class="mono">${fmt(p.L, 3)}</td><td class="mono">${fmt(p.rho, 2)}</td><td class="mono">${fmt(m.calc[i], 2)}</td><td class="mono">${fmt(m.err[i], 2)}</td></tr>`).join("") + "</tbody>";
+    }
+    function logspaceObj(pts, rho, h) {
+      const m = metrics(pts, rho, h);
+      if (!m) return 1e9;
+      const logsM = pts.map((p) => Math.log10(Math.max(p.rho, 1e-6)));
+      const logsC = m.calc.map((v) => Math.log10(Math.max(v, 1e-6)));
+      return logsM.reduce((s, v, i) => s + (v - logsC[i]) ** 2, 0) / logsM.length;
+    }
+    function fitSev() {
+      parseSev();
+      if (sevPts.length < 3) return;
+      const n = sevLayers.rho.length;
+      const dim = 2 * n - 1;
+      const rhoMin = Math.max(Math.min(...sevPts.map((p) => p.rho)) / 16, 0.1);
+      const rhoMax = Math.max(...sevPts.map((p) => p.rho)) * 25;
+      const Lmin = Math.min(...sevPts.map((p) => p.L));
+      const Lmax = Math.max(...sevPts.map((p) => p.L));
+      const unpack = (x) => {
+        const rho = x.slice(0, n).map((v) => Math.pow(10, v));
+        const h = x.slice(n).map((v) => Math.pow(10, v));
+        return { rho, h };
+      };
+      const pack = (rho, h) => rho.map((v) => Math.log10(v)).concat(h.map((v) => Math.log10(v)));
+      const low = Array(n).fill(Math.log10(rhoMin)).concat(Array(n - 1).fill(Math.log10(Math.max(Lmin * 0.002, 0.001))));
+      const high = Array(n).fill(Math.log10(rhoMax)).concat(Array(n - 1).fill(Math.log10(Lmax * 4)));
+      const popN = 18, gens = 90, F = 0.7, CR = 0.7;
+      const rand = (i) => low[i] + Math.random() * (high[i] - low[i]);
+      let pop = [];
+      pop.push(pack(sevLayers.rho, sevLayers.h));
+      while (pop.length < popN) pop.push(Array.from({ length: dim }, (_, i) => rand(i)));
+      const clamp = (x) => x.map((v, i) => Math.min(high[i], Math.max(low[i], v)));
+      const cost = (x) => { const m = unpack(x); return logspaceObj(sevPts, m.rho, m.h); };
+      let scores = pop.map(cost);
+      for (let g = 0; g < gens; g++) {
+        for (let i = 0; i < popN; i++) {
+          let a, b, c;
+          do { a = Math.floor(Math.random() * popN); } while (a === i);
+          do { b = Math.floor(Math.random() * popN); } while (b === i || b === a);
+          do { c = Math.floor(Math.random() * popN); } while (c === i || c === a || c === b);
+          const trial = pop[i].slice();
+          const R = Math.floor(Math.random() * dim);
+          for (let j = 0; j < dim; j++) {
+            if (Math.random() < CR || j === R) trial[j] = pop[a][j] + F * (pop[b][j] - pop[c][j]);
+          }
+          const t = clamp(trial);
+          const ct = cost(t);
+          if (ct < scores[i]) { pop[i] = t; scores[i] = ct; }
+        }
+      }
+      let bestI = 0;
+      scores.forEach((s, i) => { if (s < scores[bestI]) bestI = i; });
+      let best = pop[bestI].slice();
+      for (let k = 0; k < 40; k++) {
+        const j = k % dim;
+        const step = 0.08 * (high[j] - low[j]);
+        for (const sgn of [-1, 1]) {
+          const cand = best.slice();
+          cand[j] += sgn * step * (1 - k / 50);
+          const cc = clamp(cand);
+          if (cost(cc) < cost(best)) best = cc;
+        }
+      }
+      const out = unpack(best);
+      sevLayers = out;
+      renderLayerEditor();
+      drawSev();
+    }
+    $("sev-preset").addEventListener("change", () => {
+      const p = PRESETS[$("sev-preset").value];
+      if (p) { sevLayers = { rho: p.rho.slice(), h: p.h.slice() }; renderLayerEditor(); }
+    });
+    $("sev-add").addEventListener("click", () => {
+      if (sevLayers.rho.length >= 8) return;
+      sevLayers.rho.push(sevLayers.rho[sevLayers.rho.length - 1]);
+      sevLayers.h.push(Math.max(1, sevLayers.h[sevLayers.h.length - 1] || 5));
+      renderLayerEditor();
+    });
+    $("sev-del").addEventListener("click", () => {
+      if (sevLayers.rho.length <= 2) return;
+      sevLayers.rho.pop(); sevLayers.h.pop();
+      renderLayerEditor();
+    });
+    $("sev-parse").addEventListener("click", () => { parseSev(); drawSev(); });
+    $("sev-forward").addEventListener("click", () => { parseSev(); drawSev(); });
+    $("sev-fit").addEventListener("click", fitSev);
+    $("sev-synth").addEventListener("click", () => {
+      sevLayers = { rho: [100, 10, 100], h: [5, 15] };
+      const rows = [];
+      for (let i = 0; i < 12; i++) {
+        const L = Math.pow(10, i * 0.25);
+        rows.push(L.toFixed(3) + "\t" + rhoA(L, sevLayers.rho, sevLayers.h).toFixed(2));
+      }
+      $("sev-data").value = rows.join("\n");
+      $("sev-mode").value = "rho";
+      $("sev-preset").value = "H";
+      renderLayerEditor();
+      parseSev(); drawSev();
+    });
+    renderLayerEditor();
+    parseSev();
+
+    /* ===================== MALLA ===================== */
+    function num(id, d) { const v = +$(id).value; return Number.isFinite(v) ? v : d; }
+    function calcMalla() {
+      const p = {
+        rho1: num("m-rho1", 170), e1: num("m-e1", 1.5), rho2: num("m-rho2", 255), e2: num("m-e2", 4.5), rho3: num("m-rho3", 34),
+        rhoEquiManual: num("m-rhoeq", 138), h: num("m-h", 0.6), lx: num("m-lx", 8), ly: num("m-ly", 6),
+        dx: num("m-dx", 1), dy: num("m-dy", 1), n: Math.max(0, Math.round(num("m-n", 0))), lb: num("m-lb", 3),
+        scond: num("m-scond", 67.4), icc1: num("m-icc1", 2330), sBT: num("m-sbt", 315), vsec: num("m-vsec", 400),
+        zPorc: num("m-z", 6.34), escenario: $("m-esc").value, cp: num("m-cp", 0.534), df: num("m-df", 1),
+        top: num("m-top", 0.5), rhos: num("m-rhos", 3000), hg: num("m-hg", 0.15), peso70: $("m-peso").value === "70",
+        icondKA: num("m-icond", 1.245), tm: num("m-tm", 1084), ta: num("m-ta", 40), k0: 234, tcap: 3.42, tc: num("m-top", 0.5),
+      };
+      const limite = num("m-limrg", 20);
+      const nh = Math.max(1, Math.round(p.ly / p.dy) + 1);
+      const nv = Math.max(1, Math.round(p.lx / p.dx) + 1);
+      const area = p.lx * p.ly;
+      let lt = nh * p.lx + nv * p.ly;
+      if (p.n > 0) lt += p.n * p.lb;
+      const dcond = 2 * Math.sqrt((p.scond * 1e-6) / Math.PI);
+      let rhoEqui = p.rhoEquiManual;
+      if (!Number.isFinite(rhoEqui) || $("m-rhoeq").value === "") {
+        if (p.h <= p.e1) rhoEqui = p.rho1;
+        else {
+          const total = p.e1 + p.e2;
+          rhoEqui = p.rho1 * (p.e1 / total) * 0.7 + p.rho2 * (p.e2 / total) * 0.3 + p.rho3 * 0.1;
+        }
+      }
+      const imt = p.icc1;
+      const iFaseBT = (p.sBT * 1000) / (Math.sqrt(3) * p.vsec);
+      const igBT = iFaseBT / (p.zPorc / 100);
+      let ig = imt * p.cp * p.df;
+      if (p.escenario === "BT") ig = igBT * p.cp * p.df;
+      if (p.escenario === "MAX") ig = Math.max(imt, igBT) * p.cp * p.df;
+      const lnTerm = Math.log((p.tm + p.k0) / (p.ta + p.k0));
+      const sbt = p.icondKA * Math.sqrt(Math.max(1e-4, p.tc / Math.max(1e-4, p.tcap * lnTerm)));
+      const csNum = 0.09 * (1 - rhoEqui / Math.max(1, p.rhos));
+      const cs = Math.max(0, Math.min(1, 1 - csNum / (2 * p.hg + 0.09)));
+      const k = p.peso70 ? 0.157 : 0.116;
+      const vpt = (1000 + 6 * cs * p.rhos) * k / Math.sqrt(Math.max(0.001, p.top));
+      const vct = (1000 + 1.5 * cs * p.rhos) * k / Math.sqrt(Math.max(0.001, p.top));
+      const ratio = p.lx / Math.max(0.1, p.ly) + p.ly / Math.max(0.1, p.lx);
+      const nFactor = Math.sqrt(2 * ratio);
+      const ki = 0.656 + 0.172 * nFactor;
+      let kii = 1;
+      if (p.n > 0) kii = Math.max(0.35, 1 / Math.pow(Math.max(2, p.n), 2 / 3));
+      const d = Math.sqrt(p.dx * p.dy);
+      const dSafe = Math.max(dcond, 0.002);
+      const term1 = (d * d + 16 * p.h * p.h) / (16 * p.h * dSafe);
+      const term2 = Math.pow(d + 2 * p.h, 2) / (d * d + 4 * p.h * p.h);
+      let km = (1 / (2 * Math.PI)) * Math.log(Math.max(1.01, term1 * term2));
+      km *= (0.65 + 0.35 * kii);
+      km = Math.max(0.3, km);
+      const ks = Math.max(0.6, (1 / Math.PI) * (1 / (2 * p.h) + 1 / (d + p.h) + 1 / (3 * (d + 2 * p.h))));
+      const base = rhoEqui * ig / Math.max(1, lt);
+      const vc = base * ki * km;
+      const vp = base * ki * ks;
+      const rmalla = rhoEqui * (1 / Math.max(1, lt) + 1 / Math.sqrt(Math.max(1, 20 * area)));
+      const vpOk = vp < vpt, vcOk = vc < vct, rgOk = rmalla < limite, sOk = sbt <= p.scond + 0.01;
+      const ok = vpOk && vcOk && rgOk && sOk;
+      $("m-estado").innerHTML = `<span class="status ${ok ? "ok" : "bad"}">${ok ? "CUMPLE" : "NO CUMPLE"}</span>`;
+      $("m-o-rho").textContent = fmt(rhoEqui, 1) + " Ω·m";
+      $("m-o-geo").textContent = fmt(area, 1) + " m² · Lt " + fmt(lt, 1) + " m · " + nv + "×" + nh;
+      $("m-o-ig").textContent = fmt(ig, 1) + " A";
+      $("m-o-cs").textContent = fmt(cs, 3);
+      $("m-o-vp").textContent = fmt(vp, 1) + " / " + fmt(vpt, 1) + " V " + (vpOk ? "✓" : "✗");
+      $("m-o-vc").textContent = fmt(vc, 1) + " / " + fmt(vct, 1) + " V " + (vcOk ? "✓" : "✗");
+      $("m-o-rg").textContent = fmt(rmalla, 2) + " Ω " + (rgOk ? "✓" : "✗");
+      $("m-o-s").textContent = fmt(sbt, 2) + " / " + fmt(p.scond, 1) + " mm² " + (sOk ? "✓" : "✗");
+      const recs = [];
+      if (!vpOk) recs.push("Voltaje de paso alto: reduzca Dx/Dy o agregue varillas.");
+      if (!vcOk) recs.push("Voltaje de contacto alto: varillas en esquinas/perímetro.");
+      if (!rgOk) recs.push("Rg alta: aumente área o conductores.");
+      if (!sOk) recs.push("Sección de conductor insuficiente.");
+      if (p.n < 4 && p.lx > 5) recs.push("Recomendado ≥ 4 varillas en esquinas.");
+      if (!recs.length) recs.push("Diseño dentro de criterios de seguridad.");
+      $("m-recs").textContent = recs.join(" ");
+      const c = $("m-canvas").getContext("2d");
+      const W = $("m-canvas").width, Ht = $("m-canvas").height, pad = 36;
+      const tp = themePaint();
+      c.fillStyle = tp.canvas; c.fillRect(0, 0, W, Ht);
+      const sx = (W - 2 * pad) / p.lx, sy = (Ht - 2 * pad) / p.ly;
+      c.strokeStyle = tp.cyan; c.lineWidth = 1.5;
+      for (let i = 0; i < nv; i++) {
+        const x = pad + i * p.dx * sx;
+        c.beginPath(); c.moveTo(x, pad); c.lineTo(x, pad + p.ly * sy); c.stroke();
+      }
+      for (let j = 0; j < nh; j++) {
+        const y = pad + j * p.dy * sy;
+        c.beginPath(); c.moveTo(pad, y); c.lineTo(pad + p.lx * sx, y); c.stroke();
+      }
+      if (p.n > 0) {
+        c.fillStyle = tp.gold;
+        const rods = [[0, 0], [p.lx, 0], [0, p.ly], [p.lx, p.ly]];
+        rods.slice(0, p.n).forEach(([x, y]) => { c.beginPath(); c.arc(pad + x * sx, pad + y * sy, 5, 0, Math.PI * 2); c.fill(); });
+      }
+    }
+    ["m-rho1","m-e1","m-rho2","m-e2","m-rho3","m-rhoeq","m-h","m-lx","m-ly","m-dx","m-dy","m-n","m-lb","m-scond","m-icc1","m-sbt","m-vsec","m-z","m-esc","m-cp","m-df","m-top","m-rhos","m-hg","m-peso","m-icond","m-tm","m-ta","m-limrg"]
+      .forEach((id) => $(id).addEventListener("input", calcMalla));
+
+    /* ===================== ILUMINACIÓN ===================== */
+    const KAPPA_GRID = [0.6, 0.8, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, 5.0];
+    const CU_COLS = [[70,50],[70,30],[70,10],[50,50],[50,30],[50,10],[30,50],[30,30],[30,10]];
+    const CU = {
+      "recessed-modular": [
+        [0.21,0.18,0.16,0.21,0.18,0.16,0.20,0.18,0.16],
+        [0.28,0.24,0.22,0.27,0.24,0.22,0.26,0.24,0.22],
+        [0.32,0.29,0.26,0.31,0.28,0.26,0.30,0.28,0.26],
+        [0.35,0.32,0.29,0.34,0.31,0.29,0.32,0.30,0.28],
+        [0.37,0.34,0.31,0.36,0.33,0.31,0.34,0.32,0.30],
+        [0.41,0.37,0.35,0.39,0.37,0.34,0.38,0.36,0.34],
+        [0.43,0.40,0.38,0.42,0.39,0.37,0.40,0.38,0.37],
+        [0.45,0.42,0.40,0.44,0.41,0.40,0.42,0.40,0.39],
+        [0.47,0.44,0.43,0.46,0.44,0.42,0.44,0.42,0.41],
+        [0.49,0.46,0.45,0.47,0.46,0.44,0.46,0.44,0.43],
+      ],
+      "industrial-reflector": [
+        [0.36,0.31,0.28,0.35,0.31,0.28,0.35,0.31,0.28],
+        [0.45,0.40,0.37,0.44,0.40,0.37,0.44,0.40,0.37],
+        [0.49,0.45,0.40,0.49,0.44,0.40,0.46,0.43,0.40],
+        [0.55,0.49,0.46,0.53,0.49,0.45,0.52,0.48,0.45],
+        [0.58,0.54,0.49,0.57,0.53,0.49,0.55,0.52,0.49],
+        [0.64,0.59,0.55,0.61,0.58,0.55,0.60,0.56,0.54],
+        [0.68,0.63,0.60,0.65,0.62,0.59,0.64,0.61,0.58],
+        [0.70,0.65,0.62,0.67,0.64,0.61,0.65,0.63,0.61],
+        [0.73,0.70,0.67,0.70,0.67,0.65,0.67,0.67,0.64],
+        [0.75,0.72,0.69,0.73,0.70,0.67,0.70,0.70,0.67],
+      ],
+      "suspended-opaque": [
+        [0.26,0.24,0.20,0.26,0.22,0.19,0.24,0.20,0.19],
+        [0.36,0.30,0.28,0.33,0.29,0.26,0.31,0.27,0.24],
+        [0.41,0.36,0.32,0.37,0.33,0.30,0.34,0.30,0.27],
+        [0.45,0.41,0.36,0.41,0.37,0.34,0.37,0.33,0.30],
+        [0.49,0.45,0.40,0.44,0.40,0.37,0.39,0.35,0.33],
+        [0.55,0.50,0.46,0.48,0.45,0.42,0.42,0.39,0.37],
+        [0.58,0.53,0.50,0.51,0.48,0.45,0.45,0.42,0.40],
+        [0.60,0.56,0.53,0.53,0.50,0.48,0.47,0.44,0.42],
+        [0.63,0.59,0.57,0.55,0.53,0.51,0.48,0.46,0.44],
+        [0.65,0.62,0.60,0.57,0.55,0.53,0.50,0.48,0.46],
+      ],
+      "diffusing-shallow": [
+        [0.24,0.21,0.19,0.23,0.21,0.19,0.23,0.20,0.19],
+        [0.30,0.27,0.24,0.29,0.26,0.24,0.29,0.26,0.24],
+        [0.33,0.30,0.27,0.32,0.29,0.27,0.32,0.29,0.27],
+        [0.36,0.33,0.30,0.35,0.32,0.30,0.35,0.32,0.30],
+        [0.39,0.36,0.33,0.38,0.35,0.33,0.33,0.34,0.32],
+        [0.43,0.39,0.37,0.41,0.39,0.36,0.40,0.37,0.36],
+        [0.45,0.41,0.39,0.43,0.41,0.39,0.42,0.40,0.35],
+        [0.46,0.43,0.41,0.44,0.42,0.41,0.43,0.42,0.40],
+        [0.48,0.45,0.44,0.46,0.45,0.43,0.45,0.44,0.42],
+        [0.50,0.47,0.46,0.48,0.47,0.45,0.47,0.45,0.44],
+      ],
+    };
+    const SPACES = {
+      pasillo: { Em: 100, CM: 0.8, table: "diffusing-shallow" },
+      aula: { Em: 300, CM: 0.8, table: "recessed-modular" },
+      oficina: { Em: 500, CM: 0.8, table: "recessed-modular" },
+      taller: { Em: 500, CM: 0.6, table: "industrial-reflector" },
+      "sala-electricidad": { Em: 500, CM: 0.6, table: "recessed-modular" },
+      almacen: { Em: 100, CM: 0.6, table: "industrial-reflector" },
+      banos: { Em: 200, CM: 0.8, table: "diffusing-shallow" },
+      cocina: { Em: 500, CM: 0.6, table: "industrial-reflector" },
+    };
+    function snapKappa(k) {
+      const g = KAPPA_GRID;
+      if (k <= g[0]) return g[0];
+      if (k >= g[g.length - 1]) return g[g.length - 1];
+      for (let i = 0; i < g.length - 1; i++) {
+        if (k >= g[i] && k <= g[i + 1]) {
+          const t = (k - g[i]) / (g[i + 1] - g[i]);
+          return t + 1e-9 < 0.4 ? g[i] : g[i + 1];
+        }
+      }
+      return g[g.length - 1];
+    }
+    function lookupCu(tableId, kappa, ceil, wall) {
+      const rows = CU[tableId];
+      const snapped = snapKappa(kappa);
+      const ri = KAPPA_GRID.indexOf(snapped);
+      const ci = CU_COLS.findIndex((c) => c[0] === ceil && c[1] === wall);
+      if (ri < 0 || ci < 0) return { cu: NaN, snapped };
+      return { cu: rows[ri][ci], snapped };
+    }
+    function aspectScore(nA, nL, a, b) { return Math.abs(nA / nL - a / b); }
+    function bumpGrid(nA, nL, Ncalc, a, b) {
+      let guard = 0;
+      while (nA * nL < Ncalc && guard < 16) {
+        guard++;
+        const cands = [{ nA: nA + 1, nL }, { nA, nL: nL + 1 }].filter((c) => c.nA * c.nL >= Ncalc);
+        if (!cands.length) { nA++; nL++; continue; }
+        cands.sort((x, y) => aspectScore(x.nA, x.nL, a, b) - aspectScore(y.nA, y.nL, a, b) || x.nA * x.nL - y.nA * y.nL);
+        nA = cands[0].nA; nL = cands[0].nL;
+      }
+      return { nA, nL };
+    }
+    function calcLux() {
+      const a = +$("lx-a").value, b = +$("lx-b").value, H = +$("lx-H").value, PT = +$("lx-pt").value, d = +$("lx-d").value;
+      const Em = +$("lx-em").value, CM = +$("lx-cm").value, phiL = +$("lx-phi").value, watts = +$("lx-w").value;
+      const ceil = +$("lx-ceil").value, wall = +$("lx-wall").value;
+      const h = H - PT - d, S = a * b, kappa = h > 0 ? S / (h * (a + b)) : NaN;
+      const cuR = lookupCu($("lx-table").value, kappa, ceil, wall);
+      const phiT = cuR.cu > 0 && CM > 0 ? (Em * S) / (cuR.cu * CM) : NaN;
+      const Ncalc = Number.isFinite(phiT) && phiL > 0 ? Math.ceil(phiT / phiL) : NaN;
+      let dist = null;
+      if (Ncalc >= 1) {
+        const nAnchoRaw = Math.sqrt((Ncalc * a) / b);
+        const nA0 = Math.max(1, Math.round(nAnchoRaw));
+        const nL0 = Math.max(1, Math.round(Ncalc / nA0));
+        const g = bumpGrid(nA0, nL0, Ncalc, a, b);
+        dist = { nA: g.nA, nL: g.nL, Ninst: g.nA * g.nL, nAnchoRaw, eA: a / g.nA, eL: b / g.nL };
+      }
+      const EmReal = dist && cuR.cu > 0 ? (dist.Ninst * phiL * cuR.cu * CM) / S : NaN;
+      $("lx-phiT").innerHTML = fmt(phiT, 0) + " <small>lm</small>";
+      $("lx-geo").textContent = fmt(h, 2) + " m · " + fmt(S, 2) + " m² · κ " + fmt(kappa, 2);
+      $("lx-cu").textContent = fmt(cuR.cu, 2) + " (κ→" + fmt(cuR.snapped, 2) + ")";
+      $("lx-n").textContent = (Ncalc || "—") + " / " + (dist ? dist.Ninst + " (" + dist.nA + "×" + dist.nL + ")" : "—");
+      $("lx-real").textContent = fmt(EmReal, 0) + " lx · " + (dist && watts ? fmt(watts * dist.Ninst, 0) + " W" : "—");
+      const nInv = +$("lx-inv-n").value;
+      $("lx-inv").textContent = fmt((nInv * phiL * cuR.cu * CM) / S, 0) + " lx";
+      const ctx = $("lx-plan").getContext("2d");
+      const W = $("lx-plan").width, Ht = $("lx-plan").height, pad = 36;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, Ht);
+      const sx = (W - 2 * pad) / a, sy = (Ht - 2 * pad) / b;
+      ctx.strokeStyle = tp.cyan2; ctx.strokeRect(pad, pad, a * sx, b * sy);
+      if (dist) {
+        ctx.fillStyle = tp.gold;
+        for (let i = 0; i < dist.nA; i++) for (let j = 0; j < dist.nL; j++) {
+          const x = pad + (i + 0.5) * dist.eA * sx;
+          const y = pad + (j + 0.5) * dist.eL * sy;
+          ctx.beginPath(); ctx.arc(x, y, 7, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      const Ncent = dist ? dist.Ninst : 0;
+      const Pu = watts > 0 ? watts : 40;
+      const P = Ncent * Pu;
+      const supply = $("lx-sup").value;
+      const V = 220, cos = 0.9, L = +$("lx-len").value || 15;
+      const I = supply === "3x380" ? P / (Math.sqrt(3) * 380 * cos) : P / (V * cos);
+      const breakers = [6, 10, 13, 16, 20, 25, 32, 40, 50, 63];
+      const nextBr = (x) => breakers.find((b) => b + 1e-9 >= x) || 63;
+      const InG = nextBr(I * 1.1);
+      const wires = [{ s: 1.5, Iz: 16 }, { s: 2.5, Iz: 20 }, { s: 4, Iz: 25 }, { s: 6, Iz: 32 }, { s: 10, Iz: 50 }, { s: 16, Iz: 63 }];
+      const feed = wires.find((w) => w.Iz >= InG) || wires[wires.length - 1];
+      const maxC = Math.max(1, Math.floor((0.9 * 16 * V) / Pu));
+      const nCirc = Math.max(1, Math.ceil(Ncent / maxC));
+      const nRcd = Math.ceil(nCirc / 3);
+      $("lx-p").textContent = fmt(P, 0) + " W";
+      $("lx-i").textContent = fmt(I, 2) + " A / " + InG + " A";
+      $("lx-feed").textContent = feed.s + " mm² · Iz " + feed.Iz + " A";
+      $("lx-circ").textContent = nCirc + " circ. · " + nRcd + " ID 30 mA";
+      let html = "<thead><tr><th>Circuito</th><th>Centros</th><th>P</th><th>In</th></tr></thead><tbody>";
+      let left = Ncent;
+      for (let i = 0; i < nCirc; i++) {
+        const c = Math.min(maxC, left); left -= c;
+        const Pc = c * Pu;
+        const Ic = Pc / (V * cos);
+        html += `<tr><td>C${i + 1} alumbrado</td><td class="mono">${c}</td><td class="mono">${fmt(Pc, 0)} W</td><td class="mono">${nextBr(Ic * 1.1)} A</td></tr>`;
+      }
+      $("lx-board").innerHTML = html + "</tbody>";
+    }
+    $("lx-space").addEventListener("change", () => {
+      const s = SPACES[$("lx-space").value];
+      if (!s) return;
+      $("lx-em").value = s.Em; $("lx-cm").value = s.CM; $("lx-table").value = s.table;
+      calcLux();
+    });
+    $("lx-ex").addEventListener("change", () => {
+      if ($("lx-ex").value === "A") {
+        Object.assign($("lx-a"), { value: 3.2 }); $("lx-b").value = 4; $("lx-H").value = 2.7; $("lx-pt").value = 0.55;
+        $("lx-d").value = 0.35; $("lx-em").value = 100; $("lx-cm").value = 0.8; $("lx-phi").value = 2200; $("lx-w").value = 24;
+        $("lx-table").value = "recessed-modular"; $("lx-ceil").value = 70; $("lx-wall").value = 30; $("lx-inv-n").value = 4;
+      } else if ($("lx-ex").value === "B") {
+        $("lx-a").value = 5.87; $("lx-b").value = 7.24; $("lx-H").value = 2.9; $("lx-pt").value = 1; $("lx-d").value = 0;
+        $("lx-em").value = 500; $("lx-cm").value = 0.6; $("lx-phi").value = 5000; $("lx-w").value = 40;
+        $("lx-table").value = "recessed-modular"; $("lx-inv-n").value = 20;
+      }
+      calcLux();
+    });
+    ["lx-a","lx-b","lx-H","lx-pt","lx-d","lx-em","lx-cm","lx-phi","lx-w","lx-ceil","lx-wall","lx-table","lx-inv-n","lx-sup","lx-len"]
+      .forEach((id) => $(id).addEventListener("input", calcLux));
+
+    /* ===================== HIDRO ===================== */
+    let hyDir = "lm";
+    let hySync = false;
+    function renderVol() {
+      const v = +$("hy-vol").value;
+      if (!Number.isFinite(v) || v < 0) return;
+      const L = hyDir === "lm" ? v : v * 1000;
+      const m3 = L / 1000;
+      $("hy-vol-out").innerHTML = hyDir === "lm" ? fmt(m3, 6) + " <small>m³</small>" : fmt(L, 4) + " <small>L</small>";
+      $("hy-mass").textContent = fmt(L, 1) + " kg";
+      $("hy-weight").textContent = fmt(m3 * RHO * G / 1000, 3) + " kN";
+      $("hy-fill").style.width = (Math.min(1, m3) * 100) + "%";
+    }
+    function setQ(lps) {
+      hySync = true;
+      $("hy-lps").value = lps;
+      $("hy-cms").value = lps / 1000;
+      $("hy-cmh").value = (lps / 1000) * 3600;
+      $("hy-lpm").textContent = fmt(lps * 60, 2) + " L/min";
+      $("hy-day").textContent = fmt((lps / 1000) * 86400, 2) + " m³/día";
+      hySync = false;
+    }
+    function renderQ() { setQ(+$("hy-lps").value || 0); }
+    function classifyP(pKw, el) {
+      el.className = "status";
+      if (pKw <= 0) { el.textContent = "Ingrese caudal y salto"; return; }
+      if (pKw < 5) { el.classList.add("pico"); el.textContent = "Pico hidro · P < 5 kW · RGR N°04"; }
+      else if (pKw <= 300) { el.classList.add("micro"); el.textContent = "Microhidro · 5 a 300 kW · RGR N°04 / Ley 21.118"; }
+      else if (pKw <= 500) { el.classList.add("over"); el.textContent = "Sobre 300 kW · Clase B cubre BT hasta 500 kW (D.S. N° 92)"; }
+      else { el.classList.add("out"); el.textContent = "Sobre 500 kW · fuera de Clase B en BT"; }
+    }
+    function renderP() {
+      const q = $("hy-pqu").value === "lps" ? (+$("hy-pq").value || 0) / 1000 : (+$("hy-pq").value || 0);
+      const h = +$("hy-ph").value || 0;
+      const eta = Math.max(0, (+$("hy-pn").value || 0) / 100);
+      const pHyd = RHO * G * q * h / 1000;
+      const pKw = pHyd * eta;
+      $("hy-pout").innerHTML = fmt(pKw, 3) + " <small>kW</small>";
+      $("hy-qsi").textContent = fmt(q, 6) + " m³/s";
+      $("hy-phyd").textContent = fmt(pHyd, 3) + " kW";
+      $("hy-kwh").textContent = fmt(pKw * 24, 1) + " kWh/día";
+      $("hy-pvol").textContent = fmt(q * 86400, 1) + " m³/día";
+      classifyP(pKw, $("hy-pclass"));
+    }
+    function renderPot() {
+      const z1 = +$("hy-z1").value, z2 = +$("hy-z2").value;
+      const hBruto = Math.max(0, z1 - z2);
+      const loss = Math.max(0, +$("hy-loss").value || 0);
+      const hNeto = hBruto - loss;
+      const q = $("hy-pqu").value === "lps" ? (+$("hy-pq").value || 0) / 1000 : (+$("hy-pq").value || 0);
+      const eta = Math.max(0, (+$("hy-pn").value || 0) / 100);
+      const fp = Math.max(0, (+$("hy-fp").value || 0) / 100);
+      const pTeo = RHO * G * q * hBruto / 1000;
+      const pTec = hNeto > 0 ? RHO * G * q * hNeto * eta / 1000 : 0;
+      const hours = 8760 * fp;
+      const kwh = pTec * hours;
+      $("hy-eout").innerHTML = kwh >= 1000 ? fmt(kwh / 1000, 2) + " <small>MWh/año</small>" : fmt(kwh, 1) + " <small>kWh/año</small>";
+      $("hy-heads").textContent = fmt(hBruto, 2) + " / " + fmt(Math.max(0, hNeto), 2) + " m";
+      $("hy-pteo").textContent = fmt(pTeo, 2) + " / " + fmt(pTec, 2) + " kW";
+      $("hy-hours").textContent = fmt(hours, 0) + " h";
+      $("hy-spec").textContent = fmt(hNeto > 0 ? (RHO * G * hNeto * eta) / 3.6e6 : 0, 4);
+    }
+    $("hy-dir-lm").addEventListener("click", () => {
+      const L = hyDir === "lm" ? +$("hy-vol").value : +$("hy-vol").value * 1000;
+      hyDir = "lm"; $("hy-vol-label").textContent = "Volumen en litros"; $("hy-vol").value = L;
+      $("hy-dir-lm").classList.add("primary"); $("hy-dir-ml").classList.remove("primary");
+      renderVol();
+    });
+    $("hy-dir-ml").addEventListener("click", () => {
+      const L = hyDir === "lm" ? +$("hy-vol").value : +$("hy-vol").value * 1000;
+      hyDir = "ml"; $("hy-vol-label").textContent = "Volumen en m³"; $("hy-vol").value = L / 1000;
+      $("hy-dir-ml").classList.add("primary"); $("hy-dir-lm").classList.remove("primary");
+      renderVol();
+    });
+    $("hy-vol").addEventListener("input", renderVol);
+    document.querySelectorAll("[data-vol]").forEach((b) => b.addEventListener("click", () => {
+      const L = +b.dataset.vol; $("hy-vol").value = hyDir === "lm" ? L : L / 1000; renderVol();
+    }));
+    $("hy-lps").addEventListener("input", () => { if (!hySync) setQ(+$("hy-lps").value || 0); });
+    $("hy-cms").addEventListener("input", () => { if (!hySync) setQ((+$("hy-cms").value || 0) * 1000); });
+    $("hy-cmh").addEventListener("input", () => { if (!hySync) setQ(((+$("hy-cmh").value || 0) / 3600) * 1000); });
+    ["hy-pq","hy-pqu","hy-ph","hy-pn","hy-z1","hy-z2","hy-loss","hy-fp"].forEach((id) => {
+      $(id).addEventListener("input", () => { renderP(); renderPot(); });
+    });
+
+    /* ===================== CONSUMO 6 kW ===================== */
+    const EQUIP = [
+      { id: "nevera", name: "Nevera doméstica", cat: "frio", P: 150, I: 0.65, lo: 0.45, hi: 0.80, h: 24, duty: 0.35, kwhRef: [28, 38] },
+      { id: "freezer", name: "Freezer bodega 1,12 m³", cat: "frio", P: 400, I: 1.8, lo: 1.3, hi: 2.2, h: 24, duty: 0.40, kwhRef: [90, 140], alertI: 2.4 },
+      { id: "cal1", name: "Calefactor pos. 1 (400 W)", cat: "term", P: 400, I: 1.74, lo: 1.65, hi: 1.85, h: 5, duty: 1, kwhRef: [30, 50], winter: true },
+      { id: "cal2", name: "Calefactor pos. 2 (800 W)", cat: "term", P: 800, I: 3.48, lo: 3.30, hi: 3.65, h: 0, duty: 1, kwhRef: [0, 0], winter: true },
+      { id: "cal3", name: "Calefactor pos. 3 (1 200 W)", cat: "term", P: 1200, I: 5.22, lo: 5.00, hi: 5.50, h: 0, duty: 1, kwhRef: [90, 130], winter: true },
+      { id: "horno", name: "Horno eléctrico", cat: "term", P: 2200, I: 9.6, lo: 8.7, hi: 10.5, h: 1, duty: 0.33, kwhRef: [18, 30] },
+      { id: "lavav", name: "Lavavajillas (ciclo mixto)", cat: "ciclo", P: 2000, I: 8.7, lo: 0.5, hi: 9.6, h: 1.2, duty: 0.25, kwhRef: [10, 18] },
+      { id: "lavad", name: "Lavadora", cat: "ciclo", P: 450, I: 2.0, lo: 1.6, hi: 2.4, h: 1, duty: 0.3, kwhRef: [6, 15] },
+      { id: "tv", name: "Televisor LED", cat: "ciclo", P: 80, I: 0.35, lo: 0.25, hi: 0.45, h: 4, duty: 1, kwhRef: [8, 15] },
+      { id: "mac", name: "Notebook (uso/carga)", cat: "ciclo", P: 18, I: 0.08, lo: 0.04, hi: 0.22, h: 6, duty: 1, kwhRef: [3, 7] },
+      { id: "bodega", name: "LED bodega / leñera", cat: "acc", P: 80, I: 0.35, lo: 0.25, hi: 0.45, h: 3.5, duty: 1, kwhRef: [10, 25] },
+      { id: "porton", name: "Motor portón", cat: "acc", P: 500, I: 2.4, lo: 2.0, hi: 3.2, h: 0.15, duty: 1, kwhRef: [2, 6] },
+    ];
+    let eqState = EQUIP.map((e) => ({ ...e, Imeas: e.I, hours: e.h, duty: e.duty, on: e.id === "cal3" ? false : true }));
+    function buildConsumoTable() {
+      const tb = $("c-table");
+      tb.innerHTML = `<thead><tr><th></th><th>Equipo</th><th>P nom</th><th>I ref</th><th>I medida</th><th>h/día</th><th>Duty</th><th>kWh/mes</th><th>$/mes</th><th>Estado</th></tr></thead><tbody>` +
+        eqState.map((e, i) => `<tr>
+          <td><input type="checkbox" data-i="${i}" class="c-on" ${e.on ? "checked" : ""}></td>
+          <td>${e.name}</td>
+          <td class="mono">${e.P} W</td>
+          <td class="mono">${e.I} A</td>
+          <td><input type="number" step="any" value="${e.Imeas}" data-i="${i}" data-f="Imeas" style="width:90px"></td>
+          <td><input type="number" step="any" value="${e.hours}" data-i="${i}" data-f="hours" style="width:80px"></td>
+          <td><input type="number" step="any" min="0" max="1" value="${e.duty}" data-i="${i}" data-f="duty" style="width:80px"></td>
+          <td class="mono" id="c-k-${i}">—</td>
+          <td class="mono" id="c-$_${i}">—</td>
+          <td id="c-st-${i}">—</td>
+        </tr>`).join("") + "</tbody>";
+      tb.querySelectorAll("input").forEach((inp) => inp.addEventListener("input", () => {
+        const i = +inp.dataset.i;
+        if (inp.classList.contains("c-on")) eqState[i].on = inp.checked;
+        else eqState[i][inp.dataset.f] = +inp.value;
+        renderConsumo();
+      }));
+      $("c-sim").innerHTML = eqState.map((e, i) => `<label class="check"><input type="checkbox" data-sim="${i}" ${["nevera","freezer","cal3","horno"].includes(e.id) ? "checked" : ""}> ${e.name} (${e.P} W)</label>`).join("");
+      $("c-sim").querySelectorAll("input").forEach((inp) => inp.addEventListener("input", renderConsumo));
+    }
+    function renderConsumo() {
+      const V = +$("c-v").value || 230;
+      const tarifa = +$("c-tarifa").value || 0;
+      const season = $("c-season").value;
+      const kwMax = +$("c-kw").value || 6;
+      let tot = 0, frio = 0, term = 0, rest = 0, fz = 0;
+      eqState.forEach((e, i) => {
+        const winterOff = season === "verano" && e.winter;
+        const hours = winterOff ? 0 : e.hours;
+        const kwh = e.on ? (e.P / 1000) * hours * 30 * e.duty : 0;
+        tot += kwh;
+        if (e.cat === "frio") frio += kwh;
+        else if (e.cat === "term") term += kwh;
+        else rest += kwh;
+        if (e.id === "freezer") fz = kwh;
+        const stEl = $("c-st-" + i);
+        let st = "—", cls = "ok";
+        if (!e.on || winterOff) { st = "fuera"; cls = "warn"; }
+        else if (e.alertI && e.Imeas > e.alertI) { st = "alerta I continua"; cls = "bad"; }
+        else if (e.Imeas < e.lo * 0.85 || e.Imeas > e.hi * 1.15) { st = "fuera de ±15 %"; cls = "warn"; }
+        else if (e.Imeas < e.lo || e.Imeas > e.hi) { st = "revisar"; cls = "warn"; }
+        else st = "normal";
+        if (stEl) { stEl.innerHTML = `<span class="status ${cls}">${st}</span>`; }
+        if ($("c-k-" + i)) $("c-k-" + i).textContent = fmt(kwh, 1);
+        if ($("c-$_" + i)) $("c-$_" + i).textContent = "$" + fmt(kwh * tarifa, 0);
+      });
+      $("c-kwh").innerHTML = fmt(tot, 0) + " <small>kWh/mes</small>";
+      $("c-cost").textContent = "$" + fmt(tot * tarifa, 0);
+      $("c-day").textContent = fmt(tot / 30, 1) + " kWh/día · $" + fmt(tot * tarifa / 30, 0);
+      $("c-split").textContent = fmt(frio, 0) + " / " + fmt(term, 0) + " / " + fmt(rest, 0) + " kWh";
+      $("c-fz").textContent = tot > 0 ? fmt(100 * fz / tot, 0) + " %" : "—";
+      const band = season === "verano" ? [170, 260] : [270, 420];
+      $("c-band").textContent = "Banda de referencia " + season + ": " + band[0] + "–" + band[1] + " kWh/mes. " +
+        (tot < band[0] ? "Bajo la banda." : tot > band[1] ? "Sobre la banda: revisar freezer y térmicas." : "Dentro de la banda de referencia.");
+      let pSim = 0;
+      $("c-sim").querySelectorAll("input").forEach((inp) => { if (inp.checked) pSim += eqState[+inp.dataset.sim].P; });
+      $("c-sim-p").innerHTML = fmt(pSim / 1000, 2) + " <small>kW</small>";
+      const note = pSim > kwMax * 1000
+        ? "Excede el empalme de " + kwMax + " kW. Evite horno + calefactor 1 200 W + arranque de freezer."
+        : "Dentro del empalme. Reserve margen para LRA del freezer (8–14 A) y del portón (12–20 A).";
+      $("c-sim-note").textContent = note;
+      $("c-sim-note").style.color = pSim > kwMax * 1000 ? "var(--hot)" : "var(--muted)";
+    }
+    ["c-v","c-kw","c-tarifa","c-season"].forEach((id) => $(id).addEventListener("input", renderConsumo));
+    buildConsumoTable();
+
+    /* ===================== TAN / DSP / BANCO ===================== */
+    const IN_NORM = [16,25,32,40,50,63,80,100,125,160,200,250,315,400,500,630,800,1000,1250,1600,2000,2500,3200,4000,5000,6300];
+    const XL3 = [
+      { codigo: "XL3-160", nombre: "XL³ 160", I: 160, icw: 25, icc: 25, ip: [30,40,43,55], sal: 12, sis: false, dim: "575×1050×175" },
+      { codigo: "XL3-800", nombre: "XL³ 800", I: 800, icw: 36, icc: 50, ip: [30,31,40,43,55], sal: 36, sis: true, dim: "700×2000×400" },
+      { codigo: "XL3-4000", nombre: "XL³ 4000", I: 4000, icw: 85, icc: 100, ip: [30,31,40,41,54,55], sal: 72, sis: true, dim: "900×2200×600" },
+      { codigo: "XL3-6300", nombre: "XL³ 6300", I: 6300, icw: 100, icc: 120, ip: [30,31,40,41,54,55,65], sal: 96, sis: true, dim: "1000×2300×800" },
+    ];
+    function fRed(r) { return r === "N+1" ? 1.2 : r === "2N" ? 1.05 : 1; }
+    function rdf(n) { n = Math.max(1, n); return n === 1 ? 1 : n <= 3 ? 0.9 : n <= 5 ? 0.8 : n <= 9 ? 0.7 : n <= 15 ? 0.6 : 0.5; }
+    function calcTan() {
+      const P = +$("t-p").value, V = +$("t-v").value, c = +$("t-cos").value, eta = +$("t-eta").value;
+      const racks = Math.max(1, +$("t-racks").value | 0), ip = +$("t-ip").value;
+      const red = $("t-red").value, harm = $("t-h").value === "1", sis = $("t-sis").checked;
+      const inBase = (P * 1000) / (Math.sqrt(3) * V * c * eta);
+      const inDis = inBase * fRed(red);
+      const inSel = IN_NORM.find((v) => v + 1e-9 >= inDis) || IN_NORM[IN_NORM.length - 1];
+      let icc = inSel <= 125 ? 16 : inSel <= 250 ? 25 : inSel <= 630 ? 36 : inSel <= 1600 ? 50 : 65;
+      if (P >= 200) icc = Math.max(icc, 36);
+      if (P >= 300) icc = Math.max(icc, 50);
+      if (red === "2N") icc = Math.min(icc * 1.15, 100);
+      const rdfV = rdf(racks);
+      let ku = 0.8 + (harm ? 0.08 : 0) + (red === "2N" ? 0.05 : 0); ku = Math.min(ku, 0.98);
+      const pLoss = 0.55 * inDis * rdfV * ku * (1 + (harm ? 0.12 : 0));
+      const kdis = inSel <= 160 ? 2.8 : inSel <= 400 ? 4.5 : inSel <= 800 ? 7 : inSel <= 4000 ? 14 : 20;
+      const rIp = ip >= 65 ? 1.25 : ip >= 54 ? 1.12 : ip >= 40 ? 1.05 : 1;
+      const rDens = 1 + Math.min(0.25, Math.max(0, (racks - 4) * 0.02));
+      const dT = Math.min(55, Math.max(10, (pLoss / kdis) * rIp * rDens));
+      const env = XL3.find((e) => e.I >= inSel && e.icw + 0.1 >= icc && e.ip.some((x) => x >= ip) && racks <= e.sal && (!sis || e.sis)) || XL3[XL3.length - 1];
+      let fam = "TT-M";
+      if (inSel <= 125 && racks <= 6 && red === "N") fam = "TT-S";
+      else if (racks <= 8 && inSel <= 250) fam = "TT-E";
+      const alta = red !== "N" || racks >= 8 || inSel >= 250 || sis;
+      const muy = (red === "2N" && (racks >= 12 || inSel >= 400)) || (sis && harm && racks >= 10);
+      const forma = muy ? "4b" : alta ? "3b" : "2b";
+      $("t-insel").innerHTML = fmt(inSel, 0) + " <small>A · " + env.codigo + "</small>";
+      $("t-in").textContent = fmt(inBase, 1) + " / " + fmt(inDis, 1) + " A";
+      $("t-icc").textContent = fmt(icc, 1) + " / " + fmt(icc, 1) + " kA";
+      $("t-th").textContent = fmt(rdfV, 2) + " / " + fmt(ku, 2) + " / " + fmt(dT, 1) + " °C " + (dT < 30 ? "✓" : "≥30 °C");
+      $("t-fam").textContent = fam + " · forma " + forma + " · IP" + env.ip.find((x) => x >= ip);
+      $("t-notes").textContent = env.nombre + " · " + env.dim + " mm · Icw " + env.icw + " kA. " +
+        (dT >= 30 ? "ΔT ≥ 30 °C: mayor envolvente o ventilación." : "Calentamiento de prediseño bajo 30 °C.");
+    }
+    function clarke(ia, ib, ic) {
+      const a = (2 / 3) * (ia - 0.5 * ib - 0.5 * ic);
+      const b = (2 / 3) * ((Math.sqrt(3) / 2) * ib - (Math.sqrt(3) / 2) * ic);
+      const z = (ia + ib + ic) / 3;
+      return { a, b, z };
+    }
+    function calcDsp() {
+      const I1 = +$("d-i1").value, h3 = +$("d-h3").value, h5 = +$("d-h5").value, h7 = +$("d-h7").value;
+      const thdi = I1 > 1e-9 ? 100 * Math.sqrt(h3 * h3 + h5 * h5 + h7 * h7) / I1 : 0;
+      $("d-thdi").innerHTML = fmt(thdi, 2) + " <small>%</small>";
+      const ctx = $("d-wave").getContext("2d");
+      const W = $("d-wave").width, H = $("d-wave").height, n = 360;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, H);
+      const mid = H / 2, amp = H * 0.22;
+      const wave = (phase, harm) => {
+        const pts = [];
+        for (let i = 0; i < n; i++) {
+          const wt = (i / n) * 2 * Math.PI + phase;
+          const v = I1 * Math.sin(wt) + h3 * Math.sin(3 * wt) + h5 * Math.sin(5 * wt + Math.PI) + h7 * Math.sin(7 * wt);
+          pts.push(v);
+        }
+        return pts;
+      };
+      const ia = wave(0), ib = wave(-2 * Math.PI / 3), ic = wave(2 * Math.PI / 3);
+      const peak = Math.max(...ia.map(Math.abs), ...ib.map(Math.abs), ...ic.map(Math.abs), 1);
+      const draw = (arr, color) => {
+        ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.beginPath();
+        arr.forEach((v, i) => {
+          const x = (i / (n - 1)) * W, y = mid - (v / peak) * amp;
+          i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+        });
+        ctx.stroke();
+      };
+      draw(ia, tp.cyan); draw(ib, tp.gold); draw(ic, tp.hot);
+      const cl = clarke(ia[0], ib[0], ic[0]);
+      ctx.fillStyle = tp.muted; ctx.font = "12px IBM Plex Sans";
+      ctx.fillText("Ia cian · Ib oro · Ic rojo  ·  αβ0 t0: " + fmt(cl.a, 2) + ", " + fmt(cl.b, 2) + ", " + fmt(cl.z, 2), 10, 18);
+    }
+    function calcBank() {
+      const V = +$("b-v").value, I = +$("b-i").value;
+      const P = V * I;
+      $("b-p").textContent = fmt(P, 1) + " W";
+      $("b-m").textContent = fmt(100 * (1 - I / 5), 0) + " % I · " + fmt(100 * (1 - P / 120), 0) + " % P";
+      $("b-ilim").textContent = fmt(Math.min(5, I * 1.15), 2) + " A";
+      let st = "En línea";
+      if (V > 30 || I > 5 || P > 120) st = "Fuera de la KPS305D / 120 W";
+      else if (Math.abs(V - 24) > 1) st = "Revisar bus (objetivo 24 V)";
+      $("b-st").textContent = st;
+    }
+    ["t-p","t-v","t-cos","t-eta","t-racks","t-ip","t-red","t-h","t-sis"].forEach((id) => $(id).addEventListener("input", calcTan));
+    ["d-i1","d-h3","d-h5","d-h7"].forEach((id) => $(id).addEventListener("input", calcDsp));
+    ["b-v","b-i","b-rip"].forEach((id) => $(id).addEventListener("input", calcBank));
+
+    /* ===================== COLOR ===================== */
+    function hexToRgb(hex) {
+      let s = hex.trim().toUpperCase().replace(/^#/, "");
+      if (s.length === 3) s = s.split("").map((c) => c + c).join("");
+      if (!/^[0-9A-F]{6}$/.test(s)) return null;
+      const n = parseInt(s, 16);
+      return { r: ((n >> 16) & 255) / 255, g: ((n >> 8) & 255) / 255, b: (n & 255) / 255 };
+    }
+    function rgbToHsb(rgb) {
+      const r = rgb.r, g = rgb.g, b = rgb.b;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b), d = max - min;
+      const brightness = max * 100;
+      const saturation = max === 0 ? 0 : (d / max) * 100;
+      let hue = 0;
+      if (d !== 0) {
+        if (max === r) hue = 60 * (((g - b) / d) % 6);
+        else if (max === g) hue = 60 * ((b - r) / d + 2);
+        else hue = 60 * ((r - g) / d + 4);
+        if (hue < 0) hue += 360;
+      }
+      return { h: hue, s: saturation, b: brightness };
+    }
+    function renderColor() {
+      const rgb = hexToRgb($("col-hex").value);
+      const sw = $("col-swatch");
+      if (!rgb) {
+        sw.style.background = "transparent";
+        $("col-err").textContent = "Hexadecimal inválido";
+        $("col-hsb").innerHTML = "";
+        $("col-rgb").textContent = "—";
+        $("col-rgb8").textContent = "—";
+        return;
+      }
+      $("col-err").textContent = "";
+      const hex = "#" + $("col-hex").value.trim().replace(/^#/, "");
+      sw.style.background = `rgb(${Math.round(rgb.r * 255)},${Math.round(rgb.g * 255)},${Math.round(rgb.b * 255)})`;
+      $("col-rgb").textContent = fmt(rgb.r, 3) + " · " + fmt(rgb.g, 3) + " · " + fmt(rgb.b, 3);
+      $("col-rgb8").textContent = Math.round(rgb.r * 255) + ", " + Math.round(rgb.g * 255) + ", " + Math.round(rgb.b * 255);
+      const hsb = rgbToHsb(rgb);
+      const cards = [
+        ["Tono (Hue)", hsb.h.toFixed(1) + "°"],
+        ["Saturación", hsb.s.toFixed(1) + "%"],
+        ["Brillo", hsb.b.toFixed(1) + "%"],
+      ];
+      $("col-hsb").innerHTML = cards.map(([t, v]) => `<div class="meta" style="cursor:pointer" data-copy="${v}"><dt>${t}</dt><dd>${v}</dd></div>`).join("");
+      $("col-hsb").querySelectorAll("[data-copy]").forEach((el) => el.addEventListener("click", () => {
+        navigator.clipboard.writeText(el.dataset.copy);
+        $("col-copied").textContent = "Copiado: " + el.dataset.copy;
+      }));
+      $("col-copy").onclick = () => {
+        const txt = `H: ${hsb.h.toFixed(1)}°, S: ${hsb.s.toFixed(1)}%, B: ${hsb.b.toFixed(1)}%`;
+        navigator.clipboard.writeText(txt);
+        $("col-copied").textContent = "Copiado: " + txt;
+      };
+    }
+    $("col-hex").addEventListener("input", renderColor);
+
+    /* init */
+    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); renderColor();
+  })();
+  </script>
+</body>
+</html>
