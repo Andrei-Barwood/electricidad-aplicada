@@ -1,4 +1,14 @@
+# OS / editor
 .DS_Store
+Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# Local QA and batch exports (not published)
+_pdf_out/
+_pdf_verify.py
+_tpl_verify.py
+_tpl_*.png
+_batch_queseria.py
+reportes/

@@ -167,7 +167,26 @@
     main { padding: 28px 28px 40px; min-width: 0; }
     .panel { display: none; }
     .panel.active { display: block; }
-    .hero { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .hero { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; align-items: flex-start; margin-bottom: 20px; }
+    .hero-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+    .pdf-btn[disabled] { opacity: 0.65; cursor: wait; }
+    .tpl-banner {
+      display: none; margin: 0 0 16px; padding: 10px 14px; border-radius: 12px;
+      border: 1px solid var(--nav-active-border); background: var(--micro-bg);
+      font-size: 13.5px; color: var(--foam);
+    }
+    .tpl-banner.show { display: block; }
+    .tpl-banner strong { color: var(--cyan-2); }
+    .tpl-bar { margin: -4px 0 18px; max-width: 560px; }
+    .kw-pill {
+      display: inline-flex; align-items: center; font-family: var(--mono); font-size: 12px; font-weight: 600;
+      padding: 3px 9px; border-radius: 999px; background: var(--micro-bg); color: var(--cyan-2);
+      border: 1px solid var(--nav-active-border); letter-spacing: 0.02em;
+    }
+    .card.site { cursor: pointer; }
+    .card.site:hover { transform: translateY(-2px); border-color: var(--cyan); }
+    .card.site .site-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 6px; }
+    .card.site.active-site { border-color: var(--cyan); box-shadow: 0 0 0 3px var(--focus-ring); }
     h2 { font-family: var(--serif); font-size: clamp(26px, 3vw, 38px); font-weight: 650; letter-spacing: -0.03em; }
     h2 span { color: var(--cyan-2); }
     h3 { font-family: var(--serif); font-size: 22px; font-weight: 650; margin-bottom: 6px; }
@@ -258,7 +277,7 @@
       main { padding: 18px 14px 32px; }
     }
     @media print {
-      aside.nav, .row-actions, .chips, .mobile-toggle, .theme-switch { display: none !important; }
+      aside.nav, .row-actions, .chips, .mobile-toggle, .theme-switch, .hero-actions, .pdf-btn, .tpl-bar, .tpl-banner { display: none !important; }
       .app { display: block; }
       .panel { display: block !important; page-break-after: always; }
       body { background: #FFFFFF; color: #303030; }
@@ -284,7 +303,7 @@
         <button class="nav-btn" data-panel="malla"><span class="ico">▦</span> Malla de tierra</button>
         <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
-        <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo 6 kW</button>
+        <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
       </div>
@@ -292,11 +311,12 @@
     </aside>
 
     <main>
+      <div id="tpl-banner" class="tpl-banner" hidden></div>
       <section class="panel active" id="panel-home">
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Siete herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo a 6 kW, prediseño TAN/AHF y conversor de color.</p>
+            <p class="lede">Siete herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -304,9 +324,14 @@
           <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
-          <article class="card home" data-go="consumo"><h3>Consumo 6 kW</h3><p class="sub">Casa-granja a 220–230 V. Pinza True RMS, duty cycle, tarifa y simultaneidad del empalme.</p></article>
-          <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Prediseño IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
+          <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
+          <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Plantillas Los Ríos · 10 a 500 kW</h3>
+          <p class="sub">Instalaciones frecuentes de la región (lechería INDAP, acopio, aserradero, APR, microhidro RGR N°04, Clase B). Una plantilla carga SEV, malla, alumbrado, hidráulica, consumo, TAN y color. Cifras de proyección académica, no reemplazan memoria de cálculo.</p>
+          <div class="grid g2" id="site-gallery"></div>
         </div>
       </section>
 
@@ -316,7 +341,9 @@
             <h2>Sondeo eléctrico <span>vertical</span></h2>
             <p class="lede">Arreglo Schlumberger. Resistividad aparente por recurrencia de Pekeris y filtro digital de Ghosh (1971). Ajuste de modelo de capas en el navegador.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="sev">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-sev">Plantilla Los Ríos</label><select id="tpl-sev" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
             <h3>Datos de campo</h3>
@@ -389,7 +416,9 @@
             <h2>Malla de <span>tierra</span></h2>
             <p class="lede">Motor IEEE Std 80: resistividad equivalente, Ig, Cs, tensiones tolerables y de malla, Rg (Sverak simplificado) y sección de conductor.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="malla">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-malla">Plantilla Los Ríos</label><select id="tpl-malla" class="site-select"></select></div>
         <div class="card">
           <h3>Parámetros</h3>
           <div class="fields five">
@@ -458,7 +487,9 @@
             <h2>Alumbrado por <span>lúmenes</span></h2>
             <p class="lede">Método de lúmenes con tablas CU, snap de κ «como en clases» (40 % del intervalo) y tablero de circuitos. Iluminancias de UNE-EN 12464-1:2012.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="lux">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-lux">Plantilla Los Ríos</label><select id="tpl-lux" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
             <h3>Recinto</h3>
@@ -557,7 +588,9 @@
             <h2>De litros a <span>metros cúbicos</span></h2>
             <p class="lede">El aforo del estero se mide en L/s; la turbina y la potencia se calculan en m³/s. 1 m³ = 1 000 L.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="hydro">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-hydro">Plantilla Los Ríos</label><select id="tpl-hydro" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
             <h3>Conversor de volumen</h3>
@@ -635,10 +668,12 @@
       <section class="panel" id="panel-consumo">
         <div class="hero">
           <div>
-            <h2>Estudio de consumo <span>6 kW</span></h2>
-            <p class="lede">Vivienda-granja, 2 personas, empalme 6 kW, 220–230 V monofásico. Pinza True RMS: lee régimen a 30–60 s, no el pico. Tarifa de energía editable (referencia $252/kWh, sin cargo fijo).</p>
+            <h2>Estudio de <span>consumo</span></h2>
+            <p class="lede">Empalme editable. Casa-granja 6 kW (220–230 V) o plantillas 10–500 kW de Los Ríos. Pinza True RMS: lee régimen a 30–60 s, no el pico. Tarifa de energía editable (referencia $252/kWh, sin cargo fijo).</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="consumo">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-consumo">Plantilla Los Ríos</label><select id="tpl-consumo" class="site-select"></select></div>
         <div class="card">
           <div class="fields four">
             <div class="mini-input"><label>Tensión [V]</label><input id="c-v" type="number" value="230" /></div>
@@ -651,7 +686,7 @@
         </div>
         <div class="card" style="margin-top:16px">
           <h3>Equipos de referencia</h3>
-          <p class="sub">Edita I medida, horas/día y duty. El freezer es el principal sospechoso si no cicla o I &gt; 2,4 A continua.</p>
+          <p class="sub">Edita I medida, horas/día y duty. Cargas de frío deben ciclar; un motor al 100 % ON es falla.</p>
           <div class="table-wrap"><table id="c-table"></table></div>
         </div>
         <div class="grid g2" style="margin-top:16px">
@@ -662,13 +697,13 @@
               <div class="meta"><dt>Costo energía</dt><dd id="c-cost">—</dd></div>
               <div class="meta"><dt>Promedio diario</dt><dd id="c-day">—</dd></div>
               <div class="meta"><dt>Frío / térmico / resto</dt><dd id="c-split">—</dd></div>
-              <div class="meta"><dt>Freezer vs total</dt><dd id="c-fz">—</dd></div>
+              <div class="meta"><dt>Frío vs total</dt><dd id="c-fz">—</dd></div>
             </dl>
             <p class="hint" id="c-band" style="margin-top:10px"></p>
           </div>
           <div class="card">
             <h3>Simultaneidad del empalme</h3>
-            <p class="sub">Marca cargas que podrían coincidir. El empalme 6 kW no cubre horno + calefactor 1 200 W + arranque de freezer.</p>
+            <p class="sub">Marca cargas que podrían coincidir. El empalme no cubre todos los arranques a la vez.</p>
             <div id="c-sim"></div>
             <div class="result"><div class="k">P coincidente</div><div class="v" id="c-sim-p">—</div></div>
             <p id="c-sim-note" class="hint"></p>
@@ -687,12 +722,14 @@
         <div class="hero">
           <div>
             <h2>TAN-Telecom y <span>AHF</span></h2>
-            <p class="lede">Prediseño IEC 61439 de tablero para nodo de telecomunicaciones, DSP 3P+N (Clarke / THDi = Ih/I1) y banco 24 V · 120 W.</p>
+            <p class="lede">Proyectar el tablero IEC 61439 para nodo de telecomunicaciones, DSP 3P+N (Clarke / THDi = Ih/I1) y banco 24 V · 120 W.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="tan">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-tan">Plantilla Los Ríos</label><select id="tpl-tan" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
-            <h3>Prediseño de tablero</h3>
+            <h3>Proyección de tablero</h3>
             <div class="fields two">
               <div class="mini-input"><label>Potencia [kW]</label><input id="t-p" type="number" value="45" step="any" /></div>
               <div class="mini-input"><label>Tensión [V]</label><input id="t-v" type="number" value="400" /></div>
@@ -760,7 +797,9 @@
             <h2>Conversor <span>HEX → HSB</span></h2>
             <p class="lede">Genera valores HSB orgánicos y precisos a partir de un hexadecimal. Clic en una tarjeta para copiar.</p>
           </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="color">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-color">Plantilla Los Ríos</label><select id="tpl-color" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
             <label class="field" for="col-hex">Código hexadecimal</label>
@@ -784,7 +823,7 @@
       </section>
 
       <footer class="site">
-        Andres Barbudo Rodriguez - CFT Paillaco - Todos los Derechos Reservados © - visit <a href="https://www.youtube.com/@kirtantegsingh" target="_blank" rel="noopener">https://www.youtube.com/@kirtantegsingh</a> - visit <a href="https://sacred-geometry.uk" target="_blank" rel="noopener">https://sacred-geometry.uk</a>
+        Andres Barbudo Rodriguez - CFT Paillaco - Todos los Derechos Reservados © - WhatsApp <a href="https://wa.me/andresbarbudo" target="_blank" rel="noopener">@andresbarbudo</a> - visit <a href="https://www.youtube.com/@kirtantegsingh" target="_blank" rel="noopener">https://www.youtube.com/@kirtantegsingh</a> - visit <a href="https://sacred-geometry.uk" target="_blank" rel="noopener">https://sacred-geometry.uk</a>
       </footer>
     </main>
   </div>
@@ -1478,7 +1517,11 @@
       { id: "porton", name: "Motor portón", cat: "acc", P: 500, I: 2.4, lo: 2.0, hi: 3.2, h: 0.15, duty: 1, kwhRef: [2, 6] },
     ];
     let eqState = EQUIP.map((e) => ({ ...e, Imeas: e.I, hours: e.h, duty: e.duty, on: e.id === "cal3" ? false : true }));
-    function buildConsumoTable() {
+    let activeSite = null;
+    let consumoBand = null;
+    let consumoSimOk = "";
+    let consumoSimOver = "";
+    function buildConsumoTable(simIds) {
       const tb = $("c-table");
       tb.innerHTML = `<thead><tr><th></th><th>Equipo</th><th>P nom</th><th>I ref</th><th>I medida</th><th>h/día</th><th>Duty</th><th>kWh/mes</th><th>$/mes</th><th>Estado</th></tr></thead><tbody>` +
         eqState.map((e, i) => `<tr>
@@ -1499,7 +1542,9 @@
         else eqState[i][inp.dataset.f] = +inp.value;
         renderConsumo();
       }));
-      $("c-sim").innerHTML = eqState.map((e, i) => `<label class="check"><input type="checkbox" data-sim="${i}" ${["nevera","freezer","cal3","horno"].includes(e.id) ? "checked" : ""}> ${e.name} (${e.P} W)</label>`).join("");
+      const sim = simIds || eqState.filter((e) => e.sim).map((e) => e.id);
+      const auto = sim.length ? sim : ["nevera", "freezer", "cal3", "horno"];
+      $("c-sim").innerHTML = eqState.map((e, i) => `<label class="check"><input type="checkbox" data-sim="${i}" ${auto.includes(e.id) ? "checked" : ""}> ${e.name} (${e.P} W)</label>`).join("");
       $("c-sim").querySelectorAll("input").forEach((inp) => inp.addEventListener("input", renderConsumo));
     }
     function renderConsumo() {
@@ -1507,7 +1552,7 @@
       const tarifa = +$("c-tarifa").value || 0;
       const season = $("c-season").value;
       const kwMax = +$("c-kw").value || 6;
-      let tot = 0, frio = 0, term = 0, rest = 0, fz = 0;
+      let tot = 0, frio = 0, term = 0, rest = 0;
       eqState.forEach((e, i) => {
         const winterOff = season === "verano" && e.winter;
         const hours = winterOff ? 0 : e.hours;
@@ -1516,7 +1561,6 @@
         if (e.cat === "frio") frio += kwh;
         else if (e.cat === "term") term += kwh;
         else rest += kwh;
-        if (e.id === "freezer") fz = kwh;
         const stEl = $("c-st-" + i);
         let st = "—", cls = "ok";
         if (!e.on || winterOff) { st = "fuera"; cls = "warn"; }
@@ -1532,16 +1576,16 @@
       $("c-cost").textContent = "$" + fmt(tot * tarifa, 0);
       $("c-day").textContent = fmt(tot / 30, 1) + " kWh/día · $" + fmt(tot * tarifa / 30, 0);
       $("c-split").textContent = fmt(frio, 0) + " / " + fmt(term, 0) + " / " + fmt(rest, 0) + " kWh";
-      $("c-fz").textContent = tot > 0 ? fmt(100 * fz / tot, 0) + " %" : "—";
-      const band = season === "verano" ? [170, 260] : [270, 420];
+      $("c-fz").textContent = tot > 0 ? fmt(100 * frio / tot, 0) + " %" : "—";
+      const band = consumoBand || (season === "verano" ? [170, 260] : [270, 420]);
       $("c-band").textContent = "Banda de referencia " + season + ": " + band[0] + "–" + band[1] + " kWh/mes. " +
-        (tot < band[0] ? "Bajo la banda." : tot > band[1] ? "Sobre la banda: revisar freezer y térmicas." : "Dentro de la banda de referencia.");
+        (tot < band[0] ? "Bajo la banda." : tot > band[1] ? "Sobre la banda: revisar cargas de frío y coincidencia." : "Dentro de la banda de referencia.");
       let pSim = 0;
       $("c-sim").querySelectorAll("input").forEach((inp) => { if (inp.checked) pSim += eqState[+inp.dataset.sim].P; });
       $("c-sim-p").innerHTML = fmt(pSim / 1000, 2) + " <small>kW</small>";
       const note = pSim > kwMax * 1000
-        ? "Excede el empalme de " + kwMax + " kW. Evite horno + calefactor 1 200 W + arranque de freezer."
-        : "Dentro del empalme. Reserve margen para LRA del freezer (8–14 A) y del portón (12–20 A).";
+        ? (consumoSimOver || ("Excede el empalme de " + kwMax + " kW. Evite horno + calefactor 1 200 W + arranque de freezer."))
+        : (consumoSimOk || "Dentro del empalme. Reserve margen para LRA del freezer (8–14 A) y del portón (12–20 A).");
       $("c-sim-note").textContent = note;
       $("c-sim-note").style.color = pSim > kwMax * 1000 ? "var(--hot)" : "var(--muted)";
     }
@@ -1589,7 +1633,7 @@
       $("t-th").textContent = fmt(rdfV, 2) + " / " + fmt(ku, 2) + " / " + fmt(dT, 1) + " °C " + (dT < 30 ? "✓" : "≥30 °C");
       $("t-fam").textContent = fam + " · forma " + forma + " · IP" + env.ip.find((x) => x >= ip);
       $("t-notes").textContent = env.nombre + " · " + env.dim + " mm · Icw " + env.icw + " kA. " +
-        (dT >= 30 ? "ΔT ≥ 30 °C: mayor envolvente o ventilación." : "Calentamiento de prediseño bajo 30 °C.");
+        (dT >= 30 ? "ΔT ≥ 30 °C: mayor envolvente o ventilación." : "Calentamiento proyectado bajo 30 °C.");
     }
     function clarke(ia, ib, ic) {
       const a = (2 / 3) * (ia - 0.5 * ib - 0.5 * ic);
@@ -1702,8 +1746,1043 @@
     }
     $("col-hex").addEventListener("input", renderColor);
 
+    /* ===================== PDF (LuxCalc Pro: span-por-palabra + html2canvas) ===================== */
+    const PDF_FONT = 'IBM Plex Sans, Arial, "Noto Sans", Helvetica, sans-serif';
+    const PDF_MONO = 'IBM Plex Mono, ui-monospace, Menlo, monospace';
+    const PAGE_W_PX = 794;
+    const PAGE_H_PX = 1123;
+    const PAGE_PAD_PX = 52;
+    const PAGE_INNER_W = PAGE_W_PX - PAGE_PAD_PX * 2;
+    const PAGE_INNER_H = PAGE_H_PX - PAGE_PAD_PX * 2;
+    const PDF_CREDITS = "Snocomm";
+    const PDF_DISCLAIMER = "Material de apoyo académico. No sustituye catálogo, ensayo de tipo ni memoria de cálculo del proyecto.";
+
+    function loadScript(src) {
+      return new Promise((resolve, reject) => {
+        const exists = [...document.getElementsByTagName("script")].some((s) => s.getAttribute("src") === src);
+        if (exists) {
+          const wait = () => resolve();
+          setTimeout(wait, 0);
+          return;
+        }
+        const s = document.createElement("script");
+        s.src = src;
+        s.onload = () => resolve();
+        s.onerror = () => reject(new Error("No se pudo cargar " + src));
+        document.head.appendChild(s);
+      });
+    }
+    async function ensurePdfLibs() {
+      if (window.html2canvas && window.jspdf && window.jspdf.jsPDF) return;
+      await loadScript("vendor/html2canvas.min.js");
+      await loadScript("vendor/jspdf.umd.min.js");
+      if (!window.html2canvas || !window.jspdf || !window.jspdf.jsPDF) {
+        throw new Error("html2canvas o jsPDF no quedaron disponibles.");
+      }
+    }
+
+    function pdfEl(tag, style) {
+      const n = document.createElement(tag);
+      n.setAttribute("style", style);
+      return n;
+    }
+    /** html2canvas elimina espacios normales; cada palabra va en un span. */
+    function pdfWords(target, text) {
+      target.textContent = "";
+      const parts = String(text == null ? "" : text).trim().split(/\s+/).filter(Boolean);
+      if (!parts.length) return;
+      parts.forEach((part, i) => {
+        const s = document.createElement("span");
+        s.textContent = part;
+        s.style.display = "inline-block";
+        s.style.letterSpacing = "0";
+        if (i < parts.length - 1) s.style.marginRight = "0.33em";
+        target.appendChild(s);
+      });
+    }
+    function pdfText(tag, style, text) {
+      const n = pdfEl(tag, style);
+      pdfWords(n, text);
+      return n;
+    }
+    function pdfHeading(text) {
+      const n = pdfText(
+        "h2",
+        `margin:0;padding:12px 0 6px;font-size:13px;text-transform:uppercase;color:#5A64BF;border-bottom:2px solid #0ED1FF;font-family:${PDF_FONT};font-weight:700;box-sizing:border-box;width:100%;letter-spacing:0;`,
+        text,
+      );
+      n.dataset.keepWithNext = "1";
+      return n;
+    }
+    function pdfKv(label, value) {
+      const row = pdfEl(
+        "div",
+        "display:flex;gap:16px;align-items:flex-start;padding:7px 0;border-bottom:1px solid #eadfcb;box-sizing:border-box;width:100%;",
+      );
+      row.appendChild(pdfText(
+        "div",
+        `width:230px;flex:0 0 230px;color:#4a5563;font-weight:700;font-size:13px;line-height:1.45;font-family:${PDF_FONT};letter-spacing:0;`,
+        label,
+      ));
+      row.appendChild(pdfText(
+        "div",
+        `flex:1;min-width:0;color:#1c2430;font-size:13px;line-height:1.45;font-family:${PDF_MONO};letter-spacing:0;`,
+        value,
+      ));
+      return row;
+    }
+    function pdfNote(text) {
+      return pdfText(
+        "p",
+        `margin:8px 0 0;font-size:13px;line-height:1.5;color:#1c2430;font-family:${PDF_FONT};letter-spacing:0;`,
+        text,
+      );
+    }
+    function pdfFormula(text) {
+      return pdfText(
+        "p",
+        `margin:0;padding:10px 12px;font-size:12px;line-height:1.45;color:#1c2430;background:#f7f4ea;border:1px solid #eadfcb;border-radius:8px;font-family:${PDF_MONO};letter-spacing:0;box-sizing:border-box;width:100%;`,
+        text,
+      );
+    }
+    function pdfTableRow(cells, flexes, head) {
+      const row = pdfEl(
+        "div",
+        `display:flex;gap:8px;width:100%;box-sizing:border-box;padding:6px 0;border-bottom:1px solid ${head ? "#c9952a" : "#eadfcb"};align-items:flex-start;`,
+      );
+      if (head) {
+        row.dataset.keepWithNext = "1";
+        row.dataset.tableHead = "1";
+      } else {
+        row.dataset.tableRow = "1";
+      }
+      cells.forEach((c, i) => {
+        row.appendChild(pdfText(
+          "div",
+          `flex:${flexes[i] || 1} 1 0;min-width:0;font-size:${head ? "11px" : "12px"};line-height:1.35;letter-spacing:0;font-family:${head ? PDF_FONT : PDF_MONO};font-weight:${head ? 700 : 400};color:${head ? "#8a6508" : "#1c2430"};`,
+          String(c == null ? "—" : c),
+        ));
+      });
+      return row;
+    }
+    function pdfFigure(dataUrl, caption) {
+      const box = pdfEl("div", "width:100%;box-sizing:border-box;");
+      if (dataUrl) {
+        const img = document.createElement("img");
+        img.src = dataUrl;
+        img.alt = caption || "figura";
+        img.setAttribute(
+          "style",
+          `display:block;width:100%;max-height:${PAGE_INNER_H - 90}px;height:auto;object-fit:contain;border:1px solid #eadfcb;border-radius:8px;background:#ffffff;`,
+        );
+        box.appendChild(img);
+      }
+      if (caption) {
+        box.appendChild(pdfText(
+          "div",
+          `margin-top:6px;font-size:11px;color:#5b6776;font-family:${PDF_FONT};letter-spacing:0;`,
+          caption,
+        ));
+      }
+      return box;
+    }
+    function pdfSwatch(cssColor, caption) {
+      const box = pdfEl("div", "width:100%;box-sizing:border-box;");
+      const sw = pdfEl(
+        "div",
+        `height:72px;border-radius:10px;border:1px solid #eadfcb;background:${cssColor};width:100%;box-sizing:border-box;`,
+      );
+      box.appendChild(sw);
+      if (caption) {
+        box.appendChild(pdfText(
+          "div",
+          `margin-top:6px;font-size:11px;color:#5b6776;font-family:${PDF_FONT};letter-spacing:0;`,
+          caption,
+        ));
+      }
+      return box;
+    }
+    function pdfHeader(title, subtitle) {
+      const header = pdfEl("div", "width:100%;box-sizing:border-box;");
+      header.appendChild(pdfText(
+        "div",
+        `font-size:11px;font-weight:700;text-transform:uppercase;color:#5A64BF;font-family:${PDF_FONT};letter-spacing:0;`,
+        "Electricidad Aplicada",
+      ));
+      header.appendChild(pdfText(
+        "h1",
+        `margin:8px 0 10px;font-size:22px;line-height:1.3;color:#1c2430;font-weight:700;font-family:${PDF_FONT};letter-spacing:0;`,
+        title,
+      ));
+      const when = new Intl.DateTimeFormat("es-CL", { dateStyle: "long", timeStyle: "short" }).format(new Date());
+      header.appendChild(pdfText(
+        "div",
+        `font-size:12px;color:#5b6776;font-family:${PDF_FONT};letter-spacing:0;`,
+        when + " · " + PDF_CREDITS,
+      ));
+      if (subtitle) {
+        header.appendChild(pdfText(
+          "div",
+          `margin-top:8px;font-size:13px;line-height:1.45;color:#1c2430;font-family:${PDF_FONT};letter-spacing:0;`,
+          subtitle,
+        ));
+      }
+      return header;
+    }
+    function txt(id) {
+      const n = $(id);
+      return n ? n.textContent.replace(/\s+/g, " ").trim() : "—";
+    }
+    function val(id) {
+      const n = $(id);
+      return n ? String(n.value) : "";
+    }
+    function opt(id) {
+      const n = $(id);
+      if (!n || n.selectedIndex < 0) return val(id);
+      return n.options[n.selectedIndex].text;
+    }
+    function canvasUrl(id) {
+      const c = $(id);
+      if (!c || !c.toDataURL) return "";
+      try { return c.toDataURL("image/png"); } catch (e) { return ""; }
+    }
+    function tableFromEl(id) {
+      const tb = $(id);
+      if (!tb) return { headers: [], rows: [] };
+      const headers = [...tb.querySelectorAll("thead th")].map((th) => th.textContent.replace(/\s+/g, " ").trim());
+      const rows = [...tb.querySelectorAll("tbody tr")].map((tr) =>
+        [...tr.children].map((td) => td.textContent.replace(/\s+/g, " ").trim()),
+      );
+      return { headers, rows };
+    }
+
+    function refreshForPdf(id) {
+      if (id === "sev") { parseSev(); drawSev(); }
+      if (id === "malla") calcMalla();
+      if (id === "lux") calcLux();
+      if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "consumo") renderConsumo();
+      if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
+      if (id === "color") renderColor();
+    }
+
+    function buildPdfBlocks(id) {
+      const blocks = [];
+      const meta = {
+        sev: ["Informe SEV · Schlumberger", "Problema directo Pekeris + filtro Ghosh. Ajuste de capas y curva log-log."],
+        malla: ["Informe malla de tierra BT", "IEEE Std 80: Rg, tensiones de paso y contacto, Cs y sección de conductor."],
+        lux: ["Informe de alumbrado por lúmenes", "Método de lúmenes, snap de κ y tablero de circuitos. UNE-EN 12464-1:2012."],
+        hydro: ["Informe hidráulico · litros a m³", "Volumen, caudal y P = 9,81 · Q · H · η."],
+        consumo: ["Informe de consumo", "Empalme editable. Pinza True RMS, duty y simultaneidad."],
+        tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
+        color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
+      }[id];
+      if (!meta) throw new Error("Servicio desconocido: " + id);
+      const siteLine = activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
+      blocks.push(pdfHeader(meta[0], (siteLine ? siteLine + ". " : "") + meta[1]));
+
+      if (id === "sev") {
+        blocks.push(pdfHeading("Datos de campo"));
+        blocks.push(pdfKv("Interpretación", opt("sev-mode")));
+        blocks.push(pdfKv("MN", val("sev-mn") + " m"));
+        blocks.push(pdfKv("Puntos", txt("sev-npts")));
+        blocks.push(pdfHeading("Modelo de capas"));
+        blocks.push(pdfKv("Preset", opt("sev-preset")));
+        sevLayers.rho.forEach((r, i) => {
+          const h = i < sevLayers.h.length ? fmt(sevLayers.h[i], 2) + " m" : "infinita";
+          blocks.push(pdfKv("Capa " + (i + 1), "ρ = " + fmt(r, 2) + " Ω·m · h = " + h));
+        });
+        blocks.push(pdfHeading("Ajuste"));
+        blocks.push(pdfKv("Error medio", txt("sev-err")));
+        blocks.push(pdfKv("RMSE / R² log", txt("sev-rmse")));
+        blocks.push(pdfKv("Veredicto", txt("sev-verdict")));
+        blocks.push(pdfHeading("Fórmula"));
+        blocks.push(pdfFormula("K = π · [(AB/2)² − (MN/2)²] / MN · ρa = K · R"));
+        const sevTb = tableFromEl("sev-table");
+        if (sevTb.headers.length) {
+          blocks.push(pdfHeading("Tabla L y resistividad aparente"));
+          const flex = [1, 1, 1, 0.8];
+          blocks.push(pdfTableRow(sevTb.headers, flex, true));
+          sevTb.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
+        }
+        blocks.push(pdfHeading("Curva log-log"));
+        blocks.push(pdfFigure(canvasUrl("sev-chart"), "Puntos de campo (oro) y curva del modelo (cian)."));
+        blocks.push(pdfHeading("Sección geoeléctrica"));
+        blocks.push(pdfFigure(canvasUrl("sev-section"), "Resistividades y espesores del modelo de capas."));
+      }
+
+      if (id === "malla") {
+        blocks.push(pdfHeading("Parámetros"));
+        [
+          ["ρ1 / e1", val("m-rho1") + " Ω·m / " + val("m-e1") + " m"],
+          ["ρ2 / e2", val("m-rho2") + " Ω·m / " + val("m-e2") + " m"],
+          ["ρ3", val("m-rho3") + " Ω·m"],
+          ["ρeq manual", val("m-rhoeq") + " Ω·m"],
+          ["h malla / Lx × Ly", val("m-h") + " m / " + val("m-lx") + " × " + val("m-ly") + " m"],
+          ["Dx / Dy", val("m-dx") + " / " + val("m-dy") + " m"],
+          ["Varillas N / Lb", val("m-n") + " / " + val("m-lb") + " m"],
+          ["s cond", val("m-scond") + " mm²"],
+          ["Icc 1φ / S BT", val("m-icc1") + " A / " + val("m-sbt") + " kVA"],
+          ["Vsec / z%", val("m-vsec") + " V / " + val("m-z") + " %"],
+          ["Escenario Ig", opt("m-esc")],
+          ["Cp / Df / ts", val("m-cp") + " / " + val("m-df") + " / " + val("m-top") + " s"],
+          ["ρs / hg / peso", val("m-rhos") + " Ω·m / " + val("m-hg") + " m / " + opt("m-peso")],
+          ["I cond / Tm / Ta", val("m-icond") + " kA / " + val("m-tm") + " °C / " + val("m-ta") + " °C"],
+          ["Límite Rg", val("m-limrg") + " Ω"],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfHeading("Resultados IEEE 80"));
+        blocks.push(pdfKv("Estado", txt("m-estado")));
+        blocks.push(pdfKv("ρeq", txt("m-o-rho")));
+        blocks.push(pdfKv("Área / Lt", txt("m-o-geo")));
+        blocks.push(pdfKv("Ig", txt("m-o-ig")));
+        blocks.push(pdfKv("Cs", txt("m-o-cs")));
+        blocks.push(pdfKv("Vp / Vpt", txt("m-o-vp")));
+        blocks.push(pdfKv("Vc / Vct", txt("m-o-vc")));
+        blocks.push(pdfKv("Rg", txt("m-o-rg")));
+        blocks.push(pdfKv("s min / s cond", txt("m-o-s")));
+        blocks.push(pdfNote(txt("m-recs")));
+        blocks.push(pdfHeading("Fórmula"));
+        blocks.push(pdfFormula("Rg = ρ (1/Lt + 1/√(20A)) · Vp,Vc = ρ Ig / Lt · Ki · Ks|Km · Vpt = (1000+6 Cs ρs) k / √ts"));
+        blocks.push(pdfHeading("Vista de malla"));
+        blocks.push(pdfFigure(canvasUrl("m-canvas"), "Grilla Lx × Ly con conductores y varillas de esquina."));
+      }
+
+      if (id === "lux") {
+        blocks.push(pdfHeading("Recinto"));
+        [
+          ["Plantilla", opt("lx-space")],
+          ["Ejemplo de clase", opt("lx-ex")],
+          ["Ancho a / Largo b", val("lx-a") + " m / " + val("lx-b") + " m"],
+          ["H / PT / d", val("lx-H") + " / " + val("lx-pt") + " / " + val("lx-d") + " m"],
+          ["Ēm / CM", val("lx-em") + " lx / " + val("lx-cm")],
+          ["ΦL / W", val("lx-phi") + " lm / " + val("lx-w") + " W"],
+          ["ρ techo / muros", val("lx-ceil") + " % / " + val("lx-wall") + " %"],
+          ["Familia CU", opt("lx-table")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfHeading("Resultados"));
+        blocks.push(pdfKv("Flujo total ΦT", txt("lx-phiT")));
+        blocks.push(pdfKv("h útil / S / κ", txt("lx-geo")));
+        blocks.push(pdfKv("CU (κ snap)", txt("lx-cu")));
+        blocks.push(pdfKv("N calc / N inst", txt("lx-n")));
+        blocks.push(pdfKv("Ēm real / potencia", txt("lx-real")));
+        blocks.push(pdfKv("Inversa N → Ēm", val("lx-inv-n") + " → " + txt("lx-inv")));
+        blocks.push(pdfHeading("Fórmula"));
+        blocks.push(pdfFormula("h = H − PT − d · κ = (a·b)/[h(a+b)] · ΦT = (Em·S)/(CU·CM) · N = ⌈ΦT/ΦL⌉"));
+        blocks.push(pdfHeading("Plano de luminarias"));
+        blocks.push(pdfFigure(canvasUrl("lx-plan"), "Distribución n(Ancho) × n(Largo) sobre el recinto."));
+        blocks.push(pdfHeading("Tablero de alumbrado"));
+        blocks.push(pdfKv("Alimentación", opt("lx-sup")));
+        blocks.push(pdfKv("Longitud", val("lx-len") + " m"));
+        blocks.push(pdfKv("P instalada", txt("lx-p")));
+        blocks.push(pdfKv("I total / In general", txt("lx-i")));
+        blocks.push(pdfKv("Alimentador", txt("lx-feed")));
+        blocks.push(pdfKv("Circuitos / 30 mA", txt("lx-circ")));
+        const board = tableFromEl("lx-board");
+        if (board.headers.length) {
+          const flex = [1.4, 0.7, 0.8, 0.6];
+          blocks.push(pdfTableRow(board.headers, flex, true));
+          board.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
+        }
+      }
+
+      if (id === "hydro") {
+        const volLabel = hyDir === "lm" ? "Volumen en litros" : "Volumen en m³";
+        blocks.push(pdfHeading("Conversor de volumen"));
+        blocks.push(pdfKv(volLabel, val("hy-vol")));
+        blocks.push(pdfKv("Equivalente", txt("hy-vol-out")));
+        blocks.push(pdfKv("Masa de agua", txt("hy-mass")));
+        blocks.push(pdfKv("Peso", txt("hy-weight")));
+        blocks.push(pdfHeading("Caudal"));
+        blocks.push(pdfKv("L/s", val("hy-lps")));
+        blocks.push(pdfKv("m³/s", val("hy-cms")));
+        blocks.push(pdfKv("m³/h", val("hy-cmh")));
+        blocks.push(pdfKv("L/min", txt("hy-lpm")));
+        blocks.push(pdfKv("Volumen 24 h", txt("hy-day")));
+        blocks.push(pdfHeading("Potencia de la central"));
+        blocks.push(pdfKv("Q", val("hy-pq") + " " + opt("hy-pqu")));
+        blocks.push(pdfKv("Salto neto H", val("hy-ph") + " m"));
+        blocks.push(pdfKv("η", val("hy-pn") + " %"));
+        blocks.push(pdfKv("Potencia eléctrica", txt("hy-pout")));
+        blocks.push(pdfKv("Clase", txt("hy-pclass")));
+        blocks.push(pdfKv("Q SI", txt("hy-qsi")));
+        blocks.push(pdfKv("P hidráulica", txt("hy-phyd")));
+        blocks.push(pdfKv("Energía 24 h", txt("hy-kwh")));
+        blocks.push(pdfKv("Agua 24 h", txt("hy-pvol")));
+        blocks.push(pdfHeading("Potencial hidráulico"));
+        blocks.push(pdfKv("Cota captación / casa", val("hy-z1") + " / " + val("hy-z2")));
+        blocks.push(pdfKv("ΔH pérdidas / Fp", val("hy-loss") + " m / " + val("hy-fp") + " %"));
+        blocks.push(pdfKv("Energía anual", txt("hy-eout")));
+        blocks.push(pdfKv("H bruto / neto", txt("hy-heads")));
+        blocks.push(pdfKv("P teórico / técnico", txt("hy-pteo")));
+        blocks.push(pdfKv("Horas eq.", txt("hy-hours")));
+        blocks.push(pdfKv("kWh/m³", txt("hy-spec")));
+        blocks.push(pdfHeading("Fórmula"));
+        blocks.push(pdfFormula("Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp"));
+      }
+
+      if (id === "consumo") {
+        blocks.push(pdfHeading("Escenario"));
+        blocks.push(pdfKv("Tensión", val("c-v") + " V"));
+        blocks.push(pdfKv("Empalme", val("c-kw") + " kW"));
+        blocks.push(pdfKv("Tarifa", "$ " + val("c-tarifa") + " / kWh"));
+        blocks.push(pdfKv("Estación", opt("c-season")));
+        blocks.push(pdfHeading("Equipos"));
+        const flex = [2.2, 0.7, 0.7, 0.8, 0.6, 0.6, 0.8, 0.9];
+        blocks.push(pdfTableRow(["Equipo", "P", "I med", "h/día", "Duty", "kWh", "$/mes", "Estado"], flex, true));
+        eqState.forEach((e, i) => {
+          const winterOff = $("c-season").value === "verano" && e.winter;
+          const hours = winterOff ? 0 : e.hours;
+          const kwh = e.on ? (e.P / 1000) * hours * 30 * e.duty : 0;
+          const tarifa = +$("c-tarifa").value || 0;
+          blocks.push(pdfTableRow([
+            e.name,
+            e.P + " W",
+            fmt(e.Imeas, 2) + " A",
+            fmt(hours, 2),
+            fmt(e.duty, 2),
+            fmt(kwh, 1),
+            "$" + fmt(kwh * tarifa, 0),
+            txt("c-st-" + i),
+          ], flex, false));
+        });
+        blocks.push(pdfHeading("Totales"));
+        blocks.push(pdfKv("Consumo mensual", txt("c-kwh")));
+        blocks.push(pdfKv("Costo energía", txt("c-cost")));
+        blocks.push(pdfKv("Promedio diario", txt("c-day")));
+        blocks.push(pdfKv("Frío / térmico / resto", txt("c-split")));
+        blocks.push(pdfKv("Frío vs total", txt("c-fz")));
+        blocks.push(pdfNote(txt("c-band")));
+        blocks.push(pdfHeading("Simultaneidad del empalme"));
+        const simNames = [];
+        $("c-sim").querySelectorAll("input").forEach((inp) => {
+          if (inp.checked) simNames.push(eqState[+inp.dataset.sim].name);
+        });
+        blocks.push(pdfKv("Cargas coincidentes", simNames.join(", ") || "ninguna"));
+        blocks.push(pdfKv("P coincidente", txt("c-sim-p")));
+        blocks.push(pdfNote(txt("c-sim-note")));
+        blocks.push(pdfHeading("Criterios de pinza"));
+        blocks.push(pdfNote("Carga resistiva: |I − In| / In ≤ 10 %. Desvío > 15 %: revisar elemento."));
+        blocks.push(pdfNote("Compresores: deben ciclar. 100 % ON = falla. Freezer sano: 1,3–2,2 A ON, duty 30–50 %."));
+        blocks.push(pdfNote("Motor DOL: arranque 5–8× In, < 10× y < 1 s. LRA freezer 8–14 A."));
+      }
+
+      if (id === "tan") {
+        blocks.push(pdfHeading("Proyección de tablero"));
+        [
+          ["Potencia", val("t-p") + " kW"],
+          ["Tensión / cos φ / η", val("t-v") + " V / " + val("t-cos") + " / " + val("t-eta")],
+          ["Racks / IP mínimo", val("t-racks") + " / IP" + val("t-ip")],
+          ["Redundancia", opt("t-red")],
+          ["Carga armónica", opt("t-h")],
+          ["Requisito sísmico", $("t-sis").checked ? "Sí" : "No"],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfHeading("Resultado IEC 61439"));
+        blocks.push(pdfKv("In de selección / envolvente", txt("t-insel")));
+        blocks.push(pdfKv("In base / diseño", txt("t-in")));
+        blocks.push(pdfKv("Icc / Icw est.", txt("t-icc")));
+        blocks.push(pdfKv("RDF / Ku / ΔT", txt("t-th")));
+        blocks.push(pdfKv("Familia / forma", txt("t-fam")));
+        blocks.push(pdfNote(txt("t-notes")));
+        blocks.push(pdfFormula("In = (P·1000) / (√3 · V · cosφ · η)"));
+        blocks.push(pdfHeading("DSP 3P+N"));
+        blocks.push(pdfKv("I1 / H3 / H5 / H7", val("d-i1") + " / " + val("d-h3") + " / " + val("d-h5") + " / " + val("d-h7") + " A"));
+        blocks.push(pdfKv("THDi", txt("d-thdi")));
+        blocks.push(pdfNote("THDi académico = 100 · √(H3²+H5²+H7²) / I1. No es IEC 61000-4-7."));
+        blocks.push(pdfFigure(canvasUrl("d-wave"), "Ia cian · Ib oro · Ic rojo, con armónicos H3 H5 H7."));
+        blocks.push(pdfHeading("Banco 24 V · 120 W"));
+        blocks.push(pdfKv("V bus / I carga", val("b-v") + " V / " + val("b-i") + " A"));
+        blocks.push(pdfKv("Rizado máx", val("b-rip") + " %"));
+        blocks.push(pdfKv("P bus", txt("b-p")));
+        blocks.push(pdfKv("Margen 5 A / 120 W", txt("b-m")));
+        blocks.push(pdfKv("Ilim sugerida", txt("b-ilim")));
+        blocks.push(pdfKv("Estado", txt("b-st")));
+        blocks.push(pdfNote("Autoprueba → precarga lógica → E-stop → rearme enclavado. Physical outputs = false."));
+      }
+
+      if (id === "color") {
+        const raw = val("col-hex").trim().replace(/^#/, "");
+        const rgb = hexToRgb(raw);
+        blocks.push(pdfHeading("Entrada"));
+        blocks.push(pdfKv("Hexadecimal", "#" + raw.toUpperCase()));
+        if (!rgb) {
+          blocks.push(pdfNote(txt("col-err") || "Hexadecimal inválido"));
+        } else {
+          const hsb = rgbToHsb(rgb);
+          const css = "rgb(" + Math.round(rgb.r * 255) + ", " + Math.round(rgb.g * 255) + ", " + Math.round(rgb.b * 255) + ")";
+          blocks.push(pdfSwatch(css, "Muestra " + css));
+          blocks.push(pdfHeading("RGB"));
+          blocks.push(pdfKv("RGB 0–1", txt("col-rgb")));
+          blocks.push(pdfKv("RGB 0–255", txt("col-rgb8")));
+          blocks.push(pdfHeading("HSB"));
+          blocks.push(pdfKv("Tono (Hue)", hsb.h.toFixed(1) + " °"));
+          blocks.push(pdfKv("Saturación", hsb.s.toFixed(1) + " %"));
+          blocks.push(pdfKv("Brillo", hsb.b.toFixed(1) + " %"));
+        }
+      }
+
+      blocks.push(pdfHeading("Nota"));
+      blocks.push(pdfNote(PDF_DISCLAIMER));
+      return blocks;
+    }
+
+    function newPdfPage() {
+      return pdfEl(
+        "div",
+        `width:${PAGE_W_PX}px;min-height:${PAGE_H_PX}px;padding:${PAGE_PAD_PX}px;box-sizing:border-box;background:#ffffff;font-family:${PDF_FONT};`,
+      );
+    }
+    function packPdfPages(blocks, host) {
+      const pages = [];
+      let page = newPdfPage();
+      host.appendChild(page);
+      let used = 0;
+      const gap = 10;
+      let lastHeader = null;
+      const pushPage = () => {
+        pages.push(page);
+        page = newPdfPage();
+        host.appendChild(page);
+        used = 0;
+      };
+      for (let i = 0; i < blocks.length; i++) {
+        const block = blocks[i];
+        if (block.dataset.tableHead === "1") lastHeader = block;
+        page.appendChild(block);
+        const h = block.offsetHeight;
+        let extra = 0;
+        const keep = block.tagName === "H2" || block.dataset.keepWithNext === "1";
+        if (keep && i + 1 < blocks.length) {
+          page.appendChild(blocks[i + 1]);
+          extra = blocks[i + 1].offsetHeight + gap;
+          page.removeChild(blocks[i + 1]);
+        }
+        if (used > 0 && used + h + gap + extra > PAGE_INNER_H) {
+          page.removeChild(block);
+          pushPage();
+          if (block.dataset.tableRow === "1" && lastHeader) {
+            const clone = lastHeader.cloneNode(true);
+            clone.style.marginBottom = gap + "px";
+            page.appendChild(clone);
+            used = clone.offsetHeight + gap;
+          }
+          page.appendChild(block);
+          used += block.offsetHeight + gap;
+        } else {
+          used += h + gap;
+        }
+        block.style.marginBottom = gap + "px";
+      }
+      pages.push(page);
+      return pages;
+    }
+    async function waitPdfImages(root) {
+      const imgs = [...root.querySelectorAll("img")];
+      await Promise.all(imgs.map((img) => {
+        if (img.complete && img.naturalWidth) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      }));
+    }
+    async function withDayTheme(fn) {
+      const prev = document.documentElement.getAttribute("data-theme");
+      if (prev !== "day") setTheme("day");
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      try { return await fn(); }
+      finally { if (prev && prev !== "day") setTheme(prev); }
+    }
+    function pdfStamp() {
+      const d = new Date();
+      const p = (n) => String(n).padStart(2, "0");
+      return d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate());
+    }
+
+    async function exportServicePdf(id, opts) {
+      opts = opts || {};
+      const save = opts.save !== false;
+      const preview = !!opts.preview;
+      await ensurePdfLibs();
+      if (document.fonts && document.fonts.ready) await document.fonts.ready;
+      return withDayTheme(async () => {
+        refreshForPdf(id);
+        const blocks = buildPdfBlocks(id);
+        const host = pdfEl(
+          "div",
+          `position:fixed;left:0;top:0;width:${PAGE_W_PX}px;background:#fff;z-index:-1;pointer-events:none;`,
+        );
+        document.body.appendChild(host);
+        const staging = pdfEl("div", `width:${PAGE_INNER_W}px;`);
+        host.appendChild(staging);
+        blocks.forEach((b) => staging.appendChild(b));
+        await waitPdfImages(staging);
+        const pages = packPdfPages(blocks, host);
+        staging.remove();
+        await waitPdfImages(host);
+
+        const doc = new window.jspdf.jsPDF({ unit: "mm", format: "a4", compress: true });
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const pageUrls = [];
+        for (let i = 0; i < pages.length; i++) {
+          const page = pages[i];
+          const canvas = await window.html2canvas(page, {
+            backgroundColor: "#ffffff",
+            scale: 2,
+            useCORS: true,
+            logging: false,
+            width: PAGE_W_PX,
+            windowWidth: PAGE_W_PX,
+            onclone: (_doc, node) => {
+              node.style.position = "static";
+              node.style.left = "0";
+              node.style.zIndex = "1";
+              node.style.opacity = "1";
+            },
+          });
+          const url = canvas.toDataURL("image/jpeg", 0.92);
+          pageUrls.push(url);
+          if (i > 0) doc.addPage();
+          const imgH = (canvas.height * pageW) / canvas.width;
+          doc.addImage(url, "JPEG", 0, 0, pageW, Math.min(pageH, imgH), undefined, "FAST");
+        }
+        const filename = "ea-" + id + "-" + pdfStamp() + ".pdf";
+        const pdfDataUri = doc.output("datauristring");
+        if (save) doc.save(filename);
+        if (preview) {
+          host.remove();
+          document.body.innerHTML = "";
+          document.body.style.background = "#ffffff";
+          document.body.style.margin = "0";
+          pageUrls.forEach((src, i) => {
+            const img = document.createElement("img");
+            img.src = src;
+            img.alt = "página " + (i + 1);
+            img.setAttribute("style", "display:block;width:794px;margin:0 auto 12px;border:1px solid #ccc;");
+            document.body.appendChild(img);
+          });
+          const meta = document.createElement("pre");
+          meta.id = "ea-pdf-meta";
+          meta.textContent = JSON.stringify({ filename: filename, pages: pageUrls.length, ok: true });
+          document.body.appendChild(meta);
+          const href = document.createElement("a");
+          href.id = "ea-pdf-file";
+          href.href = pdfDataUri;
+          href.download = filename;
+          href.textContent = "download";
+          document.body.appendChild(href);
+        } else {
+          host.remove();
+        }
+        return { filename: filename, pages: pageUrls.length, pageUrls: pageUrls, pdfDataUri: pdfDataUri };
+      });
+    }
+
+    document.querySelectorAll(".pdf-btn").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        const id = btn.dataset.pdf;
+        const prev = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = "Generando PDF…";
+        try {
+          await exportServicePdf(id);
+          btn.textContent = "PDF descargado";
+        } catch (err) {
+          console.error(err);
+          alert("No se pudo exportar el PDF. " + (err && err.message ? err.message : err));
+          btn.textContent = "Error al exportar";
+        }
+        setTimeout(() => { btn.textContent = prev; btn.disabled = false; }, 1600);
+      });
+    });
+    window.__eaExportPdf = exportServicePdf;
+
+    /* ===================== PLANTILLAS LOS RÍOS ===================== */
+    function mot(id, name, cat, P, h, duty, extra) {
+      extra = extra || {};
+      const V = extra.V || 380;
+      const pf = extra.pf != null ? extra.pf : 0.85;
+      const I = extra.ph === 1 ? P / (V * (extra.pf != null ? extra.pf : 1)) : P / (Math.sqrt(3) * V * pf);
+      const rec = {
+        id: id, name: name, cat: cat, P: P,
+        I: +I.toFixed(2), lo: +(I * 0.88).toFixed(2), hi: +(I * 1.12).toFixed(2),
+        h: h, duty: duty, kwhRef: extra.kwhRef || [0, 0],
+      };
+      if (extra.winter) rec.winter = true;
+      if (extra.alertI) rec.alertI = extra.alertI;
+      if (extra.on === false) rec.on = false;
+      if (extra.sim) rec.sim = true;
+      return rec;
+    }
+    const SITES = [
+      {
+        id: "casa-6", kw: 6, gallery: false,
+        name: "Casa-granja (referencia CFT)",
+        place: "Paillaco",
+        blurb: "Estudio original 6 kW monofásico. Queda fuera de la banda 10–500 kW; sirve para volver al caso de taller.",
+        sev: { rho: [100, 10, 100], h: [5, 15], preset: "H" },
+        malla: { "m-rho1": 170, "m-e1": 1.5, "m-rho2": 255, "m-e2": 4.5, "m-rho3": 34, "m-rhoeq": 138, "m-h": 0.6, "m-lx": 8, "m-ly": 6, "m-dx": 1, "m-dy": 1, "m-n": 0, "m-lb": 3, "m-scond": 67.4, "m-icc1": 2330, "m-sbt": 315, "m-vsec": 400, "m-z": 6.34, "m-esc": "MT", "m-cp": 0.534, "m-df": 1, "m-top": 0.5, "m-rhos": 3000, "m-hg": 0.15, "m-peso": "70", "m-icond": 1.245, "m-tm": 1084, "m-ta": 40, "m-limrg": 20 },
+        lux: { space: "sala-electricidad", a: 5.87, b: 7.24, H: 2.9, pt: 1, d: 0, em: 500, cm: 0.6, phi: 5000, w: 40, ceil: 70, wall: 30, table: "recessed-modular", inv: 20, sup: "1x220", len: 15 },
+        hydro: { vol: 1000, lps: 80, pq: 80, pqu: "lps", ph: 24, pn: 70, z1: 144, z2: 118, loss: 2, fp: 50 },
+        consumo: { V: 230, kw: 6, tarifa: 252, season: "invierno", band: null, simOk: "", simOver: "", sim: ["nevera", "freezer", "cal3", "horno"], equip: null },
+        tan: { p: 45, v: 400, cos: 0.9, eta: 0.95, racks: 8, ip: 30, red: "N+1", h: "1", sis: false, i1: 10, h3: 0.8, h5: 2.4, h7: 1.1, bv: 24, bi: 4, brip: 2 },
+        color: { hex: "FF5733" },
+      },
+      {
+        id: "queseria-15", kw: 15, gallery: true,
+        name: "Quesería artesanal",
+        place: "Futrono",
+        blurb: "Tina, cámara y lavado. INDAP, ribera del Ranco. Empalme 15 kW 3×380 V.",
+        sev: { rho: [55, 22, 250], h: [1.4, 7], preset: "" },
+        malla: { "m-rho1": 55, "m-e1": 1.4, "m-rho2": 22, "m-e2": 7, "m-rho3": 250, "m-rhoeq": 70, "m-h": 0.6, "m-lx": 6, "m-ly": 5, "m-dx": 1.5, "m-dy": 1.5, "m-n": 4, "m-lb": 2.4, "m-scond": 25, "m-icc1": 1200, "m-sbt": 45, "m-vsec": 400, "m-z": 4.5, "m-esc": "BT", "m-cp": 0.6, "m-df": 1, "m-top": 0.5, "m-rhos": 2500, "m-hg": 0.15, "m-peso": "70", "m-icond": 0.8, "m-tm": 1084, "m-ta": 25, "m-limrg": 20 },
+        lux: { space: "cocina", a: 6, b: 8, H: 2.8, pt: 0.85, d: 0, em: 500, cm: 0.7, phi: 4500, w: 36, ceil: 70, wall: 50, table: "diffusing-shallow", inv: 8, sup: "3x380", len: 18 },
+        hydro: { vol: 2000, lps: 1.5, pq: 1.5, pqu: "lps", ph: 12, pn: 65, z1: 92, z2: 78, loss: 1.5, fp: 35 },
+        consumo: {
+          V: 380, kw: 15, tarifa: 252, season: "invierno", band: [900, 1600],
+          sim: ["tina", "camara", "termo"],
+          simOk: "Dentro de 15 kW. No coincidir tina de cuajado + termo de lavado + arranque de cámara.",
+          simOver: "Excede 15 kW. Separe tina y lavado CIP; la cámara debe ciclar.",
+          equip: [
+            mot("camara", "Cámara 0–4 °C", "frio", 2200, 24, 0.55, { sim: true }),
+            mot("tina", "Tina / pasteurizador", "term", 6000, 4, 0.45, { sim: true }),
+            mot("termo", "Termo lavado", "term", 3000, 2, 0.4, { sim: true }),
+            mot("bomba", "Bomba de trasvasije", "ciclo", 750, 3, 0.4),
+            mot("led", "LED sala y maduración", "acc", 400, 10, 1, { pf: 0.95 }),
+            mot("calef", "Calefactor sala", "term", 2000, 4, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 15, v: 400, cos: 0.9, eta: 0.92, racks: 4, ip: 30, red: "N", h: "0", sis: false, i1: 22, h3: 0.4, h5: 1.1, h7: 0.5, bv: 24, bi: 2, brip: 2 },
+        color: { hex: "E8D5A3" },
+      },
+      {
+        id: "ordena-25", kw: 25, gallery: true,
+        name: "Sala de ordeña",
+        place: "Paillaco",
+        blurb: "Estanque frío (~60 % de la energía) y bomba de vacío. Rubro lechero INDAP, trumao húmedo.",
+        sev: { rho: [42, 16, 190], h: [1.5, 6], preset: "" },
+        malla: { "m-rho1": 42, "m-e1": 1.5, "m-rho2": 16, "m-e2": 6, "m-rho3": 190, "m-rhoeq": 55, "m-h": 0.6, "m-lx": 8, "m-ly": 6, "m-dx": 1.2, "m-dy": 1.2, "m-n": 4, "m-lb": 3, "m-scond": 35, "m-icc1": 1800, "m-sbt": 75, "m-vsec": 400, "m-z": 4, "m-esc": "BT", "m-cp": 0.55, "m-df": 1, "m-top": 0.5, "m-rhos": 2200, "m-hg": 0.15, "m-peso": "70", "m-icond": 1.1, "m-tm": 1084, "m-ta": 20, "m-limrg": 10 },
+        lux: { space: "taller", a: 10, b: 14, H: 3.2, pt: 0, d: 0, em: 300, cm: 0.6, phi: 8000, w: 60, ceil: 50, wall: 30, table: "industrial-reflector", inv: 12, sup: "3x380", len: 25 },
+        hydro: { vol: 5000, lps: 4, pq: 4, pqu: "lps", ph: 18, pn: 68, z1: 110, z2: 90, loss: 2, fp: 40 },
+        consumo: {
+          V: 380, kw: 25, tarifa: 252, season: "invierno", band: [1800, 3200],
+          sim: ["vacio", "estanque", "leche"],
+          simOk: "Dentro de 25 kW. El estanque debe ciclar; no sume termo de lavado al pico de ordeña.",
+          simOver: "Excede 25 kW. Ordeña y lavado CIP no coinciden. Estanque > 2,4 A equivalentes continuos: revisar.",
+          equip: [
+            mot("estanque", "Estanque frío 2 000 L", "frio", 4000, 24, 0.55, { sim: true, alertI: 8.5 }),
+            mot("vacio", "Bomba de vacío 5,5 kW", "ciclo", 5500, 5, 0.85, { sim: true }),
+            mot("leche", "Bomba de leche", "ciclo", 1500, 5, 0.5, { sim: true }),
+            mot("termo", "Termo lavado 200 L", "term", 4500, 2, 0.35),
+            mot("pozo", "Bomba de pozo", "ciclo", 2200, 2, 0.5),
+            mot("led", "LED sala de ordeña", "acc", 800, 8, 1, { pf: 0.95 }),
+            mot("porton", "Portón corral", "acc", 370, 0.3, 1),
+            mot("calef", "Calefactor sala", "term", 2000, 5, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 25, v: 400, cos: 0.88, eta: 0.92, racks: 6, ip: 30, red: "N", h: "0", sis: false, i1: 36, h3: 0.6, h5: 2.0, h7: 0.8, bv: 24, bi: 3, brip: 2 },
+        color: { hex: "C0392B" },
+      },
+      {
+        id: "apr-35", kw: 35, gallery: true,
+        name: "APR · bombeo de agua potable",
+        place: "Los Lagos",
+        blurb: "Dos bombas 11 kW en N+1, UV y cloración. Comité de agua rural, suelo aluvial.",
+        sev: { rho: [90, 35, 140], h: [2, 10], preset: "" },
+        malla: { "m-rho1": 90, "m-e1": 2, "m-rho2": 35, "m-e2": 10, "m-rho3": 140, "m-rhoeq": 72, "m-h": 0.8, "m-lx": 8, "m-ly": 6, "m-dx": 1.5, "m-dy": 1.5, "m-n": 4, "m-lb": 3, "m-scond": 50, "m-icc1": 2200, "m-sbt": 75, "m-vsec": 400, "m-z": 4, "m-esc": "BT", "m-cp": 0.6, "m-df": 1, "m-top": 0.4, "m-rhos": 1800, "m-hg": 0.2, "m-peso": "70", "m-icond": 1.3, "m-tm": 1084, "m-ta": 18, "m-limrg": 10 },
+        lux: { space: "almacen", a: 5, b: 6, H: 2.7, pt: 0, d: 0, em: 200, cm: 0.7, phi: 4000, w: 32, ceil: 50, wall: 30, table: "diffusing-shallow", inv: 6, sup: "3x380", len: 20 },
+        hydro: { vol: 20000, lps: 12, pq: 12, pqu: "lps", ph: 48, pn: 72, z1: 96, z2: 46, loss: 2, fp: 55 },
+        consumo: {
+          V: 380, kw: 35, tarifa: 252, season: "invierno", band: [2200, 4000],
+          sim: ["b1", "uv", "led"],
+          simOk: "N+1: una bomba en servicio. No arranque las dos en DOL a la vez.",
+          simOver: "Excede 35 kW. Arranque escalonado o estrella-triángulo; la segunda bomba es reserva.",
+          equip: [
+            mot("b1", "Bomba pozo 11 kW", "ciclo", 11000, 10, 0.7, { sim: true }),
+            mot("b2", "Bomba reserva 11 kW", "ciclo", 11000, 0, 0.7, { on: false }),
+            mot("uv", "UV + cloración", "acc", 1100, 24, 1, { sim: true, pf: 0.95 }),
+            mot("led", "LED sala de bombas", "acc", 400, 12, 1, { sim: true, pf: 0.95 }),
+            mot("calef", "Calefactor sala", "term", 1200, 6, 1, { winter: true }),
+            mot("achique", "Bomba achique", "ciclo", 750, 0.5, 0.3),
+          ],
+        },
+        tan: { p: 35, v: 400, cos: 0.88, eta: 0.93, racks: 6, ip: 54, red: "N+1", h: "0", sis: true, i1: 50, h3: 0.5, h5: 2.8, h7: 1.0, bv: 24, bi: 3.5, brip: 2 },
+        color: { hex: "0E7C7B" },
+      },
+      {
+        id: "acopio-50", kw: 50, gallery: true,
+        name: "Centro de acopio de leche",
+        place: "La Unión",
+        blurb: "Dos estanques y CIP. Recolección tipo cooperativa. Empalme 50 kW 3×380 V.",
+        sev: { rho: [38, 14, 160], h: [1.2, 5], preset: "" },
+        malla: { "m-rho1": 38, "m-e1": 1.2, "m-rho2": 14, "m-e2": 5, "m-rho3": 160, "m-rhoeq": 48, "m-h": 0.6, "m-lx": 10, "m-ly": 8, "m-dx": 1.2, "m-dy": 1.2, "m-n": 4, "m-lb": 3, "m-scond": 50, "m-icc1": 2800, "m-sbt": 125, "m-vsec": 400, "m-z": 4, "m-esc": "BT", "m-cp": 0.5, "m-df": 1, "m-top": 0.5, "m-rhos": 2000, "m-hg": 0.15, "m-peso": "70", "m-icond": 1.6, "m-tm": 1084, "m-ta": 20, "m-limrg": 10 },
+        lux: { space: "taller", a: 8, b: 12, H: 3.5, pt: 0.85, d: 0, em: 300, cm: 0.7, phi: 8000, w: 60, ceil: 70, wall: 50, table: "recessed-modular", inv: 10, sup: "3x380", len: 30 },
+        hydro: { vol: 8000, lps: 6, pq: 6, pqu: "lps", ph: 16, pn: 70, z1: 88, z2: 70, loss: 1.5, fp: 45 },
+        consumo: {
+          V: 380, kw: 50, tarifa: 252, season: "invierno", band: [4500, 7500],
+          sim: ["e1", "e2", "recep"],
+          simOk: "Dentro de 50 kW si el CIP no coincide con recepción. Estanques deben ciclar.",
+          simOver: "Excede 50 kW. No lance CIP junto a ambas unidades de frío y la bomba de recepción.",
+          equip: [
+            mot("e1", "Estanque frío 1 · 7,5 kW", "frio", 7500, 24, 0.5, { sim: true }),
+            mot("e2", "Estanque frío 2 · 7,5 kW", "frio", 7500, 24, 0.5, { sim: true }),
+            mot("recep", "Bomba recepción", "ciclo", 4000, 6, 0.5, { sim: true }),
+            mot("cip", "CIP / termo", "term", 9000, 2, 0.35),
+            mot("led", "LED acopio y andén", "acc", 1200, 14, 1, { pf: 0.95 }),
+            mot("ofic", "Oficina y laboratorio", "acc", 2000, 10, 0.6, { pf: 0.9 }),
+            mot("calef", "Calefactor", "term", 2400, 6, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 50, v: 400, cos: 0.9, eta: 0.93, racks: 8, ip: 30, red: "N+1", h: "0", sis: false, i1: 72, h3: 1.2, h5: 4.0, h7: 1.6, bv: 24, bi: 4, brip: 2 },
+        color: { hex: "922B21" },
+      },
+      {
+        id: "aserradero-75", kw: 75, gallery: true,
+        name: "Aserradero",
+        place: "Panguipulli",
+        blurb: "Sierra principal, canteadora y aspiración de viruta. Suelo forestal más resistivo.",
+        sev: { rho: [140, 70, 450], h: [2, 12], preset: "" },
+        malla: { "m-rho1": 140, "m-e1": 2, "m-rho2": 70, "m-e2": 12, "m-rho3": 450, "m-rhoeq": 160, "m-h": 0.8, "m-lx": 14, "m-ly": 10, "m-dx": 1.5, "m-dy": 1.5, "m-n": 6, "m-lb": 3, "m-scond": 70, "m-icc1": 4200, "m-sbt": 160, "m-vsec": 400, "m-z": 4.5, "m-esc": "MAX", "m-cp": 0.5, "m-df": 1, "m-top": 0.4, "m-rhos": 4000, "m-hg": 0.2, "m-peso": "70", "m-icond": 2.4, "m-tm": 1084, "m-ta": 18, "m-limrg": 10 },
+        lux: { space: "taller", a: 12, b: 24, H: 5.5, pt: 0, d: 0, em: 300, cm: 0.6, phi: 14000, w: 120, ceil: 50, wall: 30, table: "industrial-reflector", inv: 18, sup: "3x380", len: 40 },
+        hydro: { vol: 3000, lps: 2, pq: 2, pqu: "lps", ph: 10, pn: 60, z1: 180, z2: 168, loss: 1, fp: 30 },
+        consumo: {
+          V: 380, kw: 75, tarifa: 252, season: "invierno", band: [6000, 11000],
+          sim: ["sierra", "cantea", "aspi"],
+          simOk: "Dentro de 75 kW. Arranque de sierra con estrella-triángulo o variador; no sume canteadora en el LRA.",
+          simOver: "Excede 75 kW. Sierra + canteadora + aspiración en DOL saturan el empalme.",
+          equip: [
+            mot("sierra", "Sierra principal 37 kW", "ciclo", 37000, 8, 0.7, { sim: true }),
+            mot("cantea", "Canteadora 15 kW", "ciclo", 15000, 8, 0.6, { sim: true }),
+            mot("aspi", "Aspiración viruta 11 kW", "ciclo", 11000, 9, 0.85, { sim: true }),
+            mot("transp", "Transportador", "ciclo", 5500, 8, 0.7),
+            mot("comp", "Compresor", "ciclo", 4000, 6, 0.45),
+            mot("afil", "Afilado", "ciclo", 2200, 2, 0.5),
+            mot("led", "LED nave", "acc", 2000, 10, 1, { pf: 0.95 }),
+            mot("calef", "Calefactor oficina", "term", 2400, 6, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 75, v: 400, cos: 0.86, eta: 0.93, racks: 8, ip: 30, red: "N", h: "1", sis: false, i1: 110, h3: 4, h5: 12, h7: 5, bv: 24, bi: 4, brip: 3 },
+        color: { hex: "8B5A2B" },
+      },
+      {
+        id: "frigo-100", kw: 100, gallery: true,
+        name: "Frigorífico / packing berries",
+        place: "Paillaco",
+        blurb: "Cámaras, túnel y hidrocooler. Variadores → armónicos. Empalme 100 kW 3×380 V.",
+        sev: { rho: [45, 18, 200], h: [1.6, 7], preset: "" },
+        malla: { "m-rho1": 45, "m-e1": 1.6, "m-rho2": 18, "m-e2": 7, "m-rho3": 200, "m-rhoeq": 60, "m-h": 0.7, "m-lx": 12, "m-ly": 10, "m-dx": 1.2, "m-dy": 1.2, "m-n": 6, "m-lb": 3, "m-scond": 70, "m-icc1": 5200, "m-sbt": 250, "m-vsec": 400, "m-z": 5, "m-esc": "MAX", "m-cp": 0.5, "m-df": 1, "m-top": 0.4, "m-rhos": 2500, "m-hg": 0.15, "m-peso": "70", "m-icond": 3.2, "m-tm": 1084, "m-ta": 20, "m-limrg": 5 },
+        lux: { space: "taller", a: 10, b: 16, H: 4.2, pt: 0.85, d: 0, em: 300, cm: 0.7, phi: 10000, w: 80, ceil: 70, wall: 50, table: "recessed-modular", inv: 16, sup: "3x380", len: 35 },
+        hydro: { vol: 12000, lps: 8, pq: 8, pqu: "lps", ph: 14, pn: 70, z1: 72, z2: 56, loss: 1.5, fp: 40 },
+        consumo: {
+          V: 380, kw: 100, tarifa: 252, season: "verano", band: [14000, 24000],
+          sim: ["c1", "c2", "tunel"],
+          simOk: "Dentro de 100 kW si el túnel no arranca junto al hidrocooler. Cámaras ciclan.",
+          simOver: "Excede 100 kW. Desfase de túnel e hidrocooler; revise THDi de los variadores en TAN.",
+          equip: [
+            mot("c1", "Cámara 1 · 15 kW", "frio", 15000, 24, 0.55, { sim: true }),
+            mot("c2", "Cámara 2 · 15 kW", "frio", 15000, 24, 0.55, { sim: true }),
+            mot("tunel", "Túnel de frío 22 kW", "frio", 22000, 10, 0.6, { sim: true }),
+            mot("hidro", "Hidrocooler 7,5 kW", "ciclo", 7500, 8, 0.5),
+            mot("led", "LED packing", "acc", 3000, 14, 1, { pf: 0.95 }),
+            mot("ofic", "Oficina / HVAC", "acc", 2000, 10, 0.7),
+            mot("calef", "Calefactor muelle", "term", 3000, 4, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 100, v: 400, cos: 0.88, eta: 0.94, racks: 10, ip: 30, red: "N+1", h: "1", sis: false, i1: 145, h3: 8, h5: 22, h7: 9, bv: 24, bi: 4.5, brip: 3 },
+        color: { hex: "5DADE2" },
+      },
+      {
+        id: "microhidro-180", kw: 180, gallery: true,
+        name: "Microhidro de pasada",
+        place: "Riñihue",
+        blurb: "180 kW, RGR N°04 / Ley 21.118. Q 800 L/s, H neto 32 m, η 72 %. Casa de máquinas.",
+        sev: { rho: [200, 80, 800], h: [1, 8], preset: "" },
+        malla: { "m-rho1": 200, "m-e1": 1, "m-rho2": 80, "m-e2": 8, "m-rho3": 800, "m-rhoeq": 220, "m-h": 0.8, "m-lx": 12, "m-ly": 8, "m-dx": 1.5, "m-dy": 1.5, "m-n": 8, "m-lb": 3, "m-scond": 95, "m-icc1": 6500, "m-sbt": 315, "m-vsec": 400, "m-z": 6.34, "m-esc": "MAX", "m-cp": 0.534, "m-df": 1, "m-top": 0.3, "m-rhos": 5000, "m-hg": 0.2, "m-peso": "70", "m-icond": 4.5, "m-tm": 1084, "m-ta": 15, "m-limrg": 5 },
+        lux: { space: "sala-electricidad", a: 6, b: 8, H: 3.5, pt: 0.85, d: 0, em: 300, cm: 0.7, phi: 5000, w: 40, ceil: 70, wall: 50, table: "recessed-modular", inv: 8, sup: "3x380", len: 20 },
+        hydro: { vol: 800000, lps: 800, pq: 800, pqu: "lps", ph: 32, pn: 72, z1: 168, z2: 134, loss: 2, fp: 45 },
+        consumo: {
+          V: 380, kw: 180, tarifa: 252, season: "invierno", band: [2500, 5000],
+          sim: ["exc", "puente", "led"],
+          simOk: "El empalme de 180 kW es de generación. Esta lista son auxiliares de casa de máquinas (~15 kW).",
+          simOver: "Auxiliares sobre el margen. El generador no se modela como carga; revise arranque del puente grúa.",
+          equip: [
+            mot("exc", "Servicios auxiliares / control", "acc", 5000, 24, 0.4, { sim: true, pf: 0.9 }),
+            mot("calef", "Calefacción casa de máquinas", "term", 2000, 12, 1, { winter: true }),
+            mot("led", "LED casa de máquinas", "acc", 800, 16, 1, { sim: true, pf: 0.95 }),
+            mot("puente", "Puente grúa", "ciclo", 4000, 1, 0.2, { sim: true }),
+            mot("achique", "Bomba achique", "ciclo", 1500, 2, 0.3),
+            mot("porton", "Portón y cerco", "acc", 500, 0.2, 1),
+          ],
+        },
+        tan: { p: 180, v: 400, cos: 0.9, eta: 0.95, racks: 10, ip: 54, red: "N+1", h: "0", sis: true, i1: 260, h3: 3, h5: 8, h7: 4, bv: 24, bi: 4, brip: 2 },
+        color: { hex: "0ED1FF" },
+      },
+      {
+        id: "claseB-500", kw: 500, gallery: true,
+        name: "Planta Clase B",
+        place: "Valdivia",
+        blurb: "Tope 500 kW en BT Clase B (D.S. N° 92). Planta de proceso, arcillas de Valdivia, tablero XL³.",
+        sev: { rho: [25, 12, 80], h: [2, 8], preset: "" },
+        malla: { "m-rho1": 25, "m-e1": 2, "m-rho2": 12, "m-e2": 8, "m-rho3": 80, "m-rhoeq": 28, "m-h": 0.8, "m-lx": 24, "m-ly": 18, "m-dx": 2, "m-dy": 2, "m-n": 8, "m-lb": 3, "m-scond": 120, "m-icc1": 15000, "m-sbt": 630, "m-vsec": 400, "m-z": 6, "m-esc": "MAX", "m-cp": 0.5, "m-df": 1, "m-top": 0.3, "m-rhos": 1500, "m-hg": 0.2, "m-peso": "70", "m-icond": 12, "m-tm": 1084, "m-ta": 20, "m-limrg": 1 },
+        lux: { space: "taller", a: 16, b: 28, H: 7, pt: 0, d: 0, em: 500, cm: 0.7, phi: 18000, w: 150, ceil: 50, wall: 30, table: "industrial-reflector", inv: 28, sup: "3x380", len: 60 },
+        hydro: { vol: 40000, lps: 50, pq: 50, pqu: "lps", ph: 22, pn: 75, z1: 48, z2: 24, loss: 2, fp: 60 },
+        consumo: {
+          V: 380, kw: 500, tarifa: 252, season: "invierno", band: [80000, 140000],
+          sim: ["l1", "comp", "led"],
+          simOk: "Dentro de 500 kW Clase B. Deje margen para LRA de línea 2 y compresores.",
+          simOver: "Excede 500 kW. Fuera de Clase B en BT (D.S. N° 92). No coincidan ambas líneas + caldera.",
+          equip: [
+            mot("l1", "Línea de proceso 1", "ciclo", 160000, 16, 0.75, { sim: true }),
+            mot("l2", "Línea de proceso 2", "ciclo", 132000, 16, 0.7),
+            mot("comp", "Compresores 75 kW", "ciclo", 75000, 18, 0.6, { sim: true }),
+            mot("caldera", "Caldera / termo", "term", 45000, 10, 0.5),
+            mot("led", "Iluminación naves", "acc", 12000, 16, 1, { sim: true, pf: 0.95 }),
+            mot("hvac", "Oficinas HVAC", "acc", 18000, 12, 0.7),
+            mot("calef", "Calefacción periférica", "term", 15000, 8, 1, { winter: true }),
+          ],
+        },
+        tan: { p: 500, v: 400, cos: 0.9, eta: 0.95, racks: 18, ip: 30, red: "N+1", h: "1", sis: true, i1: 720, h3: 25, h5: 70, h7: 28, bv: 24, bi: 5, brip: 2 },
+        color: { hex: "303030" },
+      },
+    ];
+
+    function fillMap(map) {
+      Object.keys(map).forEach((id) => {
+        const n = $(id);
+        if (!n) return;
+        if (n.type === "checkbox") n.checked = !!map[id];
+        else n.value = map[id];
+      });
+    }
+    function applySevSite(s) {
+      sevLayers = { rho: s.rho.slice(), h: s.h.slice() };
+      $("sev-preset").value = s.preset || "";
+      $("sev-mode").value = "rho";
+      $("sev-mn").value = s.mn || 1;
+      const rows = [];
+      for (let i = 0; i < 12; i++) {
+        const L = Math.pow(10, i * 0.25);
+        rows.push(L.toFixed(3) + "\t" + rhoA(L, sevLayers.rho, sevLayers.h).toFixed(2));
+      }
+      $("sev-data").value = rows.join("\n");
+      renderLayerEditor();
+      parseSev();
+      drawSev();
+    }
+    function applyLuxSite(s) {
+      $("lx-space").value = s.space;
+      $("lx-ex").value = "";
+      $("lx-a").value = s.a; $("lx-b").value = s.b; $("lx-H").value = s.H;
+      $("lx-pt").value = s.pt; $("lx-d").value = s.d; $("lx-em").value = s.em;
+      $("lx-cm").value = s.cm; $("lx-phi").value = s.phi; $("lx-w").value = s.w;
+      $("lx-ceil").value = s.ceil; $("lx-wall").value = s.wall; $("lx-table").value = s.table;
+      $("lx-inv-n").value = s.inv; $("lx-sup").value = s.sup; $("lx-len").value = s.len;
+      calcLux();
+    }
+    function applyHydroSite(s) {
+      hyDir = "lm";
+      $("hy-vol-label").textContent = "Volumen en litros";
+      $("hy-vol").value = s.vol;
+      $("hy-dir-lm").classList.add("primary");
+      $("hy-dir-ml").classList.remove("primary");
+      setQ(s.lps);
+      $("hy-pq").value = s.pq; $("hy-pqu").value = s.pqu;
+      $("hy-ph").value = s.ph; $("hy-pn").value = s.pn;
+      $("hy-z1").value = s.z1; $("hy-z2").value = s.z2;
+      $("hy-loss").value = s.loss; $("hy-fp").value = s.fp;
+      renderVol(); renderP(); renderPot();
+    }
+    function applyConsumoSite(c) {
+      $("c-v").value = c.V; $("c-kw").value = c.kw; $("c-tarifa").value = c.tarifa; $("c-season").value = c.season;
+      consumoBand = c.band;
+      consumoSimOk = c.simOk || "";
+      consumoSimOver = c.simOver || "";
+      const list = c.equip || EQUIP;
+      eqState = list.map((e) => ({
+        ...e,
+        Imeas: e.Imeas != null ? e.Imeas : e.I,
+        hours: e.hours != null ? e.hours : e.h,
+        duty: e.duty,
+        on: e.on !== false,
+      }));
+      if (!c.equip) eqState.forEach((e) => { if (e.id === "cal3") e.on = false; });
+      buildConsumoTable(c.sim);
+      renderConsumo();
+    }
+    function applyTanSite(t) {
+      $("t-p").value = t.p; $("t-v").value = t.v; $("t-cos").value = t.cos; $("t-eta").value = t.eta;
+      $("t-racks").value = t.racks; $("t-ip").value = t.ip; $("t-red").value = t.red; $("t-h").value = t.h;
+      $("t-sis").checked = !!t.sis;
+      $("d-i1").value = t.i1; $("d-h3").value = t.h3; $("d-h5").value = t.h5; $("d-h7").value = t.h7;
+      $("b-v").value = t.bv; $("b-i").value = t.bi; $("b-rip").value = t.brip;
+      calcTan(); calcDsp(); calcBank();
+    }
+    function setSiteBanner(site) {
+      const bar = $("tpl-banner");
+      if (!site || site.id === "casa-6") {
+        activeSite = site && site.id === "casa-6" ? site : null;
+        bar.hidden = !site;
+        bar.classList.toggle("show", !!site);
+        bar.innerHTML = site
+          ? "Plantilla activa: <strong>" + site.name + "</strong> · " + site.kw + " kW · " + site.place + ". Referencia de taller, no es 10–500 kW."
+          : "";
+        return;
+      }
+      activeSite = site;
+      bar.hidden = false;
+      bar.classList.add("show");
+      bar.innerHTML = "Plantilla activa: <strong>" + site.name + " · " + site.kw + " kW</strong> · " + site.place + ". " + site.blurb + " Revisa cada servicio; el PDF incluye el nombre.";
+    }
+    function syncSiteSelects(id) {
+      document.querySelectorAll(".site-select").forEach((sel) => { sel.value = id || ""; });
+      document.querySelectorAll("#site-gallery .card.site").forEach((c) => {
+        c.classList.toggle("active-site", c.dataset.site === id);
+      });
+    }
+    function applySite(id) {
+      const site = SITES.find((s) => s.id === id);
+      if (!site) return;
+      applySevSite(site.sev);
+      fillMap(site.malla);
+      calcMalla();
+      applyLuxSite(site.lux);
+      applyHydroSite(site.hydro);
+      applyConsumoSite(site.consumo);
+      applyTanSite(site.tan);
+      $("col-hex").value = site.color.hex;
+      renderColor();
+      setSiteBanner(site);
+      syncSiteSelects(site.id);
+    }
+    function buildSiteUi() {
+      const opts = '<option value="">— Elegir plantilla —</option>' +
+        SITES.map((s) => `<option value="${s.id}">${s.kw} kW · ${s.name} · ${s.place}</option>`).join("");
+      document.querySelectorAll(".site-select").forEach((sel) => {
+        sel.innerHTML = opts;
+        sel.addEventListener("change", () => { if (sel.value) applySite(sel.value); });
+      });
+      const gal = $("site-gallery");
+      gal.innerHTML = SITES.filter((s) => s.gallery).map((s) =>
+        `<article class="card site" data-site="${s.id}">
+          <div class="site-top"><h3>${s.name}</h3><span class="kw-pill">${s.kw} kW</span></div>
+          <p class="sub">${s.place}. ${s.blurb}</p>
+        </article>`
+      ).join("");
+      gal.querySelectorAll(".card.site").forEach((c) => c.addEventListener("click", () => applySite(c.dataset.site)));
+    }
+    window.__eaApplySite = applySite;
+
     /* init */
     parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); renderColor();
+    buildSiteUi();
+
+    const autoPdf = new URLSearchParams(location.search).get("ea-pdf");
+    if (autoPdf && autoPdf !== "home") {
+      showPanel(autoPdf);
+      exportServicePdf(autoPdf, { save: false, preview: true }).catch((err) => {
+        document.body.innerHTML = "<pre id='ea-pdf-meta'>" + JSON.stringify({ ok: false, error: String(err && err.message ? err.message : err) }) + "</pre>";
+      });
+    }
   })();
   </script>
 </body>
