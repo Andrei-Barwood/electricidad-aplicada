@@ -305,6 +305,7 @@
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
+        <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
       </div>
       <div class="nav-foot">Material de apoyo académico. No sustituye catálogo, ensayo de tipo ni memoria de cálculo del proyecto.</div>
@@ -316,7 +317,7 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Siete herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Ocho herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU) para sistemas eléctricos de potencia y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -326,6 +327,7 @@
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
+          <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
         </div>
         <div class="card" style="margin-top:16px">
@@ -791,6 +793,162 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-pu">
+        <div class="hero">
+          <div>
+            <h2>Sistema <span>Por Unidad (PU)</span></h2>
+            <p class="lede">Normalización de sistemas eléctricos de potencia (SEP). Conversión de bases trifásicas Sb/Vb, cambio de base de impedancias (Zpu_nueva), cálculo de cortocircuito trifásico simétrico y diagrama unilineal con zonas de tensión.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="pu">Exportar PDF</button></div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="fields two">
+            <div>
+              <label class="field" for="pu-regional-template">Plantilla regional · Los Ríos</label>
+              <select id="pu-regional-template" class="pu-regional-select"></select>
+            </div>
+            <div>
+              <label class="field">Fuente de referencia</label>
+              <p class="hint" style="margin:8px 0 0">Subestaciones y elementos publicados por el Coordinador Eléctrico Nacional. <a href="https://infotecnica.coordinador.cl/instalaciones/subestaciones" target="_blank" rel="noopener">Abrir Infotécnica</a></p>
+            </div>
+          </div>
+          <p class="hint" id="pu-regional-note" style="margin:10px 0 0">Seleccione una subestación para cargar sus barras y valores de estudio. Las impedancias de red, línea y transformador son editables: la fuente consultada no publica una impedancia equivalente única para cada barra.</p>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>1. Base del Sistema (Global)</h3>
+            <p class="sub">Potencia base común trifásica y tensión de referencia en la barra de falla o estudio.</p>
+            <div class="fields two">
+              <div class="mini-input">
+                <label for="pu-sb">Sb base global [MVA]</label>
+                <input id="pu-sb" type="number" min="0.001" step="any" value="100" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-vb">Vb en barra de falla [kV]</label>
+                <input id="pu-vb" type="number" min="0.1" step="any" value="13.8" />
+              </div>
+            </div>
+            <div class="result">
+              <div class="k">Impedancia y Corriente Base en Barra</div>
+              <div class="v" id="pu-zb-disp">1.904 <small>Ω base</small></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Ib base trifásica</dt><dd id="pu-ib-disp">4.184 kA</dd></div>
+              <div class="meta"><dt>Fórmula Zb</dt><dd id="pu-zb-formula">Zb = Vb² / Sb</dd></div>
+              <div class="meta"><dt>Fórmula Ib</dt><dd id="pu-ib-formula">Ib = Sb / (√3·Vb)</dd></div>
+              <div class="meta"><dt>Nivel de tensión</dt><dd id="pu-vnivel">Media Tensión (MT)</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">Zb [Ω] = (Vb [kV])² / Sb [MVA] &nbsp;·&nbsp; Ib [kA] = Sb [MVA] / (√3 · Vb [kV])</p>
+          </div>
+
+          <div class="card">
+            <h3>2. Cambio de Base de Impedancia (Zpu)</h3>
+            <p class="sub">Re-expresa la reactancia de catálogo del equipo a la base del sistema.</p>
+            <div class="fields two">
+              <div class="mini-input">
+                <label for="pu-zold">Zpu original (catálogo)</label>
+                <input id="pu-zold" type="number" min="0.0001" step="any" value="0.15" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-sold">S nominal equipo [MVA]</label>
+                <input id="pu-sold" type="number" min="0.001" step="any" value="25" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-vold">V nominal equipo [kV]</label>
+                <input id="pu-vold" type="number" min="0.1" step="any" value="13.8" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-vnew">V base de la zona [kV]</label>
+                <input id="pu-vnew" type="number" min="0.1" step="any" value="13.8" />
+              </div>
+            </div>
+            <div class="result">
+              <div class="k">Zpu en Base Nueva (Sb = <span id="pu-sb-tag">100</span> MVA)</div>
+              <div class="v" id="pu-znew-disp">0.6000 <small>pu</small></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Z real equivalente</dt><dd id="pu-zreal-disp">1.1427 Ω</dd></div>
+              <div class="meta"><dt>Razón de potencias</dt><dd id="pu-sratio-disp">Sb,new / Snom = 4.00</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">Zpu,new = Zpu,old · (Vnom / Vbase)² · (Sb,new / Snom)</p>
+          </div>
+        </div>
+
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>3. Cadena de Red y Cortocircuito 3φ</h3>
+            <p class="sub">Red equivalente en serie: Red / Generador + Transformador + Línea + Carga / Falla en barra final.</p>
+            <div class="fields three">
+              <div class="mini-input">
+                <label for="pu-zg-mva">Red/Gen Scc [MVA] o Xg [pu]</label>
+                <input id="pu-zg-mva" type="number" min="0.01" step="any" value="500" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-zg-mode">Modo Red/Gen</label>
+                <select id="pu-zg-mode">
+                  <option value="scc" selected>Scc [MVA] en barra</option>
+                  <option value="xpu">Xg [pu] directo (base Sb)</option>
+                </select>
+              </div>
+              <div class="mini-input">
+                <label for="pu-xt-pct">Trafo Xcc [%] o [pu]</label>
+                <input id="pu-xt-pct" type="number" min="0.01" step="any" value="7.5" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-st-mva">Trafo S nominal [MVA]</label>
+                <input id="pu-st-mva" type="number" min="0.001" step="any" value="20" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-line-r">Línea R [Ω]</label>
+                <input id="pu-line-r" type="number" min="0" step="any" value="0.05" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-line-x">Línea X [Ω]</label>
+                <input id="pu-line-x" type="number" min="0" step="any" value="0.25" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-vf-pu">Tensión pre-falla Vf [pu]</label>
+                <input id="pu-vf-pu" type="number" min="0.5" max="1.5" step="0.01" value="1.00" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-carg-kw">Carga activa [kW]</label>
+                <input id="pu-carg-kw" type="number" min="0" step="any" value="1500" />
+              </div>
+              <div class="mini-input">
+                <label for="pu-carg-fp">Factor potencia carga</label>
+                <input id="pu-carg-fp" type="number" min="0.1" max="1.0" step="0.01" value="0.90" />
+              </div>
+            </div>
+            <div class="row-actions">
+              <button class="btn primary" type="button" id="pu-recalc">Calcular Cortocircuito</button>
+            </div>
+            <p class="formula" style="margin-top:8px">Zth,pu = Zg,pu + Zt,pu + Zlinea,pu &nbsp;·&nbsp; Icc,pu = Vf / |Zth| &nbsp;·&nbsp; Icc [kA] = Icc,pu · Ib</p>
+          </div>
+
+          <div class="card">
+            <h3>Resultados de Falla y Carga</h3>
+            <div class="result">
+              <div class="k">Corriente de Cortocircuito Trifásico Simétrico (Icc 3φ)</div>
+              <div class="v" id="pu-icc-disp">5.932 <small>kA</small></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Icc en PU</dt><dd id="pu-iccpu-disp">1.418 pu</dd></div>
+              <div class="meta"><dt>Potencia de cortocircuito (Scc)</dt><dd id="pu-scc-disp">141.8 MVA</dd></div>
+              <div class="meta"><dt>Zth equivalente Thévenin</dt><dd id="pu-zth-disp">0.026 + j0.705 pu</dd></div>
+              <div class="meta"><dt>|Zth| y ángulo</dt><dd id="pu-zth-mag">0.706 pu ∠87.9°</dd></div>
+              <div class="meta"><dt>Xg red / Trafo en base Sb</dt><dd id="pu-compo-pu">0.200 / 0.375 pu</dd></div>
+              <div class="meta"><dt>Línea Zpu en base Sb</dt><dd id="pu-linea-pu">0.026 + j0.131 pu</dd></div>
+              <div class="meta"><dt>Carga en régimen nominal</dt><dd id="pu-carg-reg">0.0167 pu (69.7 A)</dd></div>
+              <div class="meta"><dt>Razón Icc / I nominal carga</dt><dd id="pu-icc-ratio">85.1 × Inom</dd></div>
+            </dl>
+            <div style="margin-top:12px">
+              <canvas class="chart" id="pu-sld-canvas" width="900" height="280"></canvas>
+            </div>
+            <p class="hint" id="pu-notes" style="margin-top:8px"></p>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-color">
         <div class="hero">
           <div>
@@ -834,6 +992,7 @@
       ? n.toLocaleString("es-CL", { maximumFractionDigits: d, minimumFractionDigits: 0 })
       : "—";
     const G = 9.81, RHO = 1000;
+    let activeSite = null;
     const cssVar = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const themePaint = () => ({
       canvas: cssVar("--input-bg") || "#303030",
@@ -868,12 +1027,18 @@
       document.querySelectorAll(".nav-btn").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
       history.replaceState(null, "", "#" + id);
       window.scrollTo(0, 0);
+      const templateBanner = $("tpl-banner");
+      if (templateBanner) {
+        templateBanner.hidden = id === "pu" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && !!activeSite);
+      }
       if (id === "sev") { parseSev(); drawSev(); }
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
+      if (id === "pu") calcPu();
       if (id === "color") renderColor();
     }
     document.querySelectorAll(".nav-btn").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
@@ -1517,7 +1682,6 @@
       { id: "porton", name: "Motor portón", cat: "acc", P: 500, I: 2.4, lo: 2.0, hi: 3.2, h: 0.15, duty: 1, kwhRef: [2, 6] },
     ];
     let eqState = EQUIP.map((e) => ({ ...e, Imeas: e.I, hours: e.h, duty: e.duty, on: e.id === "cal3" ? false : true }));
-    let activeSite = null;
     let consumoBand = null;
     let consumoSimOk = "";
     let consumoSimOver = "";
@@ -1688,6 +1852,359 @@
     ["t-p","t-v","t-cos","t-eta","t-racks","t-ip","t-red","t-h","t-sis"].forEach((id) => $(id).addEventListener("input", calcTan));
     ["d-i1","d-h3","d-h5","d-h7"].forEach((id) => $(id).addEventListener("input", calcDsp));
     ["b-v","b-i","b-rip"].forEach((id) => $(id).addEventListener("input", calcBank));
+
+    /* ===================== POR UNIDAD (PU) & SEP ===================== */
+    const PU_REGIONAL_TEMPLATES = [
+      {
+        id: "paillaco",
+        name: "S/E Paillaco · Paillaco",
+        source: "CEN #854 · barra 66 kV / 13,8 kV · transformador 66/13,8 kV 4 MVA",
+        sb: 10, vb: 13.8, zold: 0.08, sold: 4, vold: 13.8, vnew: 13.8,
+        zgMva: 250, zgMode: "scc", xtPct: 8, stMva: 4, lineR: 0.04, lineX: 0.18, vfPu: 1, cargKw: 2500, cargFp: 0.92,
+      },
+      {
+        id: "pichirropulli",
+        name: "S/E Pichirropulli · Paillaco",
+        source: "CEN #519 · barras 66 kV / 23 kV · equipo descrito como 69/24–13,8 kV 10 MVA",
+        sb: 25, vb: 23, zold: 0.1, sold: 10, vold: 24, vnew: 23,
+        zgMva: 400, zgMode: "scc", xtPct: 9, stMva: 10, lineR: 0.06, lineX: 0.3, vfPu: 1, cargKw: 5000, cargFp: 0.9,
+      },
+      {
+        id: "pullinque",
+        name: "S/E Pullinque · Panguipulli",
+        source: "CEN #474 · barras 66 kV / 23 kV / 13,2 kV · tres transformadores 66/13,8 kV 20 MVA",
+        sb: 50, vb: 13.8, zold: 0.1, sold: 20, vold: 13.8, vnew: 13.8,
+        zgMva: 500, zgMode: "scc", xtPct: 10, stMva: 20, lineR: 0.05, lineX: 0.24, vfPu: 1, cargKw: 10000, cargFp: 0.9,
+      },
+      {
+        id: "nueva-pichirropulli",
+        name: "S/E Nueva Pichirropulli · Paillaco",
+        source: "CEN #2060 · barras 220 kV · dos transformadores 230/69/24 kV 90 MVA",
+        sb: 100, vb: 220, zold: 0.12, sold: 90, vold: 230, vnew: 220,
+        zgMva: 1500, zgMode: "scc", xtPct: 12, stMva: 90, lineR: 0.12, lineX: 1.1, vfPu: 1, cargKw: 50000, cargFp: 0.95,
+      },
+      {
+        id: "valdivia",
+        name: "S/E Valdivia · Valdivia",
+        source: "CEN #592 · tres barras 220 kV · capacidad publicada no informada",
+        sb: 100, vb: 220, zold: 0.15, sold: 100, vold: 220, vnew: 220,
+        zgMva: 1800, zgMode: "scc", xtPct: 10, stMva: 100, lineR: 0.1, lineX: 0.9, vfPu: 1, cargKw: 60000, cargFp: 0.95,
+      },
+    ];
+
+    function buildPuRegionalTemplates() {
+      const select = $("pu-regional-template");
+      if (!select) return;
+      select.innerHTML = '<option value="">— Elegir subestación —</option>' +
+        PU_REGIONAL_TEMPLATES.map((p) => `<option value="${p.id}">${p.name}</option>`).join("");
+      select.addEventListener("change", () => {
+        const p = PU_REGIONAL_TEMPLATES.find((item) => item.id === select.value);
+        if (!p) return;
+        ["sb","vb","zold","sold","vold","vnew","zgMva","zgMode","xtPct","stMva","lineR","lineX","vfPu","cargKw","cargFp"]
+          .forEach((key) => { const el = $("pu-" + ({ zgMva: "zg-mva", zgMode: "zg-mode", xtPct: "xt-pct", stMva: "st-mva", lineR: "line-r", lineX: "line-x", vfPu: "vf-pu", cargKw: "carg-kw", cargFp: "carg-fp" }[key] || key)); if (el) el.value = p[key]; });
+        $("pu-regional-note").textContent = p.source + ". Valores de impedancia y carga son un escenario editable para estudio PU; no son parámetros oficiales de cortocircuito.";
+        calcPu();
+      });
+    }
+
+    function safePuNumber(id, fallback) {
+      const el = $(id);
+      if (!el) return fallback;
+      const value = Number(el.value);
+      return Number.isFinite(value) ? value : fallback;
+    }
+
+    function calcPu() {
+      const sb = Math.max(1e-4, safePuNumber("pu-sb", 100));
+      const vb = Math.max(1e-3, safePuNumber("pu-vb", 13.8));
+
+      // Zb e Ib en la barra
+      const zb = (vb * vb) / sb;
+      const ib = sb / (Math.sqrt(3) * vb);
+
+      $("pu-sb-tag").textContent = fmt(sb, 2);
+      $("pu-zb-disp").innerHTML = fmt(zb, 4) + " <small>Ω base</small>";
+      $("pu-ib-disp").textContent = (ib >= 1 ? fmt(ib, 3) + " kA" : fmt(ib * 1000, 1) + " A") + " (" + fmt(ib, 4) + " kA)";
+      $("pu-zb-formula").textContent = `Zb = (${vb} kV)² / ${sb} MVA`;
+      $("pu-ib-formula").textContent = `Ib = ${sb} / (√3 · ${vb})`;
+
+      let vnivel = "Media Tensión (MT)";
+      if (vb < 1.0) vnivel = "Baja Tensión (BT) · < 1 kV";
+      else if (vb > 66.0) vnivel = "Alta Tensión (AT) · > 66 kV";
+      $("pu-vnivel").textContent = vnivel;
+
+      // Cambio de base Zpu
+      const zold = Math.max(0, safePuNumber("pu-zold", 0.15));
+      const sold = Math.max(1e-4, safePuNumber("pu-sold", 25));
+      const vold = Math.max(1e-3, safePuNumber("pu-vold", 13.8));
+      const vnew = Math.max(1e-3, safePuNumber("pu-vnew", 13.8));
+
+      const vRatio = vold / vnew;
+      const sRatio = sb / sold;
+      const znew = zold * (vRatio * vRatio) * sRatio;
+      const zreal = zold * ((vold * vold) / sold);
+
+      $("pu-znew-disp").innerHTML = fmt(znew, 4) + " <small>pu</small>";
+      $("pu-zreal-disp").textContent = fmt(zreal, 4) + " Ω (" + fmt(znew * zb, 4) + " Ω en Vbase)";
+      $("pu-sratio-disp").textContent = `Sb/Snom = ${fmt(sRatio, 2)} · (Vnom/Vb)² = ${fmt(vRatio * vRatio, 3)}`;
+
+      // Red equivalente y cortocircuito
+      const zgMode = $("pu-zg-mode").value;
+      const zgVal = Math.max(1e-4, safePuNumber("pu-zg-mva", 500));
+      let xgPu = 0;
+      if (zgMode === "scc") {
+        xgPu = sb / zgVal; // Scc = Sb / Xg_pu => Xg_pu = Sb / Scc
+      } else {
+        xgPu = zgVal; // directo en pu sobre Sb
+      }
+
+      const xtVal = Math.max(0, safePuNumber("pu-xt-pct", 7.5));
+      const stVal = Math.max(1e-4, safePuNumber("pu-st-mva", 20));
+      const xtPuNom = xtVal > 0.5 ? xtVal / 100 : xtVal;
+      const xtPu = xtPuNom * (sb / stVal);
+
+      const lineR = Math.max(0, safePuNumber("pu-line-r", 0));
+      const lineX = Math.max(0, safePuNumber("pu-line-x", 0));
+      const rLinePu = lineR / zb;
+      const xLinePu = lineX / zb;
+
+      const rTh = rLinePu;
+      const xTh = xgPu + xtPu + xLinePu;
+      const zThMag = Math.sqrt(rTh * rTh + xTh * xTh);
+      const zThAngRad = Math.atan2(xTh, rTh);
+      const zThAngDeg = (zThAngRad * 180) / Math.PI;
+
+      const vf = Math.max(0.1, safePuNumber("pu-vf-pu", 1.0));
+      const iccpu = zThMag > 1e-6 ? vf / zThMag : 0;
+      const iccKa = iccpu * ib;
+      const sccMva = vf * iccpu * sb;
+
+      const pCargKw = Math.max(0, safePuNumber("pu-carg-kw", 0));
+      const fpCarg = Math.min(1, Math.max(0.1, safePuNumber("pu-carg-fp", 0.9)));
+      const sCargKva = pCargKw / fpCarg;
+      const sCargMva = sCargKva / 1000;
+      const iCargKa = vb > 0 ? sCargMva / (Math.sqrt(3) * vb) : 0;
+      const iCargPu = sb > 0 ? sCargMva / sb : 0;
+
+      $("pu-icc-disp").innerHTML = (iccKa >= 1 ? fmt(iccKa, 3) + " <small>kA</small>" : fmt(iccKa * 1000, 1) + " <small>A</small>");
+      $("pu-iccpu-disp").textContent = fmt(iccpu, 4) + " pu";
+      $("pu-scc-disp").textContent = fmt(sccMva, 2) + " MVA";
+      $("pu-zth-disp").textContent = `${fmt(rTh, 4)} + j${fmt(xTh, 4)} pu`;
+      $("pu-zth-mag").textContent = fmt(zThMag, 4) + " pu ∠" + fmt(zThAngDeg, 1) + "°";
+      $("pu-compo-pu").textContent = `Xg = ${fmt(xgPu, 4)} pu · Xt = ${fmt(xtPu, 4)} pu`;
+      $("pu-linea-pu").textContent = `${fmt(rLinePu, 4)} + j${fmt(xLinePu, 4)} pu (${fmt(lineR, 3)}+j${fmt(lineX, 3)} Ω)`;
+      $("pu-carg-reg").textContent = `${fmt(iCargPu, 4)} pu (${fmt(iCargKa * 1000, 1)} A · ${fmt(pCargKw, 0)} kW)`;
+
+      const ratioIcc = iCargKa > 1e-6 ? iccKa / iCargKa : 0;
+      $("pu-icc-ratio").textContent = ratioIcc > 0 ? fmt(ratioIcc, 1) + " × Inominal" : "— (sin carga)";
+
+      let note = `Thévenin total en barra: Zth = ${fmt(zThMag, 4)} pu. `;
+      if (zThMag < 0.05) note += "Impedancia muy baja: cortocircuito severo. ";
+      const xr = rTh > 0 ? xTh / rTh : 0;
+      if (rTh > 0 && xr > 15) note += `Relación X/R = ${fmt(xr, 1)} (falla predominantemente inductiva). `;
+      else if (rTh > 0) note += `Relación X/R = ${fmt(xr, 1)}. `;
+      $("pu-notes").textContent = note;
+
+      drawPuSld({
+        sb, vb, zb, ib,
+        xgPu, xtPu, rLinePu, xLinePu, zThMag,
+        iccpu, iccKa, sccMva,
+        pCargKw, iCargKa,
+      });
+    }
+
+    function drawPuSld(data) {
+      const c = $("pu-sld-canvas");
+      if (!c) return;
+      const ctx = c.getContext("2d");
+      const W = c.width, H = c.height;
+      const tp = themePaint();
+
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, W, H);
+
+      // Fondo sutil de cuadrícula de ingeniería
+      ctx.strokeStyle = tp.line;
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 6]);
+      for (let x = 60; x < W; x += 60) {
+        ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
+      }
+      for (let y = 40; y < H; y += 40) {
+        ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
+      }
+      ctx.setLineDash([]);
+
+      const yMid = H * 0.48;
+
+      // 4 nodos principales: 1) Red/Gen, 2) Trafo, 3) Línea, 4) Barra de Falla/Carga
+      const xGen = 90;
+      const xB1 = 250;
+      const xTrafo = 360;
+      const xB2 = 470;
+      const xLine = 600;
+      const xBFault = 750;
+
+      // Línea principal de enlace
+      ctx.strokeStyle = tp.muted;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.moveTo(xGen + 28, yMid);
+      ctx.lineTo(xBFault, yMid);
+      ctx.stroke();
+
+      // Símbolo Generador / Red (Círculo con senoidal)
+      ctx.fillStyle = tp.canvas;
+      ctx.strokeStyle = tp.cyan;
+      ctx.lineWidth = 2.5;
+      ctx.beginPath();
+      ctx.arc(xGen, yMid, 28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Ondeante ~ en el centro del generador
+      ctx.strokeStyle = tp.cyan;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(xGen - 14, yMid);
+      ctx.bezierCurveTo(xGen - 7, yMid - 10, xGen, yMid + 10, xGen + 7, yMid);
+      ctx.bezierCurveTo(xGen + 10, yMid - 6, xGen + 14, yMid + 4, xGen + 14, yMid);
+      ctx.stroke();
+
+      // Etiquetas Red/Gen
+      ctx.fillStyle = tp.foam;
+      ctx.font = "bold 12px IBM Plex Sans";
+      ctx.textAlign = "center";
+      ctx.fillText("RED / GEN", xGen, yMid - 38);
+      ctx.fillStyle = tp.cyan;
+      ctx.font = "11px IBM Plex Mono";
+      ctx.fillText(`Xg = ${fmt(data.xgPu, 3)} pu`, xGen, yMid + 46);
+
+      // Barra 1 (AT / MT)
+      ctx.strokeStyle = tp.gold;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(xB1, yMid - 40);
+      ctx.lineTo(xB1, yMid + 40);
+      ctx.stroke();
+      ctx.fillStyle = tp.gold;
+      ctx.font = "bold 11px IBM Plex Mono";
+      ctx.fillText("B1", xB1, yMid - 48);
+
+      // Trafo (Dos círculos entrelazados)
+      const rT = 20;
+      ctx.strokeStyle = tp.foam;
+      ctx.lineWidth = 2.2;
+      ctx.beginPath();
+      ctx.arc(xTrafo - 11, yMid, rT, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(xTrafo + 11, yMid, rT, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = tp.foam;
+      ctx.font = "bold 12px IBM Plex Sans";
+      ctx.fillText("TRAFO", xTrafo, yMid - 38);
+      ctx.fillStyle = tp.cyan;
+      ctx.font = "11px IBM Plex Mono";
+      ctx.fillText(`Xt = ${fmt(data.xtPu, 3)} pu`, xTrafo, yMid + 46);
+
+      // Barra 2
+      ctx.strokeStyle = tp.gold;
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(xB2, yMid - 40);
+      ctx.lineTo(xB2, yMid + 40);
+      ctx.stroke();
+      ctx.fillStyle = tp.gold;
+      ctx.font = "bold 11px IBM Plex Mono";
+      ctx.fillText("B2", xB2, yMid - 48);
+
+      // Línea (rectángulo de impedancia)
+      ctx.fillStyle = tp.canvas;
+      ctx.strokeStyle = tp.muted;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(xLine - 35, yMid - 16, 70, 32);
+      ctx.fillRect(xLine - 35, yMid - 16, 70, 32);
+      ctx.fillStyle = tp.foam;
+      ctx.font = "11px IBM Plex Mono";
+      ctx.fillText("LÍNEA", xLine, yMid + 4);
+      ctx.fillStyle = tp.cyan;
+      ctx.fillText(`Z = ${fmt(data.rLinePu, 3)}+j${fmt(data.xLinePu, 3)}`, xLine, yMid + 46);
+
+      // Barra de Falla (B_falla)
+      ctx.strokeStyle = tp.hot;
+      ctx.lineWidth = 5;
+      ctx.beginPath();
+      ctx.moveTo(xBFault, yMid - 55);
+      ctx.lineTo(xBFault, yMid + 55);
+      ctx.stroke();
+
+      ctx.fillStyle = tp.hot;
+      ctx.font = "bold 12px IBM Plex Sans";
+      ctx.fillText("BARRA DE FALLA", xBFault, yMid - 65);
+      ctx.font = "bold 11px IBM Plex Mono";
+      ctx.fillText(`Vb = ${fmt(data.vb, 1)} kV`, xBFault, yMid - 48);
+
+      // Rayo de Falla 3φ descendente
+      const xRay = xBFault;
+      const yRay = yMid + 25;
+      ctx.fillStyle = tp.hot;
+      ctx.strokeStyle = tp.gold;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(xRay - 4, yRay);
+      ctx.lineTo(xRay + 10, yRay + 20);
+      ctx.lineTo(xRay + 2, yRay + 22);
+      ctx.lineTo(xRay + 14, yRay + 45);
+      ctx.lineTo(xRay - 6, yRay + 26);
+      ctx.lineTo(xRay + 1, yRay + 24);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Indicadores en la barra de falla
+      ctx.fillStyle = tp.hot;
+      ctx.font = "bold 13px IBM Plex Mono";
+      ctx.textAlign = "left";
+      ctx.fillText(`Icc 3φ = ${fmt(data.iccKa, 2)} kA (${fmt(data.iccpu, 3)} pu)`, xBFault + 20, yMid + 25);
+      ctx.fillStyle = tp.muted;
+      ctx.font = "11px IBM Plex Sans";
+      ctx.fillText(`Scc = ${fmt(data.sccMva, 1)} MVA  ·  Ib = ${fmt(data.ib, 2)} kA`, xBFault + 20, yMid + 44);
+
+      // Carga
+      if (data.pCargKw > 0) {
+        ctx.fillStyle = tp.teal;
+        ctx.strokeStyle = tp.foam;
+        ctx.lineWidth = 1.5;
+        // Flecha de carga hacia abajo
+        ctx.beginPath();
+        ctx.moveTo(xBFault, yMid);
+        ctx.lineTo(xBFault, yMid - 20);
+        ctx.stroke();
+        ctx.fillStyle = tp.foam;
+        ctx.font = "11px IBM Plex Mono";
+        ctx.textAlign = "right";
+        ctx.fillText(`Carga: ${fmt(data.pCargKw, 0)} kW (${fmt(data.iCargKa * 1000, 1)} A)`, xBFault - 12, yMid - 25);
+      }
+
+      // Caja de leyendas y base
+      ctx.textAlign = "left";
+      ctx.fillStyle = tp.muted;
+      ctx.font = "11px IBM Plex Mono";
+      ctx.fillText(`Base Global: Sb = ${fmt(data.sb, 1)} MVA  |  Zb = ${fmt(data.zb, 3)} Ω  |  |Zth| = ${fmt(data.zThMag, 4)} pu`, 18, H - 14);
+    }
+
+    [
+      "pu-sb","pu-vb","pu-zold","pu-sold","pu-vold","pu-vnew",
+      "pu-zg-mva","pu-zg-mode","pu-xt-pct","pu-st-mva","pu-line-r","pu-line-x",
+      "pu-vf-pu","pu-carg-kw","pu-carg-fp"
+    ].forEach((id) => {
+      const el = $(id);
+      if (el) el.addEventListener("input", calcPu);
+      if (el && el.tagName === "SELECT") el.addEventListener("change", calcPu);
+    });
+    if ($("pu-recalc")) $("pu-recalc").addEventListener("click", calcPu);
 
     /* ===================== COLOR ===================== */
     function hexToRgb(hex) {
@@ -1964,6 +2481,7 @@
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
+      if (id === "pu") calcPu();
       if (id === "color") renderColor();
     }
 
@@ -1976,10 +2494,11 @@
         hydro: ["Informe hidráulico · litros a m³", "Volumen, caudal y P = 9,81 · Q · H · η."],
         consumo: ["Informe de consumo", "Empalme editable. Pinza True RMS, duty y simultaneidad."],
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
+        pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
         color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
       }[id];
       if (!meta) throw new Error("Servicio desconocido: " + id);
-      const siteLine = activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
+      const siteLine = id !== "pu" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
       blocks.push(pdfHeader(meta[0], (siteLine ? siteLine + ". " : "") + meta[1]));
 
       if (id === "sev") {
@@ -2198,6 +2717,54 @@
         blocks.push(pdfKv("Ilim sugerida", txt("b-ilim")));
         blocks.push(pdfKv("Estado", txt("b-st")));
         blocks.push(pdfNote("Autoprueba → precarga lógica → E-stop → rearme enclavado. Physical outputs = false."));
+      }
+
+      if (id === "pu") {
+        blocks.push(pdfHeading("Base del Sistema y Barra"));
+        [
+          ["Potencia base Sb", val("pu-sb") + " MVA"],
+          ["Tensión base Vb", val("pu-vb") + " kV (" + txt("pu-vnivel") + ")"],
+          ["Impedancia base Zb", txt("pu-zb-disp")],
+          ["Corriente base Ib", txt("pu-ib-disp")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("Zb = Vb² / Sb · Ib = Sb / (√3 · Vb)"));
+
+        blocks.push(pdfHeading("Cambio de Base de Impedancia (Zpu)"));
+        [
+          ["Zpu original", val("pu-zold") + " pu"],
+          ["S nominal equipo", val("pu-sold") + " MVA"],
+          ["V nominal equipo", val("pu-vold") + " kV"],
+          ["V base de la zona", val("pu-vnew") + " kV"],
+          ["Zpu en base nueva", txt("pu-znew-disp")],
+          ["Z real equivalente", txt("pu-zreal-disp")],
+          ["Razón de cambio", txt("pu-sratio-disp")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("Zpu,new = Zpu,old · (Vnom / Vbase)² · (Sb,new / Snom)"));
+
+        blocks.push(pdfHeading("Parámetros de Red y Falla 3φ"));
+        [
+          ["Red / Generador", val("pu-zg-mva") + " (" + opt("pu-zg-mode") + ")"],
+          ["Transformador Xcc / S", val("pu-xt-pct") + "% / " + val("pu-st-mva") + " MVA"],
+          ["Línea R / X", val("pu-line-r") + " Ω / " + val("pu-line-x") + " Ω"],
+          ["Tensión pre-falla Vf", val("pu-vf-pu") + " pu"],
+          ["Carga en barra", val("pu-carg-kw") + " kW (FP " + val("pu-carg-fp") + ")"],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+
+        blocks.push(pdfHeading("Resultados de Cortocircuito Trifásico"));
+        blocks.push(pdfKv("Icc trifásico simétrico", txt("pu-icc-disp")));
+        blocks.push(pdfKv("Icc en PU", txt("pu-iccpu-disp")));
+        blocks.push(pdfKv("Potencia Scc", txt("pu-scc-disp")));
+        blocks.push(pdfKv("Zth Thévenin", txt("pu-zth-disp")));
+        blocks.push(pdfKv("|Zth| y ángulo", txt("pu-zth-mag")));
+        blocks.push(pdfKv("Componentes Zpu", txt("pu-compo-pu")));
+        blocks.push(pdfKv("Línea en base Sb", txt("pu-linea-pu")));
+        blocks.push(pdfKv("Carga en régimen", txt("pu-carg-reg")));
+        blocks.push(pdfKv("Razón Icc / Inominal", txt("pu-icc-ratio")));
+        blocks.push(pdfNote(txt("pu-notes")));
+        blocks.push(pdfFormula("Icc,pu = Vf / |Zth,pu| · Icc [kA] = Icc,pu · Ib · Scc = √3 · Vb · Icc"));
+
+        blocks.push(pdfHeading("Diagrama Unilineal (SLD)"));
+        blocks.push(pdfFigure(canvasUrl("pu-sld-canvas"), "Diagrama unilineal: Red/Generador, Transformador, Línea y Barra de Falla 3φ."));
       }
 
       if (id === "color") {
@@ -2773,8 +3340,9 @@
     window.__eaApplySite = applySite;
 
     /* init */
-    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); renderColor();
+    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); renderColor();
     buildSiteUi();
+    buildPuRegionalTemplates();
 
     const autoPdf = new URLSearchParams(location.search).get("ea-pdf");
     if (autoPdf && autoPdf !== "home") {

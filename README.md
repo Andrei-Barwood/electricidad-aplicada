@@ -1,10 +1,10 @@
 # Electricidad Aplicada
 
-Un archivo. Siete instrumentos. Un plano.
+Un archivo. Ocho instrumentos. Un plano.
 
 [electricidadaplicada.app](https://electricidadaplicada.app)
 
-Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin nube. El hexágono del tablero, la malla del suelo, el vector del color: cada panel es una figura, no un formulario.
+Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin nube. El hexágono del tablero, la malla del suelo, el vector del color, la normalización por unidad: cada panel es una figura, no un formulario.
 
 ---
 
@@ -20,6 +20,7 @@ Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin
 💧 Hidráulica
 ⌁  Consumo
 ▣  TAN / AHF
+⚡ Por Unidad (PU)
 ◐  Color HEX → HSB
 ```
 
@@ -68,6 +69,12 @@ Empalme editable. Casa-granja o plantilla 10–500 kW. Duty, kWh, frío vs total
 El tablero es un hexágono cerrado: In, Icc, ΔT, forma. Proyectar es inscribir la carga en esa figura. Los armónicos H3, H5, H7 son polígonos anidados sobre la fundamental. El banco 24 V es el cubo chico al lado del grande.
 
 Proyección IEC 61439 (nodo telecom), DSP 3P+N (Clarke / THDi académico) y banco 24 V · 120 W.
+
+### ⚡ Por Unidad (PU) — normalización del sistema
+
+El sistema eléctrico es una escala. Al llevar magnitudes reales a por unidad (pu), la red multi-tensión se unifica en una sola impedancia Thévenin. La potencia base Sb y la tensión Vb fijan el pulso del cálculo.
+
+Calcula bases trifásicas (Zb, Ib), cambio de base Zpu de transformadores y generadores, impedancia de línea, cortocircuito simétrico trifásico (Icc 3φ, Scc) y diagrama unilineal (SLD) interactivo. Incluye plantillas exclusivas de subestaciones de Los Ríos basadas en la información pública de [Infotécnica del Coordinador Eléctrico Nacional](https://infotecnica.coordinador.cl/instalaciones/subestaciones); las impedancias de estudio permanecen editables y no se presentan como datos oficiales.
 
 ### ◐ Color — hexágono de la luz
 
