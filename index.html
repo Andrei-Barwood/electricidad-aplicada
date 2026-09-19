@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
   <script>
     (function () {
       var t;
@@ -306,6 +307,7 @@
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
+        <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
       </div>
       <div class="nav-foot">Material de apoyo académico. No sustituye catálogo, ensayo de tipo ni memoria de cálculo del proyecto.</div>
@@ -317,7 +319,7 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Ocho herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU) para sistemas eléctricos de potencia y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Nueve herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -328,6 +330,7 @@
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
+          <article class="card home" data-go="fasores"><h3>Fasores</h3><p class="sub">Conversión bidireccional entre forma rectangular (a + jb) y notación fasorial (magnitud ∠ ángulo).</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
         </div>
         <div class="card" style="margin-top:16px">
@@ -949,6 +952,83 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-fasores">
+        <div class="hero">
+          <div>
+            <h2>Calculadora de <span>fasores</span></h2>
+            <p class="lede">Convierte números complejos entre forma rectangular y notación fasorial. El ángulo se expresa en grados y se normaliza al intervalo −180° a 180°.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="fasores">Exportar PDF</button></div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Rectangular → fasorial</h3>
+            <p class="sub">Ingresa la parte real <strong>a</strong> y la parte imaginaria <strong>b</strong> del complejo a + jb.</p>
+            <div class="fields two">
+              <div><label class="field" for="ph-rect-real">Parte real a</label><input id="ph-rect-real" type="number" step="any" value="3" /></div>
+              <div><label class="field" for="ph-rect-imag">Parte imaginaria b</label><input id="ph-rect-imag" type="number" step="any" value="4" /></div>
+            </div>
+            <div class="result">
+              <div class="k">Notación fasorial</div>
+              <div class="v" id="ph-rect-polar">5 ∠ 53,13°</div>
+              <p class="hint" id="ph-rect-complex">3 + j4</p>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Magnitud |Z|</dt><dd id="ph-rect-mag">5</dd></div>
+              <div class="meta"><dt>Ángulo θ</dt><dd id="ph-rect-angle">53,13°</dd></div>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>Fasorial → rectangular</h3>
+            <p class="sub">Ingresa la magnitud y el ángulo del fasor A ∠ θ°.</p>
+            <div class="fields two">
+              <div><label class="field" for="ph-polar-mag">Magnitud A</label><input id="ph-polar-mag" type="number" min="0" step="any" value="5" /></div>
+              <div><label class="field" for="ph-polar-angle">Ángulo θ [°]</label><input id="ph-polar-angle" type="number" step="any" value="53.1301024" /></div>
+            </div>
+            <div class="result">
+              <div class="k">Forma rectangular</div>
+              <div class="v" id="ph-polar-rect">3 + j4</div>
+              <p class="hint" id="ph-polar-polar">5 ∠ 53,13°</p>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Parte real a</dt><dd id="ph-polar-real">3</dd></div>
+              <div class="meta"><dt>Parte imaginaria b</dt><dd id="ph-polar-imag">4</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Relaciones</h3>
+          <p class="hint">A = √(a² + b²) · θ = atan2(b, a) · a = A cos(θ) · b = A sin(θ)</p>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <div class="hero" style="margin-bottom:12px">
+            <div>
+              <h3>24 plantillas trifásicas</h3>
+              <p class="sub">Selecciona un circuito de ejemplo para cargar sus valores en la calculadora y visualizarlo con p5.js.</p>
+            </div>
+            <div style="min-width:min(100%, 330px)">
+              <label class="field" for="ph-template">Circuito de ejemplo</label>
+              <select id="ph-template"></select>
+            </div>
+          </div>
+          <div class="grid g2">
+            <div>
+              <h3 id="ph-template-title">—</h3>
+              <p class="hint" id="ph-template-description">—</p>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Topología</dt><dd id="ph-template-topology">—</dd></div>
+                <div class="meta"><dt>Sistema</dt><dd id="ph-template-system">—</dd></div>
+                <div class="meta"><dt>Fasor de referencia</dt><dd id="ph-template-phasor">—</dd></div>
+                <div class="meta"><dt>Secuencia</dt><dd id="ph-template-sequence">ABC</dd></div>
+              </dl>
+            </div>
+            <div>
+              <div id="ph-circuit-canvas" style="width:100%; min-height:280px; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--input-bg)" aria-label="Diagrama del circuito trifásico"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-color">
         <div class="hero">
           <div>
@@ -1016,6 +1096,7 @@
       if (typeof calcMalla === "function") calcMalla();
       if (typeof calcLux === "function") calcLux();
       if (typeof calcDsp === "function") calcDsp();
+      if (phasorSketch) phasorSketch.redraw();
     }
     $("theme-day").addEventListener("click", () => setTheme("day"));
     $("theme-night").addEventListener("click", () => setTheme("night"));
@@ -1039,6 +1120,7 @@
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
+      if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
     }
     document.querySelectorAll(".nav-btn").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
@@ -2206,6 +2288,183 @@
     });
     if ($("pu-recalc")) $("pu-recalc").addEventListener("click", calcPu);
 
+    /* ===================== FASORES ===================== */
+    const radToDeg = (rad) => rad * 180 / Math.PI;
+    const degToRad = (deg) => deg * Math.PI / 180;
+    const PHASOR_TEMPLATES = [
+      ["t01", "Carga resistiva equilibrada", "Estrella (Y)", "400 V · 10 A", 10, 0, "Resistencia trifásica pura"],
+      ["t02", "Motor de inducción", "Estrella (Y)", "400 V · 18 A", 18, -30, "Motor con factor de potencia atrasado"],
+      ["t03", "Motor de inducción", "Delta (Δ)", "400 V · 24 A", 24, -36.87, "Motor conectado en triángulo"],
+      ["t04", "Banco de capacitores", "Estrella (Y)", "400 V · 12 A", 12, 90, "Compensación capacitiva ideal"],
+      ["t05", "Carga RL industrial", "Estrella (Y)", "400 V · 15 A", 15, -53.13, "Carga inductiva con cos φ = 0,6"],
+      ["t06", "Carga RC electrónica", "Delta (Δ)", "400 V · 8 A", 8, 36.87, "Carga con corriente adelantada"],
+      ["t07", "Calefacción trifásica", "Estrella (Y)", "400 V · 22 A", 22, 0, "Tres resistencias de calefacción"],
+      ["t08", "Bomba centrífuga", "Delta (Δ)", "400 V · 20 A", 20, -25.84, "Motor de bomba con cos φ = 0,9"],
+      ["t09", "Ventilador trifásico", "Estrella (Y)", "400 V · 14 A", 14, -19.47, "Motor de ventilación eficiente"],
+      ["t10", "Transformador reductor", "Estrella-estrella", "13,2 kV / 400 V", 6, -15, "Corriente secundaria referida"],
+      ["t11", "Transformador Δ-Y", "Delta-estrella", "13,2 kV / 400 V", 8, -30, "Desfase de 30° entre devanados"],
+      ["t12", "Rectificador de 6 pulsos", "Puente trifásico", "400 V · 16 A", 16, -20, "Entrada de convertidor AC/DC"],
+      ["t13", "Variador de frecuencia", "Puente PWM", "400 V · 13 A", 13, -10, "Entrada trifásica de un VFD"],
+      ["t14", "UPS trifásica", "Estrella (Y)", "400 V · 11 A", 11, -18.19, "Entrada de UPS con carga no lineal"],
+      ["t15", "Horno de arco", "Delta (Δ)", "400 V · 30 A", 30, -45, "Carga industrial asimétrica"],
+      ["t16", "Banco RLC", "Estrella (Y)", "400 V · 9 A", 9, 26.57, "Circuito mixto próximo a resonancia"],
+      ["t17", "Lámparas LED", "Estrella (Y)", "400 V · 7 A", 7, -12, "Alumbrado con fuentes electrónicas"],
+      ["t18", "Compresor frigorífico", "Delta (Δ)", "400 V · 26 A", 26, -41.41, "Compresor de refrigeración"],
+      ["t19", "Bomba sumergible", "Estrella (Y)", "400 V · 17 A", 17, -31, "Motor sumergible de pozo"],
+      ["t20", "Generador síncrono", "Estrella (Y)", "400 V · 21 A", 21, 15, "Fuente trifásica con excitación adelantada"],
+      ["t21", "Red con neutro", "Estrella (Y) + N", "230/400 V · 9 A", 9, -5, "Carga trifásica de cuatro conductores"],
+      ["t22", "Carga monofásica distribuida", "Y desbalanceada", "230/400 V · 6 A", 6, -10, "Representación equivalente de fases desiguales"],
+      ["t23", "Filtro de armónicos", "Delta (Δ)", "400 V · 10 A", 10, 55, "Filtro pasivo sintonizado"],
+      ["t24", "Sistema fotovoltaico", "Inversor trifásico", "400 V · 14 A", 14, 8, "Inyección de corriente a la red"],
+    ].map(([id, name, topology, system, magnitude, angle, description]) => ({
+      id, name, topology, system, magnitude, angle, description,
+    }));
+    let activePhasorTemplate = PHASOR_TEMPLATES[0];
+    let phasorSketch = null;
+    function normalizeAngle(angle) {
+      let normalized = ((angle + 180) % 360 + 360) % 360 - 180;
+      if (Object.is(normalized, -0)) normalized = 0;
+      return normalized;
+    }
+    function signedImaginary(value) {
+      const magnitude = Math.abs(value);
+      return value < 0 ? "- j" + fmt(magnitude, 6) : "+ j" + fmt(magnitude, 6);
+    }
+    function drawPhasorCircuit(template) {
+      if (!phasorSketch) return;
+      phasorSketch.setTemplate(template);
+    }
+    function setupPhasorTemplates() {
+      const select = $("ph-template");
+      select.innerHTML = PHASOR_TEMPLATES.map((template, index) =>
+        `<option value="${template.id}">${index + 1}. ${template.name} · ${template.topology}</option>`,
+      ).join("");
+      select.addEventListener("change", () => applyPhasorTemplate(select.value));
+      applyPhasorTemplate(PHASOR_TEMPLATES[0].id);
+    }
+    function applyPhasorTemplate(id) {
+      const template = PHASOR_TEMPLATES.find((item) => item.id === id);
+      if (!template) return;
+      activePhasorTemplate = template;
+      $("ph-template").value = template.id;
+      $("ph-template-title").textContent = template.name;
+      $("ph-template-description").textContent = template.description;
+      $("ph-template-topology").textContent = template.topology;
+      $("ph-template-system").textContent = template.system;
+      $("ph-template-phasor").textContent = fmt(template.magnitude, 2) + " ∠ " + fmt(template.angle, 2) + "°";
+      $("ph-template-sequence").textContent = "ABC";
+      $("ph-rect-real").value = (template.magnitude * Math.cos(degToRad(template.angle))).toFixed(4);
+      $("ph-rect-imag").value = (template.magnitude * Math.sin(degToRad(template.angle))).toFixed(4);
+      $("ph-polar-mag").value = template.magnitude;
+      $("ph-polar-angle").value = template.angle;
+      calcFasores();
+      drawPhasorCircuit(template);
+    }
+    function setupPhasorSketch() {
+      if (typeof p5 !== "function") {
+        $("ph-circuit-canvas").textContent = "No se pudo cargar p5.js.";
+        return;
+      }
+      phasorSketch = new p5((p) => {
+        let template = activePhasorTemplate;
+        p.setTemplate = (next) => { template = next; p.redraw(); };
+        p.setup = () => {
+          const host = $("ph-circuit-canvas");
+          p.createCanvas(Math.max(420, host.clientWidth), 280).id("ph-circuit-sketch").parent(host);
+          p.pixelDensity(Math.min(window.devicePixelRatio || 1, 2));
+          p.textFont("IBM Plex Mono");
+          p.noLoop();
+        };
+        p.windowResized = () => {
+          const host = $("ph-circuit-canvas");
+          p.resizeCanvas(Math.max(420, host.clientWidth), 280);
+          p.redraw();
+        };
+        p.draw = () => {
+          const paint = themePaint();
+          p.background(paint.canvas);
+          const w = p.width, h = p.height, x0 = 42, x1 = w - 42;
+          const ys = [72, 140, 208];
+          const colors = [paint.cyan, paint.gold, paint.hot];
+          p.strokeWeight(2);
+          p.textSize(11);
+          p.textAlign(p.CENTER, p.CENTER);
+          p.noFill();
+          ys.forEach((y, i) => {
+            p.stroke(colors[i]);
+            p.line(x0, y, x1 - 92, y);
+            p.fill(colors[i]);
+            p.noStroke();
+            p.text(["L1", "L2", "L3"][i], x0 - 18, y);
+            p.noFill();
+          });
+          const nodeX = x1 - 92;
+          p.stroke(paint.muted);
+          p.line(nodeX, ys[0], nodeX, ys[2]);
+          p.line(nodeX, ys[1], nodeX + 28, ys[1]);
+          p.strokeWeight(2);
+          if (template.topology.includes("Delta") || template.topology.includes("Δ")) {
+            const cx = nodeX + 58, cy = 140;
+            p.stroke(paint.foam);
+            p.triangle(cx, 62, cx + 34, 140, cx, 218);
+            p.line(nodeX, ys[0], cx, 62);
+            p.line(nodeX, ys[1], cx + 34, 140);
+            p.line(nodeX, ys[2], cx, 218);
+            p.noStroke(); p.fill(paint.foam); p.text("ZΔ", cx + 15, 140);
+          } else {
+            const cx = nodeX + 58, cy = 140;
+            p.stroke(paint.foam);
+            p.line(nodeX, ys[0], cx, cy);
+            p.line(nodeX, ys[1], cx, cy);
+            p.line(nodeX, ys[2], cx, cy);
+            p.ellipse(cx, cy, 32, 32);
+            p.noStroke(); p.fill(paint.foam); p.text("ZY", cx, cy);
+            if (template.topology.includes("N")) {
+              p.stroke(paint.violet); p.line(cx, cy + 16, cx, h - 24);
+              p.noStroke(); p.fill(paint.violet); p.text("N", cx, h - 14);
+            }
+          }
+          p.noStroke(); p.fill(paint.muted); p.textAlign(p.LEFT, p.TOP);
+          p.text(template.name, 14, 12);
+          p.text(template.topology + " · " + template.system, 14, h - 20);
+          p.textAlign(p.RIGHT, p.TOP);
+          p.text("I₁ = " + fmt(template.magnitude, 2) + " ∠ " + fmt(template.angle, 2) + "°", w - 14, 12);
+          p.text("Secuencia ABC", w - 14, h - 20);
+        };
+      }, "ph-circuit-canvas");
+    }
+    function calcFasores() {
+      const real = +$("ph-rect-real").value;
+      const imag = +$("ph-rect-imag").value;
+      const magnitude = Math.hypot(real, imag);
+      const angle = magnitude === 0 ? 0 : normalizeAngle(radToDeg(Math.atan2(imag, real)));
+      $("ph-rect-polar").textContent = Number.isFinite(magnitude) && Number.isFinite(angle)
+        ? fmt(magnitude, 6) + " ∠ " + fmt(angle, 4) + "°"
+        : "—";
+      $("ph-rect-complex").textContent = Number.isFinite(real) && Number.isFinite(imag)
+        ? fmt(real, 6) + " " + signedImaginary(imag)
+        : "Entrada inválida";
+      $("ph-rect-mag").textContent = fmt(magnitude, 6);
+      $("ph-rect-angle").textContent = Number.isFinite(angle) ? fmt(angle, 4) + "°" : "—";
+
+      const polarMagnitude = +$("ph-polar-mag").value;
+      const polarAngle = +$("ph-polar-angle").value;
+      const polarValid = Number.isFinite(polarMagnitude) && polarMagnitude >= 0 && Number.isFinite(polarAngle);
+      const normalizedPolarAngle = polarValid ? normalizeAngle(polarAngle) : NaN;
+      const polarReal = polarValid ? polarMagnitude * Math.cos(degToRad(polarAngle)) : NaN;
+      const polarImag = polarValid ? polarMagnitude * Math.sin(degToRad(polarAngle)) : NaN;
+      $("ph-polar-rect").textContent = polarValid
+        ? fmt(polarReal, 6) + " " + signedImaginary(polarImag)
+        : "Magnitud inválida";
+      $("ph-polar-polar").textContent = polarValid
+        ? fmt(polarMagnitude, 6) + " ∠ " + fmt(normalizedPolarAngle, 4) + "°"
+        : "Entrada inválida";
+      $("ph-polar-real").textContent = fmt(polarReal, 6);
+      $("ph-polar-imag").textContent = fmt(polarImag, 6);
+    }
+    ["ph-rect-real", "ph-rect-imag", "ph-polar-mag", "ph-polar-angle"]
+      .forEach((id) => $(id).addEventListener("input", calcFasores));
+
     /* ===================== COLOR ===================== */
     function hexToRgb(hex) {
       let s = hex.trim().toUpperCase().replace(/^#/, "");
@@ -2482,6 +2741,7 @@
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
+      if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
     }
 
@@ -2495,6 +2755,7 @@
         consumo: ["Informe de consumo", "Empalme editable. Pinza True RMS, duty y simultaneidad."],
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
+        fasores: ["Informe calculadora de fasores", "Conversión bidireccional entre forma rectangular y notación fasorial."],
         color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
       }[id];
       if (!meta) throw new Error("Servicio desconocido: " + id);
@@ -2765,6 +3026,32 @@
 
         blocks.push(pdfHeading("Diagrama Unilineal (SLD)"));
         blocks.push(pdfFigure(canvasUrl("pu-sld-canvas"), "Diagrama unilineal: Red/Generador, Transformador, Línea y Barra de Falla 3φ."));
+      }
+
+      if (id === "fasores") {
+        blocks.push(pdfHeading("Plantilla trifásica"));
+        blocks.push(pdfKv("Circuito", activePhasorTemplate.name));
+        blocks.push(pdfKv("Topología", activePhasorTemplate.topology));
+        blocks.push(pdfKv("Sistema", activePhasorTemplate.system));
+        blocks.push(pdfKv("Fasor de referencia", txt("ph-template-phasor")));
+        blocks.push(pdfKv("Descripción", activePhasorTemplate.description));
+        blocks.push(pdfHeading("Rectangular → fasorial"));
+        blocks.push(pdfHeading("Rectangular → fasorial"));
+        blocks.push(pdfKv("Parte real a", val("ph-rect-real")));
+        blocks.push(pdfKv("Parte imaginaria b", val("ph-rect-imag")));
+        blocks.push(pdfKv("Magnitud |Z|", txt("ph-rect-mag")));
+        blocks.push(pdfKv("Ángulo θ", txt("ph-rect-angle")));
+        blocks.push(pdfKv("Notación fasorial", txt("ph-rect-polar")));
+        blocks.push(pdfHeading("Fasorial → rectangular"));
+        blocks.push(pdfKv("Magnitud A", val("ph-polar-mag")));
+        blocks.push(pdfKv("Ángulo θ", val("ph-polar-angle") + " °"));
+        blocks.push(pdfKv("Parte real a", txt("ph-polar-real")));
+        blocks.push(pdfKv("Parte imaginaria b", txt("ph-polar-imag")));
+        blocks.push(pdfKv("Forma rectangular", txt("ph-polar-rect")));
+        blocks.push(pdfHeading("Relaciones"));
+        blocks.push(pdfFormula("A = √(a² + b²) · θ = atan2(b, a) · a = A cos(θ) · b = A sin(θ)"));
+        blocks.push(pdfHeading("Diagrama del circuito"));
+        blocks.push(pdfFigure(canvasUrl("ph-circuit-sketch"), "Circuito trifásico de la plantilla seleccionada."));
       }
 
       if (id === "color") {
@@ -3340,9 +3627,11 @@
     window.__eaApplySite = applySite;
 
     /* init */
-    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); renderColor();
+    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
     buildSiteUi();
     buildPuRegionalTemplates();
+    setupPhasorTemplates();
+    setupPhasorSketch();
 
     const autoPdf = new URLSearchParams(location.search).get("ea-pdf");
     if (autoPdf && autoPdf !== "home") {

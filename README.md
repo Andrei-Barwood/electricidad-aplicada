@@ -1,6 +1,6 @@
 # Electricidad Aplicada
 
-Un archivo. Ocho instrumentos. Un plano.
+Un archivo. Nueve instrumentos. Un plano.
 
 [electricidadaplicada.app](https://electricidadaplicada.app)
 
@@ -21,6 +21,7 @@ Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin
 ⌁  Consumo
 ▣  TAN / AHF
 ⚡ Por Unidad (PU)
+∠  Fasores
 ◐  Color HEX → HSB
 ```
 
@@ -75,6 +76,10 @@ Proyección IEC 61439 (nodo telecom), DSP 3P+N (Clarke / THDi académico) y banc
 El sistema eléctrico es una escala. Al llevar magnitudes reales a por unidad (pu), la red multi-tensión se unifica en una sola impedancia Thévenin. La potencia base Sb y la tensión Vb fijan el pulso del cálculo.
 
 Calcula bases trifásicas (Zb, Ib), cambio de base Zpu de transformadores y generadores, impedancia de línea, cortocircuito simétrico trifásico (Icc 3φ, Scc) y diagrama unilineal (SLD) interactivo. Incluye plantillas exclusivas de subestaciones de Los Ríos basadas en la información pública de [Infotécnica del Coordinador Eléctrico Nacional](https://infotecnica.coordinador.cl/instalaciones/subestaciones); las impedancias de estudio permanecen editables y no se presentan como datos oficiales.
+
+### ∠ Fasores — el giro del complejo
+
+Un número complejo tiene dos lecturas: la arista rectangular `a + jb` y el radio fasorial `A ∠ θ`. La calculadora convierte en ambos sentidos, usando grados y `atan2` para conservar el cuadrante correcto. Incluye 24 plantillas de circuitos trifásicos (motores, transformadores, cargas Y/Δ, rectificadores, filtros e inversores), cuyos valores alimentan la calculadora y cuyo esquema se dibuja con p5.js.
 
 ### ◐ Color — hexágono de la luz
 
