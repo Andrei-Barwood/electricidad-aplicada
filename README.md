@@ -1,6 +1,6 @@
 # Electricidad Aplicada
 
-Un archivo. Nueve instrumentos. Un plano.
+Un archivo. Diez instrumentos. Un plano.
 
 [electricidadaplicada.app](https://electricidadaplicada.app)
 
@@ -17,7 +17,9 @@ Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin
 ∿  SEV
 ▦  Malla de tierra
 ☀  Iluminación
+♨  BTU
 💧 Hidráulica
+☀  Solar térmica
 ⌁  Consumo
 ▣  TAN / AHF
 ⚡ Por Unidad (PU)
@@ -58,6 +60,16 @@ Método de lúmenes: CU, snap de κ, N, Ēm. Tablas UNE-EN 12464-1:2012. Plano n
 El litro es el círculo; el metro cúbico, el cubo. 1 000 L cierran un volumen. El salto H es la vertical del vesica: dos cotas, un huso de agua. P = 9,81 · Q · H · η es la línea que cae y se vuelve potencia.
 
 Convierte L ↔ m³, caudal y potencia de pico / microhidro. Energía anual con factor de planta.
+
+### ☀ Solar térmica — calor y fase
+
+Calcula calor sensible con `Q = m · c · ΔT` y calor latente con `Q = m · L`. Incluye plantillas de calor específico para agua, hielo, vapor de agua, aluminio, vidrio, hierro, cobre y aire, además de relaciones de fusión, solidificación, vaporización, condensación, sublimación y sublimación inversa. La relación sugerida se actualiza al cambiar la plantilla de material.
+
+También convierte temperaturas entre Kelvin, Celsius y Fahrenheit desde cualquiera de las tres entradas.
+
+### ♨ BTU — proyección de calefacción
+
+Proyecta la carga de calefacción de un recinto desde sus dimensiones, temperaturas exterior/objetivo y aislación. Entrega BTU/h, kW térmicos, joules, kWh, equivalencia de agua en libras y litros, área sugerida, plano del recinto y una propuesta preliminar de tablero eléctrico para climatización.
 
 ### ⌁ Consumo — cubo de coincidencias
 

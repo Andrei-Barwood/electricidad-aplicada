@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Electricidad Aplicada</title>
-  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, consumo 6 kW, TAN/AHF y color." />
+  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
   <link rel="icon" href="favicon.jpeg?v=1" type="image/jpeg" />
   <link rel="apple-touch-icon" href="favicon.jpeg?v=1" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://electricidadaplicada.app/" />
   <meta property="og:title" content="Electricidad Aplicada" />
-  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, consumo 6 kW, TAN/AHF y color." />
+  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
   <meta property="og:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta property="og:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Electricidad Aplicada" />
-  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, consumo 6 kW, TAN/AHF y color." />
+  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
   <meta name="twitter:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta name="twitter:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -316,7 +316,9 @@
         <button class="nav-btn" data-panel="sev"><span class="ico">∿</span> SEV</button>
         <button class="nav-btn" data-panel="malla"><span class="ico">▦</span> Malla de tierra</button>
         <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
+        <button class="nav-btn" data-panel="btu"><span class="ico">♨</span> BTU</button>
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
+        <button class="nav-btn" data-panel="solar"><span class="ico">☀</span> Solar</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
@@ -332,14 +334,16 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Nueve herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Diez herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
           <article class="card home" data-go="sev"><h3>SEV · Schlumberger</h3><p class="sub">Problema directo Pekeris + filtro Ghosh de 9 puntos. Ajuste de capas, curva log-log y sección geoeléctrica.</p></article>
           <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
+          <article class="card home" data-go="btu"><h3>Proyección BTU</h3><p class="sub">Carga de calefacción por recinto, equivalencias térmicas y tablero eléctrico de climatización.</p></article>
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
+          <article class="card home" data-go="solar"><h3>Solar · calor</h3><p class="sub">Calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
@@ -600,6 +604,81 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-btu">
+        <div class="hero">
+          <div>
+            <h2>Proyección de <span>calefacción BTU</span></h2>
+            <p class="lede">Estima la carga térmica del recinto, su equivalente en energía y el tablero eléctrico que energizará la climatización. La carga es una aproximación académica: valida siempre con la envolvente y el equipo real.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="btu">Exportar PDF</button></div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Recinto y clima</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="btu-template">Plantilla</label>
+                <select id="btu-template">
+                  <option value="bedroom">Dormitorio</option>
+                  <option value="classroom">Sala de clases</option>
+                  <option value="office">Oficina</option>
+                  <option value="workshop">Taller</option>
+                  <option value="living">Living / estar</option>
+                </select>
+              </div>
+              <div class="mini-input"><label for="btu-insulation">Aislación</label>
+                <select id="btu-insulation"><option value="0.8">Buena</option><option value="1" selected>Media</option><option value="1.25">Baja</option></select>
+              </div>
+            </div>
+            <div class="fields" style="margin-top:10px">
+              <div class="mini-input"><label for="btu-width">Ancho [m]</label><input id="btu-width" type="number" min="0.1" step="any" value="4" /></div>
+              <div class="mini-input"><label for="btu-length">Largo [m]</label><input id="btu-length" type="number" min="0.1" step="any" value="5" /></div>
+              <div class="mini-input"><label for="btu-height">Altura [m]</label><input id="btu-height" type="number" min="1" step="any" value="2.6" /></div>
+              <div class="mini-input"><label for="btu-outdoor">Exterior [°F]</label><input id="btu-outdoor" type="number" step="any" value="41" /></div>
+              <div class="mini-input"><label for="btu-target">Objetivo [°F]</label><input id="btu-target" type="number" step="any" value="68" /></div>
+              <div class="mini-input"><label for="btu-hours">Uso [h/día]</label><input id="btu-hours" type="number" min="0" max="24" step="any" value="8" /></div>
+              <div class="mini-input"><label for="btu-capacity">Equipo [BTU/h]</label><input id="btu-capacity" type="number" min="0" step="any" value="24000" /></div>
+            </div>
+            <p class="hint" style="margin-top:10px">Factor base: 20 BTU/h por pie² con ΔT de 30 °F; se ajusta por diferencia térmica y aislación.</p>
+          </div>
+          <div class="card">
+            <h3>Resultados térmicos</h3>
+            <div class="result"><div class="k">Carga de calefacción</div><div class="v" id="btu-load">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Área recinto / sugerida</dt><dd id="btu-area">—</dd></div>
+              <div class="meta"><dt>Volumen / ΔT</dt><dd id="btu-volume">—</dd></div>
+              <div class="meta"><dt>Potencia térmica</dt><dd id="btu-thermal">—</dd></div>
+              <div class="meta"><dt>Energía diaria</dt><dd id="btu-energy-day">—</dd></div>
+              <div class="meta"><dt>Equiv. agua [lb]</dt><dd id="btu-water-lb">—</dd></div>
+              <div class="meta"><dt>Equiv. agua [L]</dt><dd id="btu-water-l">—</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">BTU/h = área(ft²) · 20 · (ΔT/30) · factor · 1 BTU = 1055,056 J</p>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Plano del recinto</h3>
+            <canvas class="chart tall" id="btu-plan" width="900" height="420"></canvas>
+          </div>
+          <div class="card">
+            <h3>Tablero eléctrico de climatización</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="btu-voltage">Alimentación</label>
+                <select id="btu-voltage"><option value="220">1×220 V</option><option value="380">3×380 V</option></select>
+              </div>
+              <div class="mini-input"><label for="btu-cop">COP / eficiencia</label><input id="btu-cop" type="number" min="0.1" step="any" value="1" /></div>
+            </div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Potencia eléctrica</dt><dd id="btu-electric">—</dd></div>
+              <div class="meta"><dt>Corriente estimada</dt><dd id="btu-current">—</dd></div>
+              <div class="meta"><dt>Protección sugerida</dt><dd id="btu-breaker">—</dd></div>
+              <div class="meta"><dt>Conductor orientativo</dt><dd id="btu-conductor">—</dd></div>
+            </dl>
+            <div class="table-wrap" style="margin-top:8px"><table id="btu-board"></table></div>
+            <p class="hint" style="margin-top:10px">Dimensionamiento preliminar con 125 % de la corriente calculada. La protección y sección finales requieren norma local, método de instalación y caída de tensión.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-hydro">
         <div class="hero">
           <div>
@@ -680,6 +759,106 @@
             <div class="meta"><dt>kWh/m³</dt><dd id="hy-spec">—</dd></div>
           </dl>
           <p class="formula" style="margin-top:10px">Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp</p>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-solar">
+        <div class="hero">
+          <div>
+            <h2>Solar <span>térmica</span></h2>
+            <p class="lede">Calcula la energía para cambiar la temperatura de una materia o para producir un cambio de fase. Valores de referencia editables en J/(kg·°C) y J/kg.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="solar">Exportar PDF</button></div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Calor específico</h3>
+            <p class="sub">Calor sensible: Q = m · c · (Tf − Ti). Un ΔT negativo representa enfriamiento.</p>
+            <label class="field" for="sol-c-material">Material / plantilla</label>
+            <select id="sol-c-material">
+              <option value="agua">Agua líquida</option>
+              <option value="hielo">Hielo</option>
+              <option value="vapor">Vapor de agua</option>
+              <option value="aluminio">Aluminio</option>
+              <option value="vidrio">Vidrio</option>
+              <option value="hierro">Hierro</option>
+              <option value="cobre">Cobre</option>
+              <option value="aire">Aire</option>
+            </select>
+            <div class="fields three" style="margin-top:10px">
+              <div class="mini-input"><label for="sol-c-mass">Masa [kg]</label><input id="sol-c-mass" type="number" min="0" step="any" value="1" /></div>
+              <div class="mini-input"><label for="sol-c-ti">Ti [°C]</label><input id="sol-c-ti" type="number" step="any" value="20" /></div>
+              <div class="mini-input"><label for="sol-c-tf">Tf [°C]</label><input id="sol-c-tf" type="number" step="any" value="80" /></div>
+            </div>
+            <div class="result"><div class="k">Energía sensible</div><div class="v" id="sol-c-result">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Calor específico c</dt><dd id="sol-c-value">—</dd></div>
+              <div class="meta"><dt>Cambio de temperatura</dt><dd id="sol-c-delta">—</dd></div>
+            </dl>
+          </div>
+          <div class="card">
+            <h3>Calor latente</h3>
+            <p class="sub">Cambio de fase: Q = m · L. No se usa ΔT porque la energía cambia el estado de la materia.</p>
+            <label class="field" for="sol-l-phase">Cambio de fase / plantilla</label>
+            <select id="sol-l-phase">
+              <option value="fusion">Fusión: hielo → agua</option>
+              <option value="vaporization">Vaporización: agua → vapor</option>
+              <option value="sublimation">Sublimación: hielo → vapor</option>
+              <option value="custom">Valor personalizado</option>
+            </select>
+            <div class="fields two" style="margin-top:10px">
+              <div class="mini-input"><label for="sol-l-mass">Masa [kg]</label><input id="sol-l-mass" type="number" min="0" step="any" value="1" /></div>
+              <div class="mini-input"><label for="sol-l-value">Calor latente L [J/kg]</label><input id="sol-l-value" type="number" min="0" step="any" value="334000" /></div>
+            </div>
+            <div class="result"><div class="k">Energía de cambio de fase</div><div class="v" id="sol-l-result">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Calor latente L</dt><dd id="sol-l-display">—</dd></div>
+              <div class="meta"><dt>Estado</dt><dd id="sol-l-states">—</dd></div>
+            </dl>
+            <p class="hint" style="margin-top:10px">Valores de referencia a presión atmosférica: fusión 334 kJ/kg, vaporización 2 257 kJ/kg y sublimación 2 834 kJ/kg.</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Relaciones de cambio de estado</h3>
+          <p class="sub">Selecciona el proceso físico para identificar el estado inicial, el estado final y el sentido energético. La plantilla se vincula al material elegido arriba.</p>
+          <div class="fields two">
+            <div class="mini-input"><label for="sol-r-material">Material de la plantilla</label><input id="sol-r-material" type="text" readonly /></div>
+            <div class="mini-input"><label for="sol-r-relation">Relación</label>
+              <select id="sol-r-relation">
+                <option value="fusion">Fusión</option>
+                <option value="solidification">Solidificación</option>
+                <option value="vaporization">Vaporización</option>
+                <option value="condensation">Condensación</option>
+                <option value="sublimation">Sublimación</option>
+                <option value="deposition">Sublimación inversa</option>
+              </select>
+            </div>
+          </div>
+          <div class="fields two" style="margin-top:10px">
+            <div class="mini-input"><label for="sol-r-mass">Masa [kg]</label><input id="sol-r-mass" type="number" min="0" step="any" value="1" /></div>
+            <div class="mini-input"><label for="sol-r-latent">Calor latente L [J/kg]</label><input id="sol-r-latent" type="number" min="0" step="any" value="334000" /></div>
+          </div>
+          <div class="result"><div class="k">Energía del proceso</div><div class="v" id="sol-r-result">—</div></div>
+          <dl class="meta-grid">
+            <div class="meta"><dt>Estado inicial → final</dt><dd id="sol-r-states">—</dd></div>
+            <div class="meta"><dt>Sentido térmico</dt><dd id="sol-r-direction">—</dd></div>
+          </dl>
+          <p class="hint" id="sol-r-note" style="margin-top:10px"></p>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Conversor de temperatura</h3>
+          <p class="sub">Ingresa una temperatura en cualquiera de las tres escalas. Las otras unidades se actualizan automáticamente.</p>
+          <div class="fields three">
+            <div class="mini-input"><label for="sol-t-k">Kelvin [K]</label><input id="sol-t-k" type="number" step="any" value="293.15" /></div>
+            <div class="mini-input"><label for="sol-t-c">Celsius [°C]</label><input id="sol-t-c" type="number" step="any" value="20" /></div>
+            <div class="mini-input"><label for="sol-t-f">Fahrenheit [°F]</label><input id="sol-t-f" type="number" step="any" value="68" /></div>
+          </div>
+          <p class="hint" id="sol-t-note" style="margin-top:10px">Relaciones: K = °C + 273,15 · °F = °C × 9/5 + 32.</p>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Valores de calor específico</h3>
+          <p class="sub">Valores aproximados de uso académico. Pueden variar con la temperatura, presión y composición.</p>
+          <div class="table-wrap"><table id="sol-c-table"></table></div>
         </div>
       </section>
 
@@ -1129,7 +1308,9 @@
       if (id === "sev") { parseSev(); drawSev(); }
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
+      if (id === "btu") calcBtu();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "solar") calcSolar();
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
@@ -1676,6 +1857,87 @@
     ["lx-a","lx-b","lx-H","lx-pt","lx-d","lx-em","lx-cm","lx-phi","lx-w","lx-ceil","lx-wall","lx-table","lx-inv-n","lx-sup","lx-len"]
       .forEach((id) => $(id).addEventListener("input", calcLux));
 
+    /* ===================== PROYECCIÓN BTU ===================== */
+    const BTU_TEMPLATES = {
+      bedroom: { base: 18 },
+      classroom: { base: 20 },
+      office: { base: 20 },
+      workshop: { base: 24 },
+      living: { base: 22 },
+    };
+    function btuConductor(current) {
+      if (current <= 10) return "1,5 mm²";
+      if (current <= 16) return "2,5 mm²";
+      if (current <= 25) return "4 mm²";
+      if (current <= 32) return "6 mm²";
+      if (current <= 40) return "10 mm²";
+      return "16 mm² (verificar)";
+    }
+    function drawBtuPlan(width, length) {
+      const canvas = $("btu-plan");
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width, H = canvas.height, pad = 52;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, H);
+      const scale = Math.min((W - 2 * pad) / width, (H - 2 * pad) / length);
+      const rw = width * scale, rh = length * scale, x = (W - rw) / 2, y = (H - rh) / 2;
+      ctx.strokeStyle = tp.cyan; ctx.lineWidth = 3; ctx.strokeRect(x, y, rw, rh);
+      ctx.fillStyle = tp.muted; ctx.font = "16px sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(fmt(width, 2) + " m", W / 2, y - 16);
+      ctx.save(); ctx.translate(x - 22, H / 2); ctx.rotate(-Math.PI / 2); ctx.fillText(fmt(length, 2) + " m", 0, 0); ctx.restore();
+      const heaterW = Math.max(38, Math.min(110, rw * 0.28));
+      ctx.fillStyle = tp.gold; ctx.fillRect(x + rw / 2 - heaterW / 2, y + rh - 18, heaterW, 8);
+      ctx.fillStyle = tp.gold; ctx.font = "13px sans-serif"; ctx.fillText("emisor / climatizador", W / 2, y + rh + 28);
+      ctx.strokeStyle = tp.hot; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(x + rw / 2, y + rh - 18); ctx.lineTo(x + rw / 2, y + rh / 2); ctx.stroke();
+      ctx.fillStyle = tp.hot; ctx.beginPath(); ctx.arc(x + rw / 2, y + rh / 2, 5, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = tp.muted; ctx.font = "12px sans-serif"; ctx.fillText("flujo de aire caliente", x + rw / 2, y + rh / 2 - 12);
+    }
+    function calcBtu() {
+      const width = Math.max(0.1, +$("btu-width").value || 0.1);
+      const length = Math.max(0.1, +$("btu-length").value || 0.1);
+      const height = Math.max(1, +$("btu-height").value || 1);
+      const outdoor = +$("btu-outdoor").value;
+      const target = +$("btu-target").value;
+      const delta = Math.max(0, (Number.isFinite(target) ? target : 68) - (Number.isFinite(outdoor) ? outdoor : 41));
+      const area = width * length;
+      const areaFt2 = area * 10.7639104167;
+      const base = (BTU_TEMPLATES[$("btu-template").value] || BTU_TEMPLATES.classroom).base;
+      const factor = Math.max(0.1, +$("btu-insulation").value || 1);
+      const load = areaFt2 * base * (delta / 30) * factor;
+      const capacity = Math.max(0, +$("btu-capacity").value || 0);
+      const suggestedFt2 = delta > 0 && base > 0 && factor > 0 ? capacity / (base * (delta / 30) * factor) : 0;
+      const suggestedArea = suggestedFt2 / 10.7639104167;
+      const thermalKw = load * 0.00029307107;
+      const hours = Math.min(24, Math.max(0, +$("btu-hours").value || 0));
+      const energyBtu = load * hours;
+      const energyJ = energyBtu * 1055.056;
+      const energyKwh = energyBtu * 0.00029307107;
+      const waterLb = energyBtu;
+      const waterL = waterLb * 0.45359237 / 0.997;
+      const cop = Math.max(0.1, +$("btu-cop").value || 1);
+      const electricKw = thermalKw / cop;
+      const voltage = +$("btu-voltage").value || 220;
+      const current = voltage === 380 ? electricKw * 1000 / (Math.sqrt(3) * voltage) : electricKw * 1000 / voltage;
+      const designCurrent = current * 1.25;
+      const breaker = Math.max(6, Math.ceil(designCurrent / 2) * 2);
+      $("btu-load").innerHTML = fmt(load, 0) + " <small>BTU/h</small>";
+      $("btu-area").textContent = fmt(area, 2) + " m² · sugerida " + fmt(suggestedArea, 2) + " m²";
+      $("btu-volume").textContent = fmt(area * height, 2) + " m³ · ΔT " + fmt(delta, 1) + " °F";
+      $("btu-thermal").textContent = fmt(thermalKw, 3) + " kW térmicos";
+      $("btu-energy-day").textContent = fmt(energyKwh, 2) + " kWh/día · " + fmt(energyJ, 0) + " J";
+      $("btu-water-lb").textContent = fmt(waterLb, 0) + " lb/día";
+      $("btu-water-l").textContent = fmt(waterL, 1) + " L/día";
+      $("btu-electric").textContent = fmt(electricKw, 3) + " kW";
+      $("btu-current").textContent = fmt(current, 2) + " A · diseño " + fmt(designCurrent, 2) + " A";
+      $("btu-breaker").textContent = breaker + " A bipolar";
+      $("btu-conductor").textContent = btuConductor(designCurrent);
+      $("btu-board").innerHTML = "<thead><tr><th>Circuito</th><th>Carga</th><th>In</th><th>Protección</th></tr></thead><tbody><tr><td>Climatización</td><td class=\"mono\">" + fmt(electricKw, 2) + " kW</td><td class=\"mono\">" + fmt(current, 2) + " A</td><td class=\"mono\">" + breaker + " A</td></tr></tbody>";
+      drawBtuPlan(width, length);
+    }
+    ["btu-template","btu-insulation","btu-width","btu-length","btu-height","btu-outdoor","btu-target","btu-hours","btu-capacity","btu-voltage","btu-cop"]
+      .forEach((id) => $(id).addEventListener("input", calcBtu));
+
     /* ===================== HIDRO ===================== */
     let hyDir = "lm";
     let hySync = false;
@@ -1760,6 +2022,125 @@
     ["hy-pq","hy-pqu","hy-ph","hy-pn","hy-z1","hy-z2","hy-loss","hy-fp"].forEach((id) => {
       $(id).addEventListener("input", () => { renderP(); renderPot(); });
     });
+
+    /* ===================== SOLAR TÉRMICA ===================== */
+    const SOLAR_MATERIALS = {
+      agua: { name: "Agua líquida", c: 4186 },
+      hielo: { name: "Hielo", c: 2100 },
+      vapor: { name: "Vapor de agua", c: 2010 },
+      aluminio: { name: "Aluminio", c: 900 },
+      vidrio: { name: "Vidrio", c: 840 },
+      hierro: { name: "Hierro", c: 449 },
+      cobre: { name: "Cobre", c: 385 },
+      aire: { name: "Aire", c: 1005 },
+    };
+    const SOLAR_PHASES = {
+      fusion: { L: 334000, states: "Hielo → agua", label: "Fusión" },
+      vaporization: { L: 2257000, states: "Agua → vapor", label: "Vaporización" },
+      sublimation: { L: 2834000, states: "Hielo → vapor", label: "Sublimación" },
+    };
+    const SOLAR_RELATIONS = {
+      fusion: { states: "sólido → líquido", sign: 1, direction: "Absorbe energía", latent: 334000 },
+      solidification: { states: "líquido → sólido", sign: -1, direction: "Libera energía", latent: 334000 },
+      vaporization: { states: "líquido → gas", sign: 1, direction: "Absorbe energía", latent: 2257000 },
+      condensation: { states: "gas → líquido", sign: -1, direction: "Libera energía", latent: 2257000 },
+      sublimation: { states: "sólido → gas", sign: 1, direction: "Absorbe energía", latent: 2834000 },
+      deposition: { states: "gas → sólido", sign: -1, direction: "Libera energía", latent: 2834000 },
+    };
+    const SOLAR_RELATION_BY_MATERIAL = {
+      agua: "vaporization",
+      hielo: "fusion",
+      vapor: "condensation",
+    };
+    let solarPhaseKey = "";
+    let solarRelationKey = "";
+    let solarTemperatureSource = "c";
+    function renderSolarTable() {
+      $("sol-c-table").innerHTML = "<thead><tr><th>Material</th><th>c [J/(kg·°C)]</th><th>Uso típico</th></tr></thead><tbody>" +
+        Object.values(SOLAR_MATERIALS).map((m) => "<tr><td>" + m.name + "</td><td class=\"mono\">" + fmt(m.c, 0) + "</td><td>Calor sensible</td></tr>").join("") +
+        "</tbody>";
+    }
+    function calcSolar() {
+      const material = SOLAR_MATERIALS[$("sol-c-material").value] || SOLAR_MATERIALS.agua;
+      const mass = Math.max(0, +$("sol-c-mass").value || 0);
+      const ti = +$("sol-c-ti").value;
+      const tf = +$("sol-c-tf").value;
+      const delta = Number.isFinite(ti) && Number.isFinite(tf) ? tf - ti : 0;
+      const q = mass * material.c * delta;
+      $("sol-c-value").textContent = fmt(material.c, 0) + " J/(kg·°C)";
+      $("sol-c-delta").textContent = fmt(delta, 2) + " °C";
+      $("sol-c-result").innerHTML = fmt(q, 2) + " <small>J</small>";
+
+      const phaseKey = $("sol-l-phase").value;
+      const phase = SOLAR_PHASES[phaseKey];
+      if (phase) {
+        if (phaseKey !== solarPhaseKey) $("sol-l-value").value = phase.L;
+        $("sol-l-value").disabled = false;
+        $("sol-l-states").textContent = phase.states;
+      } else {
+        $("sol-l-value").disabled = false;
+        $("sol-l-states").textContent = "Cambio definido por el usuario";
+      }
+      solarPhaseKey = phaseKey;
+      const latent = Math.max(0, +$("sol-l-value").value || 0);
+      const latentMass = Math.max(0, +$("sol-l-mass").value || 0);
+      $("sol-l-display").textContent = fmt(latent, 0) + " J/kg";
+      $("sol-l-result").innerHTML = fmt(latentMass * latent, 2) + " <small>J</small>";
+
+      const relationMaterial = SOLAR_MATERIALS[$("sol-c-material").value] || SOLAR_MATERIALS.agua;
+      if (solarRelationKey !== $("sol-c-material").value) {
+        $("sol-r-material").value = relationMaterial.name;
+        const suggested = SOLAR_RELATION_BY_MATERIAL[$("sol-c-material").value];
+        if (suggested) $("sol-r-relation").value = suggested;
+        if (suggested) $("sol-r-latent").value = SOLAR_RELATIONS[suggested].latent;
+      }
+      const selectedRelation = SOLAR_RELATIONS[$("sol-r-relation").value] || SOLAR_RELATIONS.fusion;
+      const relationMass = Math.max(0, +$("sol-r-mass").value || 0);
+      const relationLatent = Math.max(0, +$("sol-r-latent").value || 0);
+      $("sol-r-material").value = relationMaterial.name;
+      $("sol-r-states").textContent = selectedRelation.states;
+      $("sol-r-direction").textContent = selectedRelation.direction;
+      $("sol-r-result").innerHTML = fmt(relationMass * relationLatent * selectedRelation.sign, 2) + " <small>J</small>";
+      $("sol-r-note").textContent = SOLAR_RELATION_BY_MATERIAL[$("sol-c-material").value]
+        ? "Plantilla actualizada desde " + relationMaterial.name + ". L corresponde a una referencia del agua a presión atmosférica."
+        : "Para " + relationMaterial.name + ", ingresa el calor latente específico del material. La relación matemática permanece vigente.";
+      solarRelationKey = $("sol-c-material").value;
+    }
+    function calcSolarTemperature(source) {
+      if (source) solarTemperatureSource = source;
+      const kInput = $("sol-t-k");
+      const cInput = $("sol-t-c");
+      const fInput = $("sol-t-f");
+      let c;
+      if (solarTemperatureSource === "k") {
+        const k = +kInput.value;
+        c = Number.isFinite(k) ? k - 273.15 : NaN;
+      } else if (solarTemperatureSource === "f") {
+        const f = +fInput.value;
+        c = Number.isFinite(f) ? (f - 32) * 5 / 9 : NaN;
+      } else {
+        c = +cInput.value;
+      }
+      if (!Number.isFinite(c)) {
+        $("sol-t-note").textContent = "Ingresa una temperatura válida.";
+        return;
+      }
+      const k = c + 273.15;
+      const f = c * 9 / 5 + 32;
+      kInput.value = k.toFixed(2);
+      cInput.value = c.toFixed(2);
+      fInput.value = f.toFixed(2);
+      $("sol-t-note").textContent = "Relaciones: K = °C + 273,15 · °F = °C × 9/5 + 32. Temperatura absoluta: " + fmt(k, 2) + " K.";
+    }
+    $("sol-c-material").addEventListener("input", calcSolar);
+    ["sol-c-mass", "sol-c-ti", "sol-c-tf", "sol-l-mass", "sol-l-value"].forEach((id) => $(id).addEventListener("input", calcSolar));
+    $("sol-l-phase").addEventListener("input", calcSolar);
+    ["sol-r-relation", "sol-r-mass", "sol-r-latent"].forEach((id) => $(id).addEventListener("input", calcSolar));
+    $("sol-t-k").addEventListener("input", () => calcSolarTemperature("k"));
+    $("sol-t-c").addEventListener("input", () => calcSolarTemperature("c"));
+    $("sol-t-f").addEventListener("input", () => calcSolarTemperature("f"));
+    renderSolarTable();
+    calcSolarTemperature();
 
     /* ===================== CONSUMO 6 kW ===================== */
     const EQUIP = [
@@ -2750,7 +3131,9 @@
       if (id === "sev") { parseSev(); drawSev(); }
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
+      if (id === "btu") calcBtu();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "solar") calcSolar();
       if (id === "consumo") renderConsumo();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
@@ -2764,7 +3147,9 @@
         sev: ["Informe SEV · Schlumberger", "Problema directo Pekeris + filtro Ghosh. Ajuste de capas y curva log-log."],
         malla: ["Informe malla de tierra BT", "IEEE Std 80: Rg, tensiones de paso y contacto, Cs y sección de conductor."],
         lux: ["Informe de alumbrado por lúmenes", "Método de lúmenes, snap de κ y tablero de circuitos. UNE-EN 12464-1:2012."],
+        btu: ["Informe de proyección de calefacción BTU", "Carga térmica aproximada por recinto, equivalencias energéticas y tablero eléctrico de climatización."],
         hydro: ["Informe hidráulico · litros a m³", "Volumen, caudal y P = 9,81 · Q · H · η."],
+        solar: ["Informe solar térmico", "Calor específico y calor latente para cambios de temperatura y de fase."],
         consumo: ["Informe de consumo", "Empalme editable. Pinza True RMS, duty y simultaneidad."],
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
@@ -2879,6 +3264,44 @@
         }
       }
 
+      if (id === "btu") {
+        blocks.push(pdfHeading("Recinto y clima"));
+        [
+          ["Plantilla", opt("btu-template")],
+          ["Aislación", opt("btu-insulation")],
+          ["Ancho / largo / altura", val("btu-width") + " / " + val("btu-length") + " / " + val("btu-height") + " m"],
+          ["Exterior / objetivo", val("btu-outdoor") + " / " + val("btu-target") + " °F"],
+          ["Uso diario", val("btu-hours") + " h"],
+          ["Capacidad del equipo", val("btu-capacity") + " BTU/h"],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfHeading("Resultados térmicos"));
+        [
+          ["Carga", txt("btu-load")],
+          ["Área / volumen / ΔT", txt("btu-area") + " / " + txt("btu-volume")],
+          ["Potencia térmica", txt("btu-thermal")],
+          ["Energía diaria", txt("btu-energy-day")],
+          ["Agua equivalente", txt("btu-water-lb") + " / " + txt("btu-water-l")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("BTU/h = área(ft²) · base · (ΔT/30) · factor · 1 BTU = 1055,056 J"));
+        blocks.push(pdfHeading("Plano del recinto"));
+        blocks.push(pdfFigure(canvasUrl("btu-plan"), "Recinto con emisor de calefacción y sentido de flujo de aire."));
+        blocks.push(pdfHeading("Tablero eléctrico"));
+        [
+          ["Alimentación", opt("btu-voltage")],
+          ["COP / eficiencia", val("btu-cop")],
+          ["Potencia eléctrica", txt("btu-electric")],
+          ["Corriente", txt("btu-current")],
+          ["Protección", txt("btu-breaker")],
+          ["Conductor", txt("btu-conductor")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        const btuBoard = tableFromEl("btu-board");
+        if (btuBoard.headers.length) {
+          blocks.push(pdfTableRow(btuBoard.headers, [1.5, 1, 0.8, 1], true));
+          btuBoard.rows.forEach((row) => blocks.push(pdfTableRow(row, [1.5, 1, 0.8, 1], false)));
+        }
+        blocks.push(pdfNote("Dimensionamiento preliminar. Verificar normativa, caída de tensión, poder de corte, método de instalación y protecciones diferenciales."));
+      }
+
       if (id === "hydro") {
         const volLabel = hyDir === "lm" ? "Volumen en litros" : "Volumen en m³";
         blocks.push(pdfHeading("Conversor de volumen"));
@@ -2912,6 +3335,38 @@
         blocks.push(pdfKv("kWh/m³", txt("hy-spec")));
         blocks.push(pdfHeading("Fórmula"));
         blocks.push(pdfFormula("Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp"));
+      }
+
+      if (id === "solar") {
+        blocks.push(pdfHeading("Calor específico"));
+        blocks.push(pdfKv("Material", opt("sol-c-material")));
+        blocks.push(pdfKv("Masa", val("sol-c-mass") + " kg"));
+        blocks.push(pdfKv("Ti / Tf", val("sol-c-ti") + " / " + val("sol-c-tf") + " °C"));
+        blocks.push(pdfKv("c", txt("sol-c-value")));
+        blocks.push(pdfKv("ΔT", txt("sol-c-delta")));
+        blocks.push(pdfKv("Energía sensible", txt("sol-c-result")));
+        blocks.push(pdfFormula("Q = m · c · (Tf − Ti)"));
+        blocks.push(pdfHeading("Calor latente"));
+        blocks.push(pdfKv("Cambio de fase", opt("sol-l-phase")));
+        blocks.push(pdfKv("Masa", val("sol-l-mass") + " kg"));
+        blocks.push(pdfKv("L", txt("sol-l-display")));
+        blocks.push(pdfKv("Estados", txt("sol-l-states")));
+        blocks.push(pdfKv("Energía de fase", txt("sol-l-result")));
+        blocks.push(pdfFormula("Q = m · L"));
+        blocks.push(pdfHeading("Relación de cambio de estado"));
+        blocks.push(pdfKv("Material de plantilla", val("sol-r-material")));
+        blocks.push(pdfKv("Relación", opt("sol-r-relation")));
+        blocks.push(pdfKv("Masa", val("sol-r-mass") + " kg"));
+        blocks.push(pdfKv("Estado inicial / final", txt("sol-r-states")));
+        blocks.push(pdfKv("Sentido térmico", txt("sol-r-direction")));
+        blocks.push(pdfKv("Calor latente", val("sol-r-latent") + " J/kg"));
+        blocks.push(pdfKv("Energía del proceso", txt("sol-r-result")));
+        blocks.push(pdfFormula("Q = ±m · L · (+) absorbe energía · (−) libera energía"));
+        blocks.push(pdfHeading("Conversor de temperatura"));
+        blocks.push(pdfKv("Kelvin", val("sol-t-k") + " K"));
+        blocks.push(pdfKv("Celsius", val("sol-t-c") + " °C"));
+        blocks.push(pdfKv("Fahrenheit", val("sol-t-f") + " °F"));
+        blocks.push(pdfFormula("K = °C + 273,15 · °F = °C × 9/5 + 32"));
       }
 
       if (id === "consumo") {
@@ -3640,7 +4095,7 @@
     window.__eaApplySite = applySite;
 
     /* init */
-    parseSev(); drawSev(); calcMalla(); calcLux(); renderVol(); setQ(80); renderP(); renderPot(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
+    parseSev(); drawSev(); calcMalla(); calcLux(); calcBtu(); renderVol(); setQ(80); renderP(); renderPot(); calcSolar(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
     buildSiteUi();
     buildPuRegionalTemplates();
     setupPhasorTemplates();
