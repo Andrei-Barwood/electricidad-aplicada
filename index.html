@@ -433,7 +433,7 @@
         <div class="grid g2">
           <div class="card">
             <h3>Datos de campo</h3>
-            <p class="sub">Dos columnas: L = AB/2 [m] y ρa [Ω·m]. También puedes pegar L, MN, R y convertir con K.</p>
+            <p class="sub">Dos columnas: L = AB/2 [m] y ρa [Ω·m]. También puedes pegar L, MN, R y convertir con K. CSV con coma o punto y coma; encabezados opcionales (L, ρa, R, MN).</p>
             <textarea id="sev-data" spellcheck="false">1	98
 2	92
 4	71
@@ -452,7 +452,10 @@
             <div class="row-actions">
               <button class="btn primary" type="button" id="sev-parse">Leer datos</button>
               <button class="btn" type="button" id="sev-synth">Sintetizar tipo H</button>
+              <input id="sev-csv" type="file" accept=".csv,.txt,text/csv,text/plain" hidden />
+              <button class="btn" type="button" id="sev-csv-btn">Subir CSV</button>
             </div>
+            <p class="hint" id="sev-csv-msg"></p>
             <p class="formula">K = π · [(AB/2)² − (MN/2)²] / MN &nbsp;·&nbsp; ρa = K · R</p>
           </div>
           <div class="card">
@@ -1349,6 +1352,12 @@
         <div class="grid g2">
           <div class="card">
             <h3>Proyección de tablero</h3>
+            <p class="sub">CSV de tablero (P, V, cos φ, η, racks, IP, redundancia), DSP (I1, H3, H5, H7) y banco 24 V. También filas parámetro,valor.</p>
+            <div class="row-actions" style="margin-bottom:10px">
+              <input id="tan-csv" type="file" accept=".csv,.txt,text/csv,text/plain" hidden />
+              <button class="btn" type="button" id="tan-csv-btn">Subir CSV</button>
+            </div>
+            <p class="hint" id="tan-csv-msg"></p>
             <div class="fields two">
               <div class="mini-input"><label>Potencia [kW]</label><input id="t-p" type="number" value="45" step="any" /></div>
               <div class="mini-input"><label>Tensión [V]</label><input id="t-v" type="number" value="400" /></div>
@@ -1850,6 +1859,169 @@
         });
       });
     }
+    function parseLocaleNumber(s) {
+      s = String(s == null ? "" : s).trim().replace(/\s/g, "");
+      if (!s) return NaN;
+      if (s.includes(",") && s.includes(".")) {
+        if (s.lastIndexOf(",") > s.lastIndexOf(".")) s = s.replace(/\./g, "").replace(",", ".");
+        else s = s.replace(/,/g, "");
+      } else if ((s.match(/,/g) || []).length === 1 && !s.includes(".")) {
+        s = s.replace(",", ".");
+      }
+      return Number(s);
+    }
+    function csvNormKey(s) {
+      return String(s || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/Ω/g, "ohm").replace(/ρ/g, "rho").replace(/[^a-z0-9]+/g, "");
+    }
+    function splitCsvLine(line, delim) {
+      const out = [];
+      let cur = "", q = false;
+      for (let i = 0; i < line.length; i++) {
+        const c = line[i];
+        if (c === '"') { q = !q; continue; }
+        if (!q && c === delim) { out.push(cur); cur = ""; continue; }
+        cur += c;
+      }
+      out.push(cur);
+      return out.map((x) => x.trim());
+    }
+    function parseCsvTable(text) {
+      const raw = String(text || "").replace(/^\uFEFF/, "").split(/\r?\n/)
+        .map((l) => l.trim()).filter((l) => l && !l.startsWith("#"));
+      if (!raw.length) return { headers: [], rows: [] };
+      const delim = (raw[0].split(";").length > raw[0].split(",").length) ? ";" : ",";
+      const cells0 = splitCsvLine(raw[0], delim);
+      const numeric0 = cells0.filter((c) => Number.isFinite(parseLocaleNumber(c))).length;
+      const head0 = csvNormKey(cells0[0]);
+      const namedHead = ["l", "rho", "rhoa", "r", "mn", "ab2", "parametro", "clave", "campo", "valor", "key",
+        "p", "potencia", "v", "tension", "i1", "h3", "h5", "h7", "cos", "eta", "racks", "ip"].includes(head0);
+      const kvPairs = namedHead && numeric0 >= 1 && cells0.length === 2;
+      const hasHeader = namedHead && numeric0 === 0 && !kvPairs;
+      const headers = (hasHeader ? cells0 : cells0.map((_, i) => "c" + i)).map(csvNormKey);
+      const body = hasHeader ? raw.slice(1) : raw;
+      const rows = body.map((line) => splitCsvLine(line, delim)).filter((r) => r.some((c) => c !== ""));
+      return { headers, rows, delim };
+    }
+    function csvCol(headers, names) {
+      const want = names.map(csvNormKey);
+      return headers.findIndex((h) => want.includes(h));
+    }
+    function applySevCsv(text) {
+      const { headers, rows } = parseCsvTable(text);
+      const iL = csvCol(headers, ["l", "ab2", "ab/2", "ab2m", "distancia", "c0"]);
+      const iRho = csvCol(headers, ["rho", "rhoa", "rhoohm", "rhoohmm", "resistividad", "c1"]);
+      const iR = csvCol(headers, ["r", "rohm", "resistencia", "rmedida"]);
+      const iMn = csvCol(headers, ["mn", "mnm"]);
+      const useR = iR >= 0 && iRho < 0;
+      const iVal = useR ? iR : (iRho >= 0 ? iRho : 1);
+      const iX = iL >= 0 ? iL : 0;
+      const pts = [];
+      let mnFromFile = null;
+      rows.forEach((r) => {
+        const L = parseLocaleNumber(r[iX]);
+        const val = parseLocaleNumber(r[iVal]);
+        if (!(L > 0) || !(val > 0)) return;
+        const mn = iMn >= 0 ? parseLocaleNumber(r[iMn]) : NaN;
+        if (mn > 0) mnFromFile = mn;
+        pts.push({ L, val, mn });
+      });
+      if (pts.length < 2) throw new Error("hacen falta al menos dos pares L, ρa (o L, R).");
+      if (useR) $("sev-mode").value = "r";
+      else $("sev-mode").value = "rho";
+      if (mnFromFile > 0) $("sev-mn").value = String(mnFromFile);
+      $("sev-data").value = pts.map((p) => {
+        if (useR && p.mn > 0) return p.L + "\t" + p.val + "\t" + p.mn;
+        return p.L + "\t" + p.val;
+      }).join("\n");
+      return pts.length;
+    }
+    const TAN_CSV_MAP = {
+      p: "t-p", potencia: "t-p", kw: "t-p", pkw: "t-p",
+      v: "t-v", tension: "t-v", voltaje: "t-v",
+      cos: "t-cos", cosphi: "t-cos", fp: "t-cos",
+      eta: "t-eta", rendimiento: "t-eta",
+      racks: "t-racks", salidas: "t-racks",
+      ip: "t-ip",
+      red: "t-red", redundancia: "t-red",
+      h: "t-h", armonicos: "t-h", harm: "t-h",
+      sis: "t-sis", sismico: "t-sis",
+      i1: "d-i1", h3: "d-h3", h5: "d-h5", h7: "d-h7",
+      vbus: "b-v", vbusv: "b-v",
+      icarga: "b-i", icargaa: "b-i",
+      rizado: "b-rip", rizadomax: "b-rip"
+    };
+    function setTanCsvField(id, raw) {
+      const el = $(id);
+      if (!el) return false;
+      const s = String(raw).trim();
+      if (id === "t-sis") {
+        el.checked = /^(1|si|sí|true|yes|x)$/i.test(s);
+        return true;
+      }
+      if (id === "t-red") {
+        const u = s.toUpperCase().replace(/\s/g, "");
+        el.value = u === "2N" ? "2N" : u === "N+1" || u === "N1" ? "N+1" : "N";
+        return true;
+      }
+      if (id === "t-h") {
+        el.value = /^(1|si|sí|true|yes)$/i.test(s) ? "1" : "0";
+        return true;
+      }
+      const n = parseLocaleNumber(s);
+      if (!Number.isFinite(n) && el.tagName === "SELECT") {
+        el.value = s;
+        return true;
+      }
+      if (!Number.isFinite(n)) return false;
+      el.value = String(n);
+      return true;
+    }
+    function applyTanCsv(text) {
+      const { headers, rows } = parseCsvTable(text);
+      let n = 0;
+      const applyKv = (k, v) => {
+        const id = TAN_CSV_MAP[csvNormKey(k)];
+        if (id && setTanCsvField(id, v)) n += 1;
+      };
+      if (rows.length && headers.some((h) => TAN_CSV_MAP[h])) {
+        const last = rows[rows.length - 1];
+        headers.forEach((h, i) => { if (last[i] != null && last[i] !== "") applyKv(h, last[i]); });
+      }
+      if (!n) {
+        rows.forEach((r) => { if (r.length >= 2) applyKv(r[0], r[1]); });
+      }
+      if (!n && rows.length) {
+        const last = rows[rows.length - 1];
+        if (last.length >= 4 && last.slice(0, 4).every((c) => Number.isFinite(parseLocaleNumber(c)))) {
+          ["d-i1", "d-h3", "d-h5", "d-h7"].forEach((id, i) => { if (setTanCsvField(id, last[i])) n += 1; });
+        }
+      }
+      if (!n) throw new Error("no reconocí columnas de tablero (P, V, cos φ) ni de DSP (I1, H3, H5, H7).");
+      calcTan(); calcDsp(); calcBank();
+      return n;
+    }
+    function bindCsvInput(btnId, fileId, msgId, applyFn, okLabel) {
+      const btn = $(btnId), file = $(fileId), msg = $(msgId);
+      if (!btn || !file) return;
+      btn.addEventListener("click", () => file.click());
+      file.addEventListener("change", () => {
+        const f = file.files && file.files[0];
+        if (!f) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const n = applyFn(String(reader.result || ""));
+            if (msg) msg.textContent = n + " " + okLabel + " · " + f.name;
+          } catch (err) {
+            if (msg) msg.textContent = "No se pudo leer el CSV: " + (err && err.message ? err.message : err);
+          }
+        };
+        reader.onerror = () => { if (msg) msg.textContent = "No se pudo abrir el archivo."; };
+        reader.readAsText(f);
+        file.value = "";
+      });
+    }
     function parseSev() {
       const mode = $("sev-mode").value;
       const mn = +$("sev-mn").value || 1;
@@ -2028,6 +2200,12 @@
       renderLayerEditor();
     });
     $("sev-parse").addEventListener("click", () => { parseSev(); drawSev(); });
+    bindCsvInput("sev-csv-btn", "sev-csv", "sev-csv-msg", (t) => {
+      const n = applySevCsv(t);
+      parseSev();
+      drawSev();
+      return n;
+    }, "puntos");
     $("sev-forward").addEventListener("click", () => { parseSev(); drawSev(); });
     $("sev-fit").addEventListener("click", fitSev);
     $("sev-synth").addEventListener("click", () => {
@@ -3188,6 +3366,7 @@
     ["t-p","t-v","t-cos","t-eta","t-racks","t-ip","t-red","t-h","t-sis"].forEach((id) => $(id).addEventListener("input", calcTan));
     ["d-i1","d-h3","d-h5","d-h7"].forEach((id) => $(id).addEventListener("input", calcDsp));
     ["b-v","b-i","b-rip"].forEach((id) => $(id).addEventListener("input", calcBank));
+    bindCsvInput("tan-csv-btn", "tan-csv", "tan-csv-msg", applyTanCsv, "campos");
 
     /* ===================== POR UNIDAD (PU) & SEP ===================== */
     const PU_REGIONAL_TEMPLATES = [
