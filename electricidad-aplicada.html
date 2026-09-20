@@ -273,6 +273,22 @@
     .solar-suite .suite-mark { font-size: 28px; line-height: 1; }
     .solar-suite .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
     .solar-suite .result-grid .result { margin-top: 0; }
+    .solar-orbit-wrap { display: grid; place-items: center; min-height: 250px; perspective: 850px; }
+    .solar-cube { position: relative; width: 170px; height: 170px; transform-style: preserve-3d; transform: rotateX(-18deg) rotateY(28deg); animation: solar-cube-spin 22s linear infinite; will-change: transform; }
+    .solar-cube-face { position: absolute; inset: 0; border: 1px solid var(--cyan); background: transparent; backface-visibility: visible; -webkit-backface-visibility: visible; transform-style: preserve-3d; pointer-events: none; }
+    .solar-cube-face.front { transform: translateZ(85px); }
+    .solar-cube-face.back { transform: rotateY(180deg) translateZ(85px); }
+    .solar-cube-face.right { transform: rotateY(90deg) translateZ(85px); }
+    .solar-cube-face.left { transform: rotateY(-90deg) translateZ(85px); }
+    .solar-cube-face.top { transform: rotateX(90deg) translateZ(85px); border-color: var(--gold); }
+    .solar-cube-face.bottom { transform: rotateX(-90deg) translateZ(85px); }
+    .solar-sphere-orbit { position: absolute; inset: 0; display: grid; place-items: center; transform-style: preserve-3d; animation: solar-orbit-spin 9s linear infinite; }
+    .solar-sphere { width: 68px; height: 68px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff8bd 0 7%, var(--gold) 25%, var(--hot) 68%, #5d1c18 100%); box-shadow: 0 0 28px rgba(227, 202, 117, 0.7), 0 0 70px rgba(237, 67, 41, 0.28); transform: rotateX(var(--solar-declination, 0deg)); }
+    .solar-axis { position: absolute; width: 2px; height: 132px; background: var(--cyan-2); opacity: .8; transform: rotateZ(var(--solar-declination, 0deg)); }
+    .solar-orbit-caption { margin-top: 4px; text-align: center; color: var(--muted); font-size: 12.5px; }
+    @keyframes solar-cube-spin { from { transform: rotateX(-18deg) rotateY(28deg); } to { transform: rotateX(-18deg) rotateY(388deg); } }
+    @keyframes solar-orbit-spin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .solar-cube, .solar-sphere-orbit { animation-play-state: paused; } }
     .template-note { color: var(--muted); font-size: 12.5px; margin: 8px 0 0; }
     .row-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
     .swatch { height: 120px; border-radius: 16px; border: 1px solid var(--line); display: grid; place-items: center; }
@@ -350,7 +366,7 @@
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
           <article class="card home" data-go="btu"><h3>Proyección BTU</h3><p class="sub">Carga de calefacción por recinto, equivalencias térmicas y tablero eléctrico de climatización.</p></article>
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
-          <article class="card home" data-go="solar"><h3>Solar · calor</h3><p class="sub">Calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
+          <article class="card home" data-go="solar"><h3>Solar · calor y radiación</h3><p class="sub">Radiación horaria por estación, proyección anual, calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
@@ -777,6 +793,224 @@
             <p class="lede">Calcula la energía para cambiar la temperatura de una materia o para producir un cambio de fase. Valores de referencia editables en J/(kg·°C) y J/kg.</p>
           </div>
           <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="solar">Exportar PDF</button></div>
+        </div>
+        <div class="card solar-suite" style="margin-bottom:16px">
+          <div class="suite-head">
+            <div>
+              <h3>Azimut solar</h3>
+              <p class="sub">Calcula el coseno del azimut solar y su ángulo mediante arco coseno a partir de la altitud solar, la latitud y la declinación.</p>
+            </div>
+            <div class="suite-mark" aria-hidden="true">⌁</div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <div class="fields four">
+                <div class="mini-input">
+                  <label for="sol-az-month">Mes</label>
+                  <select id="sol-az-month">
+                    <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+                    <option value="4">Abril</option><option value="5">Mayo</option><option value="6" selected>Junio</option>
+                    <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+                    <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                  </select>
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-day">Día</label>
+                  <input id="sol-az-day" type="number" min="1" max="31" step="1" value="21" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-altitude">Altitud solar βₙ [°]</label>
+                  <input id="sol-az-altitude" type="number" min="-90" max="90" step="any" value="26.75" readonly />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-lat">Latitud L [°]</label>
+                  <input id="sol-az-lat" type="number" min="-90" max="90" step="any" value="-39.8" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-declination">Declinación δ [°]</label>
+                  <input id="sol-az-declination" type="number" min="-23.45" max="23.45" step="any" value="23.45" readonly />
+                </div>
+              </div>
+              <div class="fields three" style="margin-top:10px">
+                <div class="mini-input">
+                  <label for="sol-az-clock">Hora terrestre / solar verdadera</label>
+                  <select id="sol-az-clock"></select>
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-longitude">Longitud [°]</label>
+                  <input id="sol-az-longitude" type="number" min="-180" max="180" step="any" value="-73.25" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-az-timezone">Huso UTC</label>
+                  <input id="sol-az-timezone" type="number" min="-12" max="14" step="1" value="-4" />
+                </div>
+              </div>
+              <p class="formula" style="margin-top:12px">cos(φₛ) = [sen(βₙ) · sen(L) − sen(δ)] / [cos(βₙ) · cos(L)]</p>
+              <p class="template-note">La opción muestra <strong>hora terrestre / hora solar verdadera</strong>. La conversión usa longitud, huso UTC y ecuación del tiempo; los ángulos se ingresan en grados.</p>
+            </div>
+            <div>
+              <div class="result">
+                <div class="k">Azimut cos(φₛ)</div>
+                <div class="v" id="sol-az-cosine">—</div>
+              </div>
+              <div class="result">
+                <div class="k">Azimut φₛ = arccos(cos(φₛ))</div>
+                <div class="v" id="sol-azimuth-result">—</div>
+              </div>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Altitud utilizada</dt><dd id="sol-az-altitude-result">—</dd></div>
+                <div class="meta"><dt>Latitud utilizada</dt><dd id="sol-az-lat-result">—</dd></div>
+                <div class="meta"><dt>Declinación utilizada</dt><dd id="sol-az-declination-result">—</dd></div>
+                <div class="meta"><dt>Hora solar verdadera</dt><dd id="sol-az-solar-time-result">—</dd></div>
+                <div class="meta"><dt>Estado del cálculo</dt><dd id="sol-az-state">—</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="card solar-suite" style="margin-bottom:16px">
+          <div class="suite-head">
+            <div>
+              <h3>Radiación solar por hora y estación</h3>
+              <p class="sub">Estima la radiación incidente en un plano durante las 24 horas de un día representativo de cada estación y la extrapola al año. El resultado es una referencia académica para comparar temporadas, no un dato meteorológico medido.</p>
+            </div>
+            <div class="suite-mark" aria-hidden="true">◌</div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Parámetros del sitio</h3>
+              <div class="fields two">
+                <div class="mini-input"><label for="sol-hour-month">Mes</label><select id="sol-hour-month">
+                  <option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option>
+                  <option value="4">Abril</option><option value="5">Mayo</option><option value="6" selected>Junio</option>
+                  <option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option>
+                  <option value="10">Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option>
+                </select></div>
+                <div class="mini-input"><label for="sol-hour-day-of-month">Día del mes</label><input id="sol-hour-day-of-month" type="number" min="1" max="31" step="1" value="21" /></div>
+                <div class="mini-input"><label for="sol-hour-lat">Latitud [°]</label><input id="sol-hour-lat" type="number" min="-90" max="90" step="any" value="-39.8" /></div>
+                <div class="mini-input"><label for="sol-hour-peak">Irradiancia pico [kW/m²]</label><input id="sol-hour-peak" type="number" min="0.1" step="any" value="1" /></div>
+                <div class="mini-input"><label for="sol-hour-atm">Factor atmosférico [%]</label><input id="sol-hour-atm" type="number" min="0" max="100" step="1" value="72" /></div>
+                <div class="mini-input"><label for="sol-hour-orient">Factor orientación [%]</label><input id="sol-hour-orient" type="number" min="0" max="100" step="1" value="95" /></div>
+                <div class="mini-input"><label for="sol-hour-tilt">Inclinación del plano [°]</label><input id="sol-hour-tilt" type="number" min="0" max="90" step="1" value="40" /></div>
+                <div class="mini-input"><label for="sol-hour-surface">Superficie [m²]</label><input id="sol-hour-surface" type="number" min="0.1" step="any" value="1" /></div>
+              </div>
+              <p class="formula" style="margin-top:12px">G(h) ≈ Gp · Fatm · Forient · max(0, sin α) · superficie</p>
+              <p class="template-note">Días adoptados: verano 92, otoño 91, invierno 89 y primavera 93. La inclinación modifica la referencia del plano; para un diseño definitivo se deben usar datos TMY o mediciones locales.</p>
+            </div>
+            <div>
+              <div class="result-grid">
+                <div class="result"><div class="k">Día del año n</div><div class="v" id="sol-hour-day-number">—</div></div>
+                <div class="result"><div class="k">Declinación solar</div><div class="v" id="sol-hour-declination">—</div></div>
+                <div class="result"><div class="k">Horas sol equivalentes</div><div class="v" id="sol-hour-equivalent">—</div></div>
+                <div class="result"><div class="k">Radiación del día</div><div class="v" id="sol-hour-day-energy">—</div></div>
+              </div>
+              <canvas id="sol-hour-chart" class="chart" width="720" height="300" aria-label="Radiación solar horaria por estación"></canvas>
+            </div>
+          </div>
+          <div class="grid g2" style="margin-top:14px">
+            <div class="card">
+              <h3>Esfera solar en el cubo celeste</h3>
+              <p class="sub">La esfera gira continuamente y su eje se inclina según la declinación calculada para el día seleccionado.</p>
+              <div class="solar-orbit-wrap" aria-label="Animación de la esfera solar y su eje de declinación">
+                <div class="solar-cube">
+                  <div class="solar-cube-face front"></div><div class="solar-cube-face back"></div>
+                  <div class="solar-cube-face right"></div><div class="solar-cube-face left"></div>
+                  <div class="solar-cube-face top"></div><div class="solar-cube-face bottom"></div>
+                  <div class="solar-sphere-orbit"><div class="solar-axis"></div><div class="solar-sphere"></div></div>
+                </div>
+              </div>
+              <p class="solar-orbit-caption"><strong id="sol-hour-orbit-caption">— · n = — · δ = —</strong></p>
+            </div>
+            <div class="card">
+              <div class="result"><div class="k">Radiación anual</div><div class="v" id="sol-hour-annual">—</div></div>
+              <div class="result"><div class="k">Mejor estación</div><div class="v" id="sol-hour-best">—</div></div>
+              <p class="formula" style="margin-top:12px">δ = 23,45° · sen[(360° / 365) · (n − 81)]</p>
+            </div>
+          </div>
+          <div class="table-wrap" style="margin-top:14px">
+            <table id="sol-hour-season-table"></table>
+          </div>
+          <div class="table-wrap" style="margin-top:14px">
+            <table id="sol-hour-hour-table"></table>
+          </div>
+        </div>
+        <div class="card solar-suite" style="margin-bottom:16px">
+          <div class="suite-head">
+            <div>
+              <h3>Ángulo horario y altitud solar</h3>
+              <p class="sub">Calcula el ángulo horario respecto al mediodía solar verdadero y la altitud del Sol sobre la línea del horizonte para una ubicación y declinación determinadas.</p>
+            </div>
+            <div class="suite-mark" aria-hidden="true">☼</div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <div class="fields three">
+                <div class="mini-input">
+                  <label for="sol-alt-time">Hora solar verdadera [h]</label>
+                  <input id="sol-alt-time" type="number" min="0" max="24" step="any" value="12" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-alt-lat">Latitud L [°]</label>
+                  <input id="sol-alt-lat" type="number" min="-90" max="90" step="any" value="-39.8" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-alt-declination">Declinación δ [°]</label>
+                  <input id="sol-alt-declination" type="number" min="-23.45" max="23.45" step="any" value="23.45" />
+                </div>
+              </div>
+              <p class="formula" style="margin-top:12px">H = 15° · (hora solar verdadera − 12)</p>
+              <p class="formula" style="margin-top:8px">sen(βₙ) = cos(L) · cos(δ) · cos(H) + sen(L) · sen(δ)</p>
+              <p class="template-note">La hora ingresada se interpreta como hora solar verdadera, no como hora oficial del reloj. La altitud es positiva sobre el horizonte y negativa cuando el Sol está bajo él.</p>
+            </div>
+            <div>
+              <div class="result">
+                <div class="k">Altitud solar βₙ</div>
+                <div class="v" id="sol-altitude-result">—</div>
+              </div>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Ángulo horario H</dt><dd id="sol-hour-angle-result">—</dd></div>
+                <div class="meta"><dt>sen(βₙ)</dt><dd id="sol-altitude-sine">—</dd></div>
+                <div class="meta"><dt>Estado solar</dt><dd id="sol-altitude-state">—</dd></div>
+                <div class="meta"><dt>Referencia</dt><dd id="sol-altitude-reference">—</dd></div>
+              </dl>
+            </div>
+          </div>
+        </div>
+        <div class="card solar-suite" style="margin-bottom:16px">
+          <div class="suite-head">
+            <div>
+              <h3>Inclinación óptima de los paneles</h3>
+              <p class="sub">Calcula el ángulo de elevación recomendado sobre la horizontal a partir de la latitud del lugar de instalación y la declinación solar del día analizado.</p>
+            </div>
+            <div class="suite-mark" aria-hidden="true">∠</div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <div class="fields two">
+                <div class="mini-input">
+                  <label for="sol-opt-lat">Latitud L [°]</label>
+                  <input id="sol-opt-lat" type="number" min="-90" max="90" step="any" value="-39.8" />
+                </div>
+                <div class="mini-input">
+                  <label for="sol-opt-declination">Declinación δ [°]</label>
+                  <input id="sol-opt-declination" type="number" min="-23.45" max="23.45" step="any" value="23.45" />
+                </div>
+              </div>
+              <p class="formula" style="margin-top:12px">β = |L − δ|</p>
+              <p class="template-note">El resultado expresa la elevación del panel respecto de la horizontal. Para una instalación definitiva también deben revisarse sombras, estructura, orientación azimutal, viento y normativa local.</p>
+            </div>
+            <div>
+              <div class="result">
+                <div class="k">Ángulo óptimo β</div>
+                <div class="v" id="sol-opt-beta">—</div>
+              </div>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Latitud utilizada</dt><dd id="sol-opt-lat-result">—</dd></div>
+                <div class="meta"><dt>Declinación utilizada</dt><dd id="sol-opt-declination-result">—</dd></div>
+                <div class="meta"><dt>Referencia</dt><dd id="sol-opt-reference">—</dd></div>
+                <div class="meta"><dt>Posición sugerida</dt><dd id="sol-opt-position">—</dd></div>
+              </dl>
+            </div>
+          </div>
         </div>
         <div class="card solar-suite" style="margin-bottom:16px">
           <div class="suite-head">
@@ -1456,7 +1690,7 @@
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
-      if (id === "solar") calcSolar();
+      if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
@@ -2304,6 +2538,204 @@
       "familia-grande": { people: 6, liters: 55, cold: 12, hot: 45, sun: 3.5, eff: 45, fraction: 65, panel: 2 },
       cabaña: { people: 3, liters: 40, cold: 10, hot: 45, sun: 4.2, eff: 50, fraction: 55, panel: 2 },
     };
+    const SOLAR_HOUR_SEASONS = [
+      { key: "verano", name: "Verano", day: 355, days: 92, factor: 1.15 },
+      { key: "otoño", name: "Otoño", day: 80, days: 91, factor: 0.92 },
+      { key: "invierno", name: "Invierno", day: 172, days: 89, factor: 0.72 },
+      { key: "primavera", name: "Primavera", day: 266, days: 93, factor: 1.00 },
+    ];
+    function solarDeclination(day) {
+      return 23.45 * Math.sin((360 / 365) * (day - 81) * Math.PI / 180);
+    }
+    function solarDayOfYear(month, day) {
+      const daysByMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+      const safeMonth = Math.max(1, Math.min(12, Math.round(month) || 1));
+      const maxDay = daysByMonth[safeMonth - 1];
+      const safeDay = Math.max(1, Math.min(maxDay, Math.round(day) || 1));
+      return {
+        month: safeMonth,
+        day: safeDay,
+        dayOfYear: daysByMonth.slice(0, safeMonth - 1).reduce((sum, days) => sum + days, 0) + safeDay,
+        maxDay,
+      };
+    }
+    function solarHourlyProfile(latitude, peak, atmospheric, orientation, tilt, declination, factor = 1) {
+      const lat = latitude * Math.PI / 180;
+      const solarDeclinationRad = declination * Math.PI / 180;
+      const tiltFactor = 0.85 + 0.15 * Math.cos((Math.abs(latitude) - tilt) * Math.PI / 180);
+      const base = peak * atmospheric * orientation * factor * tiltFactor;
+      return Array.from({ length: 24 }, (_, hour) => {
+        const hourAngle = (hour + 0.5 - 12) * 15 * Math.PI / 180;
+        const altitude = Math.sin(lat) * Math.sin(solarDeclinationRad) + Math.cos(lat) * Math.cos(solarDeclinationRad) * Math.cos(hourAngle);
+        return Math.max(0, base * Math.max(0, altitude));
+      });
+    }
+    function drawSolarHourlyChart(profiles) {
+      const canvas = $("sol-hour-chart");
+      const ctx = canvas.getContext("2d");
+      const W = canvas.width, H = canvas.height, pad = 36;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas; ctx.fillRect(0, 0, W, H);
+      const max = Math.max(0.1, ...profiles.flatMap((p) => p.values));
+      const x = (hour) => pad + hour * (W - 2 * pad) / 23;
+      const y = (value) => H - pad - value / max * (H - 2 * pad);
+      ctx.strokeStyle = tp.line; ctx.lineWidth = 1;
+      for (let i = 0; i <= 4; i++) {
+        const yy = y(max * i / 4);
+        ctx.beginPath(); ctx.moveTo(pad, yy); ctx.lineTo(W - pad, yy); ctx.stroke();
+      }
+      const colors = [tp.gold, tp.cyan, tp.violet, tp.ok, tp.hot];
+      profiles.forEach((profile, index) => {
+        ctx.strokeStyle = colors[index]; ctx.lineWidth = 2; ctx.beginPath();
+        profile.values.forEach((value, hour) => {
+          const xx = x(hour), yy = y(value);
+          hour ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy);
+        });
+        ctx.stroke();
+      });
+      ctx.fillStyle = tp.muted; ctx.font = "11px IBM Plex Sans"; ctx.textAlign = "center";
+      [0, 6, 12, 18, 23].forEach((hour) => ctx.fillText(hour + " h", x(hour), H - 10));
+      ctx.textAlign = "left";
+      profiles.forEach((profile, index) => {
+        ctx.fillStyle = colors[index];
+        ctx.fillRect(pad + index * 112, 10, 18, 3);
+        ctx.fillText(profile.name, pad + 23 + index * 112, 14);
+      });
+      ctx.textAlign = "left";
+    }
+    function calcSolarHourly() {
+      const date = solarDayOfYear(+$("sol-hour-month").value, +$("sol-hour-day-of-month").value);
+      $("sol-hour-day-of-month").max = date.maxDay;
+      $("sol-hour-day-of-month").value = date.day;
+      const day = date.dayOfYear;
+      const latitude = Math.max(-90, Math.min(90, +$("sol-hour-lat").value || 0));
+      const peak = Math.max(0, +$("sol-hour-peak").value || 0);
+      const atmospheric = Math.max(0, Math.min(100, +$("sol-hour-atm").value || 0)) / 100;
+      const orientation = Math.max(0, Math.min(100, +$("sol-hour-orient").value || 0)) / 100;
+      const tilt = Math.max(0, Math.min(90, +$("sol-hour-tilt").value || 0));
+      const surface = Math.max(0, +$("sol-hour-surface").value || 0);
+      const profiles = SOLAR_HOUR_SEASONS.map((season) => {
+        const values = solarHourlyProfile(latitude, peak, atmospheric, orientation, tilt, solarDeclination(season.day), season.factor);
+        const daily = values.reduce((sum, value) => sum + value, 0);
+        return { ...season, declination: solarDeclination(season.day), values, daily, annual: daily * season.days };
+      });
+      const selectedDeclination = solarDeclination(day);
+      const selectedValues = solarHourlyProfile(latitude, peak, atmospheric, orientation, tilt, selectedDeclination);
+      const selectedDaily = selectedValues.reduce((sum, value) => sum + value, 0);
+      const annualWh = profiles.reduce((sum, profile) => sum + profile.annual, 0);
+      const best = profiles.reduce((winner, profile) => profile.daily > winner.daily ? profile : winner, profiles[0]);
+      $("sol-hour-declination").innerHTML = fmt(selectedDeclination, 2) + "°";
+      $("sol-hour-day-energy").innerHTML = fmt(selectedDaily * surface, 2) + " <small>kWh/m²·día</small>";
+      $("sol-hour-equivalent").innerHTML = fmt(annualWh / Math.max(peak, 0.001), 0) + " <small>h/año</small>";
+      $("sol-hour-annual").innerHTML = fmt(annualWh * surface, 2) + " <small>kWh/año</small>";
+      $("sol-hour-best").innerHTML = best.name + " <small>" + fmt(best.daily, 2) + " kWh/m²·día</small>";
+      const selectedMonthName = $("sol-hour-month").options[date.month - 1].textContent;
+      $("sol-hour-day-number").textContent = "n = " + day;
+      $("sol-hour-orbit-caption").textContent = selectedMonthName + " " + date.day + " · n = " + day + " · δ = " + fmt(selectedDeclination, 2) + "°";
+      document.querySelector(".solar-sphere").style.setProperty("--solar-declination", selectedDeclination.toFixed(2) + "deg");
+      document.querySelector(".solar-axis").style.setProperty("--solar-declination", selectedDeclination.toFixed(2) + "deg");
+      $("sol-hour-season-table").innerHTML = "<thead><tr><th>Periodo</th><th>Día n</th><th>Declinación</th><th>Máx. horario</th><th>Diario</th><th>Aporte anual</th></tr></thead><tbody>" +
+        profiles.map((profile) => "<tr><td>" + profile.name + "</td><td class=\"mono\">" + profile.day + "</td><td class=\"mono\">" + fmt(profile.declination, 2) + "°</td><td class=\"mono\">" + fmt(Math.max(...profile.values), 3) + " kW/m²</td><td class=\"mono\">" + fmt(profile.daily, 2) + " kWh/m²</td><td class=\"mono\">" + fmt(profile.annual, 1) + " kWh/m²</td></tr>").join("") +
+        "<tr><td><strong>Día seleccionado</strong></td><td class=\"mono\"><strong>" + day + "</strong></td><td class=\"mono\"><strong>" + fmt(selectedDeclination, 2) + "°</strong></td><td class=\"mono\"><strong>" + fmt(Math.max(...selectedValues), 3) + " kWh/m²</strong></td><td class=\"mono\"><strong>" + fmt(selectedDaily, 2) + " kWh/m²</strong></td><td>—</td></tr></tbody>";
+      const chartProfiles = profiles.concat([{ name: "Seleccionado", values: selectedValues }]);
+      $("sol-hour-hour-table").innerHTML = "<thead><tr><th>Hora solar</th>" + chartProfiles.map((profile) => "<th>" + profile.name + "</th>").join("") + "</tr></thead><tbody>" +
+        Array.from({ length: 24 }, (_, hour) => "<tr><td class=\"mono\">" + String(hour).padStart(2, "0") + ":30</td>" + chartProfiles.map((profile) => "<td class=\"mono\">" + fmt(profile.values[hour], 3) + "</td>").join("") + "</tr>").join("") + "</tbody>";
+      drawSolarHourlyChart(chartProfiles);
+    }
+    function calcSolarOptimalTilt() {
+      const latitude = Math.max(-90, Math.min(90, +$("sol-opt-lat").value || 0));
+      const declination = Math.max(-23.45, Math.min(23.45, +$("sol-opt-declination").value || 0));
+      const beta = Math.abs(latitude - declination);
+      $("sol-opt-beta").innerHTML = fmt(beta, 2) + " <small>° sobre la horizontal</small>";
+      $("sol-opt-lat-result").textContent = fmt(latitude, 2) + "°";
+      $("sol-opt-declination-result").textContent = fmt(declination, 2) + "°";
+      $("sol-opt-reference").textContent = "β = |" + fmt(latitude, 2) + " − " + fmt(declination, 2) + "|";
+      $("sol-opt-position").textContent = beta <= 5 ? "Casi horizontal" : beta >= 85 ? "Casi vertical" : "Elevación " + fmt(beta, 1) + "°";
+    }
+    function calcSolarAltitude() {
+      const solarTime = Math.max(0, Math.min(24, +$("sol-alt-time").value || 0));
+      const latitude = Math.max(-90, Math.min(90, +$("sol-alt-lat").value || 0));
+      const declination = Math.max(-23.45, Math.min(23.45, +$("sol-alt-declination").value || 0));
+      const hourAngle = 15 * (solarTime - 12);
+      const latRad = latitude * Math.PI / 180;
+      const declinationRad = declination * Math.PI / 180;
+      const hourAngleRad = hourAngle * Math.PI / 180;
+      const sine = Math.max(-1, Math.min(1,
+        Math.cos(latRad) * Math.cos(declinationRad) * Math.cos(hourAngleRad) +
+        Math.sin(latRad) * Math.sin(declinationRad),
+      ));
+      const altitude = Math.asin(sine) * 180 / Math.PI;
+      $("sol-altitude-result").innerHTML = fmt(altitude, 2) + " <small>°</small>";
+      $("sol-hour-angle-result").textContent = fmt(hourAngle, 2) + "°";
+      $("sol-altitude-sine").textContent = fmt(sine, 6);
+      $("sol-altitude-state").textContent = altitude > 0.05 ? "Sobre el horizonte" : altitude < -0.05 ? "Bajo el horizonte" : "En el horizonte";
+      $("sol-altitude-reference").textContent = "L " + fmt(latitude, 2) + "° · δ " + fmt(declination, 2) + "°";
+    }
+    function solarEquationOfTime(day) {
+      const b = (360 / 365) * (day - 81) * Math.PI / 180;
+      return 9.87 * Math.sin(2 * b) - 7.53 * Math.cos(b) - 1.5 * Math.sin(b);
+    }
+    function formatSolarClock(minutes) {
+      const normalized = ((minutes % 1440) + 1440) % 1440;
+      return String(Math.floor(normalized / 60)).padStart(2, "0") + ":" + String(Math.round(normalized % 60)).padStart(2, "0");
+    }
+    function populateSolarAzimuthHours() {
+      const date = solarDayOfYear(+$("sol-az-month").value, +$("sol-az-day").value);
+      $("sol-az-day").max = date.maxDay;
+      $("sol-az-day").value = date.day;
+      const longitude = Math.max(-180, Math.min(180, +$("sol-az-longitude").value || 0));
+      const timezone = Math.max(-12, Math.min(14, +$("sol-az-timezone").value || 0));
+      const correction = solarEquationOfTime(date.dayOfYear) + 4 * (longitude - timezone * 15);
+      const selected = $("sol-az-clock").value;
+      $("sol-az-clock").innerHTML = Array.from({ length: 24 }, (_, hour) => {
+        const clockMinutes = hour * 60;
+        const solarMinutes = clockMinutes + correction;
+        return `<option value="${clockMinutes}">${formatSolarClock(clockMinutes)} / ${formatSolarClock(solarMinutes)}</option>`;
+      }).join("");
+      if (selected !== "") $("sol-az-clock").value = selected;
+      if (!$("sol-az-clock").value) $("sol-az-clock").value = "720";
+    }
+    function calcSolarAzimuth() {
+      const date = solarDayOfYear(+$("sol-az-month").value, +$("sol-az-day").value);
+      $("sol-az-day").max = date.maxDay;
+      $("sol-az-day").value = date.day;
+      if (!$("sol-az-clock").options.length) populateSolarAzimuthHours();
+      const longitude = Math.max(-180, Math.min(180, +$("sol-az-longitude").value || 0));
+      const timezone = Math.max(-12, Math.min(14, +$("sol-az-timezone").value || 0));
+      const correction = solarEquationOfTime(date.dayOfYear) + 4 * (longitude - timezone * 15);
+      const clockMinutes = +$("sol-az-clock").value || 720;
+      const trueSolarMinutes = clockMinutes + correction;
+      const latitude = Math.max(-90, Math.min(90, +$("sol-az-lat").value || 0));
+      const declination = solarDeclination(date.dayOfYear);
+      $("sol-az-declination").value = declination.toFixed(2);
+      const trueSolarHour = trueSolarMinutes / 60;
+      const latitudeRadForAltitude = latitude * Math.PI / 180;
+      const declinationRadForAltitude = declination * Math.PI / 180;
+      const hourAngleRadForAltitude = 15 * (trueSolarHour - 12) * Math.PI / 180;
+      const altitudeSine = Math.max(-1, Math.min(1,
+        Math.cos(latitudeRadForAltitude) * Math.cos(declinationRadForAltitude) * Math.cos(hourAngleRadForAltitude) +
+        Math.sin(latitudeRadForAltitude) * Math.sin(declinationRadForAltitude),
+      ));
+      const altitude = Math.asin(altitudeSine) * 180 / Math.PI;
+      $("sol-az-altitude").value = altitude.toFixed(2);
+      const betaRad = altitude * Math.PI / 180;
+      const latitudeRad = latitude * Math.PI / 180;
+      const declinationRad = declination * Math.PI / 180;
+      const denominator = Math.cos(betaRad) * Math.cos(latitudeRad);
+      const numerator = Math.sin(betaRad) * Math.sin(latitudeRad) - Math.sin(declinationRad);
+      const rawCosine = denominator === 0 ? NaN : numerator / denominator;
+      const cosine = Number.isFinite(rawCosine) ? Math.max(-1, Math.min(1, rawCosine)) : NaN;
+      const azimuth = Number.isFinite(cosine) ? Math.acos(cosine) * 180 / Math.PI : NaN;
+      $("sol-az-cosine").textContent = fmt(cosine, 6);
+      $("sol-azimuth-result").innerHTML = Number.isFinite(azimuth) ? fmt(azimuth, 2) + " <small>°</small>" : "—";
+      $("sol-az-altitude-result").textContent = fmt(altitude, 2) + "°";
+      $("sol-az-lat-result").textContent = fmt(latitude, 2) + "°";
+      $("sol-az-declination-result").textContent = fmt(declination, 2) + "°";
+      $("sol-az-solar-time-result").textContent = formatSolarClock(trueSolarMinutes);
+      $("sol-az-state").textContent = Number.isFinite(rawCosine)
+        ? (Math.abs(rawCosine) > 1 ? "Ajustado a [-1, 1]" : "Resultado válido")
+        : "Denominador nulo";
+    }
     function applySolarResidentialTemplate() {
       const t = SOLAR_RESIDENTIAL_TEMPLATES[$("sol-rad-template").value];
       if (!t) return;
@@ -2462,8 +2894,22 @@
     ["sol-rad-width", "sol-rad-length", "sol-rad-height", "sol-rad-outdoor", "sol-rad-target", "sol-rad-insulation", "sol-rad-coverage", "sol-rad-spacing"].forEach((id) => $(id).addEventListener("input", calcSolarResidential));
     $("sol-acs-template").addEventListener("input", applySolarACSTemplate);
     ["sol-acs-people", "sol-acs-liters", "sol-acs-cold", "sol-acs-hot", "sol-acs-sun", "sol-acs-eff", "sol-acs-fraction", "sol-acs-panel"].forEach((id) => $(id).addEventListener("input", calcSolarACS));
+    ["sol-hour-month", "sol-hour-day-of-month", "sol-hour-lat", "sol-hour-peak", "sol-hour-atm", "sol-hour-orient", "sol-hour-tilt", "sol-hour-surface"].forEach((id) => $(id).addEventListener("input", calcSolarHourly));
+    $("sol-hour-month").addEventListener("change", calcSolarHourly);
+    ["sol-opt-lat", "sol-opt-declination"].forEach((id) => $(id).addEventListener("input", calcSolarOptimalTilt));
+    ["sol-alt-time", "sol-alt-lat", "sol-alt-declination"].forEach((id) => $(id).addEventListener("input", calcSolarAltitude));
+    ["sol-az-month", "sol-az-day", "sol-az-altitude", "sol-az-lat", "sol-az-longitude", "sol-az-timezone"].forEach((id) => $(id).addEventListener("input", () => {
+      if (id === "sol-az-month" || id === "sol-az-day" || id === "sol-az-longitude" || id === "sol-az-timezone") populateSolarAzimuthHours();
+      calcSolarAzimuth();
+    }));
+    $("sol-az-clock").addEventListener("change", calcSolarAzimuth);
     renderSolarTable();
     calcSolarTemperature();
+    calcSolarHourly();
+    calcSolarOptimalTilt();
+    calcSolarAltitude();
+    populateSolarAzimuthHours();
+    calcSolarAzimuth();
     calcSolarResidential();
     calcSolarACS();
 
@@ -3458,7 +3904,7 @@
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
-      if (id === "solar") calcSolar();
+      if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
@@ -3665,6 +4111,30 @@
       }
 
       if (id === "solar") {
+        blocks.push(pdfHeading("Radiación horaria y estaciones"));
+        blocks.push(pdfKv("Fecha / día del año / declinación", opt("sol-hour-month") + " " + val("sol-hour-day-of-month") + " / " + txt("sol-hour-day-number") + " / " + txt("sol-hour-declination")));
+        blocks.push(pdfKv("Ubicación / plano", val("sol-hour-lat") + "° · " + val("sol-hour-tilt") + "°"));
+        blocks.push(pdfKv("Irradiancia pico / superficie", val("sol-hour-peak") + " kW/m² · " + val("sol-hour-surface") + " m²"));
+        blocks.push(pdfKv("Factores atmosférico / orientación", val("sol-hour-atm") + " % / " + val("sol-hour-orient") + " %"));
+        blocks.push(pdfKv("Radiación anual", txt("sol-hour-annual")));
+        blocks.push(pdfKv("Radiación del día / mejor estación", txt("sol-hour-day-energy") + " / " + txt("sol-hour-best")));
+        blocks.push(pdfKv("Horas sol equivalentes / mejor estación", txt("sol-hour-equivalent") + " / " + txt("sol-hour-best")));
+        blocks.push(pdfFormula("G(h) ≈ Gp · Fatm · Forient · max(0, sin α) · superficie"));
+        blocks.push(pdfHeading("Inclinación óptima de los paneles"));
+        blocks.push(pdfKv("Latitud L / declinación δ", val("sol-opt-lat") + "° / " + val("sol-opt-declination") + "°"));
+        blocks.push(pdfKv("Ángulo de elevación β", txt("sol-opt-beta")));
+        blocks.push(pdfFormula("β = |L − δ|"));
+        blocks.push(pdfHeading("Ángulo horario y altitud solar"));
+        blocks.push(pdfKv("Hora solar verdadera", val("sol-alt-time") + " h"));
+        blocks.push(pdfKv("L / δ", val("sol-alt-lat") + "° / " + val("sol-alt-declination") + "°"));
+        blocks.push(pdfKv("Ángulo horario H / altitud βₙ", txt("sol-hour-angle-result") + " / " + txt("sol-altitude-result")));
+        blocks.push(pdfKv("Estado solar", txt("sol-altitude-state")));
+        blocks.push(pdfFormula("H = 15°(hora solar verdadera − 12) · sen(βₙ) = cos(L)cos(δ)cos(H) + sen(L)sen(δ)"));
+        blocks.push(pdfHeading("Azimut solar"));
+        blocks.push(pdfKv("Fecha / hora terrestre", opt("sol-az-month") + " " + val("sol-az-day") + " / " + opt("sol-az-clock")));
+        blocks.push(pdfKv("Hora solar verdadera / βₙ / L / δ", txt("sol-az-solar-time-result") + " / " + val("sol-az-altitude") + "° / " + val("sol-az-lat") + "° / " + val("sol-az-declination") + "°"));
+        blocks.push(pdfKv("cos(φₛ) / φₛ", txt("sol-az-cosine") + " / " + txt("sol-azimuth-result")));
+        blocks.push(pdfFormula("cos(φₛ) = [sen(βₙ)sen(L) − sen(δ)] / [cos(βₙ)cos(L)] · φₛ = arccos(cos(φₛ))"));
         blocks.push(pdfHeading("Suite residencial"));
         blocks.push(pdfKv("Piso radiante · plantilla", opt("sol-rad-template")));
         blocks.push(pdfKv("Carga / potencia piso", txt("sol-rad-load") + " / " + txt("sol-rad-output")));
