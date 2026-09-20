@@ -213,6 +213,43 @@
       background: var(--card-bg);
       border: 1px solid var(--line); border-radius: var(--radius); padding: 18px 18px 16px; box-shadow: var(--shadow);
     }
+    .calc-menu { display: grid; gap: 10px; }
+    details.calc-fold {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    details.calc-fold > summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 16px;
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 650;
+      user-select: none;
+    }
+    details.calc-fold > summary::-webkit-details-marker { display: none; }
+    details.calc-fold > summary::after {
+      content: "▾";
+      flex: 0 0 auto;
+      color: var(--cyan-2);
+      font-size: 13px;
+      transform: rotate(-90deg);
+      transition: transform 0.15s ease;
+    }
+    details.calc-fold[open] > summary::after { transform: rotate(0deg); }
+    details.calc-fold > summary:hover { color: var(--cyan-2); }
+    details.calc-fold .calc-fold-body { padding: 0 16px 16px; display: grid; gap: 16px; }
+    details.calc-fold .calc-fold-body > .card > h3:first-child { display: none; }
+    details.calc-fold .solar-suite .suite-head h3 { display: none; }
+    details.calc-fold .calc-fold-body > .card,
+    details.calc-fold .calc-fold-body > .grid > .card { box-shadow: none; }
+    details.calc-fold .solar-suite { margin-bottom: 0 !important; box-shadow: none; }
     .card.home { cursor: pointer; transition: transform .15s ease, border-color .15s; }
     .card.home:hover { transform: translateY(-2px); border-color: var(--cyan); }
     .card .sub, .hint { color: var(--muted); font-size: 13.5px; margin-bottom: 12px; }
@@ -314,6 +351,9 @@
     }
     @media print {
       aside.nav, .row-actions, .chips, .mobile-toggle, .theme-switch, .hero-actions, .pdf-btn, .tpl-bar, .tpl-banner { display: none !important; }
+      details.calc-fold { box-shadow: none; break-inside: avoid; }
+      details.calc-fold > summary { display: block; }
+      details.calc-fold > .calc-fold-body { display: grid !important; }
       .app { display: block; }
       .panel { display: block !important; page-break-after: always; }
       body { background: #FFFFFF; color: #303030; }
@@ -1193,6 +1233,7 @@
         </div>
         <div class="tpl-bar"><label class="field" for="tpl-consumo">Plantilla Los Ríos</label><select id="tpl-consumo" class="site-select"></select></div>
         <div class="card">
+          <h3>Empalme</h3>
           <div class="fields four">
             <div class="mini-input"><label>Tensión [V]</label><input id="c-v" type="number" value="230" /></div>
             <div class="mini-input"><label>Empalme [kW]</label><input id="c-kw" type="number" value="6" step="any" /></div>
@@ -1245,6 +1286,7 @@
           <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="eficiencia">Exportar PDF</button></div>
         </div>
         <div class="card">
+          <h3>Plantilla instalada</h3>
           <div class="fields two">
             <div>
               <label class="field" for="eff-template">Plantilla instalada · 24 escenarios</label>
@@ -1377,6 +1419,7 @@
           <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="pu">Exportar PDF</button></div>
         </div>
         <div class="card" style="margin-top:16px">
+          <h3>Plantilla regional</h3>
           <div class="fields two">
             <div>
               <label class="field" for="pu-regional-template">Plantilla regional · Los Ríos</label>
@@ -1612,6 +1655,7 @@
         <div class="tpl-bar"><label class="field" for="tpl-color">Plantilla Los Ríos</label><select id="tpl-color" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
+            <h3>Código hexadecimal</h3>
             <label class="field" for="col-hex">Código hexadecimal</label>
             <input id="col-hex" type="text" value="FF5733" maxlength="8" spellcheck="false" />
             <div class="swatch" id="col-swatch"></div>
@@ -1675,16 +1719,7 @@
     $("theme-day").classList.toggle("primary", document.documentElement.getAttribute("data-theme") === "day");
     $("theme-night").classList.toggle("primary", document.documentElement.getAttribute("data-theme") !== "day");
 
-    function showPanel(id) {
-      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
-      document.querySelectorAll(".nav-btn").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
-      history.replaceState(null, "", "#" + id);
-      window.scrollTo(0, 0);
-      const templateBanner = $("tpl-banner");
-      if (templateBanner) {
-        templateBanner.hidden = id === "pu" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && !!activeSite);
-      }
+    function refreshPanelVisuals(id) {
       if (id === "sev") { parseSev(); drawSev(); }
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
@@ -1698,11 +1733,65 @@
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
     }
+    function showPanel(id) {
+      document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
+      document.querySelectorAll(".nav-btn").forEach((b) => b.classList.toggle("active", b.dataset.panel === id));
+      history.replaceState(null, "", "#" + id);
+      window.scrollTo(0, 0);
+      const templateBanner = $("tpl-banner");
+      if (templateBanner) {
+        templateBanner.hidden = id === "pu" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && !!activeSite);
+      }
+      refreshPanelVisuals(id);
+    }
+    function organizeCalcMenus() {
+      document.querySelectorAll("section.panel").forEach((panel) => {
+        if (panel.id === "panel-home") return;
+        const nodes = [];
+        Array.from(panel.children).forEach((el) => {
+          if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu")) return;
+          if (el.classList.contains("grid")) {
+            Array.from(el.children).forEach((child) => nodes.push(child));
+            el.remove();
+            return;
+          }
+          nodes.push(el);
+        });
+        if (!nodes.length) return;
+        const menu = document.createElement("div");
+        menu.className = "calc-menu";
+        nodes.forEach((el, i) => {
+          const fold = document.createElement("details");
+          fold.className = "calc-fold";
+          if (i === 0) fold.open = true;
+          const summary = document.createElement("summary");
+          const heading = el.querySelector("h3");
+          summary.textContent = heading ? heading.textContent.trim() : "Calculadora";
+          const body = document.createElement("div");
+          body.className = "calc-fold-body";
+          body.appendChild(el);
+          fold.appendChild(summary);
+          fold.appendChild(body);
+          menu.appendChild(fold);
+        });
+        panel.appendChild(menu);
+        menu.querySelectorAll("details.calc-fold").forEach((fold) => {
+          fold.addEventListener("toggle", () => {
+            if (!fold.open) return;
+            menu.querySelectorAll("details.calc-fold").forEach((other) => {
+              if (other !== fold) other.open = false;
+            });
+            requestAnimationFrame(() => refreshPanelVisuals(panel.id.replace("panel-", "")));
+          });
+        });
+      });
+    }
+    organizeCalcMenus();
     document.querySelectorAll(".nav-btn").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
     document.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => showPanel(el.dataset.go)));
     $("nav-toggle").addEventListener("click", () => $("sidebar").classList.toggle("open"));
     const start = (location.hash || "#home").slice(1);
-    if (start && start !== "home") showPanel(start);
 
     /* ===================== SEV ===================== */
     const GHOSH_C = [0.0225, -0.0499, 0.1064, 0.1854, 1.9720, -1.5716, 0.4018, -0.0814, 0.0148];
@@ -4931,6 +5020,7 @@
     buildPuRegionalTemplates();
     setupPhasorTemplates();
     setupPhasorSketch();
+    if (start && start !== "home") showPanel(start);
 
     const autoPdf = new URLSearchParams(location.search).get("ea-pdf");
     if (autoPdf && autoPdf !== "home") {
