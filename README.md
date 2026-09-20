@@ -67,6 +67,12 @@ Calcula calor sensible con `Q = m · c · ΔT` y calor latente con `Q = m · L`.
 
 También convierte temperaturas entre Kelvin, Celsius y Fahrenheit desde cualquiera de las tres entradas.
 
+La suite residencial agrega plantillas de departamento, casas familiares y vivienda muy bien aislada para aproximar carga de calefacción por piso radiante, superficie activa, longitud de tubo, circuitos y caudal. Incluye además ACS solar para parejas, familias y cabañas: consumo diario, energía, superficie de colectores, número de paneles, acumulación y energía de respaldo. Son predimensionamientos académicos editables, no una memoria térmica ni una especificación de montaje.
+
+### ◒ Eficiencia energética — potencia y envolvente
+
+Incluye 24 plantillas desde 5 hasta 500 kW instalados con artefactos habituales de vivienda, comercio, servicios y proceso. Cada escenario aproxima `η = P útil / P total × 100`, potencia útil y potencia perdida o margen no utilizado mediante factores de utilización editables. La calculadora de aislamiento térmico se actualiza con la plantilla y estima transmisión, infiltración, pérdida térmica, resistencia equivalente y clasificación preliminar.
+
 ### ♨ BTU — proyección de calefacción
 
 Proyecta la carga de calefacción de un recinto desde sus dimensiones, temperaturas exterior/objetivo y aislación. Entrega BTU/h, kW térmicos, joules, kWh, equivalencia de agua en libras y litros, área sugerida, plano del recinto y una propuesta preliminar de tablero eléctrico para climatización.

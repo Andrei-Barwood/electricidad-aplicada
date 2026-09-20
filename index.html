@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Electricidad Aplicada</title>
-  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
+  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
   <link rel="icon" href="favicon.jpeg?v=1" type="image/jpeg" />
   <link rel="apple-touch-icon" href="favicon.jpeg?v=1" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://electricidadaplicada.app/" />
   <meta property="og:title" content="Electricidad Aplicada" />
-  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
+  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
   <meta property="og:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta property="og:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Electricidad Aplicada" />
-  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo 6 kW, TAN/AHF y color." />
+  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
   <meta name="twitter:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta name="twitter:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -268,6 +268,12 @@
     canvas.tall { height: 340px; }
     .callout { border-left: 3px solid var(--gold); padding: 10px 12px; background: var(--gold-dim); border-radius: 0 12px 12px 0; font-size: 13.5px; }
     .callout.cyan { border-left-color: var(--cyan); background: var(--micro-bg); }
+    .solar-suite { border-color: var(--nav-active-border); background: linear-gradient(135deg, var(--card-bg), var(--micro-bg)); }
+    .solar-suite .suite-head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .solar-suite .suite-mark { font-size: 28px; line-height: 1; }
+    .solar-suite .result-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+    .solar-suite .result-grid .result { margin-top: 0; }
+    .template-note { color: var(--muted); font-size: 12.5px; margin: 8px 0 0; }
     .row-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
     .swatch { height: 120px; border-radius: 16px; border: 1px solid var(--line); display: grid; place-items: center; }
     .fill-bar { height: 12px; border-radius: 999px; background: var(--input-bg); border: 1px solid var(--line); overflow: hidden; margin-top: 10px; }
@@ -320,6 +326,7 @@
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
         <button class="nav-btn" data-panel="solar"><span class="ico">☀</span> Solar</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
+        <button class="nav-btn" data-panel="eficiencia"><span class="ico">◒</span> Eficiencia energética</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
         <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
@@ -334,7 +341,7 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Diez herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 10 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Doce herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -345,6 +352,7 @@
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
           <article class="card home" data-go="solar"><h3>Solar · calor</h3><p class="sub">Calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
+          <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
           <article class="card home" data-go="fasores"><h3>Fasores</h3><p class="sub">Conversión bidireccional entre forma rectangular (a + jb) y notación fasorial (magnitud ∠ ángulo).</p></article>
@@ -770,6 +778,85 @@
           </div>
           <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="solar">Exportar PDF</button></div>
         </div>
+        <div class="card solar-suite" style="margin-bottom:16px">
+          <div class="suite-head">
+            <div>
+              <h3>Suite solar residencial</h3>
+              <p class="sub">Proyección preliminar para calefacción hidrónica por piso radiante y agua caliente sanitaria (ACS) con colectores solares térmicos.</p>
+            </div>
+            <div class="suite-mark" aria-hidden="true">☀︎</div>
+          </div>
+          <div class="grid g2">
+            <div class="card">
+              <h3>Calefacción por piso radiante</h3>
+              <p class="sub">Selecciona una vivienda tipo y ajusta sus condiciones de diseño. La carga combina transmisión e infiltración; sirve para aproximar potencia, tubos y circuitos.</p>
+              <label class="field" for="sol-rad-template">Plantilla residencial</label>
+              <select id="sol-rad-template">
+                <option value="depto">Departamento eficiente · 50 m²</option>
+                <option value="casa">Casa familiar estándar · 80 m²</option>
+                <option value="casa-grande">Casa familiar amplia · 120 m²</option>
+                <option value="pasiva">Casa muy bien aislada · 100 m²</option>
+              </select>
+              <div class="fields four" style="margin-top:10px">
+                <div class="mini-input"><label for="sol-rad-width">Ancho [m]</label><input id="sol-rad-width" type="number" min="1" step="any" value="5" /></div>
+                <div class="mini-input"><label for="sol-rad-length">Largo [m]</label><input id="sol-rad-length" type="number" min="1" step="any" value="10" /></div>
+                <div class="mini-input"><label for="sol-rad-height">Altura [m]</label><input id="sol-rad-height" type="number" min="2" step="any" value="2.5" /></div>
+                <div class="mini-input"><label for="sol-rad-outdoor">Exterior [°C]</label><input id="sol-rad-outdoor" type="number" step="any" value="2" /></div>
+              </div>
+              <div class="fields four" style="margin-top:10px">
+                <div class="mini-input"><label for="sol-rad-target">Interior [°C]</label><input id="sol-rad-target" type="number" step="any" value="21" /></div>
+                <div class="mini-input"><label for="sol-rad-insulation">Aislación</label><select id="sol-rad-insulation"><option value="0.45">Muy buena</option><option value="0.75" selected>Estándar</option><option value="1.2">Básica</option></select></div>
+                <div class="mini-input"><label for="sol-rad-coverage">Área activa [%]</label><input id="sol-rad-coverage" type="number" min="40" max="100" step="1" value="85" /></div>
+                <div class="mini-input"><label for="sol-rad-spacing">Paso tubo [cm]</label><select id="sol-rad-spacing"><option value="0.10">10</option><option value="0.15" selected>15</option><option value="0.20">20</option></select></div>
+              </div>
+              <div class="result-grid">
+                <div class="result"><div class="k">Carga de diseño</div><div class="v" id="sol-rad-load">—</div></div>
+                <div class="result"><div class="k">Potencia piso</div><div class="v" id="sol-rad-output">—</div></div>
+                <div class="result"><div class="k">Circuitos</div><div class="v" id="sol-rad-circuits">—</div></div>
+              </div>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Superficie activa</dt><dd id="sol-rad-area">—</dd></div>
+                <div class="meta"><dt>Tubo estimado</dt><dd id="sol-rad-tube">—</dd></div>
+                <div class="meta"><dt>Caudal total (ΔT 5 K)</dt><dd id="sol-rad-flow">—</dd></div>
+                <div class="meta"><dt>Separación recomendada</dt><dd id="sol-rad-recommendation">—</dd></div>
+              </dl>
+              <p class="template-note" id="sol-rad-note">Referencia académica: no reemplaza el cálculo de envolvente ni el balance hidráulico del fabricante.</p>
+            </div>
+            <div class="card">
+              <h3>Agua caliente sanitaria solar</h3>
+              <p class="sub">Estima energía diaria, área de captación y volumen de acumulación para ACS. La fracción solar queda editable para invierno o verano.</p>
+              <label class="field" for="sol-acs-template">Plantilla de uso</label>
+              <select id="sol-acs-template">
+                <option value="pareja">Pareja · 2 personas</option>
+                <option value="familia" selected>Familia · 4 personas</option>
+                <option value="familia-grande">Familia numerosa · 6 personas</option>
+                <option value="cabaña">Cabaña eficiente · 3 personas</option>
+              </select>
+              <div class="fields two" style="margin-top:10px">
+                <div class="mini-input"><label for="sol-acs-people">Personas</label><input id="sol-acs-people" type="number" min="1" step="1" value="4" /></div>
+                <div class="mini-input"><label for="sol-acs-liters">Litros/persona·día</label><input id="sol-acs-liters" type="number" min="20" step="1" value="50" /></div>
+                <div class="mini-input"><label for="sol-acs-cold">Agua fría [°C]</label><input id="sol-acs-cold" type="number" step="any" value="12" /></div>
+                <div class="mini-input"><label for="sol-acs-hot">ACS objetivo [°C]</label><input id="sol-acs-hot" type="number" step="any" value="45" /></div>
+                <div class="mini-input"><label for="sol-acs-sun">Radiación útil [kWh/m²·día]</label><input id="sol-acs-sun" type="number" min="0.5" step="any" value="3.5" /></div>
+                <div class="mini-input"><label for="sol-acs-eff">Rendimiento sistema [%]</label><input id="sol-acs-eff" type="number" min="20" max="90" step="1" value="45" /></div>
+                <div class="mini-input"><label for="sol-acs-fraction">Fracción solar [%]</label><input id="sol-acs-fraction" type="number" min="20" max="100" step="1" value="65" /></div>
+                <div class="mini-input"><label for="sol-acs-panel">Panel [m²]</label><input id="sol-acs-panel" type="number" min="0.5" step="any" value="2" /></div>
+              </div>
+              <div class="result-grid">
+                <div class="result"><div class="k">Energía ACS</div><div class="v" id="sol-acs-energy">—</div></div>
+                <div class="result"><div class="k">Área colectores</div><div class="v" id="sol-acs-area">—</div></div>
+                <div class="result"><div class="k">Paneles</div><div class="v" id="sol-acs-panels">—</div></div>
+              </div>
+              <dl class="meta-grid">
+                <div class="meta"><dt>Consumo diario</dt><dd id="sol-acs-volume">—</dd></div>
+                <div class="meta"><dt>Acumulador sugerido</dt><dd id="sol-acs-tank">—</dd></div>
+                <div class="meta"><dt>Aporte solar diario</dt><dd id="sol-acs-solar">—</dd></div>
+                <div class="meta"><dt>Respaldo diario</dt><dd id="sol-acs-backup">—</dd></div>
+              </dl>
+              <p class="template-note" id="sol-acs-note">El acumulador se aproxima entre 50 y 80 litros por m² de captación, según clima y patrón de consumo.</p>
+            </div>
+          </div>
+        </div>
         <div class="grid g2">
           <div class="card">
             <h3>Calor específico</h3>
@@ -911,6 +998,65 @@
               <li>Motor DOL: arranque 5–8× In, &lt; 10× y &lt; 1 s.</li>
               <li>Freezer sano: 1,3–2,2 A ON, 0 A OFF, duty 30–50 %, 90–140 kWh/mes.</li>
             </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-eficiencia">
+        <div class="hero">
+          <div>
+            <h2>Eficiencia <span>energética</span></h2>
+            <p class="lede">Calculadora de referencia para instalaciones residenciales, comerciales, productivas y de servicios. La eficiencia se aproxima como potencia útil ÷ potencia total × 100; la potencia restante se informa como pérdida o margen no utilizado.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="eficiencia">Exportar PDF</button></div>
+        </div>
+        <div class="card">
+          <div class="fields two">
+            <div>
+              <label class="field" for="eff-template">Plantilla instalada · 24 escenarios</label>
+              <select id="eff-template"></select>
+            </div>
+            <div>
+              <label class="field">Definición de referencia</label>
+              <p class="hint" style="margin:8px 0 0">η = P útil / P total × 100 · P perdida = P total − P útil. Valores académicos: verificar medición, demanda y simultaneidad.</p>
+            </div>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Proyección de potencia</h3>
+            <p class="sub" id="eff-template-note">La plantilla carga artefactos comunes y sus potencias nominales. Ajusta el factor útil de cada grupo para representar la operación real.</p>
+            <div class="result"><div class="k">Eficiencia energética</div><div class="v" id="eff-percent">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Potencia total instalada</dt><dd id="eff-total">—</dd></div>
+              <div class="meta"><dt>Potencia útil aproximada</dt><dd id="eff-useful">—</dd></div>
+              <div class="meta"><dt>Potencia perdida / margen</dt><dd id="eff-lost">—</dd></div>
+              <div class="meta"><dt>Factor de utilización</dt><dd id="eff-factor">—</dd></div>
+            </dl>
+            <div class="table-wrap" style="margin-top:14px"><table id="eff-load-table"></table></div>
+          </div>
+          <div class="card">
+            <h3>Aislamiento térmico</h3>
+            <p class="sub">Modelo simplificado de pérdidas por transmisión e infiltración. Los valores se actualizan al cambiar de plantilla y siguen siendo editables.</p>
+            <div class="fields three">
+              <div class="mini-input"><label for="eff-wall-area">Muros [m²]</label><input id="eff-wall-area" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-roof-area">Techo [m²]</label><input id="eff-roof-area" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-floor-area">Piso [m²]</label><input id="eff-floor-area" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-window-area">Ventanas [m²]</label><input id="eff-window-area" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-u-wall">U muros [W/m²K]</label><input id="eff-u-wall" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-u-roof">U techo [W/m²K]</label><input id="eff-u-roof" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-u-floor">U piso [W/m²K]</label><input id="eff-u-floor" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-u-window">U ventanas [W/m²K]</label><input id="eff-u-window" type="number" min="0" step="any" /></div>
+              <div class="mini-input"><label for="eff-delta-t">ΔT diseño [K]</label><input id="eff-delta-t" type="number" min="0" step="any" /></div>
+            </div>
+            <div class="result"><div class="k">Pérdida térmica estimada</div><div class="v" id="eff-heat-loss">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Transmitancia global Ht</dt><dd id="eff-ht">—</dd></div>
+              <div class="meta"><dt>Infiltración / ventilación</dt><dd id="eff-vent-loss">—</dd></div>
+              <div class="meta"><dt>Resistencia equivalente</dt><dd id="eff-r-value">—</dd></div>
+              <div class="meta"><dt>Clasificación</dt><dd id="eff-insulation-grade">—</dd></div>
+            </dl>
+            <p class="hint" id="eff-insulation-note" style="margin-top:10px">Referencia académica; no sustituye cálculo reglamentario de envolvente, puentes térmicos o ventilación.</p>
           </div>
         </div>
       </section>
@@ -1312,6 +1458,7 @@
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") calcSolar();
       if (id === "consumo") renderConsumo();
+      if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
       if (id === "fasores") calcFasores();
@@ -2023,6 +2170,96 @@
       $(id).addEventListener("input", () => { renderP(); renderPot(); });
     });
 
+    /* ===================== EFICIENCIA ENERGÉTICA ===================== */
+    function effTemplate(name, kw, loads, envelope) {
+      return { name, kw, loads, envelope };
+    }
+    const EFFICIENCY_TEMPLATES = [
+      effTemplate("01 · Vivienda compacta", 5, [["Iluminación LED", 0.3, 0.8], ["Refrigerador y freezer", 0.6, 0.45], ["Cocina eléctrica", 2, 0.35], ["Termo ACS", 1.5, 0.45], ["Lavadora y enchufes", 0.6, 0.3]], [65, 50, 50, 10, 0.55]),
+      effTemplate("02 · Casa familiar", 8, [["Iluminación LED", 0.5, 0.8], ["Climatización", 2.5, 0.55], ["Cocina y horno", 2.4, 0.4], ["Termo ACS", 1.8, 0.5], ["Enchufes y lavado", 0.8, 0.35]], [100, 80, 80, 16, 0.65]),
+      effTemplate("03 · Casa con taller", 12, [["Casa e iluminación", 1.2, 0.75], ["Cocina y ACS", 3.5, 0.45], ["Bomba de calor", 3.5, 0.6], ["Taller doméstico", 2.5, 0.35], ["Bomba y portón", 1.3, 0.3]], [130, 100, 100, 20, 0.75]),
+      effTemplate("04 · Condominio pequeño", 15, [["Departamentos e iluminación", 3, 0.7], ["Bombas de agua", 3, 0.55], ["ACS central", 4, 0.5], ["Ascensor", 2.5, 0.3], ["Servicios comunes", 2.5, 0.4]], [210, 150, 150, 28, 0.8]),
+      effTemplate("05 · Restaurante", 20, [["Iluminación y extracción", 3, 0.8], ["Cocina y hornos", 8, 0.6], ["Refrigeración", 3, 0.55], ["ACS y lavado", 4, 0.5], ["Climatización", 2, 0.6]], [260, 180, 180, 35, 0.9]),
+      effTemplate("06 · Minimarket", 25, [["Iluminación y cajas", 4, 0.8], ["Cámaras frigoríficas", 8, 0.55], ["Climatización", 5, 0.55], ["Panadería", 5, 0.5], ["Enchufes y respaldo", 3, 0.35]], [320, 220, 220, 42, 1]),
+      effTemplate("07 · Escuela básica", 30, [["Aulas e iluminación", 7, 0.75], ["Cocina y casino", 5, 0.45], ["Calefacción eléctrica", 10, 0.5], ["Bomba de agua", 3, 0.45], ["Computadores y red", 5, 0.6]], [420, 280, 280, 50, 0.95]),
+      effTemplate("08 · Hotel boutique", 40, [["Habitaciones", 8, 0.65], ["Cocina y lavandería", 10, 0.5], ["ACS", 8, 0.55], ["Climatización", 10, 0.6], ["Ascensor y bombas", 4, 0.35]], [520, 350, 350, 65, 1.05]),
+      effTemplate("09 · Supermercado", 50, [["Iluminación", 8, 0.8], ["Frío comercial", 18, 0.6], ["Climatización", 10, 0.6], ["Panadería y hornos", 8, 0.5], ["Cajas y servicios", 6, 0.45]], [700, 500, 500, 80, 1.1]),
+      effTemplate("10 · Centro deportivo", 60, [["Iluminación", 10, 0.8], ["Bombas de piscina", 12, 0.65], ["ACS y duchas", 15, 0.55], ["Climatización", 15, 0.6], ["Servicios auxiliares", 8, 0.4]], [900, 600, 600, 110, 1.15]),
+      effTemplate("11 · Edificio oficinas", 75, [["Iluminación LED", 15, 0.8], ["Computación y servidores", 18, 0.7], ["Climatización", 25, 0.65], ["Ascensores y bombas", 10, 0.4], ["Servicios comunes", 7, 0.45]], [1100, 750, 750, 130, 1.2]),
+      effTemplate("12 · Condominio mediano", 90, [["Departamentos", 25, 0.65], ["ACS central", 18, 0.55], ["Bombas y ascensores", 15, 0.45], ["Climatización", 22, 0.6], ["Iluminación común", 10, 0.75]], [1400, 950, 950, 160, 1.25]),
+      effTemplate("13 · Planta láctea pequeña", 110, [["Recepción y bombas", 18, 0.65], ["Frío de proceso", 25, 0.6], ["Pasteurizador", 25, 0.55], ["CIP y agua caliente", 25, 0.5], ["Iluminación y control", 17, 0.75]], [1800, 1200, 1200, 210, 1.3]),
+      effTemplate("14 · Panadería industrial", 130, [["Hornos", 45, 0.6], ["Amasadoras", 20, 0.55], ["Frío", 18, 0.6], ["Vapor y ACS", 30, 0.5], ["Iluminación y despacho", 17, 0.7]], [2200, 1500, 1500, 250, 1.35]),
+      effTemplate("15 · Aserradero pequeño", 150, [["Sierra principal", 55, 0.65], ["Canteadora", 25, 0.6], ["Aspiración", 30, 0.7], ["Transportadores", 20, 0.55], ["Taller e iluminación", 20, 0.65]], [2600, 1800, 1800, 300, 1.4]),
+      effTemplate("16 · Packing de fruta", 175, [["Frío y cámaras", 55, 0.65], ["Lavado y bombas", 35, 0.55], ["Packing y cintas", 35, 0.6], ["Compresores", 30, 0.65], ["Iluminación y oficinas", 20, 0.7]], [3200, 2200, 2200, 360, 1.35]),
+      effTemplate("17 · APR rural", 200, [["Bombas pozo", 90, 0.7], ["Impulsión y presión", 45, 0.65], ["Tratamiento UV", 20, 0.8], ["Cloración y control", 15, 0.7], ["Taller y servicios", 30, 0.45]], [2500, 1700, 1700, 280, 1.2]),
+      effTemplate("18 · Lechería tecnificada", 225, [["Ordeña y vacío", 55, 0.7], ["Estanques de frío", 60, 0.65], ["Sala y lavado", 40, 0.55], ["Bombas y motores", 45, 0.6], ["Iluminación y oficinas", 25, 0.7]], [3500, 2400, 2400, 400, 1.3]),
+      effTemplate("19 · Frigorífico mediano", 250, [["Cámaras de frío", 95, 0.65], ["Túneles", 55, 0.7], ["Compresores", 45, 0.7], ["Packing y bombas", 35, 0.6], ["Iluminación y servicios", 20, 0.7]], [4200, 2800, 2800, 480, 1.35]),
+      effTemplate("20 · Planta de áridos", 275, [["Chancador", 90, 0.7], ["Correas transportadoras", 55, 0.65], ["Harneros", 45, 0.65], ["Bombas y supresión polvo", 35, 0.55], ["Taller e iluminación", 50, 0.45]], [3000, 2000, 2000, 360, 1.5]),
+      effTemplate("21 · Planta de alimentos", 300, [["Proceso térmico", 90, 0.6], ["Refrigeración", 65, 0.65], ["Envasado", 55, 0.6], ["Vapor y bombeo", 55, 0.55], ["Servicios y oficinas", 35, 0.65]], [4500, 3000, 3000, 520, 1.35]),
+      effTemplate("22 · Aserradero mediano", 350, [["Sierra y carro", 130, 0.7], ["Secador", 80, 0.55], ["Aspiración", 65, 0.75], ["Canteado y cepillado", 45, 0.65], ["Taller y servicios", 30, 0.5]], [5000, 3400, 3400, 620, 1.45]),
+      effTemplate("23 · Centro logístico", 425, [["Grúas y montacargas", 90, 0.6], ["Frío y bodegas", 120, 0.65], ["Clasificación y cintas", 85, 0.65], ["HVAC e iluminación", 90, 0.7], ["Oficinas y carga EV", 40, 0.45]], [6500, 4300, 4300, 750, 1.3]),
+      effTemplate("24 · Planta industrial Clase B", 500, [["Líneas de proceso", 190, 0.7], ["Compresores", 90, 0.7], ["Frío industrial", 80, 0.65], ["Caldera y bombeo", 85, 0.6], ["Iluminación y servicios", 55, 0.7]], [8000, 5200, 5200, 900, 1.4]),
+    ];
+    let efficiencyTemplateIndex = 0;
+    function efficiencyFillEnvelope(t) {
+      const [wall, roof, floor, windows, u] = t.envelope;
+      [["eff-wall-area", wall], ["eff-roof-area", roof], ["eff-floor-area", floor], ["eff-window-area", windows],
+        ["eff-u-wall", u], ["eff-u-roof", u * 0.75], ["eff-u-floor", u * 0.65], ["eff-u-window", 2.7], ["eff-delta-t", 20]]
+        .forEach(([id, value]) => { $(id).value = value; });
+    }
+    function renderEfficiencyTemplates() {
+      $("eff-template").innerHTML = EFFICIENCY_TEMPLATES.map((t, i) =>
+        `<option value="${i}">${t.name} · ${t.kw} kW</option>`).join("");
+      $("eff-template").value = efficiencyTemplateIndex;
+    }
+    function calcEfficiencyInsulation() {
+      const areas = ["wall", "roof", "floor", "window"].map((key) => Math.max(0, +$("eff-" + key + "-area").value || 0));
+      const us = ["wall", "roof", "floor", "window"].map((key) => Math.max(0, +$("eff-u-" + key).value || 0));
+      const delta = Math.max(0, +$("eff-delta-t").value || 0);
+      const ht = areas.reduce((sum, area, i) => sum + area * us[i], 0);
+      const volume = areas[2] * 2.6;
+      const ventilation = 0.33 * 0.5 * volume;
+      const loss = (ht + ventilation) * delta;
+      const r = ht > 0 ? areas.reduce((sum, area) => sum + area, 0) / ht : 0;
+      const grade = loss <= 10000 ? "Muy buen desempeño" : loss <= 25000 ? "Desempeño medio" : "Revisar envolvente";
+      $("eff-ht").textContent = fmt(ht, 1) + " W/K";
+      $("eff-vent-loss").textContent = fmt(ventilation * delta / 1000, 2) + " kW";
+      $("eff-r-value").textContent = fmt(r, 2) + " m²K/W";
+      $("eff-heat-loss").innerHTML = fmt(loss / 1000, 2) + " <small>kW térmicos</small>";
+      $("eff-insulation-grade").textContent = grade;
+      $("eff-insulation-note").textContent = "Transmisión: " + fmt(ht * delta / 1000, 2) + " kW · ventilación: " + fmt(ventilation * delta / 1000, 2) + " kW · ΔT " + fmt(delta, 1) + " K.";
+    }
+    function calcEfficiency() {
+      const t = EFFICIENCY_TEMPLATES[efficiencyTemplateIndex];
+      const rows = t.loads.map(([name, power, util], i) => {
+        const input = $("eff-util-" + i);
+        return { name, power, util: input ? Math.min(1, Math.max(0, +input.value || 0)) : util };
+      });
+      const total = rows.reduce((sum, row) => sum + row.power, 0);
+      const useful = rows.reduce((sum, row) => sum + row.power * row.util, 0);
+      const lost = Math.max(0, total - useful);
+      $("eff-total").textContent = fmt(total, 2) + " kW";
+      $("eff-useful").textContent = fmt(useful, 2) + " kW";
+      $("eff-lost").textContent = fmt(lost, 2) + " kW";
+      $("eff-factor").textContent = fmt(useful / Math.max(total, 0.001) * 100, 1) + " %";
+      $("eff-percent").innerHTML = fmt(useful / Math.max(total, 0.001) * 100, 1) + " <small>%</small>";
+      $("eff-template-note").textContent = t.name + " · potencia nominal " + fmt(t.kw, 0) + " kW · " + t.loads.length + " grupos de artefactos. La suma editable es " + fmt(total, 2) + " kW.";
+      $("eff-load-table").innerHTML = "<thead><tr><th>Grupo de artefactos</th><th>P instalada</th><th>Factor útil</th><th>P útil</th></tr></thead><tbody>" +
+        rows.map((row, i) => `<tr><td>${row.name}</td><td class="mono">${fmt(row.power, 2)} kW</td><td><input class="eff-util" id="eff-util-${i}" data-index="${i}" type="number" min="0" max="1" step="0.01" value="${row.util.toFixed(2)}" style="width:90px"></td><td class="mono">${fmt(row.power * row.util, 2)} kW</td></tr>`).join("") + "</tbody>";
+      document.querySelectorAll(".eff-util").forEach((input) => input.addEventListener("input", calcEfficiency));
+      calcEfficiencyInsulation();
+    }
+    $("eff-template").addEventListener("input", () => {
+      efficiencyTemplateIndex = Math.max(0, Math.min(EFFICIENCY_TEMPLATES.length - 1, +$("eff-template").value || 0));
+      efficiencyFillEnvelope(EFFICIENCY_TEMPLATES[efficiencyTemplateIndex]);
+      calcEfficiency();
+    });
+    ["eff-wall-area", "eff-roof-area", "eff-floor-area", "eff-window-area", "eff-u-wall", "eff-u-roof", "eff-u-floor", "eff-u-window", "eff-delta-t"]
+      .forEach((id) => $(id).addEventListener("input", calcEfficiencyInsulation));
+    renderEfficiencyTemplates();
+    efficiencyFillEnvelope(EFFICIENCY_TEMPLATES[0]);
+    calcEfficiency();
+
     /* ===================== SOLAR TÉRMICA ===================== */
     const SOLAR_MATERIALS = {
       agua: { name: "Agua líquida", c: 4186 },
@@ -2055,6 +2292,88 @@
     let solarPhaseKey = "";
     let solarRelationKey = "";
     let solarTemperatureSource = "c";
+    const SOLAR_RESIDENTIAL_TEMPLATES = {
+      depto: { width: 5, length: 10, height: 2.5, outdoor: 2, target: 21, insulation: "0.75", coverage: 85, spacing: "0.15" },
+      casa: { width: 8, length: 10, height: 2.5, outdoor: 0, target: 21, insulation: "0.75", coverage: 85, spacing: "0.15" },
+      "casa-grande": { width: 10, length: 12, height: 2.6, outdoor: 0, target: 21, insulation: "1.2", coverage: 80, spacing: "0.20" },
+      pasiva: { width: 10, length: 10, height: 2.5, outdoor: 0, target: 20, insulation: "0.45", coverage: 90, spacing: "0.15" },
+    };
+    const SOLAR_ACS_TEMPLATES = {
+      pareja: { people: 2, liters: 45, cold: 12, hot: 45, sun: 3.5, eff: 45, fraction: 65, panel: 2 },
+      familia: { people: 4, liters: 50, cold: 12, hot: 45, sun: 3.5, eff: 45, fraction: 65, panel: 2 },
+      "familia-grande": { people: 6, liters: 55, cold: 12, hot: 45, sun: 3.5, eff: 45, fraction: 65, panel: 2 },
+      cabaña: { people: 3, liters: 40, cold: 10, hot: 45, sun: 4.2, eff: 50, fraction: 55, panel: 2 },
+    };
+    function applySolarResidentialTemplate() {
+      const t = SOLAR_RESIDENTIAL_TEMPLATES[$("sol-rad-template").value];
+      if (!t) return;
+      Object.entries(t).forEach(([key, value]) => {
+        const el = $("sol-rad-" + key);
+        if (el) el.value = value;
+      });
+      calcSolarResidential();
+    }
+    function applySolarACSTemplate() {
+      const t = SOLAR_ACS_TEMPLATES[$("sol-acs-template").value];
+      if (!t) return;
+      Object.entries(t).forEach(([key, value]) => {
+        const el = $("sol-acs-" + key);
+        if (el) el.value = value;
+      });
+      calcSolarACS();
+    }
+    function calcSolarResidential() {
+      const width = Math.max(0, +$("sol-rad-width").value || 0);
+      const length = Math.max(0, +$("sol-rad-length").value || 0);
+      const height = Math.max(0, +$("sol-rad-height").value || 0);
+      const delta = Math.max(0, (+$("sol-rad-target").value || 0) - (+$("sol-rad-outdoor").value || 0));
+      const area = width * length;
+      const volume = area * height;
+      const u = Math.max(0.1, +$("sol-rad-insulation").value || 0.75);
+      const active = area * Math.min(100, Math.max(0, +$("sol-rad-coverage").value || 0)) / 100;
+      const spacing = Math.max(0.05, +$("sol-rad-spacing").value || 0.15);
+      const perimeter = 2 * (width + length);
+      const transmission = (perimeter * height * u * 1.15 + area * u * 0.65) * delta;
+      const infiltration = 0.33 * 0.5 * volume * delta;
+      const load = Math.max(0, (transmission + infiltration) * 1.1);
+      const floorWm2 = Math.min(100, Math.max(45, 8 * ((+$("sol-rad-target").value || 21) + 9 - (+$("sol-rad-target").value || 21))));
+      const output = active * floorWm2;
+      const tube = active / spacing * 1.08;
+      const circuits = Math.max(1, Math.ceil(tube / 85));
+      const flow = output / (4186 * 5) * 60;
+      $("sol-rad-load").innerHTML = fmt(load / 1000, 2) + " <small>kW</small>";
+      $("sol-rad-output").innerHTML = fmt(output / 1000, 2) + " <small>kW</small>";
+      $("sol-rad-circuits").innerHTML = circuits + " <small>× ≤85 m</small>";
+      $("sol-rad-area").textContent = fmt(active, 1) + " m² de " + fmt(area, 1) + " m²";
+      $("sol-rad-tube").textContent = fmt(tube, 0) + " m";
+      $("sol-rad-flow").textContent = fmt(flow, 1) + " L/min";
+      $("sol-rad-recommendation").textContent = load > output ? "Aumentar área o apoyo" : "Capacidad preliminar suficiente";
+      $("sol-rad-note").textContent = "Carga estimada " + fmt(load / 1000, 2) + " kW · emisión adoptada " + fmt(floorWm2, 0) + " W/m². Validar temperatura de superficie y colectores.";
+    }
+    function calcSolarACS() {
+      const people = Math.max(0, +$("sol-acs-people").value || 0);
+      const liters = Math.max(0, +$("sol-acs-liters").value || 0);
+      const volume = people * liters;
+      const delta = Math.max(0, (+$("sol-acs-hot").value || 0) - (+$("sol-acs-cold").value || 0));
+      const energy = volume * 4.186 * delta / 3600;
+      const sun = Math.max(0.1, +$("sol-acs-sun").value || 0);
+      const efficiency = Math.min(100, Math.max(1, +$("sol-acs-eff").value || 0)) / 100;
+      const fraction = Math.min(100, Math.max(0, +$("sol-acs-fraction").value || 0)) / 100;
+      const panelArea = Math.max(0.5, +$("sol-acs-panel").value || 0);
+      const collectorArea = energy * fraction / (sun * efficiency);
+      const panels = Math.max(1, Math.ceil(collectorArea / panelArea));
+      const installedArea = panels * panelArea;
+      const tank = Math.max(80, installedArea * 65);
+      const solarEnergy = Math.min(energy, installedArea * sun * efficiency);
+      $("sol-acs-energy").innerHTML = fmt(energy, 2) + " <small>kWh/día</small>";
+      $("sol-acs-area").innerHTML = fmt(collectorArea, 2) + " <small>m²</small>";
+      $("sol-acs-panels").innerHTML = panels + " <small>× " + fmt(panelArea, 1) + " m²</small>";
+      $("sol-acs-volume").textContent = fmt(volume, 0) + " L/día";
+      $("sol-acs-tank").textContent = fmt(tank, 0) + " L";
+      $("sol-acs-solar").textContent = fmt(solarEnergy, 2) + " kWh/día";
+      $("sol-acs-backup").textContent = fmt(Math.max(0, energy - solarEnergy), 2) + " kWh/día";
+      $("sol-acs-note").textContent = "Aporte solar previsto " + fmt(100 * solarEnergy / Math.max(energy, 0.001), 0) + "% · acumulación " + fmt(tank, 0) + " L. Revisar orientación, sombras, anticongelante y respaldo.";
+    }
     function renderSolarTable() {
       $("sol-c-table").innerHTML = "<thead><tr><th>Material</th><th>c [J/(kg·°C)]</th><th>Uso típico</th></tr></thead><tbody>" +
         Object.values(SOLAR_MATERIALS).map((m) => "<tr><td>" + m.name + "</td><td class=\"mono\">" + fmt(m.c, 0) + "</td><td>Calor sensible</td></tr>").join("") +
@@ -2139,8 +2458,14 @@
     $("sol-t-k").addEventListener("input", () => calcSolarTemperature("k"));
     $("sol-t-c").addEventListener("input", () => calcSolarTemperature("c"));
     $("sol-t-f").addEventListener("input", () => calcSolarTemperature("f"));
+    $("sol-rad-template").addEventListener("input", applySolarResidentialTemplate);
+    ["sol-rad-width", "sol-rad-length", "sol-rad-height", "sol-rad-outdoor", "sol-rad-target", "sol-rad-insulation", "sol-rad-coverage", "sol-rad-spacing"].forEach((id) => $(id).addEventListener("input", calcSolarResidential));
+    $("sol-acs-template").addEventListener("input", applySolarACSTemplate);
+    ["sol-acs-people", "sol-acs-liters", "sol-acs-cold", "sol-acs-hot", "sol-acs-sun", "sol-acs-eff", "sol-acs-fraction", "sol-acs-panel"].forEach((id) => $(id).addEventListener("input", calcSolarACS));
     renderSolarTable();
     calcSolarTemperature();
+    calcSolarResidential();
+    calcSolarACS();
 
     /* ===================== CONSUMO 6 kW ===================== */
     const EQUIP = [
@@ -3135,6 +3460,7 @@
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") calcSolar();
       if (id === "consumo") renderConsumo();
+      if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
       if (id === "fasores") calcFasores();
@@ -3151,6 +3477,7 @@
         hydro: ["Informe hidráulico · litros a m³", "Volumen, caudal y P = 9,81 · Q · H · η."],
         solar: ["Informe solar térmico", "Calor específico y calor latente para cambios de temperatura y de fase."],
         consumo: ["Informe de consumo", "Empalme editable. Pinza True RMS, duty y simultaneidad."],
+        eficiencia: ["Informe de eficiencia energética", "24 plantillas de 5 a 500 kW: potencia útil, pérdidas y aislamiento térmico de referencia."],
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
         fasores: ["Informe calculadora de fasores", "Conversión bidireccional entre forma rectangular y notación fasorial."],
@@ -3338,6 +3665,14 @@
       }
 
       if (id === "solar") {
+        blocks.push(pdfHeading("Suite residencial"));
+        blocks.push(pdfKv("Piso radiante · plantilla", opt("sol-rad-template")));
+        blocks.push(pdfKv("Carga / potencia piso", txt("sol-rad-load") + " / " + txt("sol-rad-output")));
+        blocks.push(pdfKv("Área activa / tubo", txt("sol-rad-area") + " / " + txt("sol-rad-tube")));
+        blocks.push(pdfKv("Circuitos / caudal", txt("sol-rad-circuits") + " / " + txt("sol-rad-flow")));
+        blocks.push(pdfKv("ACS · plantilla", opt("sol-acs-template")));
+        blocks.push(pdfKv("Energía / colectores", txt("sol-acs-energy") + " / " + txt("sol-acs-area")));
+        blocks.push(pdfKv("Paneles / acumulador", txt("sol-acs-panels") + " / " + txt("sol-acs-tank")));
         blocks.push(pdfHeading("Calor específico"));
         blocks.push(pdfKv("Material", opt("sol-c-material")));
         blocks.push(pdfKv("Masa", val("sol-c-mass") + " kg"));
@@ -3413,6 +3748,32 @@
         blocks.push(pdfNote("Carga resistiva: |I − In| / In ≤ 10 %. Desvío > 15 %: revisar elemento."));
         blocks.push(pdfNote("Compresores: deben ciclar. 100 % ON = falla. Freezer sano: 1,3–2,2 A ON, duty 30–50 %."));
         blocks.push(pdfNote("Motor DOL: arranque 5–8× In, < 10× y < 1 s. LRA freezer 8–14 A."));
+      }
+
+      if (id === "eficiencia") {
+        blocks.push(pdfHeading("Plantilla y eficiencia"));
+        blocks.push(pdfKv("Plantilla", opt("eff-template")));
+        blocks.push(pdfKv("Potencia total instalada", txt("eff-total")));
+        blocks.push(pdfKv("Potencia útil", txt("eff-useful")));
+        blocks.push(pdfKv("Potencia perdida / margen", txt("eff-lost")));
+        blocks.push(pdfKv("Eficiencia η", txt("eff-percent")));
+        const effTable = tableFromEl("eff-load-table");
+        if (effTable.headers.length) {
+          blocks.push(pdfHeading("Artefactos de referencia"));
+          blocks.push(pdfTableRow(effTable.headers, [2, 1, 1, 1], true));
+          effTable.rows.forEach((row) => blocks.push(pdfTableRow(row, [2, 1, 1, 1], false)));
+        }
+        blocks.push(pdfHeading("Aislamiento térmico"));
+        [
+          ["Muros / techo / piso", val("eff-wall-area") + " / " + val("eff-roof-area") + " / " + val("eff-floor-area") + " m²"],
+          ["Ventanas", val("eff-window-area") + " m²"],
+          ["U muros / techo / piso", val("eff-u-wall") + " / " + val("eff-u-roof") + " / " + val("eff-u-floor")],
+          ["U ventanas / ΔT", val("eff-u-window") + " / " + val("eff-delta-t") + " K"],
+          ["Pérdida térmica", txt("eff-heat-loss")],
+          ["Ht / ventilación", txt("eff-ht") + " / " + txt("eff-vent-loss")],
+          ["R equivalente / clasificación", txt("eff-r-value") + " / " + txt("eff-insulation-grade")],
+        ].forEach(([label, value]) => blocks.push(pdfKv(label, value)));
+        blocks.push(pdfNote(txt("eff-insulation-note")));
       }
 
       if (id === "tan") {
