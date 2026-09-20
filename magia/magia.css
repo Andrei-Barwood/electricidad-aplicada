@@ -1,0 +1,197 @@
+/* Magia · La electricidad según el mago Vaelithor */
+#panel-magia {
+  --mg-cream: #f6efe4;
+  --mg-paper: #fffaf3;
+  --mg-ink: #3a2f27;
+  --mg-muted: #6b5a4d;
+  --mg-terr: #c46a4a;
+  --mg-sage: #5e7a5e;
+  --mg-gold: #d4a017;
+  --mg-lilac: #7b4ea3;
+  --mg-sky: #6a8eae;
+  --mg-line: #e4d3bc;
+  --mg-shadow: 0 18px 40px rgba(80, 50, 20, 0.16);
+  color: var(--mg-ink);
+  background:
+    radial-gradient(900px 420px at 12% -10%, rgba(196, 106, 74, 0.12), transparent 55%),
+    radial-gradient(700px 380px at 100% 0%, rgba(212, 160, 23, 0.14), transparent 50%),
+    linear-gradient(180deg, #fff8ee, var(--mg-cream) 55%, #efe4d4);
+  border: 1px solid var(--mg-line);
+  border-radius: 22px;
+  padding: 22px 22px 28px;
+  box-shadow: var(--mg-shadow);
+}
+#panel-magia .hero { margin-bottom: 8px; }
+#panel-magia.mg-playing > .hero { display: none; }
+#panel-magia .mg-hero {
+  display: grid;
+  grid-template-columns: 132px 1fr;
+  gap: 18px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+#panel-magia .mg-hero img {
+  width: 132px; height: 132px; object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f0d48a;
+  box-shadow: 0 8px 20px rgba(80, 50, 20, 0.18);
+  background: #f3e6d4;
+}
+#panel-magia .mg-kicker {
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mg-terr);
+  font-family: var(--sans);
+}
+#panel-magia .mg-hero h2 {
+  font-size: clamp(26px, 3vw, 38px);
+  margin-top: 4px;
+  color: var(--mg-ink);
+}
+#panel-magia .mg-hero h2 span { color: var(--mg-lilac); }
+#panel-magia .mg-lede {
+  color: var(--mg-muted);
+  max-width: 72ch;
+  margin-top: 6px;
+  font-size: 15px;
+}
+#panel-magia .mg-note {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--mg-muted);
+  background: rgba(255, 250, 243, 0.8);
+  border: 1px solid var(--mg-line);
+  border-radius: 12px;
+  padding: 10px 12px;
+}
+#panel-magia .mg-note strong { color: var(--mg-terr); }
+#panel-magia .mg-toolbar {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 8px 0 16px;
+}
+#panel-magia .mg-btn {
+  appearance: none; border: 0; cursor: pointer;
+  font-family: var(--sans); font-weight: 700; font-size: 14px;
+  padding: 10px 16px; border-radius: 999px;
+  background: var(--mg-ink); color: var(--mg-cream);
+}
+#panel-magia .mg-btn.ghost {
+  background: transparent; color: var(--mg-ink);
+  border: 1.5px solid #c4a574;
+}
+#panel-magia .mg-btn.gold { background: var(--mg-gold); color: #2b220f; }
+#panel-magia .mg-btn.sage { background: var(--mg-sage); color: #f6efe4; }
+#panel-magia .mg-btn.lilac { background: var(--mg-lilac); color: #fffaf3; }
+#panel-magia .mg-btn:disabled { opacity: 0.4; cursor: default; }
+#panel-magia .mg-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+#panel-magia .mg-floor {
+  background: var(--mg-paper);
+  border: 1px solid var(--mg-line);
+  border-radius: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  box-shadow: 0 10px 24px rgba(80, 50, 20, 0.08);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+#panel-magia .mg-floor:hover { transform: translateY(-2px); border-color: var(--mg-gold); }
+#panel-magia .mg-floor img { display: block; width: 100%; height: 118px; object-fit: cover; }
+#panel-magia .mg-floor .body { padding: 12px 14px 14px; }
+#panel-magia .mg-floor .n {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em;
+  color: var(--mg-lilac); font-weight: 700;
+}
+#panel-magia .mg-floor h3 { font-size: 18px; margin: 4px 0 4px; color: var(--mg-ink); }
+#panel-magia .mg-floor p { font-size: 12.5px; color: var(--mg-muted); line-height: 1.35; }
+#panel-magia .mg-stars { margin-top: 8px; color: var(--mg-gold); letter-spacing: 2px; font-size: 14px; }
+#panel-magia .mg-tuts { display: grid; gap: 12px; }
+@media (min-width: 900px) {
+  #panel-magia .mg-tuts { grid-template-columns: 1fr 1fr; }
+}
+#panel-magia .mg-tut {
+  display: grid; grid-template-columns: 148px 1fr; gap: 0;
+  background: var(--mg-paper); border: 1px solid var(--mg-line);
+  border-radius: 16px; overflow: hidden; cursor: pointer;
+  text-align: left; color: inherit; font: inherit; padding: 0;
+}
+#panel-magia .mg-tut img { width: 148px; height: 100%; min-height: 120px; object-fit: cover; }
+#panel-magia .mg-tut .body { padding: 12px 14px; }
+#panel-magia .mg-tut h3 { font-size: 17px; margin: 2px 0 4px; }
+#panel-magia .mg-tut p { font-size: 13px; color: var(--mg-muted); }
+#panel-magia .mg-concept {
+  background: var(--mg-paper); border: 1px solid var(--mg-line);
+  border-radius: 16px; padding: 14px 16px; margin-bottom: 14px;
+  font-size: 15px; line-height: 1.45;
+}
+#panel-magia .mg-say {
+  background: var(--mg-paper);
+  border: 1px solid var(--mg-line);
+  border-radius: 14px;
+  padding: 12px 16px;
+  font-size: 17px;
+  line-height: 1.4;
+  margin-bottom: 10px;
+  min-height: 58px;
+  font-family: Georgia, "Iowan Old Style", serif;
+}
+#panel-magia .mg-stage {
+  position: relative;
+  background: #1c1814;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px rgba(80, 50, 20, 0.18);
+}
+#panel-magia .mg-stage canvas { display: block; width: 100% !important; height: auto !important; }
+#panel-magia .mg-dock {
+  display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; align-items: center;
+}
+#panel-magia .mg-hint { font-size: 13px; color: var(--mg-muted); margin-left: auto; max-width: 52ch; }
+#panel-magia .mg-qbox {
+  display: none;
+  position: absolute; inset: 10%;
+  background: rgba(255, 250, 243, 0.96);
+  border: 3px solid var(--mg-gold);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+}
+#panel-magia .mg-qbox h2 { margin: 0 0 8px; font-size: 22px; }
+#panel-magia .mg-qbox p { font-size: 16px; }
+#panel-magia .mg-opts { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 16px; }
+#panel-magia .mg-opts .mg-btn { min-width: 140px; font-size: 15px; }
+#panel-magia .mg-fb { min-height: 28px; margin-top: 12px; font-weight: 700; }
+#panel-magia .mg-kit, #panel-magia .mg-sat {
+  background: var(--mg-paper); border: 1px solid var(--mg-line);
+  border-radius: 16px; padding: 16px; margin-top: 16px;
+}
+#panel-magia .mg-kit h3, #panel-magia .mg-sat h3 { font-size: 18px; margin-bottom: 8px; }
+#panel-magia .mg-kit ul { padding-left: 18px; color: var(--mg-muted); font-size: 13.5px; }
+#panel-magia .mg-kit li { margin: 4px 0; }
+#panel-magia .mg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+#panel-magia .mg-chip {
+  font-size: 12px; font-weight: 700; background: #f3e6d4;
+  border-radius: 999px; padding: 4px 10px; color: var(--mg-ink);
+}
+#panel-magia .mg-photo {
+  margin-top: 10px; border-radius: 14px; overflow: hidden; border: 1px solid var(--mg-line);
+}
+#panel-magia .mg-photo img { display: block; width: 100%; height: auto; }
+@media (max-width: 720px) {
+  #panel-magia .mg-hero { grid-template-columns: 1fr; }
+  #panel-magia .mg-hero img { width: 96px; height: 96px; }
+  #panel-magia .mg-tut { grid-template-columns: 1fr; }
+  #panel-magia .mg-tut img { width: 100%; height: 120px; }
+  #panel-magia .mg-hint { margin-left: 0; }
+}
+@media print {
+  #panel-magia .mg-stage, #panel-magia .mg-dock, #panel-magia .mg-toolbar { display: none !important; }
+}

@@ -21,6 +21,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="magia/magia.css" />
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
   <script>
     (function () {
@@ -375,6 +376,7 @@
       <button class="btn mobile-toggle" type="button" id="nav-toggle">Menú</button>
       <div class="nav-links" id="nav-links">
         <button class="nav-btn active" data-panel="home"><span class="ico">⌂</span> Inicio</button>
+        <button class="nav-btn" data-panel="magia"><span class="ico">✦</span> Magia</button>
         <button class="nav-btn" data-panel="sev"><span class="ico">∿</span> SEV</button>
         <button class="nav-btn" data-panel="malla"><span class="ico">▦</span> Malla de tierra</button>
         <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
@@ -397,10 +399,11 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Doce herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Doce calculadoras y un taller para las manos: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores, conversor de color y Magia —la electricidad según el mago Vaelithor. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
+          <article class="card home" data-go="magia"><h3>Magia · Vaelithor</h3><p class="sub">La electricidad, según el mago Vaelithor. Catorce pisos, cuatro puntos de vista. Se juega con las manos.</p></article>
           <article class="card home" data-go="sev"><h3>SEV · Schlumberger</h3><p class="sub">Problema directo Pekeris + filtro Ghosh de 9 puntos. Ajuste de capas, curva log-log y sección geoeléctrica.</p></article>
           <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
@@ -1676,11 +1679,27 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-magia">
+        <div class="hero">
+          <div class="mg-hero">
+            <img src="magia/assets/vaelithor.jpg" alt="El mago Vaelithor, con túnica verde y un bastón de cristal">
+            <div>
+              <div class="mg-kicker">Maeth / Aemaeth · taller de las manos</div>
+              <h2>La electricidad, <span>según el mago Vaelithor</span></h2>
+              <p class="mg-lede">Catorce pisos, cuatro puntos de vista. Para una niña de siete años. Se juega con las manos. Se invierte en lo que dura. Las palabras del taller se quedan: peldaño, disfraz, pasaporte, casita, tobogán, pasillo pegajoso, empujón, desfile, cansancio, tesoro, canicas, cubo, ovillo, columpio, foto.</p>
+            </div>
+          </div>
+        </div>
+        <div id="mg-view"></div>
+      </section>
+
       <footer class="site">
         Andres Barbudo Rodriguez - CFT Paillaco - Todos los Derechos Reservados © - WhatsApp <a href="https://wa.me/andresbarbudo" target="_blank" rel="noopener">@andresbarbudo</a> - visit <a href="https://www.youtube.com/@kirtantegsingh" target="_blank" rel="noopener">https://www.youtube.com/@kirtantegsingh</a> - visit <a href="https://sacred-geometry.uk" target="_blank" rel="noopener">https://sacred-geometry.uk</a>
       </footer>
     </main>
   </div>
+  <script src="magia/floors.js"></script>
+  <script src="magia/magia.js"></script>
   <script>
   (function () {
     const $ = (id) => document.getElementById(id);
@@ -1740,14 +1759,18 @@
       window.scrollTo(0, 0);
       const templateBanner = $("tpl-banner");
       if (templateBanner) {
-        templateBanner.hidden = id === "pu" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && !!activeSite);
+        templateBanner.hidden = id === "pu" || id === "magia" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && id !== "magia" && !!activeSite);
       }
       refreshPanelVisuals(id);
+      if (window.EA_MAGIA) {
+        if (id === "magia") window.EA_MAGIA.show();
+        else window.EA_MAGIA.hide();
+      }
     }
     function organizeCalcMenus() {
       document.querySelectorAll("section.panel").forEach((panel) => {
-        if (panel.id === "panel-home") return;
+        if (panel.id === "panel-home" || panel.id === "panel-magia") return;
         const nodes = [];
         Array.from(panel.children).forEach((el) => {
           if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu")) return;
@@ -1791,7 +1814,7 @@
     document.querySelectorAll(".nav-btn").forEach((b) => b.addEventListener("click", () => showPanel(b.dataset.panel)));
     document.querySelectorAll("[data-go]").forEach((el) => el.addEventListener("click", () => showPanel(el.dataset.go)));
     $("nav-toggle").addEventListener("click", () => $("sidebar").classList.toggle("open"));
-    const start = (location.hash || "#home").slice(1);
+    const start = (location.hash || "#home").slice(1).split("/")[0];
 
     /* ===================== SEV ===================== */
     const GHOSH_C = [0.0225, -0.0499, 0.1064, 0.1854, 1.9720, -1.5716, 0.4018, -0.0814, 0.0148];

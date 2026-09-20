@@ -12,3 +12,7 @@ _tpl_verify.py
 _tpl_*.png
 _batch_queseria.py
 reportes/
+magia/_qa/
+magia/_check.py
+magia/assets/raw_crops/
+magia/assets/keyed_raw/

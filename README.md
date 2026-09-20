@@ -1,6 +1,6 @@
 # Electricidad Aplicada
 
-Un archivo. Diez instrumentos. Un plano.
+Un archivo. Doce calculadoras. Un taller para las manos. Un plano.
 
 [electricidadaplicada.app](https://electricidadaplicada.app)
 
@@ -14,6 +14,7 @@ Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin
 
 ```
 ⌂  Inicio
+✦  Magia
 ∿  SEV
 ▦  Malla de tierra
 ☀  Iluminación
@@ -98,6 +99,12 @@ Calcula bases trifásicas (Zb, Ib), cambio de base Zpu de transformadores y gene
 ### ∠ Fasores — el giro del complejo
 
 Un número complejo tiene dos lecturas: la arista rectangular `a + jb` y el radio fasorial `A ∠ θ`. La calculadora convierte en ambos sentidos, usando grados y `atan2` para conservar el cuadrante correcto. Incluye 24 plantillas de circuitos trifásicos (motores, transformadores, cargas Y/Δ, rectificadores, filtros e inversores), cuyos valores alimentan la calculadora y cuyo esquema se dibuja con p5.js.
+
+### ✦ Magia — la electricidad según el mago Vaelithor
+
+Catorce pisos, cuatro puntos de vista. Un taller para una niña de siete años: peldaño, disfraz, pasaporte, casita, tobogán, pasillo pegajoso, cubo, ovillo, columpio, foto. Se juega con las manos, con un adulto. No sustituye las visitas del taller; aquí el mismo taller se toca.
+
+Cincuenta y seis tutoriales en p5.js, mesa de madera, juguetes que se arrastran. El inventario de inversión y la mesa de verdad de cada rincón van al lado.
 
 ### ◐ Color — hexágono de la luz
 
