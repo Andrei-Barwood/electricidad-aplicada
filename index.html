@@ -385,6 +385,7 @@
         <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
         <button class="nav-btn" data-panel="btu"><span class="ico">♨</span> BTU</button>
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
+        <button class="nav-btn" data-panel="taximetro"><span class="ico">🚕</span> Taxímetro</button>
         <button class="nav-btn" data-panel="solar"><span class="ico">☀</span> Solar</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="arcade"><span class="ico">◈</span> Arcade</button>
@@ -412,6 +413,7 @@
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
           <article class="card home" data-go="btu"><h3>Proyección BTU</h3><p class="sub">Carga de calefacción por recinto, equivalencias térmicas y tablero eléctrico de climatización.</p></article>
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
+          <article class="card home" data-go="taximetro"><h3>Taxímetro</h3><p class="sub">Calculadora para comparar tarifas razonables, aceptables y sospechosas por distancia, tiempo y consumo del vehículo.</p></article>
           <article class="card home" data-go="solar"><h3>Solar · calor y radiación</h3><p class="sub">Radiación horaria por estación, proyección anual, calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="arcade"><h3>Arcade</h3><p class="sub">Plantillas por tipo y tamaño. Sala, tienda de videojuegos y arriendo: plano, demanda, clima y tablero.</p></article>
@@ -833,6 +835,58 @@
             <div class="meta"><dt>kWh/m³</dt><dd id="hy-spec">—</dd></div>
           </dl>
           <p class="formula" style="margin-top:10px">Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp</p>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-taximetro">
+        <div class="hero">
+          <div>
+            <h2>Taxímetro · rango <span>razonable</span></h2>
+            <p class="lede">Compara la tarifa cobrada contra un costo operativo base, tiempo de espera, distancia y energía consumida. Sirve para detectar desviaciones razonables, aceptables y sospechosas sin convertir la herramienta en una acusación automática.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="taximetro">Exportar PDF</button></div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Parámetros del recorrido</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="tax-base">Tarifa base [CLP]</label><input id="tax-base" type="number" min="0" step="any" value="800" /></div>
+              <div class="mini-input"><label for="tax-km">Costo por km [CLP/km]</label><input id="tax-km" type="number" min="0" step="any" value="700" /></div>
+              <div class="mini-input"><label for="tax-min">Costo por minuto [CLP/min]</label><input id="tax-min" type="number" min="0" step="any" value="120" /></div>
+              <div class="mini-input"><label for="tax-actual">Tarifa cobrada [CLP]</label><input id="tax-actual" type="number" min="0" step="any" value="4200" /></div>
+              <div class="mini-input"><label for="tax-distance">Distancia [km]</label><input id="tax-distance" type="number" min="0" step="any" value="8.4" /></div>
+              <div class="mini-input"><label for="tax-time">Tiempo [min]</label><input id="tax-time" type="number" min="0" step="any" value="18" /></div>
+              <div class="mini-input"><label for="tax-consumption">Consumo [kWh/100 km o L/100 km]</label><input id="tax-consumption" type="number" min="0" step="any" value="12" /></div>
+              <div class="mini-input"><label for="tax-energy-price">Costo energía [CLP/u]</label><input id="tax-energy-price" type="number" min="0" step="any" value="890" /></div>
+              <div class="mini-input"><label for="tax-autonomy">Autonomía [km/u]</label><input id="tax-autonomy" type="number" min="0" step="any" value="7.5" /></div>
+              <div class="mini-input"><label for="tax-unit">Unidad de energía</label>
+                <select id="tax-unit">
+                  <option value="kwh">kWh</option>
+                  <option value="litro">litro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Resultado comparativo</h3>
+            <div class="result"><div class="k">Tarifa de referencia</div><div class="v" id="tax-reference">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Operación</dt><dd id="tax-operating">—</dd></div>
+              <div class="meta"><dt>Energía</dt><dd id="tax-energy">—</dd></div>
+              <div class="meta"><dt>Rango razonable</dt><dd id="tax-range">—</dd></div>
+              <div class="meta"><dt>Desvío</dt><dd id="tax-delta">—</dd></div>
+              <div class="meta"><dt>Consumo por metro</dt><dd id="tax-per-meter">—</dd></div>
+              <div class="meta"><dt>Autonomía del vehículo</dt><dd id="tax-autonomy-result">—</dd></div>
+            </dl>
+            <div class="result" style="margin-top:12px"><div class="k">Veredicto</div><div class="v" id="tax-verdict">—</div></div>
+            <p class="hint" id="tax-note" style="margin-top:10px">Completa los datos del recorrido y la tarifa cobrada para comparar el valor real contra el costo operativo mínimo razonable.</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Interpretación</h3>
+          <p class="sub">La comparación se basa en un rango de plausibilidad: “razonable” cuando está dentro de ±10 %, “aceptable” cuando está entre +10 % y +30 %, y “sospechoso” cuando supera +30 % sobre el costo real de operación más energía. Esto no reemplaza una tarifa legal o un contrato, pero ayuda a detectar sobrecobros reiterados.</p>
+          <div class="formula">Tarifa estimada = base + km × (costo km) + min × (costo min) + distancia × consumo/100 × costo energía</div>
+          <div class="formula" style="margin-top:8px">Consumo por metro = consumo/100 / 1000</div>
         </div>
       </section>
 
@@ -1836,6 +1890,8 @@
     $("theme-night").addEventListener("click", () => setTheme("night"));
     $("theme-day").classList.toggle("primary", document.documentElement.getAttribute("data-theme") === "day");
     $("theme-night").classList.toggle("primary", document.documentElement.getAttribute("data-theme") !== "day");
+    ["tax-base","tax-km","tax-min","tax-actual","tax-distance","tax-time","tax-consumption","tax-energy-price","tax-autonomy","tax-unit"]
+      .forEach((id) => $(id).addEventListener("input", calcTaximetro));
 
     function refreshPanelVisuals(id) {
       if (id === "sev") { parseSev(); drawSev(); }
@@ -1851,6 +1907,58 @@
       if (id === "pu") calcPu();
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
+      if (id === "taximetro") calcTaximetro();
+    }
+    function calcTaximetro() {
+      const base = Number($("tax-base").value) || 0;
+      const kmRate = Number($("tax-km").value) || 0;
+      const minRate = Number($("tax-min").value) || 0;
+      const actual = Number($("tax-actual").value) || 0;
+      const distance = Math.max(0, Number($("tax-distance").value) || 0);
+      const time = Math.max(0, Number($("tax-time").value) || 0);
+      const consumption = Math.max(0, Number($("tax-consumption").value) || 0);
+      const energyPrice = Number($("tax-energy-price").value) || 0;
+      const autonomy = Math.max(0, Number($("tax-autonomy").value) || 0);
+      const unit = $("tax-unit").value || "kwh";
+      const operating = base + distance * kmRate + time * minRate;
+      const energyUnits = distance * (consumption / 100);
+      const energyCost = energyUnits * energyPrice;
+      const reference = operating + energyCost;
+      const delta = actual - reference;
+      const pct = reference > 0 ? (delta / reference) * 100 : 0;
+      const lowerBound = reference * 0.9;
+      const upperBound = reference * 1.1;
+      const perMeter = distance > 0 ? reference / (distance * 1000) : 0;
+      const consumptionPerMeter = consumption > 0 ? (consumption / 100) / 1000 : 0;
+      const unitLabel = unit === "kwh" ? "kWh/m" : "L/m";
+      let verdict = "Razonable";
+      let verdictClass = "ok";
+      let note = "La tarifa cobrada cae dentro del rango plausible del recorrido.";
+      if (pct > 30) {
+        verdict = "Sospechoso";
+        verdictClass = "bad";
+        note = "La tarifa cobrada excede en más de 30 % el costo operativo mínimo plausible. Revisa la ruta, el tiempo, la base y el consumo.";
+      } else if (pct > 10) {
+        verdict = "Aceptable";
+        verdictClass = "warn";
+        note = "La tarifa queda por encima de lo razonable, pero todavía en un rango de variación aceptable.";
+      } else if (pct < -10) {
+        verdict = "Bajo";
+        verdictClass = "micro";
+        note = "La tarifa está por debajo del rango razonable; podría responder a descuento o a otra estructura de tarifa.";
+      }
+      $("tax-reference").innerHTML = fmt(reference, 0) + " <small>CLP</small>";
+      $("tax-operating").textContent = fmt(operating, 0) + " CLP";
+      $("tax-energy").textContent = fmt(energyCost, 0) + " CLP";
+      $("tax-range").textContent = fmt(lowerBound, 0) + " – " + fmt(upperBound, 0) + " CLP";
+      $("tax-delta").textContent = fmt(delta, 0) + " CLP";
+      $("tax-per-meter").textContent = fmt(consumptionPerMeter, 6) + " " + unitLabel;
+      $("tax-autonomy-result").textContent = fmt(autonomy, 2) + " km/u";
+      $("tax-verdict").innerHTML = '<span class="status ' + verdictClass + '">' + verdict + '</span>';
+      $("tax-note").textContent = note + " Diferencia relativa: " + fmt(Math.abs(pct), 1) + "%.";
+      if (distance > 0) {
+        $("tax-per-meter").textContent += " · " + fmt(perMeter, 4) + " CLP/m";
+      }
     }
     function showPanel(id) {
       document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
