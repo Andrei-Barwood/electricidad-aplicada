@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Electricidad Aplicada</title>
-  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
+  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
   <link rel="icon" href="favicon.jpeg?v=1" type="image/jpeg" />
   <link rel="apple-touch-icon" href="favicon.jpeg?v=1" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://electricidadaplicada.app/" />
   <meta property="og:title" content="Electricidad Aplicada" />
-  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
+  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
   <meta property="og:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta property="og:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Electricidad Aplicada" />
-  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, eficiencia energética, TAN/AHF y color." />
+  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
   <meta name="twitter:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta name="twitter:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -303,6 +303,11 @@
     .formula { font-family: var(--mono); background: var(--input-bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; font-size: 13px; overflow-x: auto; }
     canvas.chart { width: 100%; height: 280px; background: var(--input-bg); border: 1px solid var(--line); border-radius: 12px; display: block; }
     canvas.tall { height: 340px; }
+    canvas.chart.arcade { width: 100%; height: auto; }
+    .calc-stage { margin-top: 0; }
+    .arc-legend { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 10px; }
+    .arc-legend span { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--muted); }
+    .arc-sw { width: 10px; height: 10px; border-radius: 2px; display: inline-block; flex: 0 0 auto; }
     .callout { border-left: 3px solid var(--gold); padding: 10px 12px; background: var(--gold-dim); border-radius: 0 12px 12px 0; font-size: 13.5px; }
     .callout.cyan { border-left-color: var(--cyan); background: var(--micro-bg); }
     .solar-suite { border-color: var(--nav-active-border); background: linear-gradient(135deg, var(--card-bg), var(--micro-bg)); }
@@ -382,6 +387,7 @@
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
         <button class="nav-btn" data-panel="solar"><span class="ico">☀</span> Solar</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
+        <button class="nav-btn" data-panel="arcade"><span class="ico">◈</span> Arcade</button>
         <button class="nav-btn" data-panel="eficiencia"><span class="ico">◒</span> Eficiencia energética</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
@@ -397,7 +403,7 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Doce herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, caudal y potencia hidráulica, calor solar, estudio de consumo, eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Trece herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, proyección BTU, caudal y potencia hidráulica, calor solar, estudio de consumo, arcade (sala, tienda y arriendo), eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -408,6 +414,7 @@
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
           <article class="card home" data-go="solar"><h3>Solar · calor y radiación</h3><p class="sub">Radiación horaria por estación, proyección anual, calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
+          <article class="card home" data-go="arcade"><h3>Arcade</h3><p class="sub">Plantillas por tipo y tamaño. Sala, tienda de videojuegos y arriendo: plano, demanda, clima y tablero.</p></article>
           <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
@@ -1280,6 +1287,107 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-arcade">
+        <div class="hero">
+          <div>
+            <h2>Arcade · <span>sala, tienda y arriendo</span></h2>
+            <p class="lede">Una plantilla por tipo y por tamaño. Proyecta la demanda con simultaneidad, el calor de las máquinas, el plano del local y el tablero. Cifras de apoyo académico: no reemplazan la memoria de cálculo ni el pliego RIC.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="arcade">Exportar PDF</button></div>
+        </div>
+        <div class="calc-stage">
+          <div class="card">
+            <div class="result"><div class="k">Demanda de empalme</div><div class="v" id="arc-pdem">—</div></div>
+            <p class="status" id="arc-status" hidden></p>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Potencia instalada</dt><dd id="arc-pinst">—</dd></div>
+              <div class="meta"><dt>Empalme orientativo</dt><dd id="arc-empalme">—</dd></div>
+              <div class="meta"><dt>In general / alimentador</dt><dd id="arc-in">—</dd></div>
+              <div class="meta"><dt>Energía del mes</dt><dd id="arc-kwh">—</dd></div>
+              <div class="meta"><dt>Calor a rechazar</dt><dd id="arc-heat">—</dd></div>
+              <div class="meta"><dt>Clima eléctrico</dt><dd id="arc-hvac">—</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">Pdem = Σ (P · fs) · I₁φ = P / (220 · cos φ) · In ≥ 1,25 · I · Qclima ≈ (Pmáq·fs + luz + 110 W · personas) / COP</p>
+            <p class="hint" id="arc-fit" style="margin-top:8px"></p>
+          </div>
+          <div style="margin-top:16px">
+            <div class="card">
+              <h3>Plano del local</h3>
+              <p class="sub">Zonas a escala y máquinas coloreadas por circuito. La puerta de acceso queda al frente del rectángulo.</p>
+              <canvas class="chart tall arcade" id="arc-plan" width="1100" height="680" aria-label="Plano del arcade"></canvas>
+              <div class="arc-legend" id="arc-legend"></div>
+            </div>
+            <div class="card" style="margin-top:16px">
+              <h3>Tablero proyectado</h3>
+              <p class="sub">Croquis de riel DIN: interruptor general, diferenciales de 30 mA y automáticos. La tabla es la leyenda del dibujo.</p>
+              <div class="fields two">
+                <div class="mini-input"><label for="arc-supply">Alimentación</label>
+                  <select id="arc-supply">
+                    <option value="auto" selected>Automática</option>
+                    <option value="1x220">1×220 V</option>
+                    <option value="3x380">3×380 V</option>
+                  </select>
+                </div>
+                <div class="mini-input"><label for="arc-len">Largo del alimentador [m]</label><input id="arc-len" type="number" min="5" step="any" value="22" /></div>
+                <div class="mini-input"><label for="arc-cop">COP del clima</label><input id="arc-cop" type="number" min="1" step="any" value="3" /></div>
+                <div class="mini-input"><label for="arc-tarifa">$ / kWh</label><input id="arc-tarifa" type="number" min="0" step="any" value="252" /></div>
+              </div>
+              <canvas class="chart tall arcade" id="arc-sketch" width="1100" height="680" aria-label="Croquis del tablero del arcade"></canvas>
+              <div class="table-wrap" style="margin-top:8px"><table id="arc-board"></table></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Plantilla y programa</h3>
+            <label class="field" for="arc-tpl">Tipo de arcade</label>
+            <select id="arc-tpl"></select>
+            <p class="sub" id="arc-blurb" style="margin-top:8px"></p>
+            <div class="fields" style="margin-top:10px">
+              <div class="mini-input"><label for="arc-w">Ancho [m]</label><input id="arc-w" type="number" min="2" step="any" value="22" /></div>
+              <div class="mini-input"><label for="arc-l">Largo [m]</label><input id="arc-l" type="number" min="2" step="any" value="16" /></div>
+              <div class="mini-input"><label for="arc-h">Altura [m]</label><input id="arc-h" type="number" min="2" step="any" value="3.2" /></div>
+              <div class="mini-input"><label for="arc-cab">Cabinas verticales</label><input id="arc-cab" type="number" min="0" step="1" value="20" /></div>
+              <div class="mini-input"><label for="arc-deluxe">Cabinas deluxe</label><input id="arc-deluxe" type="number" min="0" step="1" value="1" /></div>
+              <div class="mini-input"><label for="arc-pin">Pinballs</label><input id="arc-pin" type="number" min="0" step="1" value="6" /></div>
+              <div class="mini-input"><label for="arc-crane">Grúas / redemption</label><input id="arc-crane" type="number" min="0" step="1" value="2" /></div>
+              <div class="mini-input"><label for="arc-rhythm">Ritmo / baile</label><input id="arc-rhythm" type="number" min="0" step="1" value="1" /></div>
+              <div class="mini-input"><label for="arc-race">Carreras</label><input id="arc-race" type="number" min="0" step="1" value="0" /></div>
+              <div class="mini-input"><label for="arc-vr">Estaciones VR</label><input id="arc-vr" type="number" min="0" step="1" value="0" /></div>
+              <div class="mini-input"><label for="arc-pc">PC esports</label><input id="arc-pc" type="number" min="0" step="1" value="0" /></div>
+              <div class="mini-input"><label for="arc-hockey">Air hockey</label><input id="arc-hockey" type="number" min="0" step="1" value="0" /></div>
+              <div class="mini-input"><label for="arc-store">Tienda [m²]</label><input id="arc-store" type="number" min="0" step="any" value="36" /></div>
+              <div class="mini-input"><label for="arc-rental">Arriendo [m²]</label><input id="arc-rental" type="number" min="0" step="any" value="40" /></div>
+              <div class="mini-input"><label for="arc-party">Fiestas [m²]</label><input id="arc-party" type="number" min="0" step="any" value="0" /></div>
+              <div class="mini-input"><label for="arc-hours">Apertura [h/día]</label><input id="arc-hours" type="number" min="0" max="24" step="any" value="12" /></div>
+              <div class="mini-input"><label for="arc-div">Simultaneidad máquinas [%]</label><input id="arc-div" type="number" min="5" max="100" step="any" value="70" /></div>
+              <div class="mini-input"><label for="arc-aisle">Pasillo [m]</label><input id="arc-aisle" type="number" min="0.6" step="any" value="1.4" /></div>
+              <div class="mini-input"><label for="arc-people">Personas en pico (0 = auto)</label><input id="arc-people" type="number" min="0" step="1" value="0" /></div>
+            </div>
+            <div class="fields" style="margin-top:10px">
+              <label class="check"><input id="arc-prize" type="checkbox" checked /> Mostrador de fichas y premios</label>
+              <label class="check"><input id="arc-bar" type="checkbox" /> Barra / café</label>
+              <label class="check"><input id="arc-wc" type="checkbox" checked /> Baños</label>
+              <label class="check"><input id="arc-shop" type="checkbox" checked /> Taller de máquinas</label>
+              <label class="check"><input id="arc-marquee" type="checkbox" checked /> Marquesina</label>
+            </div>
+            <p class="hint">La plantilla llena estos campos. Después puedes cambiar cualquier número: el plano y el tablero siguen al local, no al nombre.</p>
+          </div>
+          <div class="card">
+            <h3>Balance de servicios</h3>
+            <p class="sub">La potencia instalada alimenta el automático. La demanda, con fs, alimenta el empalme. El mes usa horas equivalentes, no el pico.</p>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Corriente de diseño</dt><dd id="arc-i">—</dd></div>
+              <div class="meta"><dt>Caída del alimentador</dt><dd id="arc-feed">—</dd></div>
+              <div class="meta"><dt>Fases L1 / L2 / L3</dt><dd id="arc-phases">—</dd></div>
+              <div class="meta"><dt>Costo de energía</dt><dd id="arc-cost">—</dd></div>
+            </dl>
+            <div class="table-wrap" style="margin-top:8px"><table id="arc-services"></table></div>
+            <p class="hint" style="margin-top:8px">Cabina vertical 280 W, deluxe 720 W, pinball 400 W, grúa 450 W, ritmo 780 W, carreras 900 W, VR 1 200 W, PC 550 W, air hockey 300 W. Alumbrado de sala 7 W/m², tienda 12 W/m², arriendo 9 W/m². El pinball va en curva C por el pico de bobina.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-eficiencia">
         <div class="hero">
           <div>
@@ -1720,6 +1828,7 @@
       if (typeof parseSev === "function") { parseSev(); drawSev(); }
       if (typeof calcMalla === "function") calcMalla();
       if (typeof calcLux === "function") calcLux();
+      if (typeof calcArcade === "function") calcArcade();
       if (typeof calcDsp === "function") calcDsp();
       if (phasorSketch) phasorSketch.redraw();
     }
@@ -1733,6 +1842,7 @@
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
+      if (id === "arcade") calcArcade();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
@@ -1749,8 +1859,8 @@
       window.scrollTo(0, 0);
       const templateBanner = $("tpl-banner");
       if (templateBanner) {
-        templateBanner.hidden = id === "pu" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && !!activeSite);
+        templateBanner.hidden = id === "pu" || id === "arcade" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && id !== "arcade" && !!activeSite);
       }
       refreshPanelVisuals(id);
     }
@@ -1759,7 +1869,7 @@
         if (panel.id === "panel-home") return;
         const nodes = [];
         Array.from(panel.children).forEach((el) => {
-          if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu")) return;
+          if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu") || el.classList.contains("calc-stage")) return;
           if (el.classList.contains("grid")) {
             Array.from(el.children).forEach((child) => nodes.push(child));
             el.remove();
@@ -3898,6 +4008,771 @@
     ["ph-rect-real", "ph-rect-imag", "ph-polar-mag", "ph-polar-angle"]
       .forEach((id) => $(id).addEventListener("input", calcFasores));
 
+    /* ===================== ARCADE ===================== */
+    const ARC_PAL = ["#1398b8", "#b68b12", "#d23a22", "#3f7d1a", "#5a4eaa", "#b03b78", "#0f6e62", "#c46a12", "#3d5a99", "#8a5a12"];
+    const ARC_BREAKERS = [6, 10, 13, 16, 20, 25, 32, 40, 50, 63];
+    const ARC_MAINS = [25, 32, 40, 50, 63, 80, 100, 125, 160, 200, 250, 315, 400];
+    const ARC_WIRES = [
+      { s: 1.5, Iz: 16 }, { s: 2.5, Iz: 20 }, { s: 4, Iz: 25 }, { s: 6, Iz: 32 },
+      { s: 10, Iz: 50 }, { s: 16, Iz: 63 }, { s: 25, Iz: 80 }, { s: 35, Iz: 100 },
+      { s: 50, Iz: 125 }, { s: 70, Iz: 160 }, { s: 95, Iz: 200 }, { s: 120, Iz: 250 },
+    ];
+    const ARC_MACHINES = [
+      { id: "cab", name: "Cabina vertical", input: "arc-cab", W: 280, pf: 0.9, fw: 0.68, fd: 0.78 },
+      { id: "deluxe", name: "Cabina deluxe", input: "arc-deluxe", W: 720, pf: 0.9, fw: 1.05, fd: 1.55 },
+      { id: "pin", name: "Pinball", input: "arc-pin", W: 400, pf: 0.85, fw: 0.66, fd: 1.3 },
+      { id: "crane", name: "Grúa", input: "arc-crane", W: 450, pf: 0.9, fw: 0.85, fd: 0.85 },
+      { id: "rhythm", name: "Ritmo", input: "arc-rhythm", W: 780, pf: 0.9, fw: 1.15, fd: 1.35 },
+      { id: "race", name: "Carreras", input: "arc-race", W: 900, pf: 0.88, fw: 1.25, fd: 1.9 },
+      { id: "vr", name: "VR", input: "arc-vr", W: 1200, pf: 0.95, fw: 1.8, fd: 1.8 },
+      { id: "pc", name: "PC esports", input: "arc-pc", W: 550, pf: 0.95, fw: 0.75, fd: 0.7 },
+      { id: "hockey", name: "Air hockey", input: "arc-hockey", W: 300, pf: 0.85, fw: 1.15, fd: 2.05 },
+    ];
+    const ARC_ZONES = {
+      sala: { name: "Sala", paint: "rgba(14,209,255,0.20)" },
+      tienda: { name: "Tienda", paint: "rgba(227,202,117,0.28)" },
+      arriendo: { name: "Arriendo", paint: "rgba(166,164,215,0.36)" },
+      premios: { name: "Premios", paint: "rgba(206,177,67,0.30)" },
+      barra: { name: "Barra", paint: "rgba(237,67,41,0.18)" },
+      fiesta: { name: "Fiesta", paint: "rgba(90,100,191,0.26)" },
+      bano: { name: "Baños", paint: "rgba(173,186,209,0.28)" },
+      taller: { name: "Taller", paint: "rgba(146,194,29,0.22)" },
+    };
+    const ARCADE_TEMPLATES = [
+      { id: "popup", name: "Pop-up · container", blurb: "Seis cabinas en un container de obra. Sin tienda ni arriendo: un pasillo y la marquesina.", W: 6, L: 2.6, H: 2.4, hours: 8, div: 80, aisle: 1.2, people: 6, cab: 6, deluxe: 0, pin: 0, crane: 0, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 0, party: 0, prize: false, bar: false, wc: false, shop: false, marquee: true },
+      { id: "rincon", name: "Rincón de barrio", blurb: "Sala chica, cabinas, dos pinballs y mostrador de fichas. Todavía sin tienda ni arriendo.", W: 9, L: 8, H: 2.8, hours: 10, div: 75, aisle: 1.3, people: 0, cab: 8, deluxe: 0, pin: 2, crane: 0, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 0, party: 0, prize: true, bar: false, wc: true, shop: false, marquee: true },
+      { id: "clasico", name: "Arcade clásico", blurb: "Piso de cabinas, pinballs y grúas, con taller y baños. El retail no entra en este tipo.", W: 14, L: 12, H: 3, hours: 12, div: 72, aisle: 1.4, people: 0, cab: 18, deluxe: 1, pin: 6, crane: 2, rhythm: 1, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 0, party: 0, prize: true, bar: false, wc: true, shop: true, marquee: true },
+      { id: "tienda", name: "Arcade + tienda", blurb: "Sala de juego y tienda de videojuegos: demos, caja y góndolas. Sin arriendo.", W: 16, L: 12, H: 3, hours: 11, div: 70, aisle: 1.4, people: 0, cab: 14, deluxe: 1, pin: 4, crane: 1, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 28, rental: 0, party: 0, prize: true, bar: false, wc: true, shop: true, marquee: true },
+      { id: "arriendo", name: "Arcade + arriendo", blurb: "Sala de juego y video rental: estanterías, caja y muro de pantallas. Sin tienda.", W: 16, L: 12, H: 3, hours: 11, div: 70, aisle: 1.4, people: 0, cab: 12, deluxe: 0, pin: 4, crane: 1, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 32, party: 0, prize: true, bar: false, wc: true, shop: false, marquee: true },
+      { id: "completo", name: "Tienda + arriendo", blurb: "El local completo: sala, tienda de videojuegos y arriendo de video, con taller y marquesina.", W: 22, L: 16, H: 3.2, hours: 12, div: 70, aisle: 1.4, people: 0, cab: 20, deluxe: 1, pin: 6, crane: 2, rhythm: 1, race: 0, vr: 0, pc: 0, hockey: 0, store: 36, rental: 40, party: 0, prize: true, bar: false, wc: true, shop: true, marquee: true },
+      { id: "pinball", name: "Sala de pinball", blurb: "Casi todo pinball. La simultaneidad baja porque las bobinas no disparan juntas. Lleva barra y clima estable.", W: 18, L: 14, H: 3, hours: 10, div: 55, aisle: 1.5, people: 0, cab: 2, deluxe: 0, pin: 24, crane: 0, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 0, party: 0, prize: false, bar: true, wc: true, shop: true, marquee: true },
+      { id: "redemption", name: "Redemption / premios", blurb: "Grúas, mesas y canje. La tienda chica es el mostrador de premios, más una sala de fiestas.", W: 18, L: 14, H: 3.2, hours: 12, div: 75, aisle: 1.5, people: 0, cab: 4, deluxe: 0, pin: 0, crane: 10, rhythm: 2, race: 1, vr: 0, pc: 0, hockey: 2, store: 12, rental: 0, party: 18, prize: true, bar: true, wc: true, shop: true, marquee: true },
+      { id: "barcade", name: "Barcade", blurb: "Cabinas y pinballs contra la barra: café, vitrina fría y horario de noche.", W: 16, L: 14, H: 3.2, hours: 8, div: 80, aisle: 1.4, people: 0, cab: 12, deluxe: 2, pin: 8, crane: 0, rhythm: 0, race: 0, vr: 0, pc: 0, hockey: 0, store: 0, rental: 0, party: 0, prize: false, bar: true, wc: true, shop: false, marquee: true },
+      { id: "vr", name: "Arena VR", blurb: "Pocas estaciones, mucha potencia por puesto, pista libre y clima alto.", W: 16, L: 14, H: 3.4, hours: 10, div: 92, aisle: 1.8, people: 0, cab: 2, deluxe: 0, pin: 0, crane: 0, rhythm: 0, race: 0, vr: 8, pc: 0, hockey: 0, store: 0, rental: 0, party: 16, prize: false, bar: false, wc: true, shop: true, marquee: true },
+      { id: "esports", name: "Café esports", blurb: "Filas de PC, tienda chica de periféricos y barra de café. Casi todo encendido a la vez.", W: 18, L: 12, H: 3, hours: 14, div: 90, aisle: 1.3, people: 0, cab: 2, deluxe: 0, pin: 0, crane: 0, rhythm: 0, race: 0, vr: 0, pc: 24, hockey: 0, store: 16, rental: 0, party: 0, prize: false, bar: true, wc: true, shop: false, marquee: true },
+      { id: "familiar", name: "Centro familiar", blurb: "Piso mixto, sala de fiestas, snack y premios. El día es de familias, sin arriendo.", W: 26, L: 18, H: 3.6, hours: 12, div: 68, aisle: 1.6, people: 0, cab: 12, deluxe: 1, pin: 4, crane: 6, rhythm: 2, race: 2, vr: 0, pc: 0, hockey: 2, store: 0, rental: 0, party: 28, prize: true, bar: true, wc: true, shop: true, marquee: true },
+      { id: "museo", name: "Museo retro", blurb: "Muchas máquinas y poca simultaneidad, clima de conservación y una tienda de archivo.", W: 30, L: 20, H: 3.6, hours: 8, div: 40, aisle: 1.6, people: 0, cab: 40, deluxe: 4, pin: 16, crane: 0, rhythm: 0, race: 2, vr: 0, pc: 0, hockey: 0, store: 20, rental: 0, party: 0, prize: false, bar: false, wc: true, shop: true, marquee: true },
+      { id: "grande", name: "Centro grande", blurb: "Sala extensa, tienda, arriendo, fiestas y barra. El empalme ya es trifásico holgado.", W: 36, L: 24, H: 4, hours: 12, div: 65, aisle: 1.6, people: 0, cab: 36, deluxe: 4, pin: 10, crane: 6, rhythm: 4, race: 4, vr: 4, pc: 0, hockey: 2, store: 50, rental: 45, party: 32, prize: true, bar: true, wc: true, shop: true, marquee: true },
+    ];
+    let arcadeLast = null;
+
+    function arcNum(id, fb) {
+      const n = +$(id).value;
+      return Number.isFinite(n) ? n : fb;
+    }
+    function arcNext(list, x) {
+      for (let i = 0; i < list.length; i++) if (list[i] + 1e-9 >= x) return list[i];
+      return list[list.length - 1];
+    }
+    function arcWireIndex(In) {
+      for (let i = 0; i < ARC_WIRES.length; i++) if (ARC_WIRES[i].Iz + 1e-9 >= In) return i;
+      return ARC_WIRES.length - 1;
+    }
+    function arcWire(In) { return ARC_WIRES[arcWireIndex(In)]; }
+    function arcCap(In, pf) { return 0.8 * In * 220 * pf; }
+    function arcDrop(I, L, s, V, three) {
+      if (!(I > 0) || !(L > 0) || !(s > 0) || !(V > 0)) return 0;
+      const k = three ? Math.sqrt(3) : 2;
+      return (k * I * L * 0.0225) / (s * V) * 100;
+    }
+    function arcZoneM2(zones, id) {
+      let s = 0;
+      zones.forEach((z) => { if (z.id === id) s += z.w * z.h; });
+      return s;
+    }
+    function arcadeLayout(inp) {
+      const W = inp.W;
+      const L = inp.L;
+      const zones = [];
+      const serviceBits = [];
+      if (inp.wc) serviceBits.push("bano");
+      if (inp.shop) serviceBits.push("taller");
+      if (inp.bar) serviceBits.push("barra");
+      if (inp.party > 0) serviceBits.push("fiesta");
+      let serviceH = 0;
+      if (serviceBits.length) {
+        serviceH = (inp.bar || inp.party > 0) ? 3.6 : 2.6;
+        if (inp.party > 0) {
+          const share = W / serviceBits.length;
+          serviceH = Math.max(serviceH, Math.min(L * 0.42, inp.party / share));
+        }
+        serviceH = Math.min(serviceH, L * 0.48);
+      }
+      const wantSide = inp.store > 0 || inp.rental > 0;
+      const prizeM2 = inp.prize ? Math.max(8, Math.min(14, Math.max(8, (inp.store + inp.rental) * 0.12))) : 0;
+      const sideAsk = inp.store + inp.rental + (wantSide && inp.prize ? prizeM2 : 0);
+      const gameH = Math.max(0.8, L - serviceH);
+      let sideW = 0;
+      if (sideAsk > 0) {
+        sideW = Math.min(W * 0.46, Math.max(2.8, sideAsk / gameH));
+        if (W - sideW < 2.6) sideW = 0;
+      }
+      const game = { id: "sala", x: 0, y: 0, w: W - sideW, h: gameH };
+      zones.push(game);
+      if (sideW > 0) {
+        const stack = [];
+        if (inp.store > 0) stack.push({ id: "tienda", m2: inp.store });
+        if (inp.rental > 0) stack.push({ id: "arriendo", m2: inp.rental });
+        if (inp.prize) stack.push({ id: "premios", m2: prizeM2 });
+        const sum = stack.reduce((s, z) => s + z.m2, 0) || 1;
+        let y = 0;
+        stack.forEach((z) => {
+          const h = game.h * (z.m2 / sum);
+          zones.push({ id: z.id, x: game.w, y: y, w: sideW, h: h });
+          y += h;
+        });
+      }
+      if (sideW <= 0 && inp.prize) {
+        const ch = Math.min(1.7, Math.max(1.05, game.h * 0.22));
+        if (game.h - ch >= 1.4) {
+          game.h -= ch;
+          zones.push({ id: "premios", x: 0, y: game.y + game.h, w: Math.min(game.w, 3.4), h: ch });
+        }
+      }
+      if (serviceH > 0) {
+        const bw = W / serviceBits.length;
+        serviceBits.forEach((id, i) => {
+          zones.push({ id: id, x: i * bw, y: L - serviceH, w: bw, h: serviceH });
+        });
+      }
+      return zones;
+    }
+    function arcadePlace(items, game, aisle) {
+      const pad = 0.35;
+      const placed = [];
+      const overflow = [];
+      let x = game.x + pad;
+      let y = game.y + pad;
+      let rowD = 0;
+      let rowType = "";
+      const limitX = game.x + game.w - pad;
+      const limitY = game.y + game.h - pad;
+      items.forEach((it) => {
+        const gap = 0.1;
+        const atStart = x <= game.x + pad + 0.2;
+        const typeBreak = rowType && it.type !== rowType && !atStart;
+        const widthBreak = x + it.fw > limitX + 1e-6 && !atStart;
+        if (typeBreak || widthBreak) {
+          y += rowD + aisle;
+          x = game.x + pad;
+          rowD = 0;
+          rowType = "";
+        }
+        if (x + it.fw > limitX + 1e-6 || y + it.fd > limitY + 1e-6) {
+          overflow.push(it);
+          return;
+        }
+        placed.push({ type: it.type, name: it.name, index: it.index, x: x, y: y, w: it.fw, d: it.fd, circuit: -1 });
+        x += it.fw + gap;
+        rowD = Math.max(rowD, it.fd);
+        rowType = it.type;
+      });
+      return { placed: placed, overflow: overflow };
+    }
+    function arcLump(src) {
+      return {
+        name: src.name, family: src.family, zone: src.zone || "", kind: src.kind, curve: src.curve || "C",
+        pf: src.pf, fs: src.fs, P: src.P, three: !!src.three, poles: src.three ? 3 : 2,
+        kwhH: src.kwhH, machineFrom: src.machineFrom, machineTo: src.machineTo,
+      };
+    }
+    function arcSplit(load, In) {
+      if (load.three) return [load];
+      const cap = arcCap(In, load.pf);
+      if (!(load.P > cap + 1e-6)) return [load];
+      const n = Math.ceil(load.P / cap);
+      const each = load.P / n;
+      const out = [];
+      for (let i = 0; i < n; i++) out.push(arcLump(Object.assign({}, load, { name: load.name + " " + (i + 1), P: each, machineFrom: undefined, machineTo: undefined })));
+      return out;
+    }
+    function arcSize(c) {
+      if (c.three) {
+        c.I = c.P / (Math.sqrt(3) * 380 * c.pf);
+        c.In = arcNext(ARC_BREAKERS, c.I * 1.25);
+        while (c.P > 0.8 * Math.sqrt(3) * 380 * c.pf * c.In + 1e-6 && c.In < 63) {
+          const n = arcNext(ARC_BREAKERS, c.In + 0.5);
+          if (n === c.In) break;
+          c.In = n;
+        }
+        c.phase = "3φ";
+        c.poles = 3;
+      } else {
+        c.I = c.P / (220 * c.pf);
+        c.In = arcNext(ARC_BREAKERS, c.I * 1.25);
+        while (c.P > arcCap(c.In, c.pf) + 1e-6 && c.In < 63) {
+          const n = arcNext(ARC_BREAKERS, c.In + 0.5);
+          if (n === c.In) break;
+          c.In = n;
+        }
+        c.poles = 2;
+      }
+      return c;
+    }
+    function arcSurface(canvas, cssH) {
+      const cssW = Math.max(300, Math.round(canvas.clientWidth || 760));
+      const dpr = 2;
+      canvas.width = Math.round(cssW * dpr);
+      canvas.height = Math.round(cssH * dpr);
+      const ctx = canvas.getContext("2d");
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      return { ctx: ctx, W: cssW, H: cssH };
+    }
+    function drawArcadePlan(model) {
+      const canvas = $("arc-plan");
+      if (!canvas) return;
+      const cssH = (canvas.clientWidth || 800) < 680 ? 360 : 520;
+      const box = arcSurface(canvas, cssH);
+      const ctx = box.ctx;
+      const W = box.W;
+      const H = box.H;
+      const pad = W < 680 ? 32 : 48;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, W, H);
+      const sc = Math.min((W - pad * 2) / model.bw, (H - pad * 2) / model.bl);
+      const ox = (W - model.bw * sc) / 2;
+      const oy = (H - model.bl * sc) / 2;
+      const X = (m) => ox + m * sc;
+      const Y = (m) => oy + m * sc;
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = tp.cyan;
+      ctx.strokeRect(X(0), Y(0), model.bw * sc, model.bl * sc);
+      model.zones.forEach((z) => {
+        const info = ARC_ZONES[z.id];
+        ctx.fillStyle = info.paint;
+        ctx.fillRect(X(z.x) + 1, Y(z.y) + 1, Math.max(1, z.w * sc - 2), Math.max(1, z.h * sc - 2));
+        if (z.w * sc > 52 && z.h * sc > 28) {
+          ctx.fillStyle = tp.foam;
+          ctx.font = "600 15px sans-serif";
+          ctx.textAlign = "left";
+          ctx.fillText(info.name, X(z.x) + 8, Y(z.y) + 20);
+          ctx.fillStyle = tp.muted;
+          ctx.font = "12px sans-serif";
+          ctx.fillText(fmt(z.w * z.h, 0) + " m²", X(z.x) + 8, Y(z.y) + 36);
+        }
+      });
+      model.placed.forEach((m) => {
+        const mw = Math.max(7, m.w * sc - 1.5);
+        const md = Math.max(7, m.d * sc - 1.5);
+        ctx.fillStyle = m.circuit >= 0 ? model.circuits[m.circuit].color : tp.gold;
+        ctx.fillRect(X(m.x), Y(m.y), mw, md);
+        ctx.strokeStyle = "rgba(28,32,40,0.72)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(X(m.x) + 0.5, Y(m.y) + 0.5, mw - 1, md - 1);
+      });
+      const doorX = X(model.bw / 2);
+      const doorY = Y(model.bl);
+      ctx.strokeStyle = tp.gold;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(doorX - 18, doorY);
+      ctx.lineTo(doorX + 18, doorY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(doorX - 18, doorY, 28, 0, -Math.PI / 2, true);
+      ctx.stroke();
+      ctx.fillStyle = tp.gold;
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("acceso", doorX, Math.min(H - 8, doorY + 16));
+      ctx.fillStyle = tp.muted;
+      ctx.font = "14px sans-serif";
+      ctx.fillText(fmt(model.bw, 2) + " m", X(model.bw / 2), Math.max(16, Y(0) - 12));
+      ctx.save();
+      ctx.translate(Math.max(14, X(0) - 16), Y(model.bl / 2));
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText(fmt(model.bl, 2) + " m", 0, 0);
+      ctx.restore();
+      ctx.textAlign = "left";
+      ctx.fillStyle = tp.foam;
+      ctx.font = "600 15px sans-serif";
+      ctx.fillText(model.tplName, 16, 26);
+    }
+    function drawArcadeBoard(model) {
+      const canvas = $("arc-sketch");
+      if (!canvas) return;
+      const tp = themePaint();
+      const devs = [{
+        kind: "main",
+        label: "QG " + model.InMain + "A",
+        sub: model.supply === "3x380" ? "4P" : "2P",
+        modules: model.supply === "3x380" ? 4 : 2,
+      }];
+      model.rcds.forEach((g, i) => {
+        devs.push({ kind: "rcd", label: "ID" + (i + 1) + " " + g.In + "A", sub: "30 mA", modules: model.supply === "3x380" ? 4 : 2 });
+        g.circuits.forEach((c) => {
+          devs.push({ kind: "mcb", label: c.id, sub: c.curve + c.In + " · " + c.phase, modules: c.poles >= 3 ? 3 : 2, color: c.color });
+        });
+      });
+      const canvasW = Math.max(300, Math.round(canvas.clientWidth || 760));
+      const pad = canvasW < 680 ? 14 : 24;
+      const moduleW = canvasW < 680 ? 40 : 48;
+      const moduleH = 62;
+      const rowPitch = moduleH + 38;
+      const header = 72;
+      const footer = 26;
+      const colMax = Math.max(3, Math.floor((canvasW - pad * 2) / moduleW));
+      let rows = 1;
+      let usedProbe = 0;
+      devs.forEach((d) => {
+        if (usedProbe > 0 && usedProbe + d.modules > colMax) { rows += 1; usedProbe = 0; }
+        usedProbe += d.modules;
+      });
+      const bitmapH = header + rows * rowPitch + footer;
+      const box = arcSurface(canvas, bitmapH);
+      const ctx = box.ctx;
+      const W = box.W;
+      const H = box.H;
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, W, H);
+      ctx.strokeStyle = tp.line;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(8, 8, W - 16, H - 16);
+      ctx.fillStyle = tp.gold;
+      ctx.font = "600 16px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Tablero general · proyección", 16, 30);
+      ctx.fillStyle = tp.muted;
+      ctx.font = "13px sans-serif";
+      const supplyLine = (model.supply === "3x380" ? "3×380 V" : "1×220 V") + " · 50 Hz · TN-S · PE";
+      ctx.fillText(W < 680 ? supplyLine : supplyLine + " · " + model.tplName, 16, 50);
+      ctx.fillStyle = "rgba(90,100,191,0.14)";
+      ctx.fillRect(pad - 6, header - 8, W - (pad - 6) * 2, rows * rowPitch + 4);
+      let x = pad;
+      let y = header;
+      let used = 0;
+      devs.forEach((d) => {
+        if (used > 0 && used + d.modules > colMax) {
+          used = 0;
+          x = pad;
+          y += rowPitch;
+        }
+        const dw = d.modules * moduleW - 4;
+        ctx.fillStyle = tp.canvas;
+        ctx.strokeStyle = tp.line;
+        ctx.lineWidth = 1;
+        ctx.fillRect(x, y, dw, moduleH);
+        ctx.strokeRect(x, y, dw, moduleH);
+        if (d.kind === "main") {
+          ctx.fillStyle = tp.gold;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+        } else if (d.kind === "rcd") {
+          ctx.fillStyle = tp.ok;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+          ctx.beginPath();
+          ctx.arc(x + dw / 2, y + 28, 6, 0, Math.PI * 2);
+          ctx.fillStyle = tp.gold;
+          ctx.fill();
+        } else {
+          ctx.fillStyle = d.color || "#d23a22";
+          ctx.fillRect(x + dw / 2 - 5, y + 10, 10, 20);
+        }
+        ctx.textAlign = "center";
+        ctx.fillStyle = tp.foam;
+        ctx.font = "600 12px sans-serif";
+        ctx.fillText(d.label, x + dw / 2, y + moduleH + 14);
+        ctx.fillStyle = tp.muted;
+        ctx.font = "11px sans-serif";
+        ctx.fillText(d.sub, x + dw / 2, y + moduleH + 28);
+        ctx.textAlign = "left";
+        x += d.modules * moduleW;
+        used += d.modules;
+      });
+      ctx.fillStyle = tp.muted;
+      ctx.font = "12px sans-serif";
+      ctx.fillText("QG omnipolar · ID 30 mA · curva B alumbrado · curva C fuerza", 16, H - 10);
+    }
+    function applyArcadeTemplate(id) {
+      const t = ARCADE_TEMPLATES.find((x) => x.id === id) || ARCADE_TEMPLATES[5];
+      $("arc-tpl").value = t.id;
+      $("arc-blurb").textContent = t.blurb;
+      $("arc-w").value = t.W;
+      $("arc-l").value = t.L;
+      $("arc-h").value = t.H;
+      $("arc-hours").value = t.hours;
+      $("arc-div").value = t.div;
+      $("arc-aisle").value = t.aisle;
+      $("arc-people").value = t.people;
+      $("arc-store").value = t.store;
+      $("arc-rental").value = t.rental;
+      $("arc-party").value = t.party;
+      $("arc-prize").checked = t.prize;
+      $("arc-bar").checked = t.bar;
+      $("arc-wc").checked = t.wc;
+      $("arc-shop").checked = t.shop;
+      $("arc-marquee").checked = t.marquee;
+      $("arc-supply").value = "auto";
+      $("arc-len").value = Math.max(12, Math.round((t.W + t.L) / 2 + t.H + 4));
+      ARC_MACHINES.forEach((spec) => { $(spec.input).value = t[spec.id]; });
+      calcArcade();
+    }
+    function calcArcade() {
+      if (!$("arc-w") || !$("arc-plan")) return;
+      const tpl = ARCADE_TEMPLATES.find((t) => t.id === $("arc-tpl").value);
+      const inp = {
+        W: Math.max(2.4, arcNum("arc-w", 22)),
+        L: Math.max(2.4, arcNum("arc-l", 16)),
+        H: Math.max(2.2, arcNum("arc-h", 3)),
+        hours: Math.min(24, Math.max(0, arcNum("arc-hours", 12))),
+        fs: Math.min(1, Math.max(0.05, arcNum("arc-div", 70) / 100)),
+        aisle: Math.max(0.6, arcNum("arc-aisle", 1.4)),
+        peopleIn: Math.max(0, Math.round(arcNum("arc-people", 0))),
+        store: Math.max(0, arcNum("arc-store", 0)),
+        rental: Math.max(0, arcNum("arc-rental", 0)),
+        party: Math.max(0, arcNum("arc-party", 0)),
+        prize: $("arc-prize").checked,
+        bar: $("arc-bar").checked,
+        wc: $("arc-wc").checked,
+        shop: $("arc-shop").checked,
+        marquee: $("arc-marquee").checked,
+        supply: $("arc-supply").value || "auto",
+        len: Math.max(5, arcNum("arc-len", 18)),
+        cop: Math.max(1, arcNum("arc-cop", 3)),
+        tarifa: Math.max(0, arcNum("arc-tarifa", 252)),
+      };
+      const zones = arcadeLayout(inp);
+      const game = zones[0];
+      const items = [];
+      ARC_MACHINES.forEach((spec) => {
+        const n = Math.max(0, Math.round(arcNum(spec.input, 0)));
+        for (let i = 0; i < n; i++) items.push({ type: spec.id, name: spec.name, spec: spec, index: items.length });
+      });
+      const placedPack = arcadePlace(items, game, inp.aisle);
+      const loads = [];
+      let cursor = 0;
+      ARC_MACHINES.forEach((spec) => {
+        const n = items.filter((it) => it.type === spec.id).length;
+        if (!n) return;
+        let In0 = 16;
+        if (spec.W > arcCap(16, spec.pf)) In0 = 20;
+        if (spec.W > arcCap(20, spec.pf)) In0 = 25;
+        if (spec.W > arcCap(25, spec.pf)) In0 = 32;
+        const per = Math.max(1, Math.floor(arcCap(In0, spec.pf) / spec.W));
+        let left = n;
+        let part = 1;
+        while (left > 0) {
+          const take = Math.min(per, left);
+          loads.push(arcLump({
+            name: n > per ? spec.name + " " + part : spec.name,
+            family: "Máquinas", zone: "sala", kind: "fuerza", curve: "C",
+            pf: spec.pf, fs: inp.fs, P: take * spec.W, kwhH: inp.hours * inp.fs,
+            machineFrom: cursor, machineTo: cursor + take,
+          }));
+          cursor += take;
+          left -= take;
+          part += 1;
+        }
+      });
+      const lightW = { sala: 7, tienda: 12, arriendo: 9, premios: 12, barra: 10, fiesta: 11, taller: 10 };
+      Object.keys(lightW).forEach((id) => {
+        const a = arcZoneM2(zones, id);
+        const P = a * lightW[id];
+        if (P < 20) return;
+        arcSplit(arcLump({
+          name: "Alumbrado " + ARC_ZONES[id].name, family: "Alumbrado", zone: id, kind: "luz", curve: "B",
+          pf: 0.95, fs: 1, P: P, kwhH: inp.hours,
+        }), 16).forEach((c) => loads.push(c));
+      });
+      if (arcZoneM2(zones, "bano") > 0) {
+        loads.push(arcLump({
+          name: "Alumbrado baños", family: "Alumbrado", zone: "bano", kind: "luz", curve: "B",
+          pf: 0.95, fs: 1, P: Math.max(36, arcZoneM2(zones, "bano") * 8), kwhH: inp.hours,
+        }));
+        loads.push(arcLump({
+          name: "Extracción baños", family: "Servicios", zone: "bano", kind: "fuerza", curve: "C",
+          pf: 0.8, fs: 1, P: 80, kwhH: inp.hours,
+        }));
+      }
+      if (inp.store > 0) {
+        const nDemo = Math.max(2, Math.min(8, Math.round(inp.store / 8)));
+        arcSplit(arcLump({
+          name: "Tienda caja y demos", family: "Tienda", zone: "tienda", kind: "fuerza", curve: "C",
+          pf: 0.95, fs: 0.75, P: 250 + nDemo * 140, kwhH: inp.hours * 0.75,
+        }), 16).forEach((c) => loads.push(c));
+      }
+      if (inp.rental > 0) {
+        loads.push(arcLump({
+          name: "Arriendo caja y pantallas", family: "Arriendo", zone: "arriendo", kind: "fuerza", curve: "C",
+          pf: 0.95, fs: 0.8, P: 220 + 180, kwhH: inp.hours * 0.8,
+        }));
+      }
+      if (inp.prize) {
+        const nTok = items.length > 24 ? 2 : 1;
+        loads.push(arcLump({
+          name: "Fichas y premios", family: "Servicios", zone: "premios", kind: "fuerza", curve: "C",
+          pf: 0.9, fs: 0.55, P: nTok * 90 + 120, kwhH: inp.hours * 0.45,
+        }));
+      }
+      if (inp.bar) {
+        loads.push(arcLump({
+          name: "Café de barra", family: "Barra", zone: "barra", kind: "fuerza", curve: "C",
+          pf: 1, fs: 0.4, P: 1800, kwhH: inp.hours * 0.3,
+        }));
+        loads.push(arcLump({
+          name: "Vitrina fría", family: "Barra", zone: "barra", kind: "fuerza", curve: "C",
+          pf: 0.85, fs: 0.5, P: 420, kwhH: 24 * 0.45,
+        }));
+      }
+      if (inp.shop) {
+        loads.push(arcLump({
+          name: "Taller de máquinas", family: "Servicios", zone: "taller", kind: "fuerza", curve: "C",
+          pf: 0.9, fs: 0.3, P: 800, kwhH: inp.hours * 0.15,
+        }));
+      }
+      const gameA = arcZoneM2(zones, "sala");
+      const sound = gameA > 8 ? Math.min(1800, Math.max(120, 4 * gameA)) : 0;
+      if (sound > 0) {
+        loads.push(arcLump({
+          name: "Sonido de sala", family: "Servicios", zone: "sala", kind: "fuerza", curve: "C",
+          pf: 0.9, fs: 0.7, P: sound, kwhH: inp.hours * 0.6,
+        }));
+      }
+      if (inp.marquee) {
+        loads.push(arcLump({
+          name: "Marquesina", family: "Servicios", zone: "sala", kind: "luz", curve: "B",
+          pf: 0.95, fs: 1, P: Math.min(1600, Math.max(180, 28 * inp.W)), kwhH: inp.hours,
+        }));
+      }
+      if (inp.W * inp.L > 12) {
+        const cams = Math.max(1, Math.ceil((inp.W * inp.L) / 60));
+        loads.push(arcLump({
+          name: "Red y cámaras", family: "Servicios", zone: "sala", kind: "fuerza", curve: "C",
+          pf: 0.95, fs: 1, P: Math.min(600, 70 + 18 * cams), kwhH: 24,
+        }));
+      }
+      const nOut = Math.max(1, Math.min(6, Math.round((inp.W * inp.L) / 50)));
+      for (let i = 0; i < nOut; i++) {
+        loads.push(arcLump({
+          name: nOut > 1 ? "Enchufes " + (i + 1) : "Enchufes",
+          family: "Servicios", zone: "sala", kind: "fuerza", curve: "C",
+          pf: 0.95, fs: 0.3, P: 1600, kwhH: inp.hours * 0.15,
+        }));
+      }
+      loads.push(arcLump({
+        name: "Emergencia", family: "Alumbrado", zone: "sala", kind: "luz", curve: "B",
+        pf: 0.95, fs: 1, P: Math.max(40, inp.W * inp.L * 1.1), kwhH: 24 * 0.2,
+      }));
+      const people = inp.peopleIn > 0 ? inp.peopleIn : Math.max(2, Math.round(
+        gameA / 5 + arcZoneM2(zones, "tienda") / 8 + arcZoneM2(zones, "arriendo") / 10 + arcZoneM2(zones, "fiesta") / 3 + (inp.bar ? 4 : 0)
+      ));
+      let heat = people * 110;
+      loads.forEach((c) => {
+        if (c.family === "Máquinas") heat += c.P * c.fs;
+        else if (c.kind === "luz") heat += c.P * c.fs;
+        else if (c.name.indexOf("Sonido") === 0) heat += Math.min(c.P, 800) * c.fs;
+      });
+      const Phvac = heat / inp.cop;
+      const Ppre = loads.reduce((s, c) => s + c.P * c.fs, 0);
+      let supply = inp.supply;
+      if (supply === "auto") supply = (Ppre + Phvac) / (220 * 0.9) <= 40 ? "1x220" : "3x380";
+      const hvacThree = supply === "3x380" && Phvac >= 2500;
+      const hvac = arcLump({
+        name: "Climatización", family: "Clima", zone: "sala", kind: "clima", curve: "C",
+        pf: 0.85, fs: 1, P: Phvac, three: hvacThree, kwhH: inp.hours * 0.65,
+      });
+      (hvacThree ? [hvac] : arcSplit(hvac, 32)).forEach((c) => loads.push(c));
+      loads.forEach(arcSize);
+      loads.forEach((c) => {
+        const lim = c.kind === "luz" ? 3 : 5;
+        const V = c.three ? 380 : 220;
+        let wi = arcWireIndex(c.In);
+        let dU = arcDrop(c.I, inp.len, ARC_WIRES[wi].s, V, !!c.three);
+        while (dU > lim && wi < ARC_WIRES.length - 1) {
+          wi += 1;
+          dU = arcDrop(c.I, inp.len, ARC_WIRES[wi].s, V, !!c.three);
+        }
+        c.section = fmt(ARC_WIRES[wi].s, 1);
+        c.dU = dU;
+      });
+      const phW = { L1: 0, L2: 0, L3: 0 };
+      loads.forEach((c) => {
+        const w = c.P * c.fs;
+        if (c.three) {
+          phW.L1 += w / 3; phW.L2 += w / 3; phW.L3 += w / 3;
+          return;
+        }
+        let phase = "L1";
+        if (supply === "3x380") ["L2", "L3"].forEach((p) => { if (phW[p] < phW[phase]) phase = p; });
+        c.phase = phase;
+        phW[phase] += w;
+      });
+      loads.forEach((c, i) => {
+        c.color = ARC_PAL[i % ARC_PAL.length];
+        c.id = "C" + (i + 1);
+      });
+      const byIndex = {};
+      placedPack.placed.forEach((m) => { byIndex[m.index] = m; });
+      loads.forEach((c, ci) => {
+        if (!(c.machineTo > c.machineFrom)) return;
+        for (let i = c.machineFrom; i < c.machineTo; i++) if (byIndex[i]) byIndex[i].circuit = ci;
+      });
+      const rcdGroups = [];
+      let bucket = [];
+      loads.forEach((c) => {
+        if (c.three) {
+          if (bucket.length) rcdGroups.push(bucket);
+          bucket = [];
+          rcdGroups.push([c]);
+          return;
+        }
+        bucket.push(c);
+        if (bucket.length === 3) { rcdGroups.push(bucket); bucket = []; }
+      });
+      if (bucket.length) rcdGroups.push(bucket);
+      const rcds = rcdGroups.map((group) => {
+        const ph = { L1: 0, L2: 0, L3: 0 };
+        group.forEach((c) => {
+          if (c.three) { ph.L1 += c.I; ph.L2 += c.I; ph.L3 += c.I; }
+          else ph[c.phase] += c.I;
+        });
+        const I = Math.max(ph.L1, ph.L2, ph.L3);
+        return { In: arcNext([25, 40, 63], Math.max(25, I * 1.1)), circuits: group };
+      });
+      const Pinst = loads.reduce((s, c) => s + c.P, 0);
+      const Pdem = loads.reduce((s, c) => s + c.P * c.fs, 0);
+      const Idesign = supply === "1x220" ? Pdem / (220 * 0.9) : Math.max(phW.L1, phW.L2, phW.L3) / (220 * 0.9);
+      let needMain = Idesign * 1.25;
+      loads.forEach((c) => { if (c.In > needMain) needMain = c.In; });
+      const InMain = arcNext(ARC_MAINS, needMain);
+      const feedV = supply === "3x380" ? 380 : 220;
+      const feedThree = supply === "3x380";
+      let fi = arcWireIndex(InMain);
+      let dUfeed = arcDrop(Idesign, inp.len, ARC_WIRES[fi].s, feedV, feedThree);
+      while (dUfeed > 3 && fi < ARC_WIRES.length - 1) {
+        fi += 1;
+        dUfeed = arcDrop(Idesign, inp.len, ARC_WIRES[fi].s, feedV, feedThree);
+      }
+      const feed = ARC_WIRES[fi];
+      let kwh = 0;
+      loads.forEach((c) => { kwh += (c.P / 1000) * c.kwhH * 30; });
+      const steps = supply === "1x220" ? [6, 10] : [15, 20, 25, 30, 40, 50, 70, 100, 150, 200, 300];
+      let empKw = steps[steps.length - 1];
+      for (let i = 0; i < steps.length; i++) if (steps[i] + 1e-6 >= Pdem / 1000) { empKw = steps[i]; break; }
+      const famOrder = ["Máquinas", "Alumbrado", "Clima", "Tienda", "Arriendo", "Barra", "Servicios"];
+      const fams = [];
+      const famMap = {};
+      loads.forEach((c) => {
+        if (!famMap[c.family]) {
+          famMap[c.family] = { name: c.family, P: 0, Pdem: 0, kwh: 0 };
+          fams.push(famMap[c.family]);
+        }
+        famMap[c.family].P += c.P;
+        famMap[c.family].Pdem += c.P * c.fs;
+        famMap[c.family].kwh += (c.P / 1000) * c.kwhH * 30;
+      });
+      fams.sort((a, b) => famOrder.indexOf(a.name) - famOrder.indexOf(b.name));
+      const notes = [];
+      let level = "ok";
+      const flag = (lv, msg) => {
+        notes.push(msg);
+        if (lv === "bad" || level === "ok") level = lv;
+      };
+      if (inp.aisle < 1.2) flag("warn", "Pasillo de " + fmt(inp.aisle, 2) + " m. Para circular con holgura, súbelo a 1,20–1,50 m.");
+      if (placedPack.overflow.length) flag("bad", placedPack.overflow.length + " máquinas no entran en la sala. El tablero igual las alimenta: alarga el local o achica el pasillo.");
+      [["tienda", inp.store, "La tienda"], ["arriendo", inp.rental, "El arriendo"], ["fiesta", inp.party, "La sala de fiestas"]].forEach((row) => {
+        const drawn = arcZoneM2(zones, row[0]);
+        if (row[1] > 0 && drawn + 0.5 < row[1] * 0.85) flag("warn", row[2] + " dibujada queda en " + fmt(drawn, 0) + " m² y pediste " + fmt(row[1], 0) + " m².");
+      });
+      if (dUfeed > 3) flag("warn", "Caída del alimentador " + fmt(dUfeed, 2) + " %. Sube la sección o acorta el largo.");
+      let duBad = 0;
+      let duExample = "";
+      loads.forEach((c) => {
+        const lim = c.kind === "luz" ? 3 : 5;
+        if (c.dU > lim) {
+          duBad += 1;
+          if (!duExample) duExample = c.id + " " + c.name + " " + fmt(c.dU, 1) + " %";
+        }
+      });
+      if (duBad) flag("warn", duBad + " circuitos superan la caída de clase (" + duExample + ").");
+      if (supply === "3x380") {
+        const vals = [phW.L1, phW.L2, phW.L3];
+        const avg = (vals[0] + vals[1] + vals[2]) / 3;
+        const imb = avg > 0 ? (Math.max(vals[0], vals[1], vals[2]) - Math.min(vals[0], vals[1], vals[2])) / avg : 0;
+        if (imb > 0.15) flag("warn", "Desbalance de fases " + fmt(imb * 100, 0) + " %. Conviene repartir antes de construir.");
+      }
+      if (supply === "1x220" && Idesign > 40) flag("bad", "La demanda supera 40 A en 220 V. Conviene pasar a 3×380 V.");
+      if (!items.length && inp.store <= 0 && inp.rental <= 0) flag("warn", "No hay máquinas ni tienda ni arriendo: el tablero es el del local vacío.");
+      const shown = notes.slice(0, 3);
+      if (notes.length > 3) shown.push("Y " + (notes.length - 3) + " avisos más en el criterio de arriba.");
+      $("arc-pdem").innerHTML = fmt(Pdem / 1000, 2) + " <small>kW</small>";
+      $("arc-pinst").textContent = fmt(Pinst / 1000, 2) + " kW";
+      $("arc-empalme").textContent = (supply === "1x220" ? "1×220 V · " : "3×380 V · ") + empKw + " kW · " + fmt(Idesign, 1) + " A";
+      $("arc-in").textContent = InMain + " A · " + feed.s + " mm²";
+      $("arc-kwh").textContent = fmt(kwh, 0) + " kWh";
+      $("arc-heat").textContent = fmt(heat / 1000, 2) + " kW · " + fmt(heat * 3.41214, 0) + " BTU/h";
+      $("arc-hvac").textContent = fmt(Phvac / 1000, 2) + " kW · COP " + fmt(inp.cop, 1);
+      $("arc-i").textContent = fmt(Idesign, 2) + " A";
+      $("arc-feed").textContent = fmt(dUfeed, 2) + " % · " + fmt(inp.len, 0) + " m";
+      $("arc-phases").textContent = supply === "1x220"
+        ? "L1 " + fmt(phW.L1 / 1000, 2) + " kW"
+        : "L1 " + fmt(phW.L1 / 1000, 2) + " · L2 " + fmt(phW.L2 / 1000, 2) + " · L3 " + fmt(phW.L3 / 1000, 2) + " kW";
+      $("arc-cost").textContent = "$ " + fmt(kwh * inp.tarifa, 0);
+      $("arc-status").className = "status" + (shown.length ? (level === "bad" ? " bad" : " warn") : "");
+      $("arc-status").textContent = shown.join(" ");
+      $("arc-status").hidden = !shown.length;
+      $("arc-status").style.display = shown.length ? "inline-flex" : "none";
+      $("arc-fit").textContent = "Pico de " + people + " personas · pasillo " + fmt(inp.aisle, 2) + " m · " + placedPack.placed.length + " máquinas en planta"
+        + (placedPack.overflow.length ? " · " + placedPack.overflow.length + " fuera de planta" : "")
+        + ". El clima cubre la ganancia interna; la envolvente de invierno se proyecta en BTU.";
+      let boardHtml = "<thead><tr><th>Circuito</th><th>Fase</th><th>P</th><th>I</th><th>In</th><th>Curva</th><th>Sección</th><th>ΔU</th></tr></thead><tbody>";
+      loads.forEach((c) => {
+        boardHtml += "<tr><td><span class=\"arc-sw\" style=\"background:" + c.color + "\"></span> " + c.id + " " + c.name + "</td>"
+          + "<td class=\"mono\">" + c.phase + "</td>"
+          + "<td class=\"mono\">" + fmt(c.P / 1000, 2) + " kW</td>"
+          + "<td class=\"mono\">" + fmt(c.I, 1) + " A</td>"
+          + "<td class=\"mono\">" + c.In + " A · " + (c.poles >= 3 ? "3P" : "1P+N") + "</td>"
+          + "<td class=\"mono\">" + c.curve + "</td>"
+          + "<td class=\"mono\">" + c.section + " mm²</td>"
+          + "<td class=\"mono\">" + fmt(c.dU, 2) + " %</td></tr>";
+      });
+      $("arc-board").innerHTML = boardHtml + "</tbody>";
+      let famHtml = "<thead><tr><th>Servicio</th><th>P inst</th><th>P dem</th><th>kWh/mes</th></tr></thead><tbody>";
+      fams.forEach((f) => {
+        famHtml += "<tr><td>" + f.name + "</td><td class=\"mono\">" + fmt(f.P / 1000, 2) + " kW</td><td class=\"mono\">" + fmt(f.Pdem / 1000, 2) + " kW</td><td class=\"mono\">" + fmt(f.kwh, 0) + "</td></tr>";
+      });
+      $("arc-services").innerHTML = famHtml + "</tbody>";
+      const seen = {};
+      let legend = "";
+      zones.forEach((z) => {
+        if (seen[z.id]) return;
+        seen[z.id] = true;
+        legend += "<span><i class=\"arc-sw\" style=\"background:" + ARC_ZONES[z.id].paint + ";border:1px solid var(--line)\"></i>" + ARC_ZONES[z.id].name + "</span>";
+      });
+      legend += "<span>Cada máquina usa el color de su circuito.</span>";
+      $("arc-legend").innerHTML = legend;
+      const model = {
+        tpl: tpl ? tpl.id : "medida",
+        tplName: tpl ? tpl.name : "Arcade a medida",
+        supply: supply, bw: inp.W, bl: inp.L, zones: zones,
+        placed: placedPack.placed, circuits: loads, rcds: rcds, InMain: InMain,
+        Pinst: Pinst, Pdem: Pdem, kwh: kwh, heat: heat, Phvac: Phvac, people: people,
+        Idesign: Idesign, dUfeed: dUfeed, level: level, overflow: placedPack.overflow.length,
+        hasStore: loads.some((c) => c.family === "Tienda"),
+        hasRental: loads.some((c) => c.family === "Arriendo"),
+        hasBar: loads.some((c) => c.family === "Barra"),
+      };
+      arcadeLast = model;
+      drawArcadePlan(model);
+      drawArcadeBoard(model);
+    }
+    function setupArcade() {
+      const sel = $("arc-tpl");
+      if (!sel) return;
+      sel.innerHTML = ARCADE_TEMPLATES.map((t) => "<option value=\"" + t.id + "\">" + t.name + "</option>").join("");
+      sel.addEventListener("change", () => applyArcadeTemplate(sel.value));
+      ["arc-w", "arc-l", "arc-h", "arc-cab", "arc-deluxe", "arc-pin", "arc-crane", "arc-rhythm", "arc-race", "arc-vr", "arc-pc", "arc-hockey", "arc-store", "arc-rental", "arc-party", "arc-hours", "arc-div", "arc-aisle", "arc-people", "arc-prize", "arc-bar", "arc-wc", "arc-shop", "arc-marquee", "arc-supply", "arc-len", "arc-cop", "arc-tarifa"]
+        .forEach((id) => {
+          const el = $(id);
+          if (!el) return;
+          el.addEventListener("input", calcArcade);
+          el.addEventListener("change", calcArcade);
+        });
+      applyArcadeTemplate("completo");
+    }
+    setupArcade();
+    window.__eaArcade = () => arcadeLast;
+
     /* ===================== COLOR ===================== */
     function hexToRgb(hex) {
       let s = hex.trim().toUpperCase().replace(/^#/, "");
@@ -4171,6 +5046,7 @@
       if (id === "malla") calcMalla();
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
+      if (id === "arcade") calcArcade();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
@@ -4195,10 +5071,11 @@
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
         fasores: ["Informe calculadora de fasores", "Conversión bidireccional entre forma rectangular y notación fasorial."],
+        arcade: ["Informe de arcade", "Demanda con simultaneidad, plano del local y tablero. Sala, tienda de videojuegos y arriendo."],
         color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
       }[id];
       if (!meta) throw new Error("Servicio desconocido: " + id);
-      const siteLine = id !== "pu" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
+      const siteLine = id !== "pu" && id !== "arcade" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
       blocks.push(pdfHeader(meta[0], (siteLine ? siteLine + ". " : "") + meta[1]));
 
       if (id === "sev") {
@@ -4619,6 +5496,58 @@
         blocks.push(pdfFormula("A = √(a² + b²) · θ = atan2(b, a) · a = A cos(θ) · b = A sin(θ)"));
         blocks.push(pdfHeading("Diagrama del circuito"));
         blocks.push(pdfFigure(canvasUrl("ph-circuit-sketch"), "Circuito trifásico de la plantilla seleccionada."));
+      }
+
+      if (id === "arcade") {
+        blocks.push(pdfHeading("Plantilla y programa"));
+        [
+          ["Tipo", opt("arc-tpl")],
+          ["Ancho / largo / altura", val("arc-w") + " / " + val("arc-l") + " / " + val("arc-h") + " m"],
+          ["Cabinas / deluxe / pinball", val("arc-cab") + " / " + val("arc-deluxe") + " / " + val("arc-pin")],
+          ["Grúas / ritmo / carreras", val("arc-crane") + " / " + val("arc-rhythm") + " / " + val("arc-race")],
+          ["VR / PC / air hockey", val("arc-vr") + " / " + val("arc-pc") + " / " + val("arc-hockey")],
+          ["Tienda / arriendo / fiestas", val("arc-store") + " / " + val("arc-rental") + " / " + val("arc-party") + " m²"],
+          ["Apertura / simultaneidad", val("arc-hours") + " h/día / " + val("arc-div") + " %"],
+          ["Pasillo / personas", val("arc-aisle") + " m / " + val("arc-people") + " (0 = auto)"],
+          ["Premios / barra / baños", ($("arc-prize").checked ? "sí" : "no") + " / " + ($("arc-bar").checked ? "sí" : "no") + " / " + ($("arc-wc").checked ? "sí" : "no")],
+          ["Taller / marquesina", ($("arc-shop").checked ? "sí" : "no") + " / " + ($("arc-marquee").checked ? "sí" : "no")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfNote(txt("arc-blurb")));
+        blocks.push(pdfHeading("Demanda"));
+        [
+          ["Demanda de empalme", txt("arc-pdem")],
+          ["Potencia instalada", txt("arc-pinst")],
+          ["Empalme orientativo", txt("arc-empalme")],
+          ["In general / alimentador", txt("arc-in")],
+          ["Corriente de diseño", txt("arc-i")],
+          ["Caída del alimentador", txt("arc-feed")],
+          ["Fases", txt("arc-phases")],
+          ["Energía del mes", txt("arc-kwh")],
+          ["Costo de energía", txt("arc-cost")],
+          ["Calor a rechazar", txt("arc-heat")],
+          ["Clima eléctrico", txt("arc-hvac")],
+          ["Alimentación / COP", opt("arc-supply") + " / " + val("arc-cop")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        if (txt("arc-status") && txt("arc-status") !== "—") blocks.push(pdfKv("Estado", txt("arc-status")));
+        blocks.push(pdfNote(txt("arc-fit")));
+        blocks.push(pdfFormula("Pdem = Σ (P · fs) · I1φ = P / (220 · cos φ) · In ≥ 1,25 · I · Qclima ≈ (Pmáq·fs + luz + 110 W · personas) / COP"));
+        const arcSvc = tableFromEl("arc-services");
+        if (arcSvc.headers.length) {
+          blocks.push(pdfHeading("Servicios"));
+          blocks.push(pdfTableRow(arcSvc.headers, [1.4, 1, 1, 1], true));
+          arcSvc.rows.forEach((row) => blocks.push(pdfTableRow(row, [1.4, 1, 1, 1], false)));
+        }
+        blocks.push(pdfHeading("Plano del local"));
+        blocks.push(pdfFigure(canvasUrl("arc-plan"), "Zonas a escala. Cada máquina lleva el color de su circuito. Acceso al frente."));
+        blocks.push(pdfHeading("Tablero proyectado"));
+        blocks.push(pdfFigure(canvasUrl("arc-sketch"), "Riel DIN: interruptor general, diferenciales de 30 mA y automáticos."));
+        const arcBoard = tableFromEl("arc-board");
+        if (arcBoard.headers.length) {
+          const flex = [2.2, 0.6, 0.7, 0.6, 1, 0.5, 0.7, 0.6];
+          blocks.push(pdfTableRow(arcBoard.headers, flex, true));
+          arcBoard.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
+        }
+        blocks.push(pdfNote("Proyección académica con tabla de clase. No sustituye memoria de cálculo, catálogo del equipo ni el pliego RIC. El automático se dimensiona con la potencia de placa; el empalme, con la simultaneidad."));
       }
 
       if (id === "color") {

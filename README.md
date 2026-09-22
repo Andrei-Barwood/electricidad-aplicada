@@ -1,6 +1,6 @@
 # Electricidad Aplicada
 
-Un archivo. Diez instrumentos. Un plano.
+Un archivo. Trece instrumentos. Un plano.
 
 [electricidadaplicada.app](https://electricidadaplicada.app)
 
@@ -21,6 +21,8 @@ Snocomm. Geometría de la corriente. Cálculo en el navegador, sin servidor, sin
 💧 Hidráulica
 ☀  Solar térmica
 ⌁  Consumo
+◈  Arcade
+◒  Eficiencia energética
 ▣  TAN / AHF
 ⚡ Por Unidad (PU)
 ∠  Fasores
@@ -76,6 +78,12 @@ Incluye 24 plantillas desde 5 hasta 500 kW instalados con artefactos habituales 
 ### ♨ BTU — proyección de calefacción
 
 Proyecta la carga de calefacción de un recinto desde sus dimensiones, temperaturas exterior/objetivo y aislación. Entrega BTU/h, kW térmicos, joules, kWh, equivalencia de agua en libras y litros, área sugerida, plano del recinto y una propuesta preliminar de tablero eléctrico para climatización.
+
+### ◈ Arcade — la retícula que juega
+
+La sala es un rectángulo. Cada cabina es un nodo; el pasillo es el vacío que las separa. La tienda y el arriendo son dos cámaras al costado: una vende, la otra presta. El tablero cierra el conjunto: fase, interruptor, diferencial.
+
+Catorce plantillas, del container al centro grande: clásico, tienda, arriendo, pinball, redemption, barcade, VR, esports, familiar y museo. Proyecta demanda con simultaneidad, calor a rechazar, empalme, plano de zonas con máquinas por circuito y croquis del tablero. Cualquier cifra sigue siendo editable. Apoyo académico, no memoria de cálculo.
 
 ### ⌁ Consumo — cubo de coincidencias
 
