@@ -391,6 +391,7 @@
         <button class="nav-btn" data-panel="arcade"><span class="ico">◈</span> Arcade</button>
         <button class="nav-btn" data-panel="eficiencia"><span class="ico">◒</span> Eficiencia energética</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
+        <button class="nav-btn" data-panel="subestaciones"><span class="ico">⚙</span> Subestaciones</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
         <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
@@ -419,6 +420,7 @@
           <article class="card home" data-go="arcade"><h3>Arcade</h3><p class="sub">Plantillas por tipo y tamaño. Sala, tienda de videojuegos y arriendo: plano, demanda, clima y tablero.</p></article>
           <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
+          <article class="card home" data-go="subestaciones"><h3>Subestaciones</h3><p class="sub">Laboratorio PU para trafos elevadores, transmisión, TC/TP, bushing, cortocircuito y puesta a tierra.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
           <article class="card home" data-go="fasores"><h3>Fasores</h3><p class="sub">Conversión bidireccional entre forma rectangular (a + jb) y notación fasorial (magnitud ∠ ángulo).</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
@@ -1581,6 +1583,94 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-subestaciones">
+        <div class="hero">
+          <div>
+            <h2>Laboratorio de <span>subestaciones</span></h2>
+            <p class="lede">Escenario académico para practicar transformadores elevadores, transmisión y equipos de patio con valores en por unidad. Las sugerencias son preliminares: valida siempre con norma, fabricante, coordinación de protecciones y estudio oficial.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="subestaciones">Exportar PDF</button></div>
+        </div>
+        <div class="card">
+          <h3>Plantilla y base del estudio</h3>
+          <div class="fields four">
+            <div class="mini-input"><label for="sub-template">Escenario</label>
+              <select id="sub-template">
+                <option value="">Personalizado</option>
+                <option value="elevadora" selected>S/E elevadora 13,8/110 kV</option>
+                <option value="transmision">S/E transmisión 23/220 kV</option>
+                <option value="distribucion">S/E distribución 66/13,8 kV</option>
+              </select>
+            </div>
+            <div class="mini-input"><label for="sub-sb">Sb común [MVA]</label><input id="sub-sb" type="number" min="0.1" step="any" value="50" /></div>
+            <div class="mini-input"><label for="sub-vlv">Barra LV [kV]</label><input id="sub-vlv" type="number" min="0.1" step="any" value="13.8" /></div>
+            <div class="mini-input"><label for="sub-vhv">Barra HV [kV]</label><input id="sub-vhv" type="number" min="0.1" step="any" value="110" /></div>
+          </div>
+          <p class="hint" id="sub-template-note" style="margin-top:10px">Modelo de estudio: red equivalente → trafo elevador → línea → barra HV. Los valores se pueden reemplazar por datos extraídos de planos y fichas técnicas.</p>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Transformador y transmisión</h3>
+            <div class="fields three">
+              <div class="mini-input"><label for="sub-trafo-mva">Trafo [MVA]</label><input id="sub-trafo-mva" type="number" min="0.1" step="any" value="40" /></div>
+              <div class="mini-input"><label for="sub-uk">Uk [%]</label><input id="sub-uk" type="number" min="0.1" step="any" value="10" /></div>
+              <div class="mini-input"><label for="sub-load-mw">Carga activa [MW]</label><input id="sub-load-mw" type="number" min="0" step="any" value="28" /></div>
+              <div class="mini-input"><label for="sub-pf">Factor de potencia</label><input id="sub-pf" type="number" min="0.1" max="1" step="0.01" value="0.92" /></div>
+              <div class="mini-input"><label for="sub-length">Línea [km]</label><input id="sub-length" type="number" min="0" step="any" value="35" /></div>
+              <div class="mini-input"><label for="sub-r-km">R línea [Ω/km]</label><input id="sub-r-km" type="number" min="0" step="any" value="0.08" /></div>
+              <div class="mini-input"><label for="sub-x-km">X línea [Ω/km]</label><input id="sub-x-km" type="number" min="0" step="any" value="0.35" /></div>
+              <div class="mini-input"><label for="sub-scc">Scc red [MVA]</label><input id="sub-scc" type="number" min="1" step="any" value="800" /></div>
+              <div class="mini-input"><label for="sub-vf">V pre-falla [pu]</label><input id="sub-vf" type="number" min="0.5" max="1.2" step="0.01" value="1" /></div>
+            </div>
+            <p class="formula" style="margin-top:10px">Zb = Vb²/Sb · Ib = Sb/(√3·Vb) · Ztrafo,pu = Uk/100 · Sb/Str</p>
+          </div>
+          <div class="card">
+            <h3>Equipos de medida y aislamiento</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="sub-tc-primary">TC primario [A]</label><input id="sub-tc-primary" type="number" min="1" step="any" value="300" /></div>
+              <div class="mini-input"><label for="sub-tc-secondary">TC secundario [A]</label><select id="sub-tc-secondary"><option value="1">1 A</option><option value="5" selected>5 A</option></select></div>
+              <div class="mini-input"><label for="sub-tp-primary">TP primario [kV]</label><input id="sub-tp-primary" type="number" min="0.1" step="any" value="110" /></div>
+              <div class="mini-input"><label for="sub-tp-secondary">TP secundario [V]</label><input id="sub-tp-secondary" type="number" min="1" step="any" value="110" /></div>
+              <div class="mini-input"><label for="sub-bushing-voltage">Bushing Um [kV]</label><input id="sub-bushing-voltage" type="number" min="0.1" step="any" value="123" /></div>
+              <div class="mini-input"><label for="sub-bushing-current">Bushing In [A]</label><input id="sub-bushing-current" type="number" min="1" step="any" value="400" /></div>
+            </div>
+            <p class="hint" id="sub-equipment-note" style="margin-top:10px">La selección de clase, aislamiento, BIL, carga de precisión y saturación del TC requiere ficha del fabricante.</p>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Puesta a tierra preliminar</h3>
+            <div class="fields four">
+              <div class="mini-input"><label for="sub-rho">ρ terreno [Ω·m]</label><input id="sub-rho" type="number" min="1" step="any" value="150" /></div>
+              <div class="mini-input"><label for="sub-grid-l">Largo malla [m]</label><input id="sub-grid-l" type="number" min="1" step="any" value="32" /></div>
+              <div class="mini-input"><label for="sub-grid-w">Ancho malla [m]</label><input id="sub-grid-w" type="number" min="1" step="any" value="24" /></div>
+              <div class="mini-input"><label for="sub-grid-depth">Profundidad [m]</label><input id="sub-grid-depth" type="number" min="0.1" step="any" value="0.6" /></div>
+            </div>
+            <p class="formula" style="margin-top:10px">Rg ≈ ρ · [1/Lt + 1/√(20A)] · Ig · Rg &lt; 1 Ω como alerta académica</p>
+          </div>
+          <div class="card">
+            <h3>Resultados del escenario</h3>
+            <div class="result"><div class="k">Estado smart</div><div class="v" id="sub-status">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Ib LV / HV</dt><dd id="sub-base-current">—</dd></div>
+              <div class="meta"><dt>Zb LV / HV</dt><dd id="sub-base-impedance">—</dd></div>
+              <div class="meta"><dt>Trafo / carga</dt><dd id="sub-loading">—</dd></div>
+              <div class="meta"><dt>Caída transmisión</dt><dd id="sub-voltage-drop">—</dd></div>
+              <div class="meta"><dt>Icc LV / HV</dt><dd id="sub-fault-current">—</dd></div>
+              <div class="meta"><dt>TC / TP</dt><dd id="sub-ratios">—</dd></div>
+              <div class="meta"><dt>Malla Rg / Lt</dt><dd id="sub-ground">—</dd></div>
+              <div class="meta"><dt>Bushing</dt><dd id="sub-bushing">—</dd></div>
+            </dl>
+            <p class="hint" id="sub-advice" style="margin-top:10px">—</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Lectura del modelo</h3>
+          <p class="sub">Usa esta pestaña para practicar con valores publicados, diagramas unilineales y fichas técnicas. La importación directa de DWG no está incluida en esta primera versión; transcribe los parámetros relevantes y conserva la fuente del plano.</p>
+          <div class="formula">Zlinea,pu = (R + jX) / ZbHV · Icc ≈ Vpre / |Zred + Ztrafo + Zlinea| · Ibase</div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-pu">
         <div class="hero">
           <div>
@@ -1892,6 +1982,9 @@
     $("theme-night").classList.toggle("primary", document.documentElement.getAttribute("data-theme") !== "day");
     ["tax-base","tax-km","tax-min","tax-actual","tax-distance","tax-time","tax-consumption","tax-energy-price","tax-autonomy","tax-unit"]
       .forEach((id) => $(id).addEventListener("input", calcTaximetro));
+    ["sub-sb","sub-vlv","sub-vhv","sub-trafo-mva","sub-uk","sub-load-mw","sub-pf","sub-length","sub-r-km","sub-x-km","sub-scc","sub-vf","sub-tc-primary","sub-tc-secondary","sub-tp-primary","sub-tp-secondary","sub-bushing-voltage","sub-bushing-current","sub-rho","sub-grid-l","sub-grid-w","sub-grid-depth"]
+      .forEach((id) => $(id).addEventListener("input", calcSubestaciones));
+    $("sub-template").addEventListener("change", applySubestacionTemplate);
 
     function refreshPanelVisuals(id) {
       if (id === "sev") { parseSev(); drawSev(); }
@@ -1908,6 +2001,7 @@
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
       if (id === "taximetro") calcTaximetro();
+      if (id === "subestaciones") calcSubestaciones();
     }
     function calcTaximetro() {
       const base = Number($("tax-base").value) || 0;
@@ -1959,6 +2053,106 @@
       if (distance > 0) {
         $("tax-per-meter").textContent += " · " + fmt(perMeter, 4) + " CLP/m";
       }
+    }
+    const SUB_TEMPLATES = {
+      elevadora: {
+        note: "Escenario de generación distribuida: 13,8 kV se eleva a 110 kV para transmisión. Ajusta el trafo y la línea con datos de tu plano.",
+        sb: 50, vlv: 13.8, vhv: 110, trafoMva: 40, uk: 10, loadMw: 28, pf: 0.92, length: 35, rKm: 0.08, xKm: 0.35, scc: 800, tc: 300, tp: 110, bushingV: 123,
+      },
+      transmision: {
+        note: "Escenario de transmisión: barra de 23 kV a 220 kV. Úsalo para comparar niveles de cortocircuito y corrientes de patio.",
+        sb: 100, vlv: 23, vhv: 220, trafoMva: 120, uk: 12, loadMw: 85, pf: 0.95, length: 80, rKm: 0.045, xKm: 0.28, scc: 2500, tc: 400, tp: 220, bushingV: 245,
+      },
+      distribucion: {
+        note: "Escenario de distribución: transformador reductor representado desde 66 kV hacia 13,8 kV. Puedes invertir las barras para practicar otro sentido de flujo.",
+        sb: 30, vlv: 13.8, vhv: 66, trafoMva: 25, uk: 8, loadMw: 18, pf: 0.9, length: 18, rKm: 0.12, xKm: 0.42, scc: 600, tc: 250, tp: 66, bushingV: 72.5,
+      },
+    };
+    function subNumber(id, fallback) {
+      const value = Number($(id).value);
+      return Number.isFinite(value) ? value : fallback;
+    }
+    function applySubestacionTemplate() {
+      const t = SUB_TEMPLATES[$("sub-template").value];
+      if (!t) {
+        $("sub-template-note").textContent = "Modelo personalizado. Ingresa los datos de placa, línea, red y terreno que quieras estudiar.";
+        calcSubestaciones();
+        return;
+      }
+      const values = {
+        "sub-sb": t.sb, "sub-vlv": t.vlv, "sub-vhv": t.vhv, "sub-trafo-mva": t.trafoMva, "sub-uk": t.uk,
+        "sub-load-mw": t.loadMw, "sub-pf": t.pf, "sub-length": t.length, "sub-r-km": t.rKm, "sub-x-km": t.xKm,
+        "sub-scc": t.scc, "sub-tc-primary": t.tc, "sub-tp-primary": t.tp, "sub-bushing-voltage": t.bushingV,
+      };
+      Object.entries(values).forEach(([id, value]) => { $(id).value = value; });
+      $("sub-template-note").textContent = t.note;
+      calcSubestaciones();
+    }
+    function calcSubestaciones() {
+      const sb = Math.max(0.001, subNumber("sub-sb", 50));
+      const vlv = Math.max(0.001, subNumber("sub-vlv", 13.8));
+      const vhv = Math.max(0.001, subNumber("sub-vhv", 110));
+      const trafoMva = Math.max(0.001, subNumber("sub-trafo-mva", 40));
+      const uk = Math.max(0.01, subNumber("sub-uk", 10));
+      const loadMw = Math.max(0, subNumber("sub-load-mw", 28));
+      const pf = Math.min(1, Math.max(0.1, subNumber("sub-pf", 0.92)));
+      const length = Math.max(0, subNumber("sub-length", 35));
+      const rKm = Math.max(0, subNumber("sub-r-km", 0.08));
+      const xKm = Math.max(0, subNumber("sub-x-km", 0.35));
+      const scc = Math.max(0.001, subNumber("sub-scc", 800));
+      const vf = Math.max(0.1, subNumber("sub-vf", 1));
+      const zblv = (vlv * vlv) / sb;
+      const zbhv = (vhv * vhv) / sb;
+      const iblv = sb / (Math.sqrt(3) * vlv);
+      const ibhv = sb / (Math.sqrt(3) * vhv);
+      const zTrafoPu = (uk / 100) * (sb / trafoMva);
+      const lineRpu = (length * rKm) / zbhv;
+      const lineXpu = (length * xKm) / zbhv;
+      const redPu = sb / scc;
+      const zFaultPu = Math.hypot(redPu + lineRpu, zTrafoPu + lineXpu);
+      const iccHv = zFaultPu > 0 ? (vf / zFaultPu) * ibhv : 0;
+      const iccLv = zTrafoPu > 0 ? (vf / zTrafoPu) * iblv : 0;
+      const loadMva = loadMw / pf;
+      const loadLv = loadMva / (Math.sqrt(3) * vlv);
+      const loadHv = loadMva / (Math.sqrt(3) * vhv);
+      const loading = (loadMva / trafoMva) * 100;
+      const voltageDrop = loadMva > 0 ? ((loadHv * Math.sqrt(3) * (length * rKm * pf + length * xKm * Math.sqrt(Math.max(0, 1 - pf * pf)))) / vhv) * 100 : 0;
+      const tcPrimary = Math.max(1, subNumber("sub-tc-primary", 300));
+      const tcSecondary = Math.max(0.1, subNumber("sub-tc-secondary", 5));
+      const tpPrimary = Math.max(0.1, subNumber("sub-tp-primary", vhv));
+      const tpSecondary = Math.max(0.1, subNumber("sub-tp-secondary", 110));
+      const tcRatio = tcPrimary / tcSecondary;
+      const tpRatio = (tpPrimary * 1000) / tpSecondary;
+      const rho = Math.max(1, subNumber("sub-rho", 150));
+      const gridL = Math.max(1, subNumber("sub-grid-l", 32));
+      const gridW = Math.max(1, subNumber("sub-grid-w", 24));
+      const gridDepth = Math.max(0.1, subNumber("sub-grid-depth", 0.6));
+      const area = gridL * gridW;
+      const totalConductor = gridL * (Math.floor(gridW / 4) + 1) + gridW * (Math.floor(gridL / 4) + 1);
+      const rg = rho * (1 / Math.max(1, totalConductor) + 1 / Math.sqrt(20 * area));
+      const bushingV = Math.max(0.1, subNumber("sub-bushing-voltage", vhv * 1.1));
+      const bushingI = Math.max(1, subNumber("sub-bushing-current", 400));
+      const advice = [];
+      if (loading > 100) advice.push("Trafo sobrecargado.");
+      else if (loading > 85) advice.push("Carga del trafo sobre 85 %.");
+      if (tcPrimary < loadHv * 1000) advice.push("TC primario menor que la corriente HV de carga.");
+      if (bushingV < vhv) advice.push("Um del bushing menor que la tensión de barra HV.");
+      if (bushingI < loadHv * 1000) advice.push("In del bushing no cubre la corriente de carga HV.");
+      if (rg > 1) advice.push("Rg supera 1 Ω: revisar malla, varillas, resistividad y tensiones de paso/contacto.");
+      if (voltageDrop > 5) advice.push("Caída de transmisión sobre 5 %.");
+      if (!advice.length) advice.push("Escenario coherente para práctica PU; faltan verificaciones de fabricante y norma.");
+      const statusClass = advice.length ? "warn" : "ok";
+      $("sub-status").innerHTML = '<span class="status ' + statusClass + '">' + (advice.length ? "REVISAR" : "COHERENTE") + "</span>";
+      $("sub-base-current").textContent = fmt(iblv, 2) + " / " + fmt(ibhv, 2) + " kA";
+      $("sub-base-impedance").textContent = fmt(zblv, 3) + " / " + fmt(zbhv, 3) + " Ω";
+      $("sub-loading").textContent = fmt(loading, 1) + " % · " + fmt(loadMva, 2) + " MVA";
+      $("sub-voltage-drop").textContent = fmt(voltageDrop, 2) + " %";
+      $("sub-fault-current").textContent = fmt(iccLv, 2) + " / " + fmt(iccHv, 2) + " kA";
+      $("sub-ratios").textContent = "TC " + fmt(tcRatio, 1) + ":1 · TP " + fmt(tpRatio, 1) + ":1";
+      $("sub-ground").textContent = fmt(rg, 3) + " Ω · Lt ≈ " + fmt(totalConductor, 0) + " m · h " + fmt(gridDepth, 2) + " m";
+      $("sub-bushing").textContent = fmt(bushingV, 1) + " kV · " + fmt(bushingI, 0) + " A";
+      $("sub-advice").textContent = advice.join(" ");
+      $("sub-equipment-note").textContent = "I carga LV/HV ≈ " + fmt(loadLv, 2) + " / " + fmt(loadHv, 2) + " kA · Ztrafo = " + fmt(zTrafoPu, 4) + " pu · línea = " + fmt(lineRpu, 4) + " + j" + fmt(lineXpu, 4) + " pu.";
     }
     function showPanel(id) {
       document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
