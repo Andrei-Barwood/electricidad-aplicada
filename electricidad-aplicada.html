@@ -4,18 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Electricidad Aplicada</title>
-  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
+  <meta name="description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, cocinas, eficiencia energética, TAN/AHF y color." />
   <link rel="icon" href="favicon.jpeg?v=1" type="image/jpeg" />
   <link rel="apple-touch-icon" href="favicon.jpeg?v=1" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://electricidadaplicada.app/" />
   <meta property="og:title" content="Electricidad Aplicada" />
-  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
+  <meta property="og:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, cocinas, eficiencia energética, TAN/AHF y color." />
   <meta property="og:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta property="og:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Electricidad Aplicada" />
-  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, eficiencia energética, TAN/AHF y color." />
+  <meta name="twitter:description" content="Suite de calculadoras de electricidad aplicada: SEV, malla de tierra, iluminación, hidráulica, solar térmica, consumo, arcade, cocinas, eficiencia energética, TAN/AHF y color." />
   <meta name="twitter:image" content="https://electricidadaplicada.app/favicon.jpeg?v=1" />
   <meta name="twitter:image:alt" content="Esfera geométrica iluminada frente a una ciudad al atardecer" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -385,11 +385,14 @@
         <button class="nav-btn" data-panel="lux"><span class="ico">☀</span> Iluminación</button>
         <button class="nav-btn" data-panel="btu"><span class="ico">♨</span> BTU</button>
         <button class="nav-btn" data-panel="hydro"><span class="ico">💧</span> Hidráulica</button>
+        <button class="nav-btn" data-panel="taximetro"><span class="ico">🚕</span> Taxímetro</button>
         <button class="nav-btn" data-panel="solar"><span class="ico">☀</span> Solar</button>
         <button class="nav-btn" data-panel="consumo"><span class="ico">⌁</span> Consumo</button>
         <button class="nav-btn" data-panel="arcade"><span class="ico">◈</span> Arcade</button>
+        <button class="nav-btn" data-panel="cocina"><span class="ico">🍳</span> Cocina</button>
         <button class="nav-btn" data-panel="eficiencia"><span class="ico">◒</span> Eficiencia energética</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
+        <button class="nav-btn" data-panel="subestaciones"><span class="ico">⚙</span> Subestaciones</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
         <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
@@ -403,7 +406,7 @@
         <div class="hero">
           <div>
             <h2>Electricidad <span>aplicada</span></h2>
-            <p class="lede">Trece herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, proyección BTU, caudal y potencia hidráulica, calor solar, estudio de consumo, arcade (sala, tienda y arriendo), eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
+            <p class="lede">Catorce herramientas en un solo archivo: sondeo eléctrico, malla IEEE 80, alumbrado por lúmenes, proyección BTU, caudal y potencia hidráulica, calor solar, estudio de consumo, arcade (sala, tienda y arriendo), cocinas de todos los tamaños, eficiencia energética, proyección TAN/AHF, calculadora por unidad (PU), calculadora de fasores y conversor de color. Plantillas de 5 a 500 kW para instalaciones típicas de la Región de Los Ríos.</p>
           </div>
         </div>
         <div class="grid g2">
@@ -412,11 +415,14 @@
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
           <article class="card home" data-go="btu"><h3>Proyección BTU</h3><p class="sub">Carga de calefacción por recinto, equivalencias térmicas y tablero eléctrico de climatización.</p></article>
           <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
+          <article class="card home" data-go="taximetro"><h3>Taxímetro</h3><p class="sub">Calculadora para comparar tarifas razonables, aceptables y sospechosas por distancia, tiempo y consumo del vehículo.</p></article>
           <article class="card home" data-go="solar"><h3>Solar · calor y radiación</h3><p class="sub">Radiación horaria por estación, proyección anual, calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
           <article class="card home" data-go="arcade"><h3>Arcade</h3><p class="sub">Plantillas por tipo y tamaño. Sala, tienda de videojuegos y arriendo: plano, demanda, clima y tablero.</p></article>
+          <article class="card home" data-go="cocina"><h3>Cocina</h3><p class="sub">Plantillas por tipo y tamaño, de la kitchenette a la planta. Plano por zonas, demanda, calor y tablero.</p></article>
           <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
+          <article class="card home" data-go="subestaciones"><h3>Subestaciones</h3><p class="sub">Laboratorio PU para trafos elevadores, transmisión, TC/TP, bushing, cortocircuito y puesta a tierra.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
           <article class="card home" data-go="fasores"><h3>Fasores</h3><p class="sub">Conversión bidireccional entre forma rectangular (a + jb) y notación fasorial (magnitud ∠ ángulo).</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
@@ -833,6 +839,58 @@
             <div class="meta"><dt>kWh/m³</dt><dd id="hy-spec">—</dd></div>
           </dl>
           <p class="formula" style="margin-top:10px">Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp</p>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-taximetro">
+        <div class="hero">
+          <div>
+            <h2>Taxímetro · rango <span>razonable</span></h2>
+            <p class="lede">Compara la tarifa cobrada contra un costo operativo base, tiempo de espera, distancia y energía consumida. Sirve para detectar desviaciones razonables, aceptables y sospechosas sin convertir la herramienta en una acusación automática.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="taximetro">Exportar PDF</button></div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Parámetros del recorrido</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="tax-base">Tarifa base [CLP]</label><input id="tax-base" type="number" min="0" step="any" value="800" /></div>
+              <div class="mini-input"><label for="tax-km">Costo por km [CLP/km]</label><input id="tax-km" type="number" min="0" step="any" value="700" /></div>
+              <div class="mini-input"><label for="tax-min">Costo por minuto [CLP/min]</label><input id="tax-min" type="number" min="0" step="any" value="120" /></div>
+              <div class="mini-input"><label for="tax-actual">Tarifa cobrada [CLP]</label><input id="tax-actual" type="number" min="0" step="any" value="4200" /></div>
+              <div class="mini-input"><label for="tax-distance">Distancia [km]</label><input id="tax-distance" type="number" min="0" step="any" value="8.4" /></div>
+              <div class="mini-input"><label for="tax-time">Tiempo [min]</label><input id="tax-time" type="number" min="0" step="any" value="18" /></div>
+              <div class="mini-input"><label for="tax-consumption">Consumo [kWh/100 km o L/100 km]</label><input id="tax-consumption" type="number" min="0" step="any" value="12" /></div>
+              <div class="mini-input"><label for="tax-energy-price">Costo energía [CLP/u]</label><input id="tax-energy-price" type="number" min="0" step="any" value="890" /></div>
+              <div class="mini-input"><label for="tax-autonomy">Autonomía [km/u]</label><input id="tax-autonomy" type="number" min="0" step="any" value="7.5" /></div>
+              <div class="mini-input"><label for="tax-unit">Unidad de energía</label>
+                <select id="tax-unit">
+                  <option value="kwh">kWh</option>
+                  <option value="litro">litro</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Resultado comparativo</h3>
+            <div class="result"><div class="k">Tarifa de referencia</div><div class="v" id="tax-reference">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Operación</dt><dd id="tax-operating">—</dd></div>
+              <div class="meta"><dt>Energía</dt><dd id="tax-energy">—</dd></div>
+              <div class="meta"><dt>Rango razonable</dt><dd id="tax-range">—</dd></div>
+              <div class="meta"><dt>Desvío</dt><dd id="tax-delta">—</dd></div>
+              <div class="meta"><dt>Consumo por metro</dt><dd id="tax-per-meter">—</dd></div>
+              <div class="meta"><dt>Autonomía del vehículo</dt><dd id="tax-autonomy-result">—</dd></div>
+            </dl>
+            <div class="result" style="margin-top:12px"><div class="k">Veredicto</div><div class="v" id="tax-verdict">—</div></div>
+            <p class="hint" id="tax-note" style="margin-top:10px">Completa los datos del recorrido y la tarifa cobrada para comparar el valor real contra el costo operativo mínimo razonable.</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Interpretación</h3>
+          <p class="sub">La comparación se basa en un rango de plausibilidad: “razonable” cuando está dentro de ±10 %, “aceptable” cuando está entre +10 % y +30 %, y “sospechoso” cuando supera +30 % sobre el costo real de operación más energía. Esto no reemplaza una tarifa legal o un contrato, pero ayuda a detectar sobrecobros reiterados.</p>
+          <div class="formula">Tarifa estimada = base + km × (costo km) + min × (costo min) + distancia × consumo/100 × costo energía</div>
+          <div class="formula" style="margin-top:8px">Consumo por metro = consumo/100 / 1000</div>
         </div>
       </section>
 
@@ -1388,6 +1446,97 @@
         </div>
       </section>
 
+      <section class="panel" id="panel-cocina">
+        <div class="hero">
+          <div>
+            <h2>Cocina · <span>de la kitchenette a la planta</span></h2>
+            <p class="lede">Una plantilla por tipo y por tamaño. Proyecta la demanda con simultaneidad, el calor que se queda en el recinto, el plano por zonas y el tablero. Cifras de apoyo académico: no reemplazan la memoria de cálculo ni el pliego RIC.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="cocina">Exportar PDF</button></div>
+        </div>
+        <div class="calc-stage">
+          <div class="card">
+            <div class="result"><div class="k">Demanda de empalme</div><div class="v" id="kit-pdem">—</div></div>
+            <p class="status" id="kit-status" hidden></p>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Potencia instalada</dt><dd id="kit-pinst">—</dd></div>
+              <div class="meta"><dt>Empalme orientativo</dt><dd id="kit-empalme">—</dd></div>
+              <div class="meta"><dt>In general / alimentador</dt><dd id="kit-in">—</dd></div>
+              <div class="meta"><dt>Energía del mes</dt><dd id="kit-kwh">—</dd></div>
+              <div class="meta"><dt>Calor en el recinto</dt><dd id="kit-heat">—</dd></div>
+              <div class="meta"><dt>Clima eléctrico</dt><dd id="kit-hvac">—</dd></div>
+            </dl>
+            <p class="formula" style="margin-top:10px">Pdem = Σ (P · fs) · I₁φ = P / (220 · cos φ) · In ≥ 1,1 · I en cocción resistiva y 1,25 · I en motores · Qsala ≈ (cocción · (1 − captura) + frío + luz + 110 W · personas) / COP</p>
+            <p class="hint" id="kit-fit" style="margin-top:8px"></p>
+            <p class="hint" id="kit-ajuste" hidden></p>
+          </div>
+          <div style="margin-top:16px">
+            <div class="card">
+              <h3>Plano de la cocina</h3>
+              <p class="sub">Zonas a escala y equipos coloreados por circuito. La puerta de acceso queda al frente del rectángulo. Las campanas van sobre la línea y no se dibujan en planta.</p>
+              <canvas class="chart tall arcade" id="kit-plan" width="1100" height="680" aria-label="Plano de la cocina"></canvas>
+              <div class="arc-legend" id="kit-legend"></div>
+            </div>
+            <div class="card" style="margin-top:16px">
+              <h3>Tablero proyectado</h3>
+              <p class="sub">Croquis de riel DIN: interruptor general, diferenciales de 30 mA y automáticos. La tabla es la leyenda del dibujo.</p>
+              <div class="fields two">
+                <div class="mini-input"><label for="kit-supply">Alimentación</label>
+                  <select id="kit-supply">
+                    <option value="auto" selected>Automática</option>
+                    <option value="1x220">1×220 V</option>
+                    <option value="3x380">3×380 V</option>
+                  </select>
+                </div>
+                <div class="mini-input"><label for="kit-len">Largo del alimentador [m]</label><input id="kit-len" type="number" min="5" step="any" value="12" /></div>
+                <div class="mini-input"><label for="kit-cop">COP del clima</label><input id="kit-cop" type="number" min="1" step="any" value="3" /></div>
+                <div class="mini-input"><label for="kit-tarifa">$ / kWh</label><input id="kit-tarifa" type="number" min="0" step="any" value="252" /></div>
+              </div>
+              <canvas class="chart tall arcade" id="kit-sketch" width="1100" height="680" aria-label="Croquis del tablero de la cocina"></canvas>
+              <div class="table-wrap" style="margin-top:8px"><table id="kit-board"></table></div>
+            </div>
+          </div>
+        </div>
+        <div class="grid g2">
+          <div class="card">
+            <h3>Plantilla y programa</h3>
+            <label class="field" for="kit-tpl">Tipo de cocina</label>
+            <select id="kit-tpl"></select>
+            <p class="sub" id="kit-blurb" style="margin-top:8px"></p>
+            <div class="fields" style="margin-top:10px">
+              <div class="mini-input"><label for="kit-w">Ancho [m]</label><input id="kit-w" type="number" min="1.2" step="any" value="3.2" /></div>
+              <div class="mini-input"><label for="kit-l">Largo [m]</label><input id="kit-l" type="number" min="1.2" step="any" value="4.2" /></div>
+              <div class="mini-input"><label for="kit-h">Altura [m]</label><input id="kit-h" type="number" min="2" step="any" value="2.5" /></div>
+              <div class="mini-input"><label for="kit-hours">Servicio [h/día]</label><input id="kit-hours" type="number" min="0" max="24" step="any" value="4" /></div>
+              <div class="mini-input"><label for="kit-div">Simultaneidad de cocción [%]</label><input id="kit-div" type="number" min="5" max="100" step="any" value="35" /></div>
+              <div class="mini-input"><label for="kit-aisle">Pasillo [m]</label><input id="kit-aisle" type="number" min="0.5" step="any" value="1.1" /></div>
+              <div class="mini-input"><label for="kit-people">Personas en la cocina (0 = auto)</label><input id="kit-people" type="number" min="0" step="1" value="0" /></div>
+              <div class="mini-input"><label for="kit-wm2">Alumbrado [W/m²]</label><input id="kit-wm2" type="number" min="2" step="any" value="12" /></div>
+            </div>
+            <div class="fields" id="kit-gear" style="margin-top:10px"></div>
+            <div class="fields" style="margin-top:10px">
+              <label class="check"><input id="kit-wc" type="checkbox" /> Baño</label>
+              <label class="check"><input id="kit-bodega" type="checkbox" /> Bodega seca</label>
+              <label class="check"><input id="kit-pass" type="checkbox" /> Despacho / pase</label>
+              <label class="check"><input id="kit-remote" type="checkbox" /> Condensadores de cámara fuera del recinto</label>
+            </div>
+            <p class="hint">La plantilla llena estos campos. Después puedes cambiar cualquier número: el plano y el tablero siguen a la cocina, no al nombre. Encimera 7,2 kW, cocina de 2 zonas 3,6 kW, horno 3,5 kW, freidora 7 kW, plancha 5 kW, baño maría 3 kW, convección 11 kW, marmita 12 kW, horno de panadería 18 kW. Lavavajillas 1,8 kW, lavado industrial 9 kW. Refrigerador 180 W, freezer 400 W, cámara 2,5 kW. Campana doméstica 180 W, industrial 2,2 kW. El automático sale de la placa; el empalme, de la simultaneidad. El frío corre 24 h con su duty.</p>
+          </div>
+          <div class="card">
+            <h3>Balance de servicios</h3>
+            <p class="sub">La potencia instalada alimenta el automático. La demanda, con fs, alimenta el empalme. El mes de cocción usa las horas de servicio; el frío, el día completo.</p>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Corriente de diseño</dt><dd id="kit-i">—</dd></div>
+              <div class="meta"><dt>Caída del alimentador</dt><dd id="kit-feed">—</dd></div>
+              <div class="meta"><dt>Fases L1 / L2 / L3</dt><dd id="kit-phases">—</dd></div>
+              <div class="meta"><dt>Costo de energía</dt><dd id="kit-cost">—</dd></div>
+            </dl>
+            <div class="table-wrap" style="margin-top:8px"><table id="kit-services"></table></div>
+            <p class="hint" style="margin-top:8px">Curva B en cocción resistiva (margen 1,1). Curva C en motores, frío y lavado (margen 1,25). La campana doméstica se lleva cerca de la mitad del calor de cocción; la industrial, cerca de tres cuartos. El clima de invierno del edificio se proyecta en BTU.</p>
+          </div>
+        </div>
+      </section>
+
       <section class="panel" id="panel-eficiencia">
         <div class="hero">
           <div>
@@ -1524,6 +1673,94 @@
             </dl>
             <p class="callout cyan" style="margin-top:10px">Autoprueba → precarga lógica → E-stop → rearme enclavado. Physical outputs = false.</p>
           </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-subestaciones">
+        <div class="hero">
+          <div>
+            <h2>Laboratorio de <span>subestaciones</span></h2>
+            <p class="lede">Escenario académico para practicar transformadores elevadores, transmisión y equipos de patio con valores en por unidad. Las sugerencias son preliminares: valida siempre con norma, fabricante, coordinación de protecciones y estudio oficial.</p>
+          </div>
+          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="subestaciones">Exportar PDF</button></div>
+        </div>
+        <div class="card">
+          <h3>Plantilla y base del estudio</h3>
+          <div class="fields four">
+            <div class="mini-input"><label for="sub-template">Escenario</label>
+              <select id="sub-template">
+                <option value="">Personalizado</option>
+                <option value="elevadora" selected>S/E elevadora 13,8/110 kV</option>
+                <option value="transmision">S/E transmisión 23/220 kV</option>
+                <option value="distribucion">S/E distribución 66/13,8 kV</option>
+              </select>
+            </div>
+            <div class="mini-input"><label for="sub-sb">Sb común [MVA]</label><input id="sub-sb" type="number" min="0.1" step="any" value="50" /></div>
+            <div class="mini-input"><label for="sub-vlv">Barra LV [kV]</label><input id="sub-vlv" type="number" min="0.1" step="any" value="13.8" /></div>
+            <div class="mini-input"><label for="sub-vhv">Barra HV [kV]</label><input id="sub-vhv" type="number" min="0.1" step="any" value="110" /></div>
+          </div>
+          <p class="hint" id="sub-template-note" style="margin-top:10px">Modelo de estudio: red equivalente → trafo elevador → línea → barra HV. Los valores se pueden reemplazar por datos extraídos de planos y fichas técnicas.</p>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Transformador y transmisión</h3>
+            <div class="fields three">
+              <div class="mini-input"><label for="sub-trafo-mva">Trafo [MVA]</label><input id="sub-trafo-mva" type="number" min="0.1" step="any" value="40" /></div>
+              <div class="mini-input"><label for="sub-uk">Uk [%]</label><input id="sub-uk" type="number" min="0.1" step="any" value="10" /></div>
+              <div class="mini-input"><label for="sub-load-mw">Carga activa [MW]</label><input id="sub-load-mw" type="number" min="0" step="any" value="28" /></div>
+              <div class="mini-input"><label for="sub-pf">Factor de potencia</label><input id="sub-pf" type="number" min="0.1" max="1" step="0.01" value="0.92" /></div>
+              <div class="mini-input"><label for="sub-length">Línea [km]</label><input id="sub-length" type="number" min="0" step="any" value="35" /></div>
+              <div class="mini-input"><label for="sub-r-km">R línea [Ω/km]</label><input id="sub-r-km" type="number" min="0" step="any" value="0.08" /></div>
+              <div class="mini-input"><label for="sub-x-km">X línea [Ω/km]</label><input id="sub-x-km" type="number" min="0" step="any" value="0.35" /></div>
+              <div class="mini-input"><label for="sub-scc">Scc red [MVA]</label><input id="sub-scc" type="number" min="1" step="any" value="800" /></div>
+              <div class="mini-input"><label for="sub-vf">V pre-falla [pu]</label><input id="sub-vf" type="number" min="0.5" max="1.2" step="0.01" value="1" /></div>
+            </div>
+            <p class="formula" style="margin-top:10px">Zb = Vb²/Sb · Ib = Sb/(√3·Vb) · Ztrafo,pu = Uk/100 · Sb/Str</p>
+          </div>
+          <div class="card">
+            <h3>Equipos de medida y aislamiento</h3>
+            <div class="fields two">
+              <div class="mini-input"><label for="sub-tc-primary">TC primario [A]</label><input id="sub-tc-primary" type="number" min="1" step="any" value="300" /></div>
+              <div class="mini-input"><label for="sub-tc-secondary">TC secundario [A]</label><select id="sub-tc-secondary"><option value="1">1 A</option><option value="5" selected>5 A</option></select></div>
+              <div class="mini-input"><label for="sub-tp-primary">TP primario [kV]</label><input id="sub-tp-primary" type="number" min="0.1" step="any" value="110" /></div>
+              <div class="mini-input"><label for="sub-tp-secondary">TP secundario [V]</label><input id="sub-tp-secondary" type="number" min="1" step="any" value="110" /></div>
+              <div class="mini-input"><label for="sub-bushing-voltage">Bushing Um [kV]</label><input id="sub-bushing-voltage" type="number" min="0.1" step="any" value="123" /></div>
+              <div class="mini-input"><label for="sub-bushing-current">Bushing In [A]</label><input id="sub-bushing-current" type="number" min="1" step="any" value="400" /></div>
+            </div>
+            <p class="hint" id="sub-equipment-note" style="margin-top:10px">La selección de clase, aislamiento, BIL, carga de precisión y saturación del TC requiere ficha del fabricante.</p>
+          </div>
+        </div>
+        <div class="grid g2" style="margin-top:16px">
+          <div class="card">
+            <h3>Puesta a tierra preliminar</h3>
+            <div class="fields four">
+              <div class="mini-input"><label for="sub-rho">ρ terreno [Ω·m]</label><input id="sub-rho" type="number" min="1" step="any" value="150" /></div>
+              <div class="mini-input"><label for="sub-grid-l">Largo malla [m]</label><input id="sub-grid-l" type="number" min="1" step="any" value="32" /></div>
+              <div class="mini-input"><label for="sub-grid-w">Ancho malla [m]</label><input id="sub-grid-w" type="number" min="1" step="any" value="24" /></div>
+              <div class="mini-input"><label for="sub-grid-depth">Profundidad [m]</label><input id="sub-grid-depth" type="number" min="0.1" step="any" value="0.6" /></div>
+            </div>
+            <p class="formula" style="margin-top:10px">Rg ≈ ρ · [1/Lt + 1/√(20A)] · Ig · Rg &lt; 1 Ω como alerta académica</p>
+          </div>
+          <div class="card">
+            <h3>Resultados del escenario</h3>
+            <div class="result"><div class="k">Estado smart</div><div class="v" id="sub-status">—</div></div>
+            <dl class="meta-grid">
+              <div class="meta"><dt>Ib LV / HV</dt><dd id="sub-base-current">—</dd></div>
+              <div class="meta"><dt>Zb LV / HV</dt><dd id="sub-base-impedance">—</dd></div>
+              <div class="meta"><dt>Trafo / carga</dt><dd id="sub-loading">—</dd></div>
+              <div class="meta"><dt>Caída transmisión</dt><dd id="sub-voltage-drop">—</dd></div>
+              <div class="meta"><dt>Icc LV / HV</dt><dd id="sub-fault-current">—</dd></div>
+              <div class="meta"><dt>TC / TP</dt><dd id="sub-ratios">—</dd></div>
+              <div class="meta"><dt>Malla Rg / Lt</dt><dd id="sub-ground">—</dd></div>
+              <div class="meta"><dt>Bushing</dt><dd id="sub-bushing">—</dd></div>
+            </dl>
+            <p class="hint" id="sub-advice" style="margin-top:10px">—</p>
+          </div>
+        </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Lectura del modelo</h3>
+          <p class="sub">Usa esta pestaña para practicar con valores publicados, diagramas unilineales y fichas técnicas. La importación directa de DWG no está incluida en esta primera versión; transcribe los parámetros relevantes y conserva la fuente del plano.</p>
+          <div class="formula">Zlinea,pu = (R + jX) / ZbHV · Icc ≈ Vpre / |Zred + Ztrafo + Zlinea| · Ibase</div>
         </div>
       </section>
 
@@ -1829,6 +2066,7 @@
       if (typeof calcMalla === "function") calcMalla();
       if (typeof calcLux === "function") calcLux();
       if (typeof calcArcade === "function") calcArcade();
+      if (typeof calcCocina === "function") calcCocina();
       if (typeof calcDsp === "function") calcDsp();
       if (phasorSketch) phasorSketch.redraw();
     }
@@ -1836,6 +2074,11 @@
     $("theme-night").addEventListener("click", () => setTheme("night"));
     $("theme-day").classList.toggle("primary", document.documentElement.getAttribute("data-theme") === "day");
     $("theme-night").classList.toggle("primary", document.documentElement.getAttribute("data-theme") !== "day");
+    ["tax-base","tax-km","tax-min","tax-actual","tax-distance","tax-time","tax-consumption","tax-energy-price","tax-autonomy","tax-unit"]
+      .forEach((id) => $(id).addEventListener("input", calcTaximetro));
+    ["sub-sb","sub-vlv","sub-vhv","sub-trafo-mva","sub-uk","sub-load-mw","sub-pf","sub-length","sub-r-km","sub-x-km","sub-scc","sub-vf","sub-tc-primary","sub-tc-secondary","sub-tp-primary","sub-tp-secondary","sub-bushing-voltage","sub-bushing-current","sub-rho","sub-grid-l","sub-grid-w","sub-grid-depth"]
+      .forEach((id) => $(id).addEventListener("input", calcSubestaciones));
+    $("sub-template").addEventListener("change", applySubestacionTemplate);
 
     function refreshPanelVisuals(id) {
       if (id === "sev") { parseSev(); drawSev(); }
@@ -1843,6 +2086,7 @@
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
       if (id === "arcade") calcArcade();
+      if (id === "cocina") calcCocina();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
@@ -1851,6 +2095,159 @@
       if (id === "pu") calcPu();
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
+      if (id === "taximetro") calcTaximetro();
+      if (id === "subestaciones") calcSubestaciones();
+    }
+    function calcTaximetro() {
+      const base = Number($("tax-base").value) || 0;
+      const kmRate = Number($("tax-km").value) || 0;
+      const minRate = Number($("tax-min").value) || 0;
+      const actual = Number($("tax-actual").value) || 0;
+      const distance = Math.max(0, Number($("tax-distance").value) || 0);
+      const time = Math.max(0, Number($("tax-time").value) || 0);
+      const consumption = Math.max(0, Number($("tax-consumption").value) || 0);
+      const energyPrice = Number($("tax-energy-price").value) || 0;
+      const autonomy = Math.max(0, Number($("tax-autonomy").value) || 0);
+      const unit = $("tax-unit").value || "kwh";
+      const operating = base + distance * kmRate + time * minRate;
+      const energyUnits = distance * (consumption / 100);
+      const energyCost = energyUnits * energyPrice;
+      const reference = operating + energyCost;
+      const delta = actual - reference;
+      const pct = reference > 0 ? (delta / reference) * 100 : 0;
+      const lowerBound = reference * 0.9;
+      const upperBound = reference * 1.1;
+      const perMeter = distance > 0 ? reference / (distance * 1000) : 0;
+      const consumptionPerMeter = consumption > 0 ? (consumption / 100) / 1000 : 0;
+      const unitLabel = unit === "kwh" ? "kWh/m" : "L/m";
+      let verdict = "Razonable";
+      let verdictClass = "ok";
+      let note = "La tarifa cobrada cae dentro del rango plausible del recorrido.";
+      if (pct > 30) {
+        verdict = "Sospechoso";
+        verdictClass = "bad";
+        note = "La tarifa cobrada excede en más de 30 % el costo operativo mínimo plausible. Revisa la ruta, el tiempo, la base y el consumo.";
+      } else if (pct > 10) {
+        verdict = "Aceptable";
+        verdictClass = "warn";
+        note = "La tarifa queda por encima de lo razonable, pero todavía en un rango de variación aceptable.";
+      } else if (pct < -10) {
+        verdict = "Bajo";
+        verdictClass = "micro";
+        note = "La tarifa está por debajo del rango razonable; podría responder a descuento o a otra estructura de tarifa.";
+      }
+      $("tax-reference").innerHTML = fmt(reference, 0) + " <small>CLP</small>";
+      $("tax-operating").textContent = fmt(operating, 0) + " CLP";
+      $("tax-energy").textContent = fmt(energyCost, 0) + " CLP";
+      $("tax-range").textContent = fmt(lowerBound, 0) + " – " + fmt(upperBound, 0) + " CLP";
+      $("tax-delta").textContent = fmt(delta, 0) + " CLP";
+      $("tax-per-meter").textContent = fmt(consumptionPerMeter, 6) + " " + unitLabel;
+      $("tax-autonomy-result").textContent = fmt(autonomy, 2) + " km/u";
+      $("tax-verdict").innerHTML = '<span class="status ' + verdictClass + '">' + verdict + '</span>';
+      $("tax-note").textContent = note + " Diferencia relativa: " + fmt(Math.abs(pct), 1) + "%.";
+      if (distance > 0) {
+        $("tax-per-meter").textContent += " · " + fmt(perMeter, 4) + " CLP/m";
+      }
+    }
+    const SUB_TEMPLATES = {
+      elevadora: {
+        note: "Escenario de generación distribuida: 13,8 kV se eleva a 110 kV para transmisión. Ajusta el trafo y la línea con datos de tu plano.",
+        sb: 50, vlv: 13.8, vhv: 110, trafoMva: 40, uk: 10, loadMw: 28, pf: 0.92, length: 35, rKm: 0.08, xKm: 0.35, scc: 800, tc: 300, tp: 110, bushingV: 123,
+      },
+      transmision: {
+        note: "Escenario de transmisión: barra de 23 kV a 220 kV. Úsalo para comparar niveles de cortocircuito y corrientes de patio.",
+        sb: 100, vlv: 23, vhv: 220, trafoMva: 120, uk: 12, loadMw: 85, pf: 0.95, length: 80, rKm: 0.045, xKm: 0.28, scc: 2500, tc: 400, tp: 220, bushingV: 245,
+      },
+      distribucion: {
+        note: "Escenario de distribución: transformador reductor representado desde 66 kV hacia 13,8 kV. Puedes invertir las barras para practicar otro sentido de flujo.",
+        sb: 30, vlv: 13.8, vhv: 66, trafoMva: 25, uk: 8, loadMw: 18, pf: 0.9, length: 18, rKm: 0.12, xKm: 0.42, scc: 600, tc: 250, tp: 66, bushingV: 72.5,
+      },
+    };
+    function subNumber(id, fallback) {
+      const value = Number($(id).value);
+      return Number.isFinite(value) ? value : fallback;
+    }
+    function applySubestacionTemplate() {
+      const t = SUB_TEMPLATES[$("sub-template").value];
+      if (!t) {
+        $("sub-template-note").textContent = "Modelo personalizado. Ingresa los datos de placa, línea, red y terreno que quieras estudiar.";
+        calcSubestaciones();
+        return;
+      }
+      const values = {
+        "sub-sb": t.sb, "sub-vlv": t.vlv, "sub-vhv": t.vhv, "sub-trafo-mva": t.trafoMva, "sub-uk": t.uk,
+        "sub-load-mw": t.loadMw, "sub-pf": t.pf, "sub-length": t.length, "sub-r-km": t.rKm, "sub-x-km": t.xKm,
+        "sub-scc": t.scc, "sub-tc-primary": t.tc, "sub-tp-primary": t.tp, "sub-bushing-voltage": t.bushingV,
+      };
+      Object.entries(values).forEach(([id, value]) => { $(id).value = value; });
+      $("sub-template-note").textContent = t.note;
+      calcSubestaciones();
+    }
+    function calcSubestaciones() {
+      const sb = Math.max(0.001, subNumber("sub-sb", 50));
+      const vlv = Math.max(0.001, subNumber("sub-vlv", 13.8));
+      const vhv = Math.max(0.001, subNumber("sub-vhv", 110));
+      const trafoMva = Math.max(0.001, subNumber("sub-trafo-mva", 40));
+      const uk = Math.max(0.01, subNumber("sub-uk", 10));
+      const loadMw = Math.max(0, subNumber("sub-load-mw", 28));
+      const pf = Math.min(1, Math.max(0.1, subNumber("sub-pf", 0.92)));
+      const length = Math.max(0, subNumber("sub-length", 35));
+      const rKm = Math.max(0, subNumber("sub-r-km", 0.08));
+      const xKm = Math.max(0, subNumber("sub-x-km", 0.35));
+      const scc = Math.max(0.001, subNumber("sub-scc", 800));
+      const vf = Math.max(0.1, subNumber("sub-vf", 1));
+      const zblv = (vlv * vlv) / sb;
+      const zbhv = (vhv * vhv) / sb;
+      const iblv = sb / (Math.sqrt(3) * vlv);
+      const ibhv = sb / (Math.sqrt(3) * vhv);
+      const zTrafoPu = (uk / 100) * (sb / trafoMva);
+      const lineRpu = (length * rKm) / zbhv;
+      const lineXpu = (length * xKm) / zbhv;
+      const redPu = sb / scc;
+      const zFaultPu = Math.hypot(redPu + lineRpu, zTrafoPu + lineXpu);
+      const iccHv = zFaultPu > 0 ? (vf / zFaultPu) * ibhv : 0;
+      const iccLv = zTrafoPu > 0 ? (vf / zTrafoPu) * iblv : 0;
+      const loadMva = loadMw / pf;
+      const loadLv = loadMva / (Math.sqrt(3) * vlv);
+      const loadHv = loadMva / (Math.sqrt(3) * vhv);
+      const loading = (loadMva / trafoMva) * 100;
+      const voltageDrop = loadMva > 0 ? ((loadHv * Math.sqrt(3) * (length * rKm * pf + length * xKm * Math.sqrt(Math.max(0, 1 - pf * pf)))) / vhv) * 100 : 0;
+      const tcPrimary = Math.max(1, subNumber("sub-tc-primary", 300));
+      const tcSecondary = Math.max(0.1, subNumber("sub-tc-secondary", 5));
+      const tpPrimary = Math.max(0.1, subNumber("sub-tp-primary", vhv));
+      const tpSecondary = Math.max(0.1, subNumber("sub-tp-secondary", 110));
+      const tcRatio = tcPrimary / tcSecondary;
+      const tpRatio = (tpPrimary * 1000) / tpSecondary;
+      const rho = Math.max(1, subNumber("sub-rho", 150));
+      const gridL = Math.max(1, subNumber("sub-grid-l", 32));
+      const gridW = Math.max(1, subNumber("sub-grid-w", 24));
+      const gridDepth = Math.max(0.1, subNumber("sub-grid-depth", 0.6));
+      const area = gridL * gridW;
+      const totalConductor = gridL * (Math.floor(gridW / 4) + 1) + gridW * (Math.floor(gridL / 4) + 1);
+      const rg = rho * (1 / Math.max(1, totalConductor) + 1 / Math.sqrt(20 * area));
+      const bushingV = Math.max(0.1, subNumber("sub-bushing-voltage", vhv * 1.1));
+      const bushingI = Math.max(1, subNumber("sub-bushing-current", 400));
+      const advice = [];
+      if (loading > 100) advice.push("Trafo sobrecargado.");
+      else if (loading > 85) advice.push("Carga del trafo sobre 85 %.");
+      if (tcPrimary < loadHv * 1000) advice.push("TC primario menor que la corriente HV de carga.");
+      if (bushingV < vhv) advice.push("Um del bushing menor que la tensión de barra HV.");
+      if (bushingI < loadHv * 1000) advice.push("In del bushing no cubre la corriente de carga HV.");
+      if (rg > 1) advice.push("Rg supera 1 Ω: revisar malla, varillas, resistividad y tensiones de paso/contacto.");
+      if (voltageDrop > 5) advice.push("Caída de transmisión sobre 5 %.");
+      if (!advice.length) advice.push("Escenario coherente para práctica PU; faltan verificaciones de fabricante y norma.");
+      const statusClass = advice.length ? "warn" : "ok";
+      $("sub-status").innerHTML = '<span class="status ' + statusClass + '">' + (advice.length ? "REVISAR" : "COHERENTE") + "</span>";
+      $("sub-base-current").textContent = fmt(iblv, 2) + " / " + fmt(ibhv, 2) + " kA";
+      $("sub-base-impedance").textContent = fmt(zblv, 3) + " / " + fmt(zbhv, 3) + " Ω";
+      $("sub-loading").textContent = fmt(loading, 1) + " % · " + fmt(loadMva, 2) + " MVA";
+      $("sub-voltage-drop").textContent = fmt(voltageDrop, 2) + " %";
+      $("sub-fault-current").textContent = fmt(iccLv, 2) + " / " + fmt(iccHv, 2) + " kA";
+      $("sub-ratios").textContent = "TC " + fmt(tcRatio, 1) + ":1 · TP " + fmt(tpRatio, 1) + ":1";
+      $("sub-ground").textContent = fmt(rg, 3) + " Ω · Lt ≈ " + fmt(totalConductor, 0) + " m · h " + fmt(gridDepth, 2) + " m";
+      $("sub-bushing").textContent = fmt(bushingV, 1) + " kV · " + fmt(bushingI, 0) + " A";
+      $("sub-advice").textContent = advice.join(" ");
+      $("sub-equipment-note").textContent = "I carga LV/HV ≈ " + fmt(loadLv, 2) + " / " + fmt(loadHv, 2) + " kA · Ztrafo = " + fmt(zTrafoPu, 4) + " pu · línea = " + fmt(lineRpu, 4) + " + j" + fmt(lineXpu, 4) + " pu.";
     }
     function showPanel(id) {
       document.querySelectorAll(".panel").forEach((p) => p.classList.toggle("active", p.id === "panel-" + id));
@@ -1859,8 +2256,8 @@
       window.scrollTo(0, 0);
       const templateBanner = $("tpl-banner");
       if (templateBanner) {
-        templateBanner.hidden = id === "pu" || id === "arcade" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && id !== "arcade" && !!activeSite);
+        templateBanner.hidden = id === "pu" || id === "arcade" || id === "cocina" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && id !== "arcade" && id !== "cocina" && !!activeSite);
       }
       refreshPanelVisuals(id);
     }
@@ -4773,6 +5170,963 @@
     setupArcade();
     window.__eaArcade = () => arcadeLast;
 
+    /* ===================== COCINA ===================== */
+    const KIT_ZONES = {
+      cocina: { name: "Cocina", paint: "rgba(14,209,255,0.16)" },
+      coccion: { name: "Cocción", paint: "rgba(237,67,41,0.20)" },
+      prep: { name: "Preparación", paint: "rgba(14,209,255,0.14)" },
+      frio: { name: "Frío", paint: "rgba(90,100,191,0.30)" },
+      lavado: { name: "Lavado", paint: "rgba(173,186,209,0.34)" },
+      bodega: { name: "Bodega", paint: "rgba(227,202,117,0.28)" },
+      despacho: { name: "Despacho", paint: "rgba(146,194,29,0.18)" },
+      bano: { name: "Baño", paint: "rgba(173,186,209,0.24)" },
+    };
+    const KIT_GEAR = [
+      { id: "enc2", name: "Cocina 2 zonas", input: "kit-enc2", W: 3600, pf: 1, fw: 0.36, fd: 0.52, zone: "coccion", prefer3: false, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "enc4", name: "Encimera 4 zonas", input: "kit-enc4", W: 7200, pf: 1, fw: 0.62, fd: 0.62, zone: "coccion", prefer3: false, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "horno", name: "Horno", input: "kit-horno", W: 3500, pf: 1, fw: 0.6, fd: 0.62, zone: "coccion", prefer3: false, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "micro", name: "Microondas", input: "kit-micro", W: 1200, pf: 1, fw: 0.5, fd: 0.4, zone: "prep", prefer3: false, dedicated: false, mode: "aux", heat: "aux", curve: "B" },
+      { id: "camp", name: "Campana doméstica", input: "kit-camp", W: 180, pf: 0.8, fw: 0.7, fd: 0.32, zone: "coccion", prefer3: false, dedicated: true, mode: "hood", heat: "hood", curve: "C" },
+      { id: "campind", name: "Campana industrial", input: "kit-campind", W: 2200, pf: 0.85, fw: 1.3, fd: 0.55, zone: "coccion", prefer3: false, dedicated: true, mode: "hood", heat: "hood", curve: "C" },
+      { id: "lava", name: "Lavavajillas", input: "kit-lava", W: 1800, pf: 1, fw: 0.6, fd: 0.6, zone: "lavado", prefer3: false, dedicated: true, mode: "wash", heat: "wash", curve: "C" },
+      { id: "lavind", name: "Lavado industrial", input: "kit-lavind", W: 9000, pf: 0.9, fw: 1.15, fd: 0.8, zone: "lavado", prefer3: true, dedicated: true, mode: "wash", heat: "wash", curve: "C" },
+      { id: "refri", name: "Refrigerador", input: "kit-refri", W: 180, pf: 0.85, fw: 0.7, fd: 0.68, zone: "frio", prefer3: false, dedicated: false, mode: "cold", heat: "cold", curve: "C", duty: 0.35 },
+      { id: "freezer", name: "Freezer", input: "kit-freezer", W: 400, pf: 0.85, fw: 0.8, fd: 0.7, zone: "frio", prefer3: false, dedicated: false, mode: "cold", heat: "cold", curve: "C", duty: 0.4 },
+      { id: "camara", name: "Cámara de frío", input: "kit-camara", W: 2500, pf: 0.85, fw: 1.5, fd: 1.3, zone: "frio", prefer3: true, dedicated: true, mode: "cold", heat: "coldroom", curve: "C", duty: 0.55 },
+      { id: "hervidor", name: "Hervidor", input: "kit-hervidor", W: 2200, pf: 1, fw: 0.28, fd: 0.28, zone: "prep", prefer3: false, dedicated: false, mode: "aux", heat: "aux", curve: "B" },
+      { id: "freidora", name: "Freidora", input: "kit-freidora", W: 7000, pf: 1, fw: 0.5, fd: 0.72, zone: "coccion", prefer3: true, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "plancha", name: "Plancha", input: "kit-plancha", W: 5000, pf: 1, fw: 0.9, fd: 0.7, zone: "coccion", prefer3: false, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "bmaria", name: "Baño maría", input: "kit-bmaria", W: 3000, pf: 1, fw: 0.6, fd: 0.6, zone: "coccion", prefer3: false, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "convec", name: "Horno de convección", input: "kit-convec", W: 11000, pf: 0.95, fw: 0.9, fd: 0.95, zone: "coccion", prefer3: true, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "marmita", name: "Marmita", input: "kit-marmita", W: 12000, pf: 0.95, fw: 0.85, fd: 0.85, zone: "coccion", prefer3: true, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+      { id: "amasa", name: "Amasadora", input: "kit-amasa", W: 1500, pf: 0.85, fw: 0.6, fd: 0.7, zone: "prep", prefer3: false, dedicated: true, mode: "aux", heat: "aux", curve: "C" },
+      { id: "hpan", name: "Horno de panadería", input: "kit-hpan", W: 18000, pf: 0.95, fw: 1.7, fd: 1.45, zone: "coccion", prefer3: true, dedicated: true, mode: "hot", heat: "cook", curve: "B" },
+    ];
+    function kitTpl(t) {
+      return Object.assign({
+        enc2: 0, enc4: 0, horno: 0, micro: 0, camp: 0, campind: 0, lava: 0, lavind: 0,
+        refri: 0, freezer: 0, camara: 0, hervidor: 0, freidora: 0, plancha: 0, bmaria: 0,
+        convec: 0, marmita: 0, amasa: 0, hpan: 0,
+        wc: false, bodega: false, pass: false, remote: false,
+        people: 0, wm2: 12, H: 2.5, hours: 4, div: 40, aisle: 1.1,
+      }, t);
+    }
+    const COCINA_TEMPLATES = [
+      kitTpl({ id: "kitchenette", name: "Kitchenette", blurb: "Un módulo contra el muro: dos zonas, microondas, frío bajo mesón y campana. Cabe en un estudio.", W: 1.8, L: 2.6, H: 2.4, hours: 3, div: 30, aisle: 0.9, people: 1, wm2: 12, enc2: 1, micro: 1, camp: 1, refri: 1, hervidor: 1 }),
+      kitTpl({ id: "departamento", name: "Departamento", blurb: "Cocina de departamento. Encimera, horno y lavavajillas van en circuitos propios. Sigue siendo un empalme de casa.", W: 2.4, L: 3.4, H: 2.5, hours: 3.5, div: 35, aisle: 1, wm2: 12, enc4: 1, horno: 1, micro: 1, camp: 1, lava: 1, refri: 1, hervidor: 1 }),
+      kitTpl({ id: "casa", name: "Casa", blurb: "Cocina de casa. La encimera y el horno no coinciden enteros: la simultaneidad es la de una familia, no la de un servicio.", W: 3.2, L: 4.2, H: 2.5, hours: 4, div: 35, aisle: 1.1, wm2: 12, enc4: 1, horno: 1, micro: 1, camp: 1, lava: 1, refri: 1, hervidor: 1 }),
+      kitTpl({ id: "quincho", name: "Quincho", blurb: "Quincho cubierto. La plancha se suma a la encimera cuando hay asado, y el pase abre al patio.", W: 4.2, L: 5.5, H: 2.6, hours: 3, div: 50, aisle: 1.2, wm2: 12, pass: true, enc4: 1, horno: 1, micro: 1, camp: 1, refri: 1, hervidor: 1, plancha: 1 }),
+      kitTpl({ id: "foodtruck", name: "Food truck", blurb: "Camión o kiosco angosto. Línea corta y casi todo encendido en el servicio. La freidora pide trifásica.", W: 2.2, L: 5.4, H: 2.3, hours: 10, div: 80, aisle: 0.75, people: 2, wm2: 14, enc2: 1, micro: 1, plancha: 1, freidora: 1, refri: 1, campind: 1 }),
+      kitTpl({ id: "cafeteria", name: "Cafetería", blurb: "Cafetería de barrio. Plancha, horno y un lavado. El despacho da al salón.", W: 4.8, L: 6.5, H: 2.8, hours: 12, div: 65, aisle: 1.2, wm2: 14, pass: true, wc: true, enc4: 1, horno: 1, micro: 1, plancha: 1, refri: 2, lava: 1, camp: 1, campind: 1, hervidor: 1 }),
+      kitTpl({ id: "delivery", name: "Delivery", blurb: "Cocina de delivery, sin salón. Dos encimeras, convección y freidora. El horario es largo y la simultaneidad alta.", W: 6, L: 9, H: 2.8, hours: 14, div: 72, aisle: 1.3, wm2: 14, bodega: true, pass: true, enc4: 2, horno: 1, convec: 1, freidora: 1, plancha: 1, refri: 2, freezer: 1, lavind: 1, campind: 2 }),
+      kitTpl({ id: "barrio", name: "Restaurante de barrio", blurb: "Restaurante chico. Línea caliente corta, frío de alcance y lavavajillas. La campana industrial ya es circuito propio.", W: 6.5, L: 8, H: 2.8, hours: 10, div: 70, aisle: 1.3, wm2: 15, bodega: true, pass: true, wc: true, enc4: 1, horno: 1, freidora: 1, plancha: 1, bmaria: 1, refri: 2, freezer: 1, lava: 1, campind: 1 }),
+      kitTpl({ id: "restaurante", name: "Restaurante", blurb: "Cocina de restaurante. Línea caliente, cámara, lavado industrial y despacho al salón. El empalme sale trifásico.", W: 8, L: 12, H: 3, hours: 12, div: 75, aisle: 1.4, wm2: 15, bodega: true, pass: true, wc: true, enc4: 2, horno: 2, freidora: 2, plancha: 2, bmaria: 2, convec: 1, refri: 2, freezer: 1, camara: 1, lavind: 1, campind: 2 }),
+      kitTpl({ id: "hotel", name: "Hotel o casino", blurb: "Cocina de hotel o casino. Varias líneas, marmitas y cámaras con el condensador fuera del recinto. El día casi no cierra.", W: 12, L: 16, H: 3.2, hours: 16, div: 68, aisle: 1.5, wm2: 14, bodega: true, pass: true, wc: true, remote: true, enc4: 2, horno: 2, freidora: 2, plancha: 3, bmaria: 3, convec: 2, marmita: 2, refri: 3, freezer: 2, camara: 2, lavind: 2, campind: 4, amasa: 1 }),
+      kitTpl({ id: "panaderia", name: "Panadería", blurb: "Panadería y pastelería. El horno de piso manda la demanda. La amasadora es un pico corto, no el empalme.", W: 8, L: 14, H: 3.2, hours: 10, div: 80, aisle: 1.4, wm2: 12, bodega: true, pass: true, hpan: 2, amasa: 2, convec: 1, refri: 1, freezer: 1, camara: 1, campind: 1, lavind: 1 }),
+      kitTpl({ id: "produccion", name: "Producción", blurb: "Producción. Varias líneas calientes, frío de bodega y lavado por turno. La proyección ya es de planta.", W: 14, L: 20, H: 3.6, hours: 16, div: 78, aisle: 1.6, wm2: 14, bodega: true, pass: true, wc: true, remote: true, enc4: 2, freidora: 4, plancha: 3, bmaria: 4, convec: 3, marmita: 3, hpan: 1, amasa: 2, refri: 2, freezer: 2, camara: 4, lavind: 3, campind: 6 }),
+    ];
+    let cocinaLast = null;
+
+    function kitFamily(spec) {
+      if (spec.mode === "hood") return "Campana";
+      if (spec.mode === "cold") return "Frío";
+      if (spec.mode === "wash") return "Lavado";
+      if (spec.mode === "hot") return "Cocción";
+      return "Preparación";
+    }
+    function kitFs(spec, hotFs) {
+      if (spec.mode === "hot") return hotFs;
+      if (spec.mode === "cold") return spec.duty || 0.4;
+      if (spec.mode === "hood") return 0.85;
+      if (spec.mode === "wash") return 0.45;
+      return Math.min(0.25, hotFs);
+    }
+    function kitKwhH(spec, hours, fs) {
+      if (spec.mode === "cold") return 24 * fs;
+      if (spec.mode === "hood") return hours * 0.75;
+      if (spec.mode === "aux") return hours * 0.15;
+      return hours * fs;
+    }
+    function kitLoad(src) {
+      return {
+        name: src.name, family: src.family, zone: src.zone || "", kind: src.kind || "fuerza",
+        curve: src.curve || "C", pf: src.pf, fs: src.fs, P: src.P, three: !!src.three,
+        prefer3: !!src.prefer3, poles: src.three ? 3 : 2, kwhH: src.kwhH, heat: src.heat || "none",
+        uids: src.uids || [],
+      };
+    }
+    function kitSize(c) {
+      const margin = c.curve === "B" ? 1.1 : 1.25;
+      const factor = c.curve === "B" ? 1 : 0.8;
+      const denom = (c.three ? Math.sqrt(3) * 380 : 220) * c.pf;
+      c.I = denom > 0 ? c.P / denom : 0;
+      c.In = arcNext(ARC_BREAKERS, c.I * margin);
+      while (c.P > factor * denom * c.In + 1e-6 && c.In < 63) {
+        const n = arcNext(ARC_BREAKERS, c.In + 0.5);
+        if (n === c.In) break;
+        c.In = n;
+      }
+      c.poles = c.three ? 3 : 2;
+      if (c.three) c.phase = "3φ";
+      return c;
+    }
+    function kitImb(ph) {
+      const vals = [ph.L1, ph.L2, ph.L3];
+      const avg = (vals[0] + vals[1] + vals[2]) / 3;
+      return avg > 0 ? (Math.max(vals[0], vals[1], vals[2]) - Math.min(vals[0], vals[1], vals[2])) / avg : 0;
+    }
+    function kitPhaseWeights(loads) {
+      const ph = { L1: 0, L2: 0, L3: 0 };
+      loads.forEach((c) => {
+        const w = c.P * c.fs;
+        if (c.three) { ph.L1 += w / 3; ph.L2 += w / 3; ph.L3 += w / 3; }
+        else ph[c.phase || "L1"] += w;
+      });
+      return ph;
+    }
+    function kitAssignBalanced(loads) {
+      const ph = { L1: 0, L2: 0, L3: 0 };
+      loads.forEach((c) => {
+        if (!c.three) return;
+        const w = c.P * c.fs / 3;
+        ph.L1 += w; ph.L2 += w; ph.L3 += w;
+      });
+      const mono = loads.filter((c) => !c.three).slice().sort((a, b) => (b.P * b.fs) - (a.P * a.fs));
+      mono.forEach((c) => {
+        let best = "L1";
+        if (ph.L2 < ph[best]) best = "L2";
+        if (ph.L3 < ph[best]) best = "L3";
+        c.phase = best;
+        ph[best] += c.P * c.fs;
+      });
+      let guard = 0;
+      let improved = true;
+      while (improved && guard < 12) {
+        improved = false;
+        guard += 1;
+        mono.forEach((c) => {
+          const w = c.P * c.fs;
+          const from = c.phase || "L1";
+          ph[from] -= w;
+          let best = from;
+          let bestImb = Infinity;
+          ["L1", "L2", "L3"].forEach((p) => {
+            ph[p] += w;
+            const trial = kitImb(ph);
+            if (trial < bestImb - 1e-9) { bestImb = trial; best = p; }
+            ph[p] -= w;
+          });
+          ph[best] += w;
+          if (best !== from) {
+            c.phase = best;
+            improved = true;
+          }
+        });
+      }
+    }
+    function kitApplyDrop(list, len) {
+      list.forEach((c) => {
+        const lim = c.kind === "luz" ? 3 : 5;
+        const V = c.three ? 380 : 220;
+        let wi = arcWireIndex(c.In);
+        let dU = arcDrop(c.I, len, ARC_WIRES[wi].s, V, !!c.three);
+        while (dU > lim && wi < ARC_WIRES.length - 1) {
+          wi += 1;
+          dU = arcDrop(c.I, len, ARC_WIRES[wi].s, V, !!c.three);
+        }
+        c.section = fmt(ARC_WIRES[wi].s, 1);
+        c.dU = dU;
+      });
+    }
+    function kitZoneM2(zones, id) {
+      let s = 0;
+      zones.forEach((z) => { if (z.id === id) s += z.w * z.h; });
+      return s;
+    }
+    function kitchenLayout(inp) {
+      const W = inp.W;
+      const L = inp.L;
+      if (W < 2.05 || L < 2) return [{ id: "cocina", x: 0, y: 0, w: W, h: L }];
+      const front = (inp.wc || inp.pass) ? Math.min(1.7, Math.max(1.2, L * 0.16)) : 0;
+      const usable = Math.max(0.8, L - front);
+      const deep = Math.max(0.65, inp.cookDeep || 0);
+      const rows = inp.cookPlace > 0 && inp.cookWide > Math.max(2.2, W * 0.48) ? 2 : 1;
+      let cook = 0;
+      if (inp.cookPlace > 0) {
+        const gap = rows > 1 ? Math.min(inp.aisle, 1.3) : 0;
+        cook = Math.min(usable * 0.58, Math.max(deep + 0.26, deep * rows + gap * (rows - 1) + 0.28));
+        if (usable - cook < 0.85) cook = Math.max(Math.min(deep + 0.2, usable * 0.7), usable * 0.42);
+      }
+      let left = 0;
+      if (inp.coldPlace || inp.bodega) {
+        const span = Math.max(inp.coldSpan || 0, inp.bodega ? 1.15 : 0);
+        const want = Math.max(span + 0.28, inp.coldPlace > 5 ? 2.5 : inp.coldPlace > 2 ? 1.75 : 1.25);
+        left = Math.min(W * 0.4, want);
+        if (W - left < 1.45) left = 0;
+      }
+      let right = 0;
+      if (inp.washPlace > 0 && W - left >= 2.6) {
+        const span = Math.max(1.2, (inp.washSpan || 0.8) + 0.28);
+        right = Math.min(W * 0.28, Math.max(span, 1.2));
+        if (W - left - right < 1.3) right = 0;
+      }
+      const zones = [];
+      const midW = Math.max(0.4, W - left - right);
+      if (cook > 0.2) zones.push({ id: "coccion", x: left, y: 0, w: midW, h: cook });
+      const prep = { id: "prep", x: left, y: cook, w: midW, h: Math.max(0.4, usable - cook) };
+      zones.push(prep);
+      if (right > 0) zones.push({ id: "lavado", x: W - right, y: 0, w: right, h: usable });
+      if (inp.washPlace > 0 && right === 0) {
+        const washH = Math.min(Math.max(1.05, (inp.washDeep || 0.7) + 0.3), prep.h * 0.45);
+        if (prep.h - washH >= 0.6) {
+          prep.h -= washH;
+          zones.push({ id: "lavado", x: prep.x, y: prep.y + prep.h, w: prep.w, h: washH });
+        }
+      }
+      if (left > 0) {
+        if (inp.coldPlace > 0 && inp.bodega) {
+          const coldH = Math.min(usable * 0.72, Math.max(usable * 0.48, (inp.coldDeep || 0.8) + 0.45));
+          zones.push({ id: "frio", x: 0, y: 0, w: left, h: coldH });
+          if (usable - coldH >= 0.6) zones.push({ id: "bodega", x: 0, y: coldH, w: left, h: usable - coldH });
+          else zones[zones.length - 1].h = usable;
+        } else if (inp.coldPlace > 0) zones.push({ id: "frio", x: 0, y: 0, w: left, h: usable });
+        else zones.push({ id: "bodega", x: 0, y: 0, w: left, h: usable });
+      }
+      if (front > 0) {
+        const y = L - front;
+        const bathW = Math.min(1.7, W * 0.34);
+        if (inp.wc && inp.pass) {
+          zones.push({ id: "despacho", x: 0, y: y, w: W - bathW, h: front });
+          zones.push({ id: "bano", x: W - bathW, y: y, w: bathW, h: front });
+        } else if (inp.wc) {
+          zones.push({ id: "prep", x: 0, y: y, w: W - bathW, h: front });
+          zones.push({ id: "bano", x: W - bathW, y: y, w: bathW, h: front });
+        } else zones.push({ id: "despacho", x: 0, y: y, w: W, h: front });
+      }
+      const clean = zones.filter((z) => z.w > 0.3 && z.h > 0.3);
+      return clean.length ? clean : [{ id: "cocina", x: 0, y: 0, w: W, h: L }];
+    }
+    function kitchenPlace(items, zone, aisle) {
+      const pad = 0.1;
+      const gap = 0.08;
+      const placed = [];
+      const overflow = [];
+      if (!zone) {
+        items.forEach((it) => overflow.push(it));
+        return { placed: placed, overflow: overflow };
+      }
+      if (zone.cursorX == null) {
+        zone.cursorX = zone.x + pad;
+        zone.cursorY = zone.y + pad;
+        zone.cursorD = 0;
+      }
+      const limitX = zone.x + zone.w - pad;
+      const limitY = zone.y + zone.h - pad;
+      items.forEach((it) => {
+        let x = zone.cursorX;
+        let y = zone.cursorY;
+        let rowD = zone.cursorD;
+        const atStart = x <= zone.x + pad + 0.05;
+        if (!atStart && x + it.fw > limitX + 1e-6) {
+          y += rowD + aisle;
+          x = zone.x + pad;
+          rowD = 0;
+        }
+        if (x + it.fw > limitX + 1e-6 || y + it.fd > limitY + 1e-6) {
+          overflow.push(it);
+          return;
+        }
+        placed.push({ uid: it.uid, name: it.name, x: x, y: y, w: it.fw, d: it.fd, circuit: -1 });
+        zone.cursorX = x + it.fw + gap;
+        zone.cursorD = Math.max(rowD, it.fd);
+        zone.cursorY = y;
+      });
+      return { placed: placed, overflow: overflow };
+    }
+    function kitDestination(zones, id) {
+      return zones.find((z) => z.id === id) || zones.find((z) => z.id === "prep") || zones.find((z) => z.id === "cocina") || zones[0];
+    }
+    function kitPack(items, zones, aisle) {
+      const groups = [];
+      items.forEach((u) => {
+        const zone = kitDestination(zones, u.zone);
+        let g = null;
+        for (let i = 0; i < groups.length; i++) if (groups[i].zone === zone) g = groups[i];
+        if (!g) {
+          g = { zone: zone, items: [] };
+          groups.push(g);
+        }
+        g.items.push(u);
+      });
+      const placed = [];
+      const retry = [];
+      const fallback = zones.find((z) => z.id === "prep") || zones.find((z) => z.id === "cocina") || zones[0];
+      groups.forEach((g) => {
+        const pack = kitchenPlace(g.items, g.zone, aisle);
+        placed.push.apply(placed, pack.placed);
+        pack.overflow.forEach((it) => {
+          if (g.zone !== fallback) retry.push(it);
+          else retry.push(it);
+        });
+      });
+      const overflow = [];
+      if (retry.length && fallback) {
+        const pack = kitchenPlace(retry, fallback, Math.min(aisle, 0.7));
+        placed.push.apply(placed, pack.placed);
+        overflow.push.apply(overflow, pack.overflow);
+      }
+      return { placed: placed, overflow: overflow };
+    }
+    function drawKitchenPlan(model) {
+      const canvas = $("kit-plan");
+      if (!canvas) return;
+      const cssH = (canvas.clientWidth || 800) < 680 ? 360 : 520;
+      const box = arcSurface(canvas, cssH);
+      const ctx = box.ctx;
+      const W = box.W;
+      const H = box.H;
+      const pad = W < 680 ? 32 : 48;
+      const tp = themePaint();
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, W, H);
+      const sc = Math.min((W - pad * 2) / model.bw, (H - pad * 2) / model.bl);
+      const ox = (W - model.bw * sc) / 2;
+      const oy = (H - model.bl * sc) / 2;
+      const X = (m) => ox + m * sc;
+      const Y = (m) => oy + m * sc;
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = tp.cyan;
+      ctx.strokeRect(X(0), Y(0), model.bw * sc, model.bl * sc);
+      model.zones.forEach((z) => {
+        const info = KIT_ZONES[z.id];
+        if (!info) return;
+        ctx.fillStyle = info.paint;
+        ctx.fillRect(X(z.x) + 1, Y(z.y) + 1, Math.max(1, z.w * sc - 2), Math.max(1, z.h * sc - 2));
+        ctx.strokeStyle = tp.line;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(X(z.x) + 1, Y(z.y) + 1, Math.max(1, z.w * sc - 2), Math.max(1, z.h * sc - 2));
+      });
+      model.placed.forEach((m) => {
+        const mw = Math.max(7, m.w * sc - 1.5);
+        const md = Math.max(7, m.d * sc - 1.5);
+        ctx.fillStyle = m.circuit >= 0 ? model.circuits[m.circuit].color : tp.gold;
+        ctx.fillRect(X(m.x), Y(m.y), mw, md);
+        ctx.strokeStyle = "rgba(28,32,40,0.72)";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(X(m.x) + 0.5, Y(m.y) + 0.5, mw - 1, md - 1);
+      });
+      model.zones.forEach((z) => {
+        const info = KIT_ZONES[z.id];
+        if (!info || z.w * sc <= 52 || z.h * sc <= 22) return;
+        const tx = X(z.x) + 8;
+        const ty = Y(z.y) + 18;
+        ctx.font = "600 14px sans-serif";
+        ctx.textAlign = "left";
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = tp.canvas;
+        ctx.strokeText(info.name, tx, ty);
+        ctx.fillStyle = tp.foam;
+        ctx.fillText(info.name, tx, ty);
+        if (z.h * sc > 40) {
+          ctx.font = "12px sans-serif";
+          ctx.strokeText(fmt(z.w * z.h, 0) + " m²", tx, ty + 16);
+          ctx.fillStyle = tp.muted;
+          ctx.fillText(fmt(z.w * z.h, 0) + " m²", tx, ty + 16);
+        }
+      });
+      const doorX = X(model.bw / 2);
+      const doorY = Y(model.bl);
+      ctx.strokeStyle = tp.gold;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(doorX - 18, doorY);
+      ctx.lineTo(doorX + 18, doorY);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(doorX - 18, doorY, 28, 0, -Math.PI / 2, true);
+      ctx.stroke();
+      ctx.fillStyle = tp.gold;
+      ctx.font = "12px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("acceso", doorX, Math.min(H - 8, doorY + 16));
+      ctx.fillStyle = tp.muted;
+      ctx.font = "14px sans-serif";
+      ctx.fillText(fmt(model.bw, 2) + " m", X(model.bw / 2), Math.max(16, Y(0) - 12));
+      ctx.save();
+      ctx.translate(Math.max(14, X(0) - 16), Y(model.bl / 2));
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillText(fmt(model.bl, 2) + " m", 0, 0);
+      ctx.restore();
+      ctx.textAlign = "left";
+      ctx.fillStyle = tp.foam;
+      ctx.font = "600 15px sans-serif";
+      ctx.fillText(model.tplName, 16, 26);
+    }
+    function drawKitchenBoard(model) {
+      const canvas = $("kit-sketch");
+      if (!canvas) return;
+      const tp = themePaint();
+      const devs = [{
+        kind: "main",
+        label: "QG " + model.InMain + "A",
+        sub: model.supply === "3x380" ? "4P" : "2P",
+        modules: model.supply === "3x380" ? 4 : 2,
+      }];
+      model.rcds.forEach((g, i) => {
+        devs.push({ kind: "rcd", label: "ID" + (i + 1) + " " + g.In + "A", sub: "30 mA", modules: model.supply === "3x380" ? 4 : 2 });
+        g.circuits.forEach((c) => {
+          devs.push({ kind: "mcb", label: c.id, sub: c.curve + c.In + " · " + c.phase, modules: c.poles >= 3 ? 3 : 2, color: c.color });
+        });
+      });
+      const canvasW = Math.max(300, Math.round(canvas.clientWidth || 760));
+      const pad = canvasW < 680 ? 14 : 24;
+      const moduleW = canvasW < 680 ? 40 : 48;
+      const moduleH = 62;
+      const rowPitch = moduleH + 38;
+      const header = 72;
+      const footer = 26;
+      const colMax = Math.max(3, Math.floor((canvasW - pad * 2) / moduleW));
+      let rows = 1;
+      let usedProbe = 0;
+      devs.forEach((d) => {
+        if (usedProbe > 0 && usedProbe + d.modules > colMax) { rows += 1; usedProbe = 0; }
+        usedProbe += d.modules;
+      });
+      const bitmapH = header + rows * rowPitch + footer;
+      const box = arcSurface(canvas, bitmapH);
+      const ctx = box.ctx;
+      const bw = box.W;
+      const bh = box.H;
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, bw, bh);
+      ctx.strokeStyle = tp.line;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(8, 8, bw - 16, bh - 16);
+      ctx.fillStyle = tp.gold;
+      ctx.font = "600 16px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Tablero general · proyección", 16, 30);
+      ctx.fillStyle = tp.muted;
+      ctx.font = "13px sans-serif";
+      const supplyLine = (model.supply === "3x380" ? "3×380 V" : "1×220 V") + " · 50 Hz · TN-S · PE";
+      ctx.fillText(bw < 680 ? supplyLine : supplyLine + " · " + model.tplName, 16, 50);
+      ctx.fillStyle = "rgba(90,100,191,0.14)";
+      ctx.fillRect(pad - 6, header - 8, bw - (pad - 6) * 2, rows * rowPitch + 4);
+      let x = pad;
+      let y = header;
+      let used = 0;
+      devs.forEach((d) => {
+        if (used > 0 && used + d.modules > colMax) {
+          used = 0;
+          x = pad;
+          y += rowPitch;
+        }
+        const dw = d.modules * moduleW - 4;
+        ctx.fillStyle = tp.canvas;
+        ctx.strokeStyle = tp.line;
+        ctx.lineWidth = 1;
+        ctx.fillRect(x, y, dw, moduleH);
+        ctx.strokeRect(x, y, dw, moduleH);
+        if (d.kind === "main") {
+          ctx.fillStyle = tp.gold;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+        } else if (d.kind === "rcd") {
+          ctx.fillStyle = tp.ok;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+          ctx.beginPath();
+          ctx.arc(x + dw / 2, y + 28, 6, 0, Math.PI * 2);
+          ctx.fillStyle = tp.gold;
+          ctx.fill();
+        } else {
+          ctx.fillStyle = d.color || "#d23a22";
+          ctx.fillRect(x + dw / 2 - 5, y + 10, 10, 20);
+        }
+        ctx.textAlign = "center";
+        ctx.fillStyle = tp.foam;
+        ctx.font = "600 12px sans-serif";
+        ctx.fillText(d.label, x + dw / 2, y + moduleH + 14);
+        ctx.fillStyle = tp.muted;
+        ctx.font = "11px sans-serif";
+        ctx.fillText(d.sub, x + dw / 2, y + moduleH + 28);
+        ctx.textAlign = "left";
+        x += d.modules * moduleW;
+        used += d.modules;
+      });
+      ctx.fillStyle = tp.muted;
+      ctx.font = "12px sans-serif";
+      ctx.fillText("QG omnipolar · ID 30 mA · curva B cocción resistiva · curva C motores y frío", 16, bh - 10);
+    }
+    function applyCocinaTemplate(id) {
+      const t = COCINA_TEMPLATES.find((x) => x.id === id) || COCINA_TEMPLATES[2];
+      $("kit-tpl").value = t.id;
+      $("kit-blurb").textContent = t.blurb;
+      $("kit-w").value = t.W;
+      $("kit-l").value = t.L;
+      $("kit-h").value = t.H;
+      $("kit-hours").value = t.hours;
+      $("kit-div").value = t.div;
+      $("kit-aisle").value = t.aisle;
+      $("kit-people").value = t.people;
+      $("kit-wm2").value = t.wm2;
+      $("kit-wc").checked = t.wc;
+      $("kit-bodega").checked = t.bodega;
+      $("kit-pass").checked = t.pass;
+      $("kit-remote").checked = t.remote;
+      $("kit-supply").value = "auto";
+      $("kit-len").value = Math.max(8, Math.round((t.W + t.L) / 2 + 4));
+      KIT_GEAR.forEach((spec) => { $(spec.input).value = t[spec.id] || 0; });
+      calcCocina();
+    }
+    function calcCocina() {
+      if (!$("kit-w") || !$("kit-plan") || !$("kit-enc4")) return;
+      const tpl = COCINA_TEMPLATES.find((t) => t.id === $("kit-tpl").value);
+      const inp = {
+        W: Math.max(1.2, arcNum("kit-w", 3.2)),
+        L: Math.max(1.2, arcNum("kit-l", 4.2)),
+        H: Math.max(2.1, arcNum("kit-h", 2.5)),
+        hours: Math.min(24, Math.max(0, arcNum("kit-hours", 4))),
+        fs: Math.min(1, Math.max(0.05, arcNum("kit-div", 35) / 100)),
+        aisle: Math.max(0.5, arcNum("kit-aisle", 1.1)),
+        peopleIn: Math.max(0, Math.round(arcNum("kit-people", 0))),
+        wm2: Math.max(2, arcNum("kit-wm2", 12)),
+        wc: $("kit-wc").checked,
+        bodega: $("kit-bodega").checked,
+        pass: $("kit-pass").checked,
+        remote: $("kit-remote").checked,
+        supply: $("kit-supply").value || "auto",
+        len: Math.max(5, arcNum("kit-len", 12)),
+        cop: Math.max(1, arcNum("kit-cop", 3)),
+        tarifa: Math.max(0, arcNum("kit-tarifa", 252)),
+      };
+      const units = [];
+      let uid = 1;
+      KIT_GEAR.forEach((spec) => {
+        const n = Math.max(0, Math.round(arcNum(spec.input, 0)));
+        for (let i = 0; i < n; i++) {
+          units.push({
+            uid: uid, spec: spec, name: spec.name, fw: spec.fw, fd: spec.fd, zone: spec.zone,
+            place: spec.mode !== "hood",
+          });
+          uid += 1;
+        }
+      });
+      let cookWide = 0, cookDeep = 0, cookPlace = 0;
+      let coldSpan = 0, coldDeep = 0, coldPlace = 0;
+      let washSpan = 0, washDeep = 0, washPlace = 0;
+      units.forEach((u) => {
+        if (!u.place) return;
+        if (u.zone === "coccion") { cookPlace += 1; cookWide += u.fw + 0.08; cookDeep = Math.max(cookDeep, u.fd); }
+        if (u.zone === "frio") { coldPlace += 1; coldSpan = Math.max(coldSpan, u.fw); coldDeep = Math.max(coldDeep, u.fd); }
+        if (u.zone === "lavado") { washPlace += 1; washSpan = Math.max(washSpan, u.fw); washDeep = Math.max(washDeep, u.fd); }
+      });
+      inp.cookWide = cookWide;
+      inp.cookDeep = cookDeep;
+      inp.cookPlace = cookPlace;
+      inp.coldSpan = coldSpan;
+      inp.coldDeep = coldDeep;
+      inp.coldPlace = coldPlace;
+      inp.washSpan = washSpan;
+      inp.washDeep = washDeep;
+      inp.washPlace = washPlace;
+      const zones = kitchenLayout(inp);
+      const packed = kitPack(units.filter((u) => u.place), zones, inp.aisle);
+      const loads = [];
+      const bySpec = {};
+      units.forEach((u) => {
+        if (!bySpec[u.spec.id]) bySpec[u.spec.id] = [];
+        bySpec[u.spec.id].push(u);
+      });
+      const pushGearLoads = (spec, group) => {
+        const fs = kitFs(spec, inp.fs);
+        const base = {
+          family: kitFamily(spec), zone: spec.zone, kind: "fuerza", curve: spec.curve, pf: spec.pf,
+          fs: fs, prefer3: spec.prefer3, heat: spec.heat, kwhH: kitKwhH(spec, inp.hours, fs),
+        };
+        if (spec.dedicated) {
+          group.forEach((u, i) => {
+            loads.push(kitLoad(Object.assign({}, base, {
+              name: group.length > 1 ? spec.name + " " + (i + 1) : spec.name,
+              P: spec.W, uids: u.place ? [u.uid] : [],
+            })));
+          });
+          return;
+        }
+        let In0 = 16;
+        const capAt = (In) => (spec.curve === "B" ? 1 : 0.8) * In * 220 * spec.pf;
+        if (spec.W > capAt(16)) In0 = 20;
+        if (spec.W > capAt(20)) In0 = 25;
+        if (spec.W > capAt(25)) In0 = 32;
+        const per = Math.max(1, Math.floor(capAt(In0) / spec.W));
+        let part = 1;
+        for (let i = 0; i < group.length; i += per) {
+          const slice = group.slice(i, i + per);
+          loads.push(kitLoad(Object.assign({}, base, {
+            name: group.length > per ? spec.name + " " + part : spec.name,
+            P: slice.length * spec.W,
+            uids: slice.filter((u) => u.place).map((u) => u.uid),
+          })));
+          part += 1;
+        }
+      };
+      KIT_GEAR.forEach((spec) => {
+        if (bySpec[spec.id] && bySpec[spec.id].length) pushGearLoads(spec, bySpec[spec.id]);
+      });
+      const lightK = { cocina: 1, coccion: 1.15, prep: 1, frio: 0.75, lavado: 0.9, bodega: 0.6, despacho: 0.85, bano: 0.7 };
+      Object.keys(KIT_ZONES).forEach((id) => {
+        const a = kitZoneM2(zones, id);
+        const P = a * inp.wm2 * (lightK[id] || 1);
+        if (P < 20) return;
+        arcSplit(arcLump({
+          name: "Alumbrado " + KIT_ZONES[id].name, family: "Alumbrado", zone: id, kind: "luz", curve: "B",
+          pf: 0.95, fs: 1, P: P, kwhH: inp.hours,
+        }), 16).forEach((c) => {
+          c.heat = "light";
+          loads.push(c);
+        });
+      });
+      if (kitZoneM2(zones, "bano") > 0) {
+        loads.push(kitLoad({
+          name: "Extracción baño", family: "Lavado", zone: "bano", kind: "fuerza", curve: "C",
+          pf: 0.8, fs: 1, P: 80, kwhH: inp.hours, heat: "hood", prefer3: false,
+        }));
+      }
+      const area = inp.W * inp.L;
+      const nOut = Math.max(1, Math.min(8, Math.round(area / (area < 30 ? 10 : 16))));
+      for (let i = 0; i < nOut; i++) {
+        loads.push(kitLoad({
+          name: nOut > 1 ? "Enchufes de mesón " + (i + 1) : "Enchufes de mesón",
+          family: "Enchufes", zone: "prep", kind: "fuerza", curve: "B",
+          pf: 1, fs: 0.2, P: 2200, kwhH: inp.hours * 0.12, heat: "none", prefer3: false,
+        }));
+      }
+      if (area >= 20) {
+        loads.push(kitLoad({
+          name: "Emergencia", family: "Alumbrado", zone: "prep", kind: "luz", curve: "B",
+          pf: 0.95, fs: 1, P: Math.max(40, area * 1.1), kwhH: 24 * 0.2, heat: "light", prefer3: false,
+        }));
+      }
+      if (area >= 60) {
+        const cams = Math.max(1, Math.ceil(area / 80));
+        loads.push(kitLoad({
+          name: "Red y cámaras", family: "Preparación", zone: "prep", kind: "fuerza", curve: "C",
+          pf: 0.95, fs: 1, P: Math.min(500, 70 + 16 * cams), kwhH: 24, heat: "none", prefer3: false,
+        }));
+      }
+      const people = inp.peopleIn > 0 ? inp.peopleIn : Math.max(1, Math.round(area / (area < 20 ? 12 : 10)));
+      const indHood = units.filter((u) => u.spec.id === "campind").length;
+      const domHood = units.filter((u) => u.spec.id === "camp").length;
+      let capture = 0.1;
+      if (domHood > 0) capture = 0.5;
+      if (indHood > 0) capture = 0.75;
+      if (indHood >= 3) capture = 0.82;
+      let heat = people * 110;
+      loads.forEach((c) => {
+        const q = c.P * c.fs;
+        if (c.heat === "cook") heat += q * (1 - capture);
+        else if (c.heat === "cold") heat += q;
+        else if (c.heat === "coldroom") heat += q * (inp.remote ? 0.15 : 1);
+        else if (c.heat === "hood") heat += q * 0.9;
+        else if (c.heat === "wash") heat += q * 0.12;
+        else if (c.heat === "aux") heat += q * 0.45;
+        else if (c.heat === "light" || c.kind === "luz") heat += q;
+      });
+      const Phvac = heat / inp.cop;
+      const Ppre = loads.reduce((s, c) => s + c.P * c.fs, 0);
+      let supply = inp.supply;
+      if (supply === "auto") {
+        const wants3 = loads.some((c) => c.prefer3) || (Ppre + Phvac) / (220 * 0.9) > 50;
+        supply = wants3 ? "3x380" : "1x220";
+      }
+      const hvacThree = supply === "3x380" && Phvac >= 2500;
+      const hvac = kitLoad({
+        name: "Climatización", family: "Clima", zone: "prep", kind: "clima", curve: "C",
+        pf: 0.85, fs: 1, P: Phvac, prefer3: false, kwhH: inp.hours * 0.5, heat: "none", three: hvacThree,
+      });
+      (hvacThree ? [hvac] : arcSplit(hvac, 32)).forEach((c) => {
+        c.family = c.family || "Clima";
+        c.kind = "clima";
+        c.curve = "C";
+        c.heat = "none";
+        c.kwhH = inp.hours * 0.5;
+        c.uids = c.uids || [];
+        loads.push(c);
+      });
+      loads.forEach((c) => { if (c.prefer3) c.three = supply === "3x380"; });
+      loads.forEach(kitSize);
+      kitApplyDrop(loads, inp.len);
+      const phW0 = { L1: 0, L2: 0, L3: 0 };
+      loads.forEach((c) => {
+        const w = c.P * c.fs;
+        if (c.three) {
+          phW0.L1 += w / 3; phW0.L2 += w / 3; phW0.L3 += w / 3;
+          return;
+        }
+        let phase = "L1";
+        if (supply === "3x380") ["L2", "L3"].forEach((p) => { if (phW0[p] < phW0[phase]) phase = p; });
+        c.phase = phase;
+        c.born = phase;
+        phW0[phase] += w;
+      });
+      let phW = phW0;
+      let imb = supply === "3x380" ? kitImb(phW) : 0;
+      const imb0 = imb;
+      const splits = [];
+      if (supply === "3x380" && imb > 0.15) {
+        kitAssignBalanced(loads);
+        phW = kitPhaseWeights(loads);
+        imb = kitImb(phW);
+        let guard = 0;
+        while (imb > 0.15 && guard < 4) {
+          let heavy = null;
+          loads.forEach((c) => {
+            if (c.three) return;
+            if (!heavy || c.P * c.fs > heavy.P * heavy.fs) heavy = c;
+          });
+          if (!heavy || heavy.P * heavy.fs < 1500) break;
+          const total = loads.reduce((s, c) => s + c.P * c.fs, 0);
+          let n = 2;
+          if ((heavy.P / 2) * heavy.fs > total * 0.34) n = 3;
+          const eachP = heavy.P / n;
+          const idx = loads.indexOf(heavy);
+          const parts = [];
+          for (let i = 0; i < n; i++) {
+            const part = kitLoad({
+              name: heavy.name + " · " + (i + 1),
+              family: heavy.family, zone: heavy.zone, kind: heavy.kind, curve: heavy.curve,
+              pf: heavy.pf, fs: heavy.fs, P: eachP, prefer3: false, three: false,
+              kwhH: heavy.kwhH, heat: heavy.heat, uids: i === 0 ? (heavy.uids || []) : [],
+            });
+            kitSize(part);
+            parts.push(part);
+          }
+          loads.splice(idx, 1);
+          parts.forEach((part, i) => loads.splice(idx + i, 0, part));
+          splits.push(heavy.name + " de " + fmt(heavy.P / 1000, 2) + " kW se aproximó en " + n + " circuitos de " + fmt(eachP / 1000, 2) + " kW");
+          kitApplyDrop(loads, inp.len);
+          kitAssignBalanced(loads);
+          phW = kitPhaseWeights(loads);
+          imb = kitImb(phW);
+          guard += 1;
+        }
+      }
+      const moves = [];
+      loads.forEach((c) => {
+        if (!c.born || c.born === c.phase) return;
+        moves.push({ text: c.name + " pasó de " + c.born + " a " + c.phase, w: c.P * c.fs });
+      });
+      moves.sort((a, b) => b.w - a.w);
+      let phaseNote = "";
+      if (supply === "3x380" && imb0 > 0.15) {
+        const bits = [];
+        if (splits.length) bits.push(splits.join(". "));
+        if (moves.length) {
+          const shownMoves = moves.slice(0, 4).map((m) => m.text);
+          let moveTxt = shownMoves.join("; ");
+          const extra = moves.length - shownMoves.length;
+          if (extra > 0) moveTxt += "; y " + extra + (extra === 1 ? " circuito más" : " circuitos más");
+          bits.push(moveTxt);
+        }
+        if (!bits.length) bits.push("Se buscaron fases más parejas");
+        bits.push("El desbalance pasó de " + fmt(imb0 * 100, 0) + " % a " + fmt(imb * 100, 0) + " %");
+        phaseNote = "Ajuste de reparto: " + bits.join(". ") + ".";
+      }
+      loads.forEach((c, i) => {
+        c.color = ARC_PAL[i % ARC_PAL.length];
+        c.id = "C" + (i + 1);
+      });
+      const uidCircuit = {};
+      loads.forEach((c, ci) => { (c.uids || []).forEach((id) => { uidCircuit[id] = ci; }); });
+      packed.placed.forEach((p) => { if (uidCircuit[p.uid] != null) p.circuit = uidCircuit[p.uid]; });
+      const rcdGroups = [];
+      let bucket = [];
+      loads.forEach((c) => {
+        if (c.three || c.In >= 25) {
+          if (bucket.length) rcdGroups.push(bucket);
+          bucket = [];
+          rcdGroups.push([c]);
+          return;
+        }
+        bucket.push(c);
+        if (bucket.length === 3) { rcdGroups.push(bucket); bucket = []; }
+      });
+      if (bucket.length) rcdGroups.push(bucket);
+      const rcds = rcdGroups.map((group) => {
+        const ph = { L1: 0, L2: 0, L3: 0 };
+        let top = 0;
+        group.forEach((c) => {
+          if (c.three) { ph.L1 += c.I; ph.L2 += c.I; ph.L3 += c.I; }
+          else ph[c.phase || "L1"] += c.I;
+          if (c.In > top) top = c.In;
+        });
+        const I = Math.max(ph.L1, ph.L2, ph.L3, top);
+        return { In: arcNext([25, 40, 63, 80, 100, 125], Math.max(25, I)), circuits: group };
+      });
+      const Pinst = loads.reduce((s, c) => s + c.P, 0);
+      const Pdem = loads.reduce((s, c) => s + c.P * c.fs, 0);
+      const Idesign = supply === "1x220" ? Pdem / (220 * 0.9) : Math.max(phW.L1, phW.L2, phW.L3) / (220 * 0.9);
+      let needMain = Idesign * 1.25;
+      loads.forEach((c) => { if (c.In > needMain) needMain = c.In; });
+      const InMain = arcNext(ARC_MAINS, needMain);
+      const feedV = supply === "3x380" ? 380 : 220;
+      const feedThree = supply === "3x380";
+      let fi = arcWireIndex(InMain);
+      let dUfeed = arcDrop(Idesign, inp.len, ARC_WIRES[fi].s, feedV, feedThree);
+      while (dUfeed > 3 && fi < ARC_WIRES.length - 1) {
+        fi += 1;
+        dUfeed = arcDrop(Idesign, inp.len, ARC_WIRES[fi].s, feedV, feedThree);
+      }
+      const feed = ARC_WIRES[fi];
+      let kwh = 0;
+      loads.forEach((c) => { kwh += (c.P / 1000) * (c.kwhH || 0) * 30; });
+      const steps = supply === "1x220" ? [6, 10] : [15, 20, 25, 30, 40, 50, 70, 100, 150, 200, 300, 500];
+      let empKw = null;
+      for (let i = 0; i < steps.length; i++) if (steps[i] + 1e-6 >= Pdem / 1000) { empKw = steps[i]; break; }
+      if (empKw == null) empKw = Math.max(steps[steps.length - 1], Math.ceil((Pdem / 1000) / 10) * 10);
+      const famOrder = ["Cocción", "Campana", "Frío", "Lavado", "Preparación", "Alumbrado", "Clima", "Enchufes"];
+      const fams = [];
+      const famMap = {};
+      loads.forEach((c) => {
+        if (!famMap[c.family]) {
+          famMap[c.family] = { name: c.family, P: 0, Pdem: 0, kwh: 0 };
+          fams.push(famMap[c.family]);
+        }
+        famMap[c.family].P += c.P;
+        famMap[c.family].Pdem += c.P * c.fs;
+        famMap[c.family].kwh += (c.P / 1000) * (c.kwhH || 0) * 30;
+      });
+      fams.sort((a, b) => famOrder.indexOf(a.name) - famOrder.indexOf(b.name));
+      const notes = [];
+      let level = "ok";
+      const flag = (lv, msg) => {
+        notes.push(msg);
+        if (lv === "bad" || level === "ok") level = lv;
+      };
+      if (inp.aisle < 0.7) flag("warn", "Pasillo de " + fmt(inp.aisle, 2) + " m. Para trabajar de pie, súbelo al menos a 0,90 m.");
+      else if (area >= 30 && inp.aisle < 1.2) flag("warn", "Pasillo de " + fmt(inp.aisle, 2) + " m. En cocina de servicio, 1,20 m deja cruzar con bandeja.");
+      if (packed.overflow.length) flag("bad", packed.overflow.length + " equipos no entran en el plano. El tablero igual los alimenta: alarga la cocina o baja el pasillo.");
+      if (dUfeed > 3) flag("warn", "Caída del alimentador " + fmt(dUfeed, 2) + " %. Sube la sección o acorta el largo.");
+      if (feed.Iz + 0.1 < InMain) flag("warn", "El general es de " + InMain + " A y la tabla de sección llega a " + feed.s + " mm². En obra se revisa el método de instalación.");
+      let duBad = 0;
+      let duExample = "";
+      loads.forEach((c) => {
+        const lim = c.kind === "luz" ? 3 : 5;
+        if (c.dU > lim) {
+          duBad += 1;
+          if (!duExample) duExample = c.id + " " + c.name + " " + fmt(c.dU, 1) + " %";
+        }
+      });
+      if (duBad) flag("warn", duBad + " circuitos superan la caída de clase (" + duExample + ").");
+      if (supply === "3x380" && imb > 0.15) flag("warn", "Desbalance de fases " + fmt(imb * 100, 0) + " % después del reparto.");
+      if (supply === "1x220" && Idesign > 40) {
+        flag(Idesign > 63 ? "bad" : "warn", "La demanda " + (Idesign > 63 ? "supera 63 A" : "pasa de 40 A") + " en 220 V. Conviene 3×380 V.");
+      }
+      if (supply === "1x220") {
+        const forced = [];
+        loads.forEach((c) => { if (c.prefer3 && forced.length < 3) forced.push(c.name); });
+        if (forced.length) flag("warn", "Equipos pensados en trifásica quedan en 220 V (" + forced.join(", ") + "). El automático sube.");
+      }
+      const cookInst = units.filter((u) => u.spec.heat === "cook").reduce((s, u) => s + u.spec.W, 0);
+      if (cookInst > 2000 && domHood + indHood === 0) flag("warn", "Hay cocción y no hay campana. El calor se queda en el recinto.");
+      if (!units.length) flag("warn", "Sin equipos: el tablero es el del recinto vacío.");
+      const shown = notes.slice(0, 3);
+      if (notes.length > 3) {
+        const extra = notes.length - 3;
+        shown.push("Y " + extra + (extra === 1 ? " aviso más." : " avisos más."));
+      }
+      $("kit-pdem").innerHTML = fmt(Pdem / 1000, 2) + " <small>kW</small>";
+      $("kit-pinst").textContent = fmt(Pinst / 1000, 2) + " kW";
+      $("kit-empalme").textContent = (supply === "1x220" ? "1×220 V · " : "3×380 V · ") + empKw + " kW · " + fmt(Idesign, 1) + " A";
+      $("kit-in").textContent = InMain + " A · " + feed.s + " mm²";
+      $("kit-kwh").textContent = fmt(kwh, 0) + " kWh";
+      $("kit-heat").textContent = fmt(heat / 1000, 2) + " kW · " + fmt(heat * 3.41214, 0) + " BTU/h";
+      $("kit-hvac").textContent = fmt(Phvac / 1000, 2) + " kW · COP " + fmt(inp.cop, 1);
+      $("kit-i").textContent = fmt(Idesign, 2) + " A";
+      $("kit-feed").textContent = fmt(dUfeed, 2) + " % · " + fmt(inp.len, 0) + " m";
+      $("kit-phases").textContent = supply === "1x220"
+        ? "L1 " + fmt(phW.L1 / 1000, 2) + " kW"
+        : "L1 " + fmt(phW.L1 / 1000, 2) + " · L2 " + fmt(phW.L2 / 1000, 2) + " · L3 " + fmt(phW.L3 / 1000, 2) + " kW";
+      $("kit-ajuste").textContent = phaseNote;
+      $("kit-ajuste").hidden = !phaseNote;
+      $("kit-cost").textContent = "$ " + fmt(kwh * inp.tarifa, 0);
+      $("kit-status").className = "status" + (shown.length ? (level === "bad" ? " bad" : " warn") : "");
+      $("kit-status").textContent = shown.join(" ");
+      $("kit-status").hidden = !shown.length;
+      $("kit-status").style.display = shown.length ? "inline-flex" : "none";
+      const hoodN = domHood + indHood;
+      const fitBits = [
+        fmt(area, 1) + " m²",
+        people + (people === 1 ? " persona en la cocina" : " personas en la cocina"),
+        "pasillo " + fmt(inp.aisle, 2) + " m",
+        packed.placed.length + " equipos en planta",
+      ];
+      if (packed.overflow.length) fitBits.push(packed.overflow.length + " fuera de planta");
+      if (hoodN) fitBits.push(hoodN + (hoodN === 1 ? " campana sobre la línea" : " campanas sobre la línea"));
+      fitBits.push("captura " + fmt(capture * 100, 0) + " %");
+      $("kit-fit").textContent = fitBits.join(" · ") + ". El clima cubre lo que la campana no se lleva; la envolvente de invierno se proyecta en BTU.";
+      let boardHtml = "<thead><tr><th>Circuito</th><th>Fase</th><th>P</th><th>I</th><th>In</th><th>Curva</th><th>Sección</th><th>ΔU</th></tr></thead><tbody>";
+      loads.forEach((c) => {
+        boardHtml += "<tr><td><span class=\"arc-sw\" style=\"background:" + c.color + "\"></span> " + c.id + " " + c.name + "</td>"
+          + "<td class=\"mono\">" + c.phase + "</td>"
+          + "<td class=\"mono\">" + fmt(c.P / 1000, 2) + " kW</td>"
+          + "<td class=\"mono\">" + fmt(c.I, 1) + " A</td>"
+          + "<td class=\"mono\">" + c.In + " A · " + (c.poles >= 3 ? "3P" : "1P+N") + "</td>"
+          + "<td class=\"mono\">" + c.curve + "</td>"
+          + "<td class=\"mono\">" + c.section + " mm²</td>"
+          + "<td class=\"mono\">" + fmt(c.dU, 2) + " %</td></tr>";
+      });
+      $("kit-board").innerHTML = boardHtml + "</tbody>";
+      let famHtml = "<thead><tr><th>Servicio</th><th>P inst</th><th>P dem</th><th>kWh/mes</th></tr></thead><tbody>";
+      fams.forEach((f) => {
+        famHtml += "<tr><td>" + f.name + "</td><td class=\"mono\">" + fmt(f.P / 1000, 2) + " kW</td><td class=\"mono\">" + fmt(f.Pdem / 1000, 2) + " kW</td><td class=\"mono\">" + fmt(f.kwh, 0) + "</td></tr>";
+      });
+      $("kit-services").innerHTML = famHtml + "</tbody>";
+      const seen = {};
+      let legend = "";
+      zones.forEach((z) => {
+        if (seen[z.id] || !KIT_ZONES[z.id]) return;
+        seen[z.id] = true;
+        legend += "<span><i class=\"arc-sw\" style=\"background:" + KIT_ZONES[z.id].paint + ";border:1px solid var(--line)\"></i>" + KIT_ZONES[z.id].name + "</span>";
+      });
+      legend += "<span>Cada equipo usa el color de su circuito. Las campanas no se dibujan.</span>";
+      $("kit-legend").innerHTML = legend;
+      const model = {
+        tpl: tpl ? tpl.id : "medida",
+        tplName: tpl ? tpl.name : "Cocina a medida",
+        supply: supply, bw: inp.W, bl: inp.L, zones: zones,
+        placed: packed.placed, circuits: loads, rcds: rcds, InMain: InMain,
+        Pinst: Pinst, Pdem: Pdem, kwh: kwh, heat: heat, Phvac: Phvac, people: people,
+        Idesign: Idesign, dUfeed: dUfeed, level: level, overflow: packed.overflow.length,
+        capture: capture,
+      };
+      cocinaLast = model;
+      drawKitchenPlan(model);
+      drawKitchenBoard(model);
+    }
+    function setupCocina() {
+      const sel = $("kit-tpl");
+      const host = $("kit-gear");
+      if (!sel || !host) return;
+      sel.innerHTML = COCINA_TEMPLATES.map((t) => "<option value=\"" + t.id + "\">" + t.name + "</option>").join("");
+      host.innerHTML = KIT_GEAR.map((spec) => (
+        "<div class=\"mini-input\"><label for=\"" + spec.input + "\">" + spec.name + "</label><input id=\"" + spec.input + "\" type=\"number\" min=\"0\" step=\"1\" value=\"0\" /></div>"
+      )).join("");
+      sel.addEventListener("change", () => applyCocinaTemplate(sel.value));
+      const ids = ["kit-w", "kit-l", "kit-h", "kit-hours", "kit-div", "kit-aisle", "kit-people", "kit-wm2", "kit-wc", "kit-bodega", "kit-pass", "kit-remote", "kit-supply", "kit-len", "kit-cop", "kit-tarifa"].concat(KIT_GEAR.map((spec) => spec.input));
+      ids.forEach((id) => {
+        const el = $(id);
+        if (!el) return;
+        el.addEventListener("input", calcCocina);
+        el.addEventListener("change", calcCocina);
+      });
+      applyCocinaTemplate("casa");
+      window.addEventListener("resize", () => {
+        const panel = $("panel-cocina");
+        if (panel && panel.classList.contains("active")) calcCocina();
+      });
+    }
+    setupCocina();
+    window.__eaCocina = () => cocinaLast;
+
     /* ===================== COLOR ===================== */
     function hexToRgb(hex) {
       let s = hex.trim().toUpperCase().replace(/^#/, "");
@@ -5047,6 +6401,7 @@
       if (id === "lux") calcLux();
       if (id === "btu") calcBtu();
       if (id === "arcade") calcArcade();
+      if (id === "cocina") calcCocina();
       if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
@@ -5072,10 +6427,11 @@
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
         fasores: ["Informe calculadora de fasores", "Conversión bidireccional entre forma rectangular y notación fasorial."],
         arcade: ["Informe de arcade", "Demanda con simultaneidad, plano del local y tablero. Sala, tienda de videojuegos y arriendo."],
+        cocina: ["Informe de cocina", "Demanda con simultaneidad, calor del recinto, plano por zonas y tablero. De la kitchenette a la planta."],
         color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
       }[id];
       if (!meta) throw new Error("Servicio desconocido: " + id);
-      const siteLine = id !== "pu" && id !== "arcade" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
+      const siteLine = id !== "pu" && id !== "arcade" && id !== "cocina" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
       blocks.push(pdfHeader(meta[0], (siteLine ? siteLine + ". " : "") + meta[1]));
 
       if (id === "sev") {
@@ -5548,6 +6904,61 @@
           arcBoard.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
         }
         blocks.push(pdfNote("Proyección académica con tabla de clase. No sustituye memoria de cálculo, catálogo del equipo ni el pliego RIC. El automático se dimensiona con la potencia de placa; el empalme, con la simultaneidad."));
+      }
+
+      if (id === "cocina") {
+        const gearLine = KIT_GEAR.map((spec) => {
+          const n = +val(spec.input);
+          return n > 0 ? spec.name + " " + n : "";
+        }).filter(Boolean).join(", ") || "sin equipos";
+        blocks.push(pdfHeading("Plantilla y programa"));
+        [
+          ["Tipo", opt("kit-tpl")],
+          ["Ancho / largo / altura", val("kit-w") + " / " + val("kit-l") + " / " + val("kit-h") + " m"],
+          ["Servicio / simultaneidad", val("kit-hours") + " h/día / " + val("kit-div") + " %"],
+          ["Pasillo / personas", val("kit-aisle") + " m / " + val("kit-people") + " (0 = auto)"],
+          ["Alumbrado", val("kit-wm2") + " W/m²"],
+          ["Baño / bodega / despacho", ($("kit-wc").checked ? "sí" : "no") + " / " + ($("kit-bodega").checked ? "sí" : "no") + " / " + ($("kit-pass").checked ? "sí" : "no")],
+          ["Condensadores fuera", $("kit-remote").checked ? "sí" : "no"],
+          ["Equipos", gearLine],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfNote(txt("kit-blurb")));
+        blocks.push(pdfHeading("Demanda"));
+        [
+          ["Demanda de empalme", txt("kit-pdem")],
+          ["Potencia instalada", txt("kit-pinst")],
+          ["Empalme orientativo", txt("kit-empalme")],
+          ["In general / alimentador", txt("kit-in")],
+          ["Corriente de diseño", txt("kit-i")],
+          ["Caída del alimentador", txt("kit-feed")],
+          ["Fases", txt("kit-phases")],
+          ["Ajuste de reparto", txt("kit-ajuste") || "sin ajuste"],
+          ["Energía del mes", txt("kit-kwh")],
+          ["Costo de energía", txt("kit-cost")],
+          ["Calor en el recinto", txt("kit-heat")],
+          ["Clima eléctrico", txt("kit-hvac")],
+          ["Alimentación / COP", opt("kit-supply") + " / " + val("kit-cop")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        if (txt("kit-status") && txt("kit-status") !== "—") blocks.push(pdfKv("Estado", txt("kit-status")));
+        blocks.push(pdfNote(txt("kit-fit")));
+        blocks.push(pdfFormula("Pdem = Σ (P · fs) · I1φ = P / (220 · cos φ) · In ≥ 1,1 · I en cocción resistiva y 1,25 · I en motores · Qsala ≈ (cocción · (1 − captura) + frío + luz + 110 W · personas) / COP"));
+        const kitSvc = tableFromEl("kit-services");
+        if (kitSvc.headers.length) {
+          blocks.push(pdfHeading("Servicios"));
+          blocks.push(pdfTableRow(kitSvc.headers, [1.4, 1, 1, 1], true));
+          kitSvc.rows.forEach((row) => blocks.push(pdfTableRow(row, [1.4, 1, 1, 1], false)));
+        }
+        blocks.push(pdfHeading("Plano de la cocina"));
+        blocks.push(pdfFigure(canvasUrl("kit-plan"), "Zonas a escala. Cada equipo lleva el color de su circuito. Las campanas van sobre la línea. Acceso al frente."));
+        blocks.push(pdfHeading("Tablero proyectado"));
+        blocks.push(pdfFigure(canvasUrl("kit-sketch"), "Riel DIN: interruptor general, diferenciales de 30 mA y automáticos."));
+        const kitBoard = tableFromEl("kit-board");
+        if (kitBoard.headers.length) {
+          const flex = [2.2, 0.6, 0.7, 0.6, 1, 0.5, 0.7, 0.6];
+          blocks.push(pdfTableRow(kitBoard.headers, flex, true));
+          kitBoard.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
+        }
+        blocks.push(pdfNote("Proyección académica. No sustituye memoria de cálculo, catálogo del equipo ni el pliego RIC. El automático se dimensiona con la potencia de placa; el empalme, con la simultaneidad. El frío corre 24 h con su duty."));
       }
 
       if (id === "color") {
