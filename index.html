@@ -2049,6 +2049,20 @@
             <div id="int-rcd-list" style="font-size:14px;color:var(--foam);display:grid;gap:6px">—</div>
           </div>
         </div>
+        <div class="card" style="margin-top:16px">
+          <h3>Tablero proyectado</h3>
+          <p class="sub">Croquis de riel DIN: interruptor general, diferenciales de 30 mA y automáticos. La tabla es la leyenda del dibujo.</p>
+          <div class="fields two">
+            <div class="mini-input"><label for="int-supply">Alimentación</label>
+              <select id="int-supply">
+                <option value="1x220" selected>1×220 V</option>
+                <option value="3x380">3×380 V</option>
+              </select>
+            </div>
+          </div>
+          <canvas class="chart tall arcade" id="int-sketch" width="1100" height="680" aria-label="Croquis del tablero interior"></canvas>
+          <div class="table-wrap" style="margin-top:8px"><table id="int-board"></table></div>
+        </div>
       </section>
 
 <section class="panel" id="panel-color">
@@ -6212,6 +6226,102 @@
     ];
     let intCounter = 4;
 
+    
+    function drawInteriorBoard(model) {
+      const canvas = $("int-sketch");
+      if (!canvas) return;
+      const tp = themePaint();
+      const devs = [{
+        kind: "main",
+        label: "QG " + model.InMain + "A",
+        sub: model.supply === "3x380" ? "4P" : "2P",
+        modules: model.supply === "3x380" ? 4 : 2,
+      }];
+      model.rcds.forEach((g, i) => {
+        devs.push({ kind: "rcd", label: "ID" + (i + 1) + " " + g.In + "A", sub: "30 mA", modules: model.supply === "3x380" ? 4 : 2 });
+        g.circuits.forEach((c) => {
+          devs.push({ kind: "mcb", label: c.id, sub: "C" + c.In + " · " + c.phase, modules: c.poles >= 3 ? 3 : 2, color: c.color });
+        });
+      });
+      const canvasW = Math.max(300, Math.round(canvas.clientWidth || 760));
+      const pad = canvasW < 680 ? 14 : 24;
+      const moduleW = canvasW < 680 ? 40 : 48;
+      const moduleH = 62;
+      const rowPitch = moduleH + 38;
+      const header = 72;
+      const footer = 26;
+      const colMax = Math.max(3, Math.floor((canvasW - pad * 2) / moduleW));
+      let rows = 1;
+      let usedProbe = 0;
+      devs.forEach((d) => {
+        if (usedProbe > 0 && usedProbe + d.modules > colMax) { rows += 1; usedProbe = 0; }
+        usedProbe += d.modules;
+      });
+      const bitmapH = header + rows * rowPitch + footer;
+      const box = arcSurface(canvas, bitmapH);
+      const ctx = box.ctx;
+      const bw = box.W;
+      const bh = box.H;
+      ctx.fillStyle = tp.canvas;
+      ctx.fillRect(0, 0, bw, bh);
+      ctx.strokeStyle = tp.line;
+      ctx.lineWidth = 2;
+      ctx.strokeRect(8, 8, bw - 16, bh - 16);
+      ctx.fillStyle = tp.gold;
+      ctx.font = "600 16px sans-serif";
+      ctx.textAlign = "left";
+      ctx.fillText("Tablero general · interior", 16, 30);
+      ctx.fillStyle = tp.muted;
+      ctx.font = "13px sans-serif";
+      const supplyLine = (model.supply === "3x380" ? "3×380 V" : "1×220 V") + " · 50 Hz · TN-S · PE";
+      ctx.fillText(supplyLine, 16, 50);
+      ctx.fillStyle = "rgba(90,100,191,0.14)";
+      ctx.fillRect(pad - 6, header - 8, bw - (pad - 6) * 2, rows * rowPitch + 4);
+      let x = pad;
+      let y = header;
+      let used = 0;
+      devs.forEach((d) => {
+        if (used > 0 && used + d.modules > colMax) {
+          used = 0;
+          x = pad;
+          y += rowPitch;
+        }
+        const dw = d.modules * moduleW - 4;
+        ctx.fillStyle = tp.canvas;
+        ctx.strokeStyle = tp.line;
+        ctx.lineWidth = 1;
+        ctx.fillRect(x, y, dw, moduleH);
+        ctx.strokeRect(x, y, dw, moduleH);
+        if (d.kind === "main") {
+          ctx.fillStyle = tp.gold;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+        } else if (d.kind === "rcd") {
+          ctx.fillStyle = tp.ok;
+          ctx.fillRect(x + 4, y + 8, dw - 8, 9);
+          ctx.beginPath();
+          ctx.arc(x + dw / 2, y + 28, 6, 0, Math.PI * 2);
+          ctx.fillStyle = tp.gold;
+          ctx.fill();
+        } else {
+          ctx.fillStyle = d.color || "#d23a22";
+          ctx.fillRect(x + dw / 2 - 5, y + 10, 10, 20);
+        }
+        ctx.textAlign = "center";
+        ctx.fillStyle = tp.foam;
+        ctx.font = "600 12px sans-serif";
+        ctx.fillText(d.label, x + dw / 2, y + moduleH + 14);
+        ctx.fillStyle = tp.muted;
+        ctx.font = "11px sans-serif";
+        ctx.fillText(d.sub, x + dw / 2, y + moduleH + 28);
+        ctx.textAlign = "left";
+        x += d.modules * moduleW;
+        used += d.modules;
+      });
+      ctx.fillStyle = tp.muted;
+      ctx.font = "12px sans-serif";
+      ctx.fillText("QG omnipolar · ID 30 mA · Carga interior", 16, bh - 10);
+    }
+
     function renderInterior() {
       const tbody = $("int-circuits-body");
       if (!tbody) return;
@@ -6236,8 +6346,9 @@
         }
         
         const rcdIndex = Math.floor(i / 3);
-        if (!rcds[rcdIndex]) rcds[rcdIndex] = { n: rcdIndex + 1, cbMax: 0, circuits: [] };
+        if (!rcds[rcdIndex]) rcds[rcdIndex] = { n: rcdIndex + 1, cbMax: 0, circuits: [], circuitsFull: [] };
         rcds[rcdIndex].circuits.push(c.name);
+        rcds[rcdIndex].circuitsFull.push({ ...c, cb, cable });
         if (cb > rcds[rcdIndex].cbMax) rcds[rcdIndex].cbMax = cb;
 
         const tr = document.createElement("tr");
@@ -6284,6 +6395,43 @@
       });
       if (!rcds.length) rcdHtml = "—";
       $("int-rcd-list").innerHTML = rcdHtml;
+
+      const supply = $("int-supply") ? $("int-supply").value : "1x220";
+      const modelRcds = rcds.map((r, i) => {
+         let rcdCb = r.cbMax <= 25 ? 25 : 40;
+         return {
+            In: rcdCb,
+            circuits: r.circuitsFull.map((c, j) => {
+               return {
+                  id: "C" + c.id,
+                  curve: "C",
+                  In: c.cb,
+                  phase: "R",
+                  poles: 2,
+                  color: c.type === "alumbrado" ? "#E3CA75" : (c.type === "enchufe" ? "#0ED1FF" : "#ED4329"),
+                  name: c.name,
+                  power: c.power,
+                  cable: c.cable
+               };
+            })
+         };
+      });
+
+      const model = { supply: supply, InMain: cbGral, rcds: modelRcds };
+      
+      let boardHtml = "<thead><tr><th>N°</th><th>Circuito</th><th>Polos</th><th>In [A]</th><th>Dif [mA]</th><th>Cable</th></tr></thead><tbody>";
+      boardHtml += `<tr><td>QG</td><td>General</td><td>${supply === "3x380" ? 4 : 2}</td><td><span class="status ok">${cbGral} A</span></td><td>—</td><td class="mono">${fmt(condGral, 1)} mm²</td></tr>`;
+      
+      model.rcds.forEach((g, i) => {
+        boardHtml += `<tr><td>ID${i + 1}</td><td>Diferencial grupo</td><td>${supply === "3x380" ? 4 : 2}</td><td><span class="status ok">${g.In} A</span></td><td>30 mA</td><td>—</td></tr>`;
+        g.circuits.forEach(c => {
+          boardHtml += `<tr><td><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${c.color};margin-right:6px"></span>${c.id}</td><td>${c.name}</td><td>${c.poles}</td><td><span class="status ok">${c.In} A</span></td><td>ID${i + 1}</td><td class="mono">${fmt(c.cable, 1)} mm²</td></tr>`;
+        });
+      });
+      boardHtml += "</tbody>";
+      if ($("int-board")) $("int-board").innerHTML = boardHtml;
+      if (typeof drawInteriorBoard === "function") drawInteriorBoard(model);
+
 
       document.querySelectorAll(".int-name").forEach(el => el.addEventListener("change", e => {
         const id = +e.target.dataset.id;
@@ -6626,7 +6774,15 @@
         } else {
             blocks.push(pdfFormula(txt("int-rcd-list")));
         }
-        blocks.push(pdfNote("Nota: El dimensionamiento es referencial y asume empalme monofásico en 220V según el RIC vigente."));
+                blocks.push(pdfHeading("Tablero proyectado"));
+        blocks.push(pdfFigure(canvasUrl("int-sketch"), "Riel DIN: interruptor general, diferenciales de 30 mA y automáticos."));
+        const intBoard = tableFromEl("int-board");
+        if (intBoard.headers.length) {
+          const flex = [0.8, 2.2, 0.6, 0.8, 0.8, 0.8];
+          blocks.push(pdfTableRow(intBoard.headers, flex, true));
+          intBoard.rows.forEach((row) => blocks.push(pdfTableRow(row, flex, false)));
+        }
+        blocks.push(pdfNote("Nota: El dimensionamiento es referencial y asume empalme según el RIC vigente."));
       }
 
 
@@ -7838,6 +7994,11 @@
         renderInterior();
       });
     }
+    if ($("int-supply")) $("int-supply").addEventListener("change", renderInterior);
+    window.addEventListener("resize", () => {
+       if (document.getElementById("panel-interior").classList.contains("active")) renderInterior();
+    });
+
 
     buildSiteUi();
     buildPuRegionalTemplates();
