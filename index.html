@@ -7947,10 +7947,12 @@
       syncSiteSelects(site.id);
     }
     function buildSiteUi() {
-      const opts = '<option value="">— Elegir plantilla —</option>' +
+      const allOpts = '<option value="">— Elegir plantilla —</option>' +
         SITES.map((s) => `<option value="${s.id}">${s.kw} kW · ${s.name} · ${s.place}</option>`).join("");
+      const casaOpts = '<option value="">— Elegir plantilla domiciliaria —</option>' +
+        SITES.filter((s) => s.id.startsWith("casa")).map((s) => `<option value="${s.id}">${s.kw} kW · ${s.name} · ${s.place}</option>`).join("");
       document.querySelectorAll(".site-select").forEach((sel) => {
-        sel.innerHTML = opts;
+        sel.innerHTML = sel.id === "tpl-interior" ? casaOpts : allOpts;
         sel.addEventListener("change", () => { if (sel.value) applySite(sel.value); });
       });
       const gal = $("site-gallery");
