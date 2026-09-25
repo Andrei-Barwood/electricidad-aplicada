@@ -12,3 +12,9 @@ _tpl_verify.py
 _tpl_*.png
 _batch_queseria.py
 reportes/
+
+# Local PDFs and scratch
+_pdf_out/
+*.pdf
+*.py
+magia/
