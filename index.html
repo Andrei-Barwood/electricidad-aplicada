@@ -2008,6 +2008,7 @@
           </div>
           <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="interior">Exportar PDF</button></div>
         </div>
+        <div class="tpl-bar"><label class="field" for="tpl-interior">Plantilla Domiciliaria</label><select id="tpl-interior" class="site-select"></select></div>
         <div class="grid g2">
           <div class="card">
             <h3>Circuitos de la Vivienda</h3>
@@ -7372,6 +7373,89 @@
       return rec;
     }
     const SITES = [
+
+      {
+        id: "casa-basica-3", kw: 3, gallery: true,
+        name: "Casa básica",
+        place: "Vivienda mínima",
+        blurb: "Alumbrado y enchufes para vivienda pequeña. Empalme monofásico 3 kW.",
+        sev: { rho: [100, 10, 100], h: [5, 15], preset: "H" },
+        malla: { "m-rho1": 170, "m-e1": 1.5, "m-rho2": 255, "m-e2": 4.5, "m-rho3": 34, "m-rhoeq": 138, "m-h": 0.6, "m-lx": 5, "m-ly": 5, "m-dx": 1, "m-dy": 1, "m-n": 0, "m-lb": 3, "m-scond": 35, "m-icc1": 1500, "m-sbt": 150, "m-vsec": 400, "m-z": 5, "m-esc": "BT", "m-cp": 0.5, "m-df": 1, "m-top": 0.5, "m-rhos": 3000, "m-hg": 0.15, "m-peso": "70", "m-icond": 0.5, "m-tm": 1084, "m-ta": 30, "m-limrg": 20 },
+        lux: { space: "sala-electricidad", a: 3, b: 4, H: 2.5, pt: 0.8, d: 0, em: 150, cm: 0.6, phi: 3000, w: 20, ceil: 70, wall: 50, table: "diffusing-shallow", inv: 2, sup: "1x220", len: 10 },
+        hydro: { vol: 500, lps: 10, pq: 10, pqu: "lps", ph: 12, pn: 50, z1: 50, z2: 40, loss: 1, fp: 20 },
+        consumo: { V: 220, kw: 3, tarifa: 252, season: "invierno", band: null, simOk: "", simOver: "", sim: ["nevera", "led"], equip: null },
+        tan: { p: 10, v: 400, cos: 0.9, eta: 0.9, racks: 2, ip: 30, red: "N", h: "0", sis: false, i1: 5, h3: 0.2, h5: 0.5, h7: 0.1, bv: 24, bi: 1, brip: 2 },
+        color: { hex: "ADD8E6" },
+        interior: [
+          { name: "Alumbrado General", type: "alumbrado", power: 400 },
+          { name: "Enchufes Habitaciones", type: "enchufe", power: 1200 },
+          { name: "Enchufes Cocina", type: "enchufe", power: 1400 }
+        ]
+      },
+      {
+        id: "casa-estandar-6", kw: 6, gallery: true,
+        name: "Casa estándar",
+        place: "Vivienda media",
+        blurb: "Casa urbana típica. Incluye lavadora y clima básico. Empalme monofásico 6 kW.",
+        sev: { rho: [100, 10, 100], h: [5, 15], preset: "H" },
+        malla: { "m-rho1": 170, "m-e1": 1.5, "m-rho2": 255, "m-e2": 4.5, "m-rho3": 34, "m-rhoeq": 138, "m-h": 0.6, "m-lx": 8, "m-ly": 6, "m-dx": 1, "m-dy": 1, "m-n": 0, "m-lb": 3, "m-scond": 67.4, "m-icc1": 2330, "m-sbt": 315, "m-vsec": 400, "m-z": 6.34, "m-esc": "MT", "m-cp": 0.534, "m-df": 1, "m-top": 0.5, "m-rhos": 3000, "m-hg": 0.15, "m-peso": "70", "m-icond": 1.245, "m-tm": 1084, "m-ta": 40, "m-limrg": 20 },
+        lux: { space: "sala-electricidad", a: 5, b: 6, H: 2.7, pt: 0.8, d: 0, em: 200, cm: 0.6, phi: 4000, w: 30, ceil: 70, wall: 30, table: "recessed-modular", inv: 4, sup: "1x220", len: 15 },
+        hydro: { vol: 1000, lps: 20, pq: 20, pqu: "lps", ph: 24, pn: 70, z1: 100, z2: 80, loss: 2, fp: 40 },
+        consumo: { V: 220, kw: 6, tarifa: 252, season: "invierno", band: null, simOk: "", simOver: "", sim: ["nevera", "led", "lavadora"], equip: null },
+        tan: { p: 45, v: 400, cos: 0.9, eta: 0.95, racks: 8, ip: 30, red: "N+1", h: "1", sis: false, i1: 10, h3: 0.8, h5: 2.4, h7: 1.1, bv: 24, bi: 4, brip: 2 },
+        color: { hex: "87CEFA" },
+        interior: [
+          { name: "Alumbrado Living/Dorm.", type: "alumbrado", power: 300 },
+          { name: "Alumbrado Cocina/Baños", type: "alumbrado", power: 250 },
+          { name: "Enchufes Generales", type: "enchufe", power: 1500 },
+          { name: "Enchufes Cocina", type: "enchufe", power: 2000 },
+          { name: "Lavandería", type: "enchufe", power: 1500 }
+        ]
+      },
+      {
+        id: "casa-bodega-10", kw: 10, gallery: true,
+        name: "Casa con Bodega",
+        place: "Parcela / Suburbana",
+        blurb: "Vivienda amplia con bodega independiente y taller doméstico. Empalme 10 kW.",
+        sev: { rho: [120, 20, 110], h: [3, 10], preset: "H" },
+        malla: { "m-rho1": 120, "m-e1": 1.5, "m-rho2": 220, "m-e2": 4.5, "m-rho3": 40, "m-rhoeq": 100, "m-h": 0.6, "m-lx": 10, "m-ly": 8, "m-dx": 2, "m-dy": 2, "m-n": 2, "m-lb": 3, "m-scond": 35, "m-icc1": 1800, "m-sbt": 200, "m-vsec": 400, "m-z": 5, "m-esc": "BT", "m-cp": 0.55, "m-df": 1, "m-top": 0.5, "m-rhos": 2500, "m-hg": 0.15, "m-peso": "70", "m-icond": 1.5, "m-tm": 1084, "m-ta": 35, "m-limrg": 15 },
+        lux: { space: "taller", a: 6, b: 8, H: 3.0, pt: 0.8, d: 0, em: 300, cm: 0.6, phi: 5000, w: 40, ceil: 50, wall: 30, table: "industrial-reflector", inv: 6, sup: "1x220", len: 20 },
+        hydro: { vol: 1500, lps: 30, pq: 30, pqu: "lps", ph: 24, pn: 60, z1: 120, z2: 100, loss: 1.5, fp: 45 },
+        consumo: { V: 220, kw: 10, tarifa: 252, season: "invierno", band: null, simOk: "", simOver: "", sim: ["nevera", "led", "taller"], equip: null },
+        tan: { p: 20, v: 400, cos: 0.9, eta: 0.93, racks: 4, ip: 30, red: "N", h: "0", sis: false, i1: 15, h3: 1.0, h5: 2.0, h7: 0.5, bv: 24, bi: 2, brip: 2 },
+        color: { hex: "4682B4" },
+        interior: [
+          { name: "Alumbrado Casa", type: "alumbrado", power: 400 },
+          { name: "Alumbrado Bodega/Ext", type: "alumbrado", power: 300 },
+          { name: "Enchufes Habitaciones", type: "enchufe", power: 1500 },
+          { name: "Enchufes Cocina", type: "enchufe", power: 2500 },
+          { name: "Climatización 1", type: "clima", power: 2000 },
+          { name: "Enchufes Taller/Bodega", type: "clima", power: 3000 }
+        ]
+      },
+      {
+        id: "casa-finca-15", kw: 15, gallery: true,
+        name: "Casa con Finca y Leñera",
+        place: "Agrícola",
+        blurb: "Propiedad grande con dependencias agrícolas y maquinaria. Empalme 15 kW.",
+        sev: { rho: [150, 30, 120], h: [4, 12], preset: "H" },
+        malla: { "m-rho1": 150, "m-e1": 1.5, "m-rho2": 300, "m-e2": 4.5, "m-rho3": 50, "m-rhoeq": 120, "m-h": 0.6, "m-lx": 15, "m-ly": 10, "m-dx": 2, "m-dy": 2, "m-n": 4, "m-lb": 3, "m-scond": 50, "m-icc1": 2500, "m-sbt": 300, "m-vsec": 400, "m-z": 4, "m-esc": "BT", "m-cp": 0.6, "m-df": 1, "m-top": 0.5, "m-rhos": 2500, "m-hg": 0.15, "m-peso": "70", "m-icond": 2.0, "m-tm": 1084, "m-ta": 35, "m-limrg": 10 },
+        lux: { space: "taller", a: 10, b: 12, H: 4.0, pt: 0, d: 0, em: 400, cm: 0.6, phi: 6000, w: 50, ceil: 50, wall: 30, table: "industrial-reflector", inv: 10, sup: "3x380", len: 30 },
+        hydro: { vol: 3000, lps: 50, pq: 50, pqu: "lps", ph: 24, pn: 65, z1: 150, z2: 120, loss: 2.5, fp: 50 },
+        consumo: { V: 220, kw: 15, tarifa: 252, season: "invierno", band: null, simOk: "", simOver: "", sim: ["nevera", "led", "bomba"], equip: null },
+        tan: { p: 30, v: 400, cos: 0.85, eta: 0.95, racks: 6, ip: 54, red: "N+1", h: "1", sis: false, i1: 20, h3: 1.5, h5: 3.0, h7: 1.0, bv: 24, bi: 3, brip: 2 },
+        color: { hex: "000080" },
+        interior: [
+          { name: "Alumbrado Interior Casa", type: "alumbrado", power: 500 },
+          { name: "Alumbrado Exterior/Perímetro", type: "alumbrado", power: 600 },
+          { name: "Alumbrado Finca/Leñera", type: "alumbrado", power: 400 },
+          { name: "Enchufes Casa", type: "enchufe", power: 2500 },
+          { name: "Cocina y Horno", type: "enchufe", power: 3500 },
+          { name: "Climatización", type: "clima", power: 3000 },
+          { name: "Bomba Pozo", type: "clima", power: 1500 },
+          { name: "Enchufes Finca (Fuerza)", type: "clima", power: 3000 }
+        ]
+      },
       {
         id: "casa-6", kw: 6, gallery: false,
         name: "Casa-granja (referencia CFT)",
@@ -7695,6 +7779,14 @@
         c.classList.toggle("active-site", c.dataset.site === id);
       });
     }
+    
+    function applyInteriorSite(circuits) {
+      if (!circuits || !circuits.length) return;
+      intCircuits = circuits.map((c, i) => ({ id: i + 1, ...c }));
+      intCounter = circuits.length + 1;
+      if (typeof renderInterior === 'function') renderInterior();
+    }
+
     function applySite(id) {
       const site = SITES.find((s) => s.id === id);
       if (!site) return;
@@ -7704,6 +7796,7 @@
       applyLuxSite(site.lux);
       applyHydroSite(site.hydro);
       applyConsumoSite(site.consumo);
+      if (site.interior) applyInteriorSite(site.interior);
       applyTanSite(site.tan);
       $("col-hex").value = site.color.hex;
       renderColor();
