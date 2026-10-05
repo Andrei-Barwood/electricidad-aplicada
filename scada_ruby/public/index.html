@@ -113,7 +113,7 @@
                 document.getElementById('netStatus').innerText = "❌ Desconectado";
                 document.getElementById('netStatus').style.color = "#ff5555";
             }
-        }, 500);
+        }, 2000); // 2 segundos es el estándar SCADA. 500ms quema el CPU del celular.
 
         // Enviar comando POST al servidor Ruby cuando se presiona el botón
         async function toggleQ1() {
