@@ -41,6 +41,7 @@
       --panel: #4F4F4F;
       --panel-2: #485199;
       --line: rgba(195, 206, 222, 0.22);
+      --line-subtle: rgba(195, 206, 222, 0.10);
       --foam: #EAEEF4;
       --muted: #ADBAD1;
       --cyan: #0ED1FF;
@@ -92,6 +93,7 @@
       --panel: #FFFFFF;
       --panel-2: #EBF8FF;
       --line: rgba(72, 81, 153, 0.18);
+      --line-subtle: rgba(72, 81, 153, 0.10);
       --foam: #303030;
       --muted: #63627C;
       --cyan: #0ED1FF;
@@ -363,6 +365,533 @@
       .panel { display: block !important; page-break-after: always; }
       body { background: #FFFFFF; color: #303030; }
     }
+  
+    /* ===================== GUÍA HIDRÁULICA Y PROYECTOS (Unidad 2 CFT) ===================== */
+    #panel-hydro .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 0 60px;
+      position: relative;
+    }
+    #panel-hydro header.top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    #panel-hydro .eyebrow {
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    #panel-hydro .badge-cft {
+      background: var(--gold-dim);
+      color: var(--gold);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--gold);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+    }
+    #panel-hydro h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.8vw, 3rem);
+      line-height: 1.1;
+      font-weight: 650;
+      color: var(--foam);
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    #panel-hydro h2 {
+      font-family: var(--serif);
+      font-size: clamp(1.5rem, 2.4vw, 2rem);
+      font-weight: 650;
+      color: var(--foam);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+    #panel-hydro h3 {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 650;
+      color: var(--foam);
+      margin-bottom: 8px;
+    }
+    #panel-hydro h4 {
+      font-family: var(--sans);
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+    #panel-hydro .lede {
+      max-width: 76ch;
+      color: var(--muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    #panel-hydro nav.jump-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 16px 0 28px;
+      background: var(--meta-bg);
+      padding: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      position: sticky;
+      top: 12px;
+      z-index: 20;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    #panel-hydro nav.jump-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 999px;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+    }
+    #panel-hydro nav.jump-nav a:hover,
+    #panel-hydro nav.jump-nav a.active {
+      color: var(--foam);
+      background: var(--nav-active);
+      border-color: var(--nav-active-border);
+      font-weight: 600;
+    }
+    #panel-hydro button.solid {
+      border: 1px solid var(--nav-active-border);
+      background: var(--nav-active);
+      color: var(--foam);
+      font-family: var(--sans);
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 13.5px;
+      transition: transform 0.15s, background 0.15s, border-color 0.15s;
+    }
+    #panel-hydro button.solid:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+      color: var(--cyan-2);
+    }
+    #panel-hydro button.ghost {
+      color: var(--foam);
+      border: 1px solid var(--line);
+      background: var(--btn-bg);
+      padding: 8px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+    #panel-hydro button.ghost:hover {
+      background: var(--nav-hover);
+      border-color: var(--cyan-2);
+      color: var(--cyan-2);
+    }
+    #panel-hydro section { margin-top: 44px; }
+    #panel-hydro .sec-head { margin-bottom: 20px; }
+    #panel-hydro .sec-tag {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--cyan-2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    #panel-hydro .sec-desc {
+      color: var(--muted);
+      max-width: 82ch;
+      font-size: 0.98rem;
+      line-height: 1.6;
+    }
+    #panel-hydro .card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    #panel-hydro .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    #panel-hydro .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    @media (max-width: 900px) {
+      #panel-hydro .grid-2, #panel-hydro .grid-3 { grid-template-columns: 1fr; }
+      #panel-hydro nav.jump-nav { border-radius: 16px; }
+    }
+    #panel-hydro .formula-box {
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      color: var(--cyan-2);
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--gold);
+      border-radius: 0 12px 12px 0;
+      padding: 12px 16px;
+      margin: 12px 0 16px;
+      overflow-x: auto;
+    }
+    #panel-hydro .formula-box small {
+      font-family: var(--sans);
+      color: var(--muted);
+      font-size: 0.78rem;
+      display: block;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+    #panel-hydro .tiles {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    #panel-hydro .tile {
+      background: var(--meta-bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    #panel-hydro .tile .lbl {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+    }
+    #panel-hydro .tile .val {
+      font-family: var(--mono);
+      font-size: 1.75rem;
+      line-height: 1.15;
+      margin: 6px 0 2px;
+      font-weight: 600;
+      color: var(--foam);
+    }
+    #panel-hydro .tile .unit {
+      color: var(--cyan-2);
+      font-size: 0.88rem;
+      font-family: var(--sans);
+      font-weight: 500;
+    }
+    #panel-hydro .tile.gold .val { color: var(--gold); }
+    #panel-hydro .tile.ok .val { color: var(--ok-text); }
+    #panel-hydro .tile.hot .val { color: var(--hot); }
+    #panel-hydro .tile.cyan .val { color: var(--cyan-2); }
+    #panel-hydro .tile .sub-detail,
+    #panel-hydro .tile .extra {
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+    #panel-hydro .fields-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+    #panel-hydro label.field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12.5px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    #panel-hydro label.field span.name {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #panel-hydro label.field span.val-badge {
+      font-family: var(--mono);
+      color: var(--cyan-2);
+      font-size: 12px;
+      font-weight: 600;
+    }
+    #panel-hydro input[type="number"],
+    #panel-hydro select,
+    #panel-hydro input[type="text"] {
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--foam);
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      padding: 9px 12px;
+      min-height: 40px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+    #panel-hydro input[type="number"]:focus,
+    #panel-hydro select:focus,
+    #panel-hydro input[type="text"]:focus {
+      outline: none;
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+    #panel-hydro input[type="range"] {
+      accent-color: var(--cyan);
+      cursor: pointer;
+      width: 100%;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      outline: none;
+    }
+    #panel-hydro .svg-container {
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    #panel-hydro svg.plot {
+      width: 100%;
+      height: auto;
+      display: block;
+      overflow: visible;
+    }
+    #panel-hydro .plot text {
+      font-family: var(--mono);
+      font-size: 11px;
+      fill: var(--muted);
+    }
+    #panel-hydro .plot text.axis-title {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      fill: var(--foam);
+    }
+    #panel-hydro .plot text.highlight {
+      font-weight: 600;
+      fill: var(--gold);
+    }
+    #panel-hydro table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.92rem;
+      margin: 14px 0;
+    }
+    #panel-hydro table.data-table th,
+    #panel-hydro table.data-table td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+    #panel-hydro table.data-table th {
+      color: var(--gold);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 600;
+      background: var(--gold-dim);
+    }
+    #panel-hydro table.data-table tr:hover td {
+      background: var(--micro-bg);
+    }
+    #panel-hydro .alert-banner {
+      background: var(--micro-bg);
+      border: 1px solid var(--nav-active-border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 14px 0;
+      font-size: 0.93rem;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      color: var(--foam);
+    }
+    #panel-hydro .alert-banner.warn {
+      background: var(--warn-bg);
+      border-color: var(--warn);
+      color: var(--warn);
+    }
+    #panel-hydro .alert-banner.ok {
+      background: var(--ok-bg);
+      border-color: var(--ok);
+      color: var(--ok-text);
+    }
+    #panel-hydro .regimen-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    #panel-hydro .regimen-btn {
+      background: var(--btn-bg);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+    #panel-hydro .regimen-btn:hover,
+    #panel-hydro .regimen-btn.active {
+      background: var(--nav-active);
+      color: var(--foam);
+      border-color: var(--nav-active-border);
+      font-weight: 600;
+    }
+    #panel-hydro .step-item {
+      display: grid;
+      grid-template-columns: 36px 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    #panel-hydro .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--gold-dim);
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #panel-hydro .quiz-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 16px;
+      background: var(--card-bg);
+    }
+    #panel-hydro .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    #panel-hydro .quiz-header .tag {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--cyan-2);
+      background: var(--micro-bg);
+      padding: 3px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--nav-active-border);
+    }
+    #panel-hydro .quiz-num {
+      font-family: var(--mono);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    #panel-hydro .quiz-inputs {
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      margin: 14px 0 10px;
+    }
+    #panel-hydro .quiz-feedback {
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+    #panel-hydro .quiz-feedback.success {
+      display: block;
+      background: var(--ok-bg);
+      border: 1px solid var(--ok);
+      color: var(--ok-text);
+    }
+    #panel-hydro .quiz-feedback.error {
+      display: block;
+      background: var(--hot-bg);
+      border: 1px solid var(--hot);
+      color: var(--hot);
+    }
+    #panel-hydro .basin-legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+    #panel-hydro .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    #panel-hydro .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+    }
+    #panel-hydro .chart-tooltip {
+      position: absolute;
+      background: var(--nav-bg);
+      border: 1px solid var(--cyan);
+      color: var(--foam);
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: var(--mono);
+      pointer-events: none;
+      display: none;
+      z-index: 10;
+      white-space: nowrap;
+      box-shadow: var(--shadow);
+    }
+    #panel-hydro footer.doc-foot {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12.5px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    @media print {
+      #panel-hydro nav.jump-nav,
+      #panel-hydro button.solid,
+      #panel-hydro button.ghost { display: none !important; }
+      #panel-hydro .card { border: 1px solid #ccc; background: none !important; box-shadow: none; color: #000; }
+      #panel-hydro .formula-box { background: #f4f4f4 !important; color: #000 !important; border-left: 3px solid #666; }
+      #panel-hydro .tile { background: #f9f9f9 !important; border: 1px solid #ddd; }
+      #panel-hydro .tile .val { color: #000 !important; }
+    }
   </style>
 </head>
 <body>
@@ -414,7 +943,7 @@
           <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
           <article class="card home" data-go="lux"><h3>Iluminación por lúmenes</h3><p class="sub">ΦT, κ, CU, grilla n×n y tablero de circuitos. Plantillas UNE-EN 12464-1:2012.</p></article>
           <article class="card home" data-go="btu"><h3>Proyección BTU</h3><p class="sub">Carga de calefacción por recinto, equivalencias térmicas y tablero eléctrico de climatización.</p></article>
-          <article class="card home" data-go="hydro"><h3>Litros ↔ m³</h3><p class="sub">Volumen, caudal y P = 9,81·Q·H·η. Pico / microhidro y potencial anual.</p></article>
+          <article class="card home" data-go="hydro"><h3>Hidráulica e Hidrología</h3><p class="sub">Guía de proyectos hidroeléctricos: cuencas, aforo, CDC, turbinas y cálculos de potencia CFT.</p></article>
           <article class="card home" data-go="taximetro"><h3>Taxímetro</h3><p class="sub">Calculadora para comparar tarifas razonables, aceptables y sospechosas por distancia, tiempo y consumo del vehículo.</p></article>
           <article class="card home" data-go="solar"><h3>Solar · calor y radiación</h3><p class="sub">Radiación horaria por estación, proyección anual, calor específico y calor latente para agua, hielo, vapor, metales, vidrio y aire.</p></article>
           <article class="card home" data-go="consumo"><h3>Consumo</h3><p class="sub">Empalme editable. Casa-granja 6 kW o plantillas 10–500 kW. Pinza True RMS y simultaneidad.</p></article>
@@ -760,87 +1289,695 @@
       </section>
 
       <section class="panel" id="panel-hydro">
-        <div class="hero">
-          <div>
-            <h2>De litros a <span>metros cúbicos</span></h2>
-            <p class="lede">El aforo del estero se mide en L/s; la turbina y la potencia se calculan en m³/s. 1 m³ = 1 000 L.</p>
-          </div>
-          <div class="hero-actions"><button class="btn primary pdf-btn" type="button" data-pdf="hydro">Exportar PDF</button></div>
+<div class="wrap">
+
+  <!-- ENCABEZADO -->
+  <header class="top">
+    <div>
+      <div class="eyebrow">
+        <span class="badge-cft">CFT · TALLER DE ENERGÍA II</span>
+        <span>UNIDAD 2 · RECURSOS HÍDRICOS Y GENERACIÓN</span>
+      </div>
+      <h1>Fundamentos Hidrológicos y Proyectos Hidráulicos</h1>
+      <p class="lede">
+        Expansión conceptual interactiva: <strong>Cuenca Hidrográfica</strong>, <strong>Parámetros de Diseño</strong>, <strong>Hidrogramas</strong> y la <strong>Curva de Duración de Caudales (CDC)</strong> para el dimensionamiento técnico-económico de centrales hidroeléctricas.
+      </p>
+    </div>
+    <div>
+      <button class="ghost" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    </div>
+  </header>
+
+  <!-- MENÚ DE SALTO RÁPIDO -->
+  <nav class="jump-nav" aria-label="Navegación por módulos">
+    <a href="#modulo1">1. Cuenca Hidrográfica</a>
+    <a href="#modulo2">2. Cantidades de Proyecto</a>
+    <a href="#modulo3">3. El Hidrograma</a>
+    <a href="#modulo4">4. Curva de Duración (CDC)</a>
+    <a href="#modulo5">5. Ejercicios Resueltos</a>
+    <a href="#glosario">Glosario & Normativa</a>
+  </nav>
+
+  <!-- ==========================================
+       MÓDULO 1: LA CUENCA HIDROGRÁFICA
+       ========================================== -->
+  <section id="modulo1">
+    <div class="sec-head">
+      <div class="sec-tag">Módulo 01 · Morfología & Cuencas</div>
+      <h2>La Cuenca Hidrográfica y la Información Hidrológica</h2>
+      <p class="sec-desc">
+        La cuenca hidrográfica es el colector natural que transforma la lluvia y el deshielo en escorrentía superficial y subterránea. Sus características morfométricas definen la magnitud, velocidad y agresividad del caudal disponible para una central hidroeléctrica.
+      </p>
+    </div>
+
+    <div class="grid-2">
+      <!-- EXPLICACIÓN Y TEORÍA -->
+      <div class="card">
+        <h3>1.1. Concepto y Divisoria de Aguas</h3>
+        <p style="margin: 10px 0; color: var(--muted);">
+          Una cuenca es un territorio delimitado naturalmente por la <em>divisoria de aguas</em> (línea de altas cumbres o <em>divortia aquarum</em>), donde todas las aguas escurren hacia un punto de salida común o punto de cierre (donde comúnmente se ubica la captación o bocatoma).
+        </p>
+
+        <div class="formula-box">
+          Balance Hídrico Anual: P = ETR + Q + ΔS
+          <small>P: Precipitación | ETR: Evapotranspiración Real | Q: Escorrentía | ΔS: Variación de reservas de agua subterránea</small>
         </div>
-        <div class="tpl-bar"><label class="field" for="tpl-hydro">Plantilla Los Ríos</label><select id="tpl-hydro" class="site-select"></select></div>
-        <div class="grid g2">
-          <div class="card">
-            <h3>Conversor de volumen</h3>
-            <div class="chips">
-              <button class="chip btn primary" type="button" id="hy-dir-lm">Litros → m³</button>
-              <button class="chip btn" type="button" id="hy-dir-ml">m³ → litros</button>
-            </div>
-            <label class="field" id="hy-vol-label" for="hy-vol">Volumen en litros</label>
-            <input id="hy-vol" type="number" min="0" step="any" value="1000" />
-            <div class="chips">
-              <button class="chip" type="button" data-vol="200">200 L</button>
-              <button class="chip" type="button" data-vol="1000">1 000 L</button>
-              <button class="chip" type="button" data-vol="5000">5 000 L</button>
-            </div>
-            <div class="result"><div class="k" id="hy-vol-k">Equivalente</div><div class="v" id="hy-vol-out">—</div></div>
-            <div class="fill-bar"><span id="hy-fill"></span></div>
-            <dl class="meta-grid">
-              <div class="meta"><dt>Masa de agua</dt><dd id="hy-mass">—</dd></div>
-              <div class="meta"><dt>Peso</dt><dd id="hy-weight">—</dd></div>
-            </dl>
+
+        <h4 style="margin: 14px 0 8px; color: var(--foam);">Parámetros Morfométricos Críticos</h4>
+        <ul style="padding-left: 20px; color: var(--muted); font-size: 0.95rem; margin-bottom: 14px;">
+          <li><strong style="color: var(--foam);">Área de drenaje (A en km²):</strong> Determina el volumen bruto capturado por el sistema.</li>
+          <li><strong style="color: var(--foam);">Perímetro (P en km):</strong> Longitud del contorno de la divisoria de aguas.</li>
+          <li><strong style="color: var(--foam);">Coeficiente de Compacidad de Gravelius (K<sub>c</sub>):</strong> Compara la forma de la cuenca con un círculo perfecto. Define el tiempo de concentración de las crecidas.</li>
+        </ul>
+
+        <div class="formula-box">
+          K<sub>c</sub> = 0.282 · ( P / √A )
+          <small>K<sub>c</sub> ≈ 1.0 a 1.2: Cuenca redondeada (muy propensa a crecidas súbitas y destructivas)<br>
+          K<sub>c</sub> > 1.5: Cuenca alargada (flujos amortiguados en el tiempo, menores picos)</small>
+        </div>
+
+        <div class="formula-box">
+          Tiempo de Concentración (Kirpich): t<sub>c</sub> = 0.0663 · ( L<sup>0.77</sup> / S<sup>0.385</sup> )
+          <small>t<sub>c</sub>: Tiempo (horas) que tarda la gota más lejana en llegar a la salida | L: Longitud cauce (km) | S: Pendiente media (m/m)</small>
+        </div>
+      </div>
+
+      <!-- VISUALIZADOR INTERACTIVO Y CALCULADORA MORFOMÉTRICA -->
+      <div class="card">
+        <h3>1.2. Calculadora de Forma y Tiempo de Concentración</h3>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-bottom: 12px;">
+          Modifica los parámetros de la cuenca para diagnosticar su respuesta hidrológica ante precipitaciones.
+        </p>
+
+        <div class="fields-grid">
+          <label class="field">
+            <span class="name">Área de Cuenca (A): <span class="val-badge" id="lbl-area">120 km²</span></span>
+            <input type="range" id="input-area" min="10" max="1500" value="120" step="5" oninput="actualizarCuenca()">
+          </label>
+          <label class="field">
+            <span class="name">Perímetro (P): <span class="val-badge" id="lbl-perim">52 km</span></span>
+            <input type="range" id="input-perim" min="15" max="300" value="52" step="1" oninput="actualizarCuenca()">
+          </label>
+          <label class="field">
+            <span class="name">Longitud Cauce (L): <span class="val-badge" id="lbl-long">24 km</span></span>
+            <input type="range" id="input-long" min="2" max="120" value="24" step="1" oninput="actualizarCuenca()">
+          </label>
+          <label class="field">
+            <span class="name">Desnivel Cauce (ΔH): <span class="val-badge" id="lbl-desnivel">480 m</span></span>
+            <input type="range" id="input-desnivel" min="20" max="2500" value="480" step="10" oninput="actualizarCuenca()">
+          </label>
+        </div>
+
+        <div class="tiles">
+          <div class="tile gold">
+            <div class="lbl">Índice Gravelius (K<sub>c</sub>)</div>
+            <div class="val" id="res-kc">1.34</div>
+            <div class="extra" id="res-kc-diag">Moderadamente alargada</div>
           </div>
-          <div class="card">
-            <h3>Caudal</h3>
-            <div class="fields">
-              <div class="mini-input"><label>L/s</label><input id="hy-lps" type="number" min="0" step="any" value="80" /></div>
-              <div class="mini-input"><label>m³/s</label><input id="hy-cms" type="number" min="0" step="any" value="0.08" /></div>
-              <div class="mini-input"><label>m³/h</label><input id="hy-cmh" type="number" min="0" step="any" value="288" /></div>
-            </div>
-            <dl class="meta-grid">
-              <div class="meta"><dt>L/min</dt><dd id="hy-lpm">—</dd></div>
-              <div class="meta"><dt>Volumen 24 h</dt><dd id="hy-day">—</dd></div>
-            </dl>
+          <div class="tile cyan">
+            <div class="lbl">Tiempo de Concentración (t<sub>c</sub>)</div>
+            <div class="val" id="res-tc">3.6</div>
+            <div class="unit">horas</div>
+            <div class="extra" id="res-tc-min">216 minutos</div>
           </div>
         </div>
-        <div class="card" style="margin-top:16px">
-          <h3>Potencia de la central</h3>
-          <p class="sub">P(kW) = 9,81 × Q(m³/s) × H(m) × η. Pico &lt; 5 kW · microhidro 5–300 kW (RGR N°04). GD residencial tope 300 kW (Ley 21.118). Clase B en BT hasta 500 kW (D.S. N° 92).</p>
-          <div class="fields">
-            <div class="mini-input"><label>Q</label>
-              <div style="display:grid;grid-template-columns:1fr 110px;gap:8px">
-                <input id="hy-pq" type="number" min="0" step="any" value="80" />
-                <select id="hy-pqu"><option value="lps">L/s</option><option value="cms">m³/s</option></select>
+
+        <!-- DIAGRAMA ESQUEMÁTICO DE CUENCA -->
+        <div class="svg-container" style="height: 180px; display: flex; align-items: center; justify-content: center;">
+          <svg id="svg-cuenca" viewBox="0 0 400 150" style="width: 100%; height: 100%;">
+            <!-- Contorno de cuenca dinámico -->
+            <path id="path-cuenca" d="M 50,75 C 60,20 180,10 320,30 C 370,60 380,95 320,125 C 180,140 70,130 50,75 Z" fill="var(--micro-bg)" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="6,4"></path>
+            <!-- Red fluvial Strahler -->
+            <path d="M 310,35 Q 260,65 200,75" stroke="var(--cyan-2)" stroke-width="1.5" fill="none"></path>
+            <path d="M 310,120 Q 250,90 200,75" stroke="var(--cyan-2)" stroke-width="1.5" fill="none"></path>
+            <path d="M 280,75 L 200,75" stroke="var(--cyan-2)" stroke-width="1.5" fill="none"></path>
+            <path d="M 200,75 L 50,75" stroke="var(--cyan)" stroke-width="3.5" fill="none"></path>
+            <!-- Punto de aforo / bocatoma -->
+            <circle cx="50" cy="75" r="7" fill="var(--gold)"></circle>
+            <text x="50" y="98" text-anchor="middle" fill="var(--gold)" font-weight="700">Bocatoma (Salida)</text>
+            <text x="310" y="25" text-anchor="middle" fill="var(--muted)">Divisoria de Aguas</text>
+            <text x="220" y="68" fill="var(--foam)">Cauce Principal</text>
+          </svg>
+        </div>
+
+        <div class="basin-legend">
+          <div class="legend-item"><div class="legend-color" style="background: var(--cyan); border: 1px dashed var(--line);"></div><span>Divisoria (Divortia Aquarum)</span></div>
+          <div class="legend-item"><div class="legend-color" style="background: var(--cyan-2);"></div><span>Afluentes (Orden 1 y 2)</span></div>
+          <div class="legend-item"><div class="legend-color" style="background: var(--gold);"></div><span>Punto de Cierre / Bocatoma</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MÓDULO 2: CANTIDADES NECESARIAS PARA UN PROYECTO
+       ========================================== -->
+  <section id="modulo2">
+    <div class="sec-head">
+      <div class="sec-tag">Módulo 02 · Parámetros de Diseño</div>
+      <h2>Cantidades y Parámetros Técnicos para un Proyecto Hidráulico</h2>
+      <p class="sec-desc">
+        El dimensionamiento de una central hidroeléctrica requiere cuantificar con exactitud el caudal aprovechable, el desnivel topográfico, las pérdidas de carga en conductos y la eficiencia de conversión de la turbina y el generador.
+      </p>
+    </div>
+
+    <!-- MATRIZ DE CANTIDADES OBLIGATORIAS -->
+    <div class="grid-3" style="margin-bottom: 24px;">
+      <div class="card" style="border-top: 3px solid var(--cyan);">
+        <h4 style="color: var(--cyan-2); margin-bottom: 8px;">1. Variables de Caudal (Q)</h4>
+        <ul style="color: var(--muted); font-size: 0.9rem; padding-left: 18px; display: grid; gap: 6px;">
+          <li><strong style="color: var(--foam);">Q<sub>medio</sub>:</strong> Caudal medio histórico anual del río.</li>
+          <li><strong style="color: var(--gold);">Q<sub>ecológico</sub>:</strong> Caudal protegido por ley que debe permanecer en el río (DGA Chile).</li>
+          <li><strong style="color: var(--foam);">Q<sub>diseño</sub> (o equipamiento):</strong> Caudal nominal que ingresa a la turbina a plena carga.</li>
+          <li><strong style="color: var(--foam);">Q<sub>crecida</sub> (Tr 50/100 años):</strong> Diseña vertederos y defensas de bocatoma.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-top: 3px solid var(--gold);">
+        <h4 style="color: var(--gold); margin-bottom: 8px;">2. Variables Topográficas (H)</h4>
+        <ul style="color: var(--muted); font-size: 0.9rem; padding-left: 18px; display: grid; gap: 6px;">
+          <li><strong style="color: var(--foam);">Cota Captación (Z<sub>1</sub>):</strong> Nivel de agua en cámara de carga o presa.</li>
+          <li><strong style="color: var(--foam);">Cota Restitución (Z<sub>2</sub>):</strong> Nivel en canal de desagüe de casa de máquinas.</li>
+          <li><strong style="color: var(--foam);">Altura Bruta (H<sub>b</sub> = Z<sub>1</sub> - Z<sub>2</sub>):</strong> Desnivel geodésico total.</li>
+          <li><strong style="color: var(--hot);">Pérdidas de Carga (h<sub>f</sub>):</strong> Fricción en tubería de presión y accesorios.</li>
+          <li><strong style="color: var(--ok);">Altura Neta (H<sub>n</sub> = H<sub>b</sub> - h<sub>f</sub>):</strong> Energía real que choca en la turbina.</li>
+        </ul>
+      </div>
+
+      <div class="card" style="border-top: 3px solid var(--ok);">
+        <h4 style="color: var(--ok); margin-bottom: 8px;">3. Variables de Conversión (η)</h4>
+        <ul style="color: var(--muted); font-size: 0.9rem; padding-left: 18px; display: grid; gap: 6px;">
+          <li><strong style="color: var(--foam);">η<sub>turbina</sub> (84% - 93%):</strong> Eficiencia hidráulico-mecánica.</li>
+          <li><strong style="color: var(--foam);">η<sub>generador</sub> (93% - 97%):</strong> Eficiencia eléctrica del alternador.</li>
+          <li><strong style="color: var(--foam);">η<sub>transformador</sub> (98%):</strong> Pérdidas de elevación de tensión.</li>
+          <li><strong style="color: var(--foam);">Rendimiento Total (η<sub>g</sub>):</strong> η<sub>t</sub> · η<sub>gen</sub> · η<sub>tr</sub> ≈ <strong>75% a 85%</strong>.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- SIMULADOR COMPLETO DE POTENCIA Y ELECCIÓN DE TURBINA -->
+    <div class="card">
+      <h3>2.2. Simulador Integral de Potencia, Pérdidas y Selección de Turbina</h3>
+      <p style="color: var(--muted); font-size: 0.93rem; margin-bottom: 16px;">
+        Ingresa los datos del proyecto para evaluar la potencia hidráulica bruta, las pérdidas de carga en la aducción, la potencia eléctrica entregada y la turbina hidráulica idónea según la carta de aplicación internacional (Pelton, Francis, Kaplan, Turgo, Michell-Banki).
+      </p>
+
+      <div class="grid-2">
+        <div>
+          <div class="fields-grid">
+            <label class="field">
+              <span class="name">Caudal del Río: <span class="val-badge" id="lbl-qrio">3.20 m³/s</span></span>
+              <input type="range" id="inp-qrio" min="0.1" max="25" value="3.2" step="0.1" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Caudal Ecológico (Q<sub>eco</sub>): <span class="val-badge" id="lbl-qeco">0.40 m³/s</span></span>
+              <input type="range" id="inp-qeco" min="0.0" max="5.0" value="0.4" step="0.05" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Caudal de Diseño (Q<sub>d</sub>): <span class="val-badge" id="lbl-qd">2.50 m³/s</span></span>
+              <input type="range" id="inp-qd" min="0.1" max="20" value="2.5" step="0.1" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Altura Bruta (H<sub>b</sub>): <span class="val-badge" id="lbl-hb">45.0 m</span></span>
+              <input type="range" id="inp-hb" min="2" max="600" value="45" step="1" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">% Pérdidas de Carga en Tubería: <span class="val-badge" id="lbl-perdp">4.5 %</span></span>
+              <input type="range" id="inp-perdp" min="1" max="15" value="4.5" step="0.5" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Rendimiento Turbina (η<sub>t</sub>): <span class="val-badge" id="lbl-etat">88 %</span></span>
+              <input type="range" id="inp-etat" min="70" max="95" value="88" step="1" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Rendimiento Generador (η<sub>g</sub>): <span class="val-badge" id="lbl-etag">95 %</span></span>
+              <input type="range" id="inp-etag" min="80" max="98" value="95" step="1" oninput="calcProyecto()">
+            </label>
+            <label class="field">
+              <span class="name">Horas de Operación / Año: <span class="val-badge" id="lbl-horas">7,200 h</span></span>
+              <input type="range" id="inp-horas" min="1000" max="8760" value="7200" step="100" oninput="calcProyecto()">
+            </label>
+          </div>
+
+          <div class="alert-banner" id="banner-caudal">
+            <div style="font-size: 20px;">💡</div>
+            <div id="msg-caudal">Caudal aprovechable: 2.50 m³/s (el río aporta suficiente agua por sobre el caudal ecológico).</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="tiles">
+            <div class="tile gold">
+              <div class="lbl">Potencia Hidráulica Bruta</div>
+              <div class="val" id="res-ph">1,104</div>
+              <div class="unit">kW</div>
+              <div class="sub-detail">P<sub>h</sub> = 1000 · 9.81 · Q · H<sub>b</sub></div>
+            </div>
+            <div class="tile ok">
+              <div class="lbl">Potencia Eléctrica Útil (P<sub>e</sub>)</div>
+              <div class="val" id="res-pe">882</div>
+              <div class="unit">kW</div>
+              <div class="sub-detail" id="res-pe-mw">0.88 MW entregados</div>
+            </div>
+            <div class="tile hot">
+              <div class="lbl">Pérdidas Totales</div>
+              <div class="val" id="res-perd">222</div>
+              <div class="unit">kW</div>
+              <div class="sub-detail" id="res-rend-global">Rendimiento global: 79.9%</div>
+            </div>
+            <div class="tile cyan">
+              <div class="lbl">Energía Anual Generable</div>
+              <div class="val" id="res-eanual">6,350</div>
+              <div class="unit">MWh / año</div>
+              <div class="sub-detail" id="res-fp">Factor de Planta: 82.2%</div>
+            </div>
+          </div>
+
+          <!-- DIAGNÓSTICO DE TURBINA RECOMENDADA -->
+          <div style="background: var(--meta-bg); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-top: 10px;">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--gold); letter-spacing: 0.08em; font-weight: 700;">Turbina Recomendada según Q y H</div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 6px;">
+              <div style="font-size: 1.4rem; font-family: var(--serif); color: var(--cyan-2); font-weight: 600;" id="res-turbina-nombre">Turbina Francis</div>
+              <span class="badge-cft" id="res-turbina-tipo">Reacción de flujo mixto</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--muted); margin-top: 6px;" id="res-turbina-desc">
+              Óptima para alturas medias (25m - 250m) y caudales moderados a altos. El agua entra por una voluta espiral radialmente y sale axialmente.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MÓDULO 3: EL HIDROGRAMA
+       ========================================== -->
+  <section id="modulo3">
+    <div class="sec-head">
+      <div class="sec-tag">Módulo 03 · Dinámica Temporal</div>
+      <h2>El Hidrograma: Anatomía y Regímenes Fluviales</h2>
+      <p class="sec-desc">
+        El hidrograma grafica la evolución del caudal respecto al tiempo Q(t). Permite analizar el pico de crecida para la seguridad de las obras civiles y separar el caudal base (aguas subterráneas) de la escorrentía directa provocada por tormentas o deshielos.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="regimen-tabs">
+        <button class="regimen-btn active" id="btn-reg-crecida" onclick="seleccionarVistaHidrograma('crecida')">1. Hidrograma de Crecida (Tormenta)</button>
+        <button class="regimen-btn" id="btn-reg-pluvial" onclick="seleccionarVistaHidrograma('pluvial')">2. Régimen Pluvial (Sur de Chile)</button>
+        <button class="regimen-btn" id="btn-reg-nival" onclick="seleccionarVistaHidrograma('nival')">3. Régimen Nival (Cordillera Central)</button>
+        <button class="regimen-btn" id="btn-reg-mixto" onclick="seleccionarVistaHidrograma('mixto')">4. Régimen Pluvio-Nival (Mixto)</button>
+      </div>
+
+      <div class="grid-2" style="align-items: start;">
+        <div>
+          <!-- GRÁFICO SVG INTERACTIVO -->
+          <div class="svg-container" style="height: 320px;">
+            <div id="tooltip-hidro" class="chart-tooltip"></div>
+            <svg id="svg-hidro" class="plot" viewBox="0 0 520 280">
+              <!-- Ejes -->
+              <line x1="50" y1="240" x2="490" y2="240" stroke="var(--line)" stroke-width="1.5"></line>
+              <line x1="50" y1="30" x2="50" y2="240" stroke="var(--line)" stroke-width="1.5"></line>
+              
+              <!-- Líneas guía horizontales -->
+              <line x1="50" y1="180" x2="490" y2="180" stroke="var(--line-subtle)" stroke-dasharray="4"></line>
+              <line x1="50" y1="120" x2="490" y2="120" stroke="var(--line-subtle)" stroke-dasharray="4"></line>
+              <line x1="50" y1="60" x2="490" y2="60" stroke="var(--line-subtle)" stroke-dasharray="4"></line>
+
+              <!-- Curva Caudal Base (relleno y línea) -->
+              <path id="hidro-area-base" d="" fill="rgba(224, 193, 112, 0.18)"></path>
+              <!-- Curva Escorrentía Directa (relleno) -->
+              <path id="hidro-area-dir" d="" fill="rgba(62, 200, 216, 0.28)"></path>
+              <!-- Línea Hidrograma Total -->
+              <path id="hidro-path-total" d="" fill="none" stroke="var(--cyan)" stroke-width="3"></path>
+              <!-- Línea Caudal Base Divisoria -->
+              <path id="hidro-path-base" d="" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="5,4"></path>
+
+              <!-- Textos de ejes -->
+              <text x="250" y="270" text-anchor="middle" class="axis-title" id="hidro-x-label">Tiempo (Horas desde inicio lluvia)</text>
+              <text x="20" y="20" class="axis-title" id="hidro-y-label">Caudal Q (m³/s)</text>
+
+              <!-- Etiquetas y Marcadores dinámicos -->
+              <g id="hidro-markers"></g>
+            </svg>
+          </div>
+
+          <div style="display: flex; gap: 14px; margin-top: 10px; font-size: 12px; flex-wrap: wrap;">
+            <div class="legend-item"><div class="legend-color" style="background: var(--cyan);"></div><span>Curva de Caudal Total</span></div>
+            <div class="legend-item"><div class="legend-color" style="background: var(--micro-bg);"></div><span>Escorrentía Directa (Superficial)</span></div>
+            <div class="legend-item"><div class="legend-color" style="background: var(--gold);"></div><span>Caudal Base (Acuífero / Freático)</span></div>
+          </div>
+        </div>
+
+        <!-- EXPLICACIÓN DINÁMICA DEL MODO SELECCIONADO -->
+        <div>
+          <div style="background: var(--meta-bg); border: 1px solid var(--line); border-radius: 14px; padding: 20px;">
+            <h4 style="color: var(--cyan-2); font-size: 1.15rem; margin-bottom: 8px;" id="hidro-title">
+              Anatomía de un Hidrograma de Tormenta
+            </h4>
+            <p style="color: var(--muted); font-size: 0.92rem; margin-bottom: 14px;" id="hidro-summary">
+              Al precipitar, el suelo absorbe agua hasta saturarse (infiltración). Una vez superada la capacidad de retención, el agua corre por la superficie generando el pico de crecida.
+            </p>
+
+            <div id="hidro-details">
+              <div class="step-item">
+                <div class="step-num">1</div>
+                <div>
+                  <strong style="color: var(--foam);">Rama Ascendente (Concentración):</strong>
+                  <div style="font-size: 0.88rem; color: var(--muted);">El caudal crece a medida que los afluentes de toda la cuenca aportan al río principal.</div>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">2</div>
+                <div>
+                  <strong style="color: var(--gold);">Caudal Punta o Pico (Q<sub>p</sub>):</strong>
+                  <div style="font-size: 0.88rem; color: var(--muted);">Valor máximo instantáneo. Crucial para definir el vertedero de evacuación y defensas fluviales.</div>
+                </div>
+              </div>
+
+              <div class="step-item">
+                <div class="step-num">3</div>
+                <div>
+                  <strong style="color: var(--foam);">Rama Descendente y Agotamiento:</strong>
+                  <div style="font-size: 0.88rem; color: var(--muted);">Cesa la lluvia y el río vuelve paulatinamente al caudal base sostenido por el nivel freático subterráneo.</div>
+                </div>
               </div>
             </div>
-            <div class="mini-input"><label>Salto neto H [m]</label><input id="hy-ph" type="number" min="0" step="any" value="24" /></div>
-            <div class="mini-input"><label>η [%]</label><input id="hy-pn" type="number" min="1" max="100" step="any" value="70" /></div>
+
+            <!-- BOTÓN INTERACTIVO PARA TOGGLE DE SEPARACIÓN -->
+            <div style="margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: flex; gap: 10px; align-items: center; justify-content: space-between;">
+              <span style="font-size: 0.88rem; color: var(--foam);">Separación de Caudal Base:</span>
+              <button class="ghost" id="btn-toggle-base" onclick="toggleCaudalBase()">Ocultar Base</button>
+            </div>
           </div>
-          <div class="result"><div class="k">Potencia eléctrica</div><div class="v" id="hy-pout">—</div><div style="margin-top:8px"><span class="status" id="hy-pclass">—</span></div></div>
-          <dl class="meta-grid">
-            <div class="meta"><dt>Q SI</dt><dd id="hy-qsi">—</dd></div>
-            <div class="meta"><dt>P hidráulica</dt><dd id="hy-phyd">—</dd></div>
-            <div class="meta"><dt>Energía 24 h</dt><dd id="hy-kwh">—</dd></div>
-            <div class="meta"><dt>Agua 24 h</dt><dd id="hy-pvol">—</dd></div>
-          </dl>
         </div>
-        <div class="card" style="margin-top:16px">
-          <h3>Potencial hidráulico</h3>
-          <div class="fields four">
-            <div class="mini-input"><label>Cota captación</label><input id="hy-z1" type="number" value="144" step="any" /></div>
-            <div class="mini-input"><label>Cota casa máq.</label><input id="hy-z2" type="number" value="118" step="any" /></div>
-            <div class="mini-input"><label>ΔH pérdidas [m]</label><input id="hy-loss" type="number" value="2" step="any" /></div>
-            <div class="mini-input"><label>Factor de planta %</label><input id="hy-fp" type="number" value="50" step="any" /></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MÓDULO 4: CURVA DE DURACIÓN DE CAUDALES (CDC)
+       ========================================== -->
+  <section id="modulo4">
+    <div class="sec-head">
+      <div class="sec-tag">Módulo 04 · Herramienta Reina de Diseño</div>
+      <h2>Curva de Duración de Caudales (CDC / Flow Duration Curve)</h2>
+      <p class="sec-desc">
+        La Curva de Duración de Caudales indica el porcentaje del tiempo (probabilidad de excedencia) en que un determinado caudal es igualado o superado. Es la herramienta determinante para fijar el caudal de equipamiento (Q<sub>dis</sub>), la potencia firme y calcular la energía anual.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="grid-2" style="margin-bottom: 20px;">
+        <div>
+          <h3>4.1. Fundamento de Construcción</h3>
+          <p style="color: var(--muted); font-size: 0.92rem; margin: 8px 0 12px;">
+            Se toman los caudales diarios de un año completo (o serie histórica de 10 a 30 años de una estación de la DGA), se ordenan de <strong>mayor a menor</strong> y se calcula la probabilidad de excedencia P con la fórmula de Weibull:
+          </p>
+          <div class="formula-box">
+            P = [ m / (N + 1) ] · 100%
+            <small>m: Posición u orden del dato ordenado (1 a N) | N: Total de observaciones (ej. 365 días)</small>
           </div>
-          <div class="result"><div class="k">Energía anual</div><div class="v" id="hy-eout">—</div></div>
-          <dl class="meta-grid">
-            <div class="meta"><dt>H bruto / neto</dt><dd id="hy-heads">—</dd></div>
-            <div class="meta"><dt>P teórico / técnico</dt><dd id="hy-pteo">—</dd></div>
-            <div class="meta"><dt>Horas eq.</dt><dd id="hy-hours">—</dd></div>
-            <div class="meta"><dt>kWh/m³</dt><dd id="hy-spec">—</dd></div>
-          </dl>
-          <p class="formula" style="margin-top:10px">Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp</p>
+          <div style="font-size: 0.88rem; color: var(--muted); line-height: 1.5;">
+            <p><strong style="color: var(--gold);">Q<sub>95</sub> (Aguas Bajas):</strong> Caudal presente el 95% del año. Representa el caudal firme de estiaje disponible casi permanentemente.</p>
+            <p><strong style="color: var(--foam);">Q<sub>50</sub> (Mediana):</strong> Caudal normal garantizado la mitad del año.</p>
+            <p><strong style="color: var(--cyan);">Q<sub>10</sub> (Aguas Altas / Crecidas):</strong> Superado sólo el 10% del año.</p>
+          </div>
         </div>
+
+        <div>
+          <h3>4.2. Zonificación Energética en la CDC</h3>
+          <div style="display: grid; gap: 8px; font-size: 0.88rem; margin-top: 8px;">
+            <div style="background: rgba(61, 206, 138, 0.12); border-left: 3px solid var(--ok); padding: 8px 12px; border-radius: 0 8px 8px 0;">
+              <strong style="color: var(--ok);">Área 1: Energía Turbinable (Firme + Secundaria)</strong>
+              <div style="color: var(--muted);">Volumen turbinado hasta la capacidad nominal Q<sub>dis</sub> (descontando Q<sub>eco</sub>).</div>
+            </div>
+            <div style="background: rgba(224, 122, 108, 0.12); border-left: 3px solid var(--hot); padding: 8px 12px; border-radius: 0 8px 8px 0;">
+              <strong style="color: var(--hot);">Área 2: Agua Vertida (Excedente no Turbinable)</strong>
+              <div style="color: var(--muted);">Caudales que superan Q<sub>dis</sub> + Q<sub>eco</sub>. Se derraman por el aliviadero sin generar kilovatios.</div>
+            </div>
+            <div style="background: rgba(224, 193, 112, 0.12); border-left: 3px solid var(--gold); padding: 8px 12px; border-radius: 0 8px 8px 0;">
+              <strong style="color: var(--gold);">Área 3: Caudal Ecológico Protegido</strong>
+              <div style="color: var(--muted);">Banda base intocable exigida por ley para preservar la biota del río.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SIMULADOR INTERACTIVO DE CDC -->
+      <div style="border-top: 1px solid var(--line); padding-top: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+          <h4 style="color: var(--foam); font-size: 1.1rem;">Simulador Dinámico de Dimensionamiento sobre la CDC</h4>
+          <div style="display: flex; gap: 8px;">
+            <button class="ghost" onclick="cargarEscenarioCDC('cordillerano')">Río Cordillerano</button>
+            <button class="ghost" onclick="cargarEscenarioCDC('sur')">Río Pluvial Sur</button>
+            <button class="ghost" onclick="cargarEscenarioCDC('regulada')">Río Regulado</button>
+          </div>
+        </div>
+
+        <div class="fields-grid">
+          <label class="field">
+            <span class="name">Caudal de Diseño (Q<sub>dis</sub>): <span class="val-badge" id="lbl-cdc-qd">4.20 m³/s</span></span>
+            <input type="range" id="inp-cdc-qd" min="0.5" max="15" value="4.2" step="0.1" oninput="actualizarCDC()">
+          </label>
+          <label class="field">
+            <span class="name">Caudal Ecológico (Q<sub>eco</sub>): <span class="val-badge" id="lbl-cdc-qeco">0.80 m³/s</span></span>
+            <input type="range" id="inp-cdc-qeco" min="0.1" max="4.0" value="0.8" step="0.05" oninput="actualizarCDC()">
+          </label>
+          <label class="field">
+            <span class="name">Altura Neta (H<sub>n</sub>): <span class="val-badge" id="lbl-cdc-hn">38 m</span></span>
+            <input type="range" id="inp-cdc-hn" min="5" max="300" value="38" step="1" oninput="actualizarCDC()">
+          </label>
+          <label class="field">
+            <span class="name">Rendimiento Global (η): <span class="val-badge" id="lbl-cdc-eta">82 %</span></span>
+            <input type="range" id="inp-cdc-eta" min="65" max="92" value="82" step="1" oninput="actualizarCDC()">
+          </label>
+        </div>
+
+        <div class="grid-2" style="align-items: center;">
+          <!-- GRÁFICO SVG DE CDC -->
+          <div class="svg-container" style="height: 340px;">
+            <div id="tooltip-cdc" class="chart-tooltip"></div>
+            <svg id="svg-cdc" class="plot" viewBox="0 0 520 280">
+              <!-- Ejes -->
+              <line x1="55" y1="230" x2="490" y2="230" stroke="var(--line)" stroke-width="1.5"></line>
+              <line x1="55" y1="20" x2="55" y2="230" stroke="var(--line)" stroke-width="1.5"></line>
+
+              <!-- Áreas sombreadas -->
+              <path id="cdc-area-vertido" fill="rgba(224, 122, 108, 0.25)"></path>
+              <path id="cdc-area-turbinable" fill="rgba(61, 206, 138, 0.35)"></path>
+              <path id="cdc-area-eco" fill="rgba(224, 193, 112, 0.25)"></path>
+
+              <!-- Curva CDC Principal -->
+              <path id="cdc-curve" fill="none" stroke="var(--cyan-2)" stroke-width="3"></path>
+
+              <!-- Línea horizontal Qdis + Qeco -->
+              <line id="cdc-line-qd" x1="55" y1="100" x2="490" y2="100" stroke="var(--ok)" stroke-width="2" stroke-dasharray="6,3"></line>
+              <!-- Línea horizontal Qeco -->
+              <line id="cdc-line-eco" x1="55" y1="180" x2="490" y2="180" stroke="var(--gold)" stroke-width="2" stroke-dasharray="4,4"></line>
+
+              <!-- Textos de ejes -->
+              <text x="270" y="260" text-anchor="middle" class="axis-title">Porcentaje del Tiempo de Excedencia (%)</text>
+              <text x="20" y="18" class="axis-title">Q (m³/s)</text>
+
+              <!-- Ticks de X (0, 20, 40, 60, 80, 100%) -->
+              <text x="55" y="245" text-anchor="middle">0%</text>
+              <text x="142" y="245" text-anchor="middle">20%</text>
+              <text x="229" y="245" text-anchor="middle">40%</text>
+              <text x="316" y="245" text-anchor="middle">60%</text>
+              <text x="403" y="245" text-anchor="middle">80%</text>
+              <text x="490" y="245" text-anchor="middle">100%</text>
+
+              <!-- Etiquetas dinámicas en gráfico -->
+              <text id="lbl-svg-qd" x="495" y="95" fill="var(--ok)" font-weight="700" font-size="11">Qd + Qeco</text>
+              <text id="lbl-svg-eco" x="495" y="175" fill="var(--gold)" font-weight="700" font-size="11">Qeco</text>
+            </svg>
+          </div>
+
+          <!-- RESULTADOS EN TIEMPO REAL -->
+          <div>
+            <div class="tiles">
+              <div class="tile gold">
+                <div class="lbl">Potencia Nominal (P<sub>nom</sub>)</div>
+                <div class="val" id="res-cdc-pnom">1,284</div>
+                <div class="unit">kW</div>
+                <div class="sub-detail">A plena capacidad (Q<sub>dis</sub>)</div>
+              </div>
+              <div class="tile ok">
+                <div class="lbl">Energía Anual Generada</div>
+                <div class="val" id="res-cdc-eanual">8,120</div>
+                <div class="unit">MWh / año</div>
+                <div class="sub-detail" id="res-cdc-equiv">Equivalente a 2,200 hogares</div>
+              </div>
+              <div class="tile cyan">
+                <div class="lbl">Factor de Capacidad (Planta)</div>
+                <div class="val" id="res-cdc-fp">72.2</div>
+                <div class="unit">%</div>
+                <div class="sub-detail" id="res-cdc-heq">6,325 horas equivalentes</div>
+              </div>
+              <div class="tile hot">
+                <div class="lbl">Agua Vertida (Excedente)</div>
+                <div class="val" id="res-cdc-vertido">18.4</div>
+                <div class="unit">%</div>
+                <div class="sub-detail">No cabe en la turbina</div>
+              </div>
+            </div>
+
+            <div class="alert-banner" style="margin-top: 12px;">
+              <div style="font-size: 20px;">⚖️</div>
+              <div style="font-size: 0.88rem;" id="res-cdc-tradeoff">
+                <strong>Análisis de compromiso técnico-económico:</strong> Tu caudal de diseño corresponde a una excedencia del <strong>34%</strong> (superado 124 días/año a plena carga). Representa un dimensionamiento equilibrado entre inversión en turbina y captación de energía.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       MÓDULO 5: EJERCICIOS Y AUTOEVALUACIÓN PRÁCTICA
+       ========================================== -->
+  <section id="modulo5">
+    <div class="sec-head">
+      <div class="sec-tag">Módulo 05 · Práctica Aplicada CFT</div>
+      <h2>Ejercicios Guiados y Autoevaluación</h2>
+      <p class="sec-desc">
+        Aplica los conceptos hidrológicos a problemas de cálculo técnico típicos del Taller de Energía II y proyectos de energías renovables en Chile.
+      </p>
+    </div>
+
+    <!-- EJERCICIO 1: GRAVELIUS -->
+    <div class="quiz-box" id="qbox-1">
+      <div class="quiz-header">
+        <span class="quiz-num">EJERCICIO 1 · MORFOMETRÍA DE CUENCA</span>
+        <span class="tag">Kirpich & Gravelius</span>
+      </div>
+      <p style="color: var(--foam); font-size: 0.95rem; line-height: 1.5;">
+        Una microcuenca en la precordillera de la Región de Los Ríos tiene un área de <strong>A = 80 km²</strong> y un perímetro de <strong>P = 38 km</strong>.
+        Calcula el Coeficiente de Compacidad de Gravelius (K<sub>c</sub>) con 2 decimales y determina si la cuenca es propensa a crecidas repentinas.
+      </p>
+      <div class="quiz-inputs">
+        <label class="field" style="max-width: 180px;">
+          <span>Valor de K<sub>c</sub>:</span>
+          <input type="number" id="ans-kc" step="0.01" placeholder="Ej: 1.25">
+        </label>
+        <button class="solid" onclick="verificarEjercicio1()">Comprobar Respuesta</button>
+      </div>
+      <div class="quiz-feedback" id="feed-1"></div>
+    </div>
+
+    <!-- EJERCICIO 2: POTENCIA ELÉCTRICA CON CAUDAL ECOLÓGICO -->
+    <div class="quiz-box" id="qbox-2">
+      <div class="quiz-header">
+        <span class="quiz-num">EJERCICIO 2 · POTENCIA Y CAUDAL ECOLÓGICO</span>
+        <span class="tag">P = ρ · g · Q · H · η</span>
+      </div>
+      <p style="color: var(--foam); font-size: 0.95rem; line-height: 1.5;">
+        En un río con caudal natural de <strong>4.8 m³/s</strong>, la DGA exige un caudal ecológico de <strong>0.6 m³/s</strong>. La central tiene una altura neta de <strong>H<sub>n</sub> = 28 m</strong> y un rendimiento global de la instalación de <strong>η = 82%</strong>.
+        Calcula la <strong>potencia eléctrica útil (P<sub>e</sub>)</strong> entregada a la red en <strong>kW</strong> (usa g = 9.81 m/s² y densidad 1000 kg/m³).
+      </p>
+      <div class="quiz-inputs">
+        <label class="field" style="max-width: 200px;">
+          <span>Potencia Útil (kW):</span>
+          <input type="number" id="ans-pe" step="1" placeholder="Ej: 950">
+        </label>
+        <button class="solid" onclick="verificarEjercicio2()">Comprobar Respuesta</button>
+      </div>
+      <div class="quiz-feedback" id="feed-2"></div>
+    </div>
+
+    <!-- EJERCICIO 3: CURVA DE DURACIÓN DE CAUDALES -->
+    <div class="quiz-box" id="qbox-3">
+      <div class="quiz-header">
+        <span class="quiz-num">EJERCICIO 3 · INTERPRETACIÓN DE LA CDC</span>
+        <span class="tag">Factor de Planta y Horas Equivalentes</span>
+      </div>
+      <p style="color: var(--foam); font-size: 0.95rem; line-height: 1.5;">
+        Una central minihidro de <strong>P<sub>nom</sub> = 1,500 kW (1.5 MW)</strong> genera anualmente <strong>9,855 MWh</strong> según la integración de su Curva de Duración de Caudales.
+        Calcula su <strong>Factor de Planta (FP en %)</strong> respecto al año civil de 8,760 horas.
+      </p>
+      <div class="quiz-inputs">
+        <label class="field" style="max-width: 180px;">
+          <span>Factor de Planta (%):</span>
+          <input type="number" id="ans-fp" step="0.1" placeholder="Ej: 65.5">
+        </label>
+        <button class="solid" onclick="verificarEjercicio3()">Comprobar Respuesta</button>
+      </div>
+      <div class="quiz-feedback" id="feed-3"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================
+       GLOSARIO TÉCNICO Y NORMATIVA
+       ========================================== -->
+  <section id="glosario">
+    <div class="sec-head">
+      <div class="sec-tag">Marco Teórico & Regulatorio</div>
+      <h2>Glosario Técnico y Normativa de Aguas en Chile</h2>
+    </div>
+
+    <div class="card">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">Término</th>
+            <th style="width: 50%;">Definición Técnica</th>
+            <th style="width: 25%;">Referencia / Norma</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Divisoria de Aguas (Divortia Aquarum)</strong></td>
+            <td>Línea geográfica imaginaria trazada sobre las máximas crestas montañosas que separa el escurrimiento hacia dos cuencas hidrográficas vecinas.</td>
+            <td>Morfología Fluvial</td>
+          </tr>
+          <tr>
+            <td><strong>Caudal Ecológico (Q<sub>eco</sub>)</strong></td>
+            <td>Flujo mínimo permanente que debe escurrir por el álveo natural para salvaguardar el ecosistema acuático, fauna íctica y el turismo. No puede ser derivado a tubería de presión.</td>
+            <td>Código de Aguas (Art. 129 bis 1) · Res. DGA N° 71/2014</td>
+          </tr>
+          <tr>
+            <td><strong>Caudal Firme (Q<sub>95</sub>)</strong></td>
+            <td>Caudal igualado o superado el 95% del tiempo en la curva de duración de caudales. Garantiza la potencia firme que una central puede comprometer en el mercado eléctrico.</td>
+            <td>Coordinador Eléctrico Nacional (CEN)</td>
+          </tr>
+          <tr>
+            <td><strong>Tiempo de Concentración (t<sub>c</sub>)</strong></td>
+            <td>Tiempo requerido para que una partícula de agua caída en el punto hidráulicamente más remoto de la cuenca viaje hasta el punto de captación.</td>
+            <td>Fórmula de Kirpich / DOH Chile</td>
+          </tr>
+          <tr>
+            <td><strong>Altura Neta (H<sub>n</sub>)</strong></td>
+            <td>Desnivel físico bruto menos las pérdidas de carga hidráulicas por fricción (Darcy-Weisbach / Manning) y singularidades (codos, rejillas y válvulas) en la tubería de presión.</td>
+            <td>Mecánica de Fluidos e Hidráulica</td>
+          </tr>
+          <tr>
+            <td><strong>Turbinas de Acción vs Reacción</strong></td>
+            <td><strong>Acción (Pelton, Turgo):</strong> La presión del agua se convierte 100% en velocidad en toberas antes de golpear las cucharas al aire libre.<br><strong>Reacción (Francis, Kaplan):</strong> El rodete opera completamente sumergido y aprovecha tanto la presión estática como la energía cinética.</td>
+            <td>IEC 60193 / Criterio de Selección H-Q</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="doc-foot">
+    <div>
+      <strong>Taller de Energía II · Unidad 2: Recursos Hídricos y Centrales Hidráulicas</strong><br>
+      CFT de Los Ríos / Paillaco · Especialidad en Electricidad y Energías Renovables
+    </div>
+    <div style="text-align: right;">
+      Documento interactivo generado para estudio y resolución analítica · Octubre 2026<br>
+      Basado en el registro de cátedra <em>13 de octubre.archimedes</em>
+    </div>
+  </footer>
+
+</div>
       </section>
+
 
       <section class="panel" id="panel-taximetro">
         <div class="hero">
@@ -2087,7 +3224,14 @@
       if (id === "btu") calcBtu();
       if (id === "arcade") calcArcade();
       if (id === "cocina") calcCocina();
-      if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "hydro") {
+        if (typeof renderizarHidrograma === "function") {
+          requestAnimationFrame(() => renderizarHidrograma());
+        }
+        if (typeof actualizarCDC === "function") {
+          requestAnimationFrame(() => actualizarCDC());
+        }
+      }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
@@ -2263,7 +3407,7 @@
     }
     function organizeCalcMenus() {
       document.querySelectorAll("section.panel").forEach((panel) => {
-        if (panel.id === "panel-home") return;
+        if (panel.id === "panel-home" || panel.id === "panel-hydro") return;
         const nodes = [];
         Array.from(panel.children).forEach((el) => {
           if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu") || el.classList.contains("calc-stage")) return;
@@ -3093,90 +4237,613 @@
     ["btu-template","btu-insulation","btu-width","btu-length","btu-height","btu-outdoor","btu-target","btu-hours","btu-capacity","btu-voltage","btu-cop"]
       .forEach((id) => $(id).addEventListener("input", calcBtu));
 
-    /* ===================== HIDRO ===================== */
-    let hyDir = "lm";
-    let hySync = false;
-    function renderVol() {
-      const v = +$("hy-vol").value;
-      if (!Number.isFinite(v) || v < 0) return;
-      const L = hyDir === "lm" ? v : v * 1000;
-      const m3 = L / 1000;
-      $("hy-vol-out").innerHTML = hyDir === "lm" ? fmt(m3, 6) + " <small>m³</small>" : fmt(L, 4) + " <small>L</small>";
-      $("hy-mass").textContent = fmt(L, 1) + " kg";
-      $("hy-weight").textContent = fmt(m3 * RHO * G / 1000, 3) + " kN";
-      $("hy-fill").style.width = (Math.min(1, m3) * 100) + "%";
+    /* ===================== HIDROLOGÍA Y PROYECTOS HIDRÁULICOS (Unidad 2 CFT) ===================== */
+    let mostrarCaudalBase = true;
+    let vistaActualHidro = 'crecida';
+    let escenarioCDC = 'sur';
+
+    function actualizarCuenca() {
+      if (!$("input-area")) return;
+      const A = parseFloat($("input-area").value);
+      const P = parseFloat($("input-perim").value);
+      const L = parseFloat($("input-long").value);
+      const dH = parseFloat($("input-desnivel").value);
+
+      $("lbl-area").textContent = A.toFixed(0) + " km²";
+      $("lbl-perim").textContent = P.toFixed(0) + " km";
+      $("lbl-long").textContent = L.toFixed(0) + " km";
+      $("lbl-desnivel").textContent = dH.toFixed(0) + " m";
+
+      const Kc = 0.282 * (P / Math.sqrt(A));
+      $("res-kc").textContent = Kc.toFixed(2);
+
+      let diag = "Cuenca redonda (Alta propensión a crecidas violentas)";
+      if (Kc >= 1.25 && Kc < 1.5) {
+        diag = "Moderadamente alargada (Crecidas normales)";
+      } else if (Kc >= 1.5) {
+        diag = "Alargada (Picos atenuados, baja agresividad)";
+      }
+      $("res-kc-diag").textContent = diag;
+
+      const S = dH / (L * 1000);
+      const tcHoras = 0.0663 * (Math.pow(L, 0.77) / Math.pow(Math.max(S, 0.0001), 0.385));
+      const tcMin = tcHoras * 60;
+
+      $("res-tc").textContent = tcHoras.toFixed(1);
+      $("res-tc-min").textContent = Math.round(tcMin) + " minutos";
+
+      const pathCuenca = $("path-cuenca");
+      if (pathCuenca) {
+        const ratio = Math.min(Math.max((Kc - 1.0) / 1.0, 0), 1);
+        const xEnd = 300 + (ratio * 80);
+        const ySpread = 60 - (ratio * 25);
+        pathCuenca.setAttribute("d", `M 50,75 C 70,${75 - ySpread} 180,${75 - ySpread - 10} ${xEnd},45 C ${xEnd + 40},75 ${xEnd + 30},105 ${xEnd},115 C 180,${75 + ySpread + 10} 70,${75 + ySpread} 50,75 Z`);
+      }
     }
-    function setQ(lps) {
-      hySync = true;
-      $("hy-lps").value = lps;
-      $("hy-cms").value = lps / 1000;
-      $("hy-cmh").value = (lps / 1000) * 3600;
-      $("hy-lpm").textContent = fmt(lps * 60, 2) + " L/min";
-      $("hy-day").textContent = fmt((lps / 1000) * 86400, 2) + " m³/día";
-      hySync = false;
+
+    function calcProyecto() {
+      if (!$("inp-qrio")) return;
+      const Qrio = parseFloat($("inp-qrio").value);
+      const Qeco = parseFloat($("inp-qeco").value);
+      const Qd = parseFloat($("inp-qd").value);
+      const Hb = parseFloat($("inp-hb").value);
+      const pctPerd = parseFloat($("inp-perdp").value);
+      const etat = parseFloat($("inp-etat").value) / 100;
+      const etag = parseFloat($("inp-etag").value) / 100;
+      const horas = parseFloat($("inp-horas").value);
+
+      $("lbl-qrio").textContent = Qrio.toFixed(2) + " m³/s";
+      $("lbl-qeco").textContent = Qeco.toFixed(2) + " m³/s";
+      $("lbl-qd").textContent = Qd.toFixed(2) + " m³/s";
+      $("lbl-hb").textContent = Hb.toFixed(1) + " m";
+      $("lbl-perdp").textContent = pctPerd.toFixed(1) + " %";
+      $("lbl-etat").textContent = Math.round(etat * 100) + " %";
+      $("lbl-etag").textContent = Math.round(etag * 100) + " %";
+      $("lbl-horas").textContent = horas.toLocaleString("es-CL") + " h";
+
+      const Qdisp = Math.max(0, Qrio - Qeco);
+      const Qturb = Math.min(Qdisp, Qd);
+
+      const banner = $("banner-caudal");
+      const msg = $("msg-caudal");
+
+      if (banner && msg) {
+        if (Qrio <= Qeco) {
+          banner.className = "alert-banner warn";
+          msg.innerHTML = `<strong>¡Caudal insuficiente!</strong> El río lleva ${Qrio.toFixed(2)} m³/s, que es menor o igual al caudal ecológico obligatorio (${Qeco.toFixed(2)} m³/s). La central debe permanecer <strong>detenida</strong> para no infringir la ley.`;
+        } else if (Qdisp < Qd) {
+          banner.className = "alert-banner warn";
+          msg.innerHTML = `<strong>Generación parcial:</strong> El río aporta ${Qdisp.toFixed(2)} m³/s útiles (descontado el caudal ecológico), operando por debajo del caudal nominal de diseño (${Qd.toFixed(2)} m³/s).`;
+        } else {
+          banner.className = "alert-banner ok";
+          msg.innerHTML = `<strong>Capacidad plena:</strong> Caudal aprovechable de ${Qdisp.toFixed(2)} m³/s. Se turbinan ${Qd.toFixed(2)} m³/s a régimen nominal y se derraman ${(Qdisp - Qd).toFixed(2)} m³/s por el río.`;
+        }
+      }
+
+      const hf = Hb * (pctPerd / 100);
+      const Hn = Math.max(0, Hb - hf);
+      const Ph = 1000 * 9.81 * Qturb * Hb / 1000;
+      const etaGlobal = (1 - (pctPerd / 100)) * etat * etag;
+      const Pe = 1000 * 9.81 * Qturb * Hn * etat * etag / 1000;
+      const Pperd = Math.max(0, Ph - Pe);
+
+      const EanualMWh = (Pe * horas) / 1000;
+      const PmaxNom = (1000 * 9.81 * Qd * Hn * etat * etag / 1000);
+      const FP = PmaxNom > 0 ? (EanualMWh * 1000) / (PmaxNom * 8760) * 100 : 0;
+
+      $("res-ph").textContent = Math.round(Ph).toLocaleString("es-CL");
+      $("res-pe").textContent = Math.round(Pe).toLocaleString("es-CL");
+      $("res-pe-mw").textContent = (Pe / 1000).toFixed(2) + " MW entregados";
+      $("res-perd").textContent = Math.round(Pperd).toLocaleString("es-CL");
+      $("res-rend-global").textContent = `Rendimiento global: ${(etaGlobal * 100).toFixed(1)}%`;
+      $("res-eanual").textContent = Math.round(EanualMWh).toLocaleString("es-CL");
+      $("res-fp").textContent = `Factor de Planta: ${FP.toFixed(1)}%`;
+
+      determinarTurbina(Qd, Hn);
     }
-    function renderQ() { setQ(+$("hy-lps").value || 0); }
-    function classifyP(pKw, el) {
-      el.className = "status";
-      if (pKw <= 0) { el.textContent = "Ingrese caudal y salto"; return; }
-      if (pKw < 5) { el.classList.add("pico"); el.textContent = "Pico hidro · P < 5 kW · RGR N°04"; }
-      else if (pKw <= 300) { el.classList.add("micro"); el.textContent = "Microhidro · 5 a 300 kW · RGR N°04 / Ley 21.118"; }
-      else if (pKw <= 500) { el.classList.add("over"); el.textContent = "Sobre 300 kW · Clase B cubre BT hasta 500 kW (D.S. N° 92)"; }
-      else { el.classList.add("out"); el.textContent = "Sobre 500 kW · fuera de Clase B en BT"; }
+
+    function determinarTurbina(Q, H) {
+      if (!$("res-turbina-nombre")) return;
+      let nombre = "", tipo = "", desc = "";
+
+      if (H >= 120) {
+        if (Q < 4) {
+          nombre = "Turbina Pelton";
+          tipo = "Acción tangencial (Inyectores a chorro libre)";
+          desc = "Inmejorable para altos desniveles y caudales reducidos a medios. Excelente rendimiento a cargas parciales y mantenimiento sencillo de cucharas.";
+        } else {
+          nombre = "Turbina Francis de Alta Caída";
+          tipo = "Reacción radial-axial";
+          desc = "Desnivel elevado con caudal significativo. Requiere diseño robusto para soportar la presión hidrostática en la cámara espiral.";
+        }
+      } else if (H >= 25 && H < 120) {
+        if (Q <= 1.0) {
+          nombre = "Turbina Michell-Banki (Flujo Cruzado)";
+          tipo = "Acción de flujo transversal";
+          desc = "Extremadamente económica y robusta para proyectos de minihidro comunitaria y pequeños cauces de montaña con caudales variables.";
+        } else {
+          nombre = "Turbina Francis";
+          tipo = "Reacción de flujo mixto";
+          desc = "El caballo de batalla mundial para alturas medias. El agua ingresa con presión radialmente a través del distribuidor Fink y descarga axialmente hacia el tubo de aspiración.";
+        }
+      } else {
+        if (H < 10 && Q >= 5) {
+          nombre = "Turbina Kaplan / Bulbo";
+          tipo = "Reacción de flujo axial con álabes orientables";
+          desc = "Diseñada para ríos caudalosos de llanura con desniveles mínimos. Los álabes móviles del rodete y del distribuidor garantizan alto rendimiento en todo el rango.";
+        } else if (H < 8 && Q < 3) {
+          nombre = "Tornillo Hidrodinámico de Arquímedes";
+          tipo = "Gravimétrico de baja velocidad";
+          desc = "Ideal para microcentrales de muy bajo desnivel (1m a 6m). Completamente amigable con la fauna íctica (permite paso de peces sin dañarlos).";
+        } else {
+          nombre = "Turbina Kaplan / Semi-Kaplan";
+          tipo = "Reacción axial";
+          desc = "Apropiada para bajas caídas con caudales abundantes, permitiendo aprovechar ríos caudalosos sin requerir grandes embalses.";
+        }
+      }
+
+      $("res-turbina-nombre").textContent = nombre;
+      $("res-turbina-tipo").textContent = tipo;
+      $("res-turbina-desc").textContent = desc;
     }
-    function renderP() {
-      const q = $("hy-pqu").value === "lps" ? (+$("hy-pq").value || 0) / 1000 : (+$("hy-pq").value || 0);
-      const h = +$("hy-ph").value || 0;
-      const eta = Math.max(0, (+$("hy-pn").value || 0) / 100);
-      const pHyd = RHO * G * q * h / 1000;
-      const pKw = pHyd * eta;
-      $("hy-pout").innerHTML = fmt(pKw, 3) + " <small>kW</small>";
-      $("hy-qsi").textContent = fmt(q, 6) + " m³/s";
-      $("hy-phyd").textContent = fmt(pHyd, 3) + " kW";
-      $("hy-kwh").textContent = fmt(pKw * 24, 1) + " kWh/día";
-      $("hy-pvol").textContent = fmt(q * 86400, 1) + " m³/día";
-      classifyP(pKw, $("hy-pclass"));
+
+    function seleccionarVistaHidrograma(modo) {
+      if (!$("btn-reg-crecida")) return;
+      vistaActualHidro = modo;
+      ["btn-reg-crecida", "btn-reg-pluvial", "btn-reg-nival", "btn-reg-mixto"].forEach((id) => {
+        const el = $(id);
+        if (el) el.classList.remove("active");
+      });
+
+      const tit = $("hidro-title");
+      const sum = $("hidro-summary");
+      const xLbl = $("hidro-x-label");
+
+      if (modo === "crecida") {
+        if ($("btn-reg-crecida")) $("btn-reg-crecida").classList.add("active");
+        if (tit) tit.textContent = "Anatomía de un Hidrograma de Crecida (Evento Singular)";
+        if (sum) sum.textContent = "Respuesta hidrológica en horas frente a un temporal intenso. Muestra la concentración del flujo, el caudal punta instantáneo y la posterior recesión.";
+        if (xLbl) xLbl.textContent = "Tiempo transcurrido (Horas)";
+      } else if (modo === "pluvial") {
+        if ($("btn-reg-pluvial")) $("btn-reg-pluvial").classList.add("active");
+        if (tit) tit.textContent = "Régimen Pluvial (Zona Centro-Sur de Chile)";
+        if (sum) sum.textContent = "Dominado por las lluvias de invierno (junio, julio, agosto). Típico de cuencas de la Cordillera de la Costa y valles del centro-sur (Biobío bajo, Los Ríos, Los Lagos). En verano el río decae a su caudal base de estiaje.";
+        if (xLbl) xLbl.textContent = "Meses del año (Ene a Dic)";
+      } else if (modo === "nival") {
+        if ($("btn-reg-nival")) $("btn-reg-nival").classList.add("active");
+        if (tit) tit.textContent = "Régimen Nival (Alta Cordillera de Los Andes)";
+        if (sum) sum.textContent = "La precipitación invernal cae en forma de nieve y queda congelada. El deshielo se activa con las temperaturas de primavera-verano (noviembre a enero), generando los máximos caudales precisamente cuando no llueve.";
+        if (xLbl) xLbl.textContent = "Meses del año (Ene a Dic)";
+      } else if (modo === "mixto") {
+        if ($("btn-reg-mixto")) $("btn-reg-mixto").classList.add("active");
+        if (tit) tit.textContent = "Régimen Pluvio-Nival (Mixto Andino)";
+        if (sum) sum.textContent = "Doble pico anual: primer máximo en invierno por las lluvias en cotas medias/bajas, y un segundo máximo en primavera/verano por fusión de nieves cordilleranas (ej. Ríos Maule, Biobío, Maipo).";
+        if (xLbl) xLbl.textContent = "Meses del año (Ene a Dic)";
+      }
+
+      renderizarHidrograma();
     }
-    function renderPot() {
-      const z1 = +$("hy-z1").value, z2 = +$("hy-z2").value;
-      const hBruto = Math.max(0, z1 - z2);
-      const loss = Math.max(0, +$("hy-loss").value || 0);
-      const hNeto = hBruto - loss;
-      const q = $("hy-pqu").value === "lps" ? (+$("hy-pq").value || 0) / 1000 : (+$("hy-pq").value || 0);
-      const eta = Math.max(0, (+$("hy-pn").value || 0) / 100);
-      const fp = Math.max(0, (+$("hy-fp").value || 0) / 100);
-      const pTeo = RHO * G * q * hBruto / 1000;
-      const pTec = hNeto > 0 ? RHO * G * q * hNeto * eta / 1000 : 0;
-      const hours = 8760 * fp;
-      const kwh = pTec * hours;
-      $("hy-eout").innerHTML = kwh >= 1000 ? fmt(kwh / 1000, 2) + " <small>MWh/año</small>" : fmt(kwh, 1) + " <small>kWh/año</small>";
-      $("hy-heads").textContent = fmt(hBruto, 2) + " / " + fmt(Math.max(0, hNeto), 2) + " m";
-      $("hy-pteo").textContent = fmt(pTeo, 2) + " / " + fmt(pTec, 2) + " kW";
-      $("hy-hours").textContent = fmt(hours, 0) + " h";
-      $("hy-spec").textContent = fmt(hNeto > 0 ? (RHO * G * hNeto * eta) / 3.6e6 : 0, 4);
+
+    function toggleCaudalBase() {
+      mostrarCaudalBase = !mostrarCaudalBase;
+      const btn = $("btn-toggle-base");
+      if (btn) btn.textContent = mostrarCaudalBase ? "Ocultar Base" : "Mostrar Base";
+      renderizarHidrograma();
     }
-    $("hy-dir-lm").addEventListener("click", () => {
-      const L = hyDir === "lm" ? +$("hy-vol").value : +$("hy-vol").value * 1000;
-      hyDir = "lm"; $("hy-vol-label").textContent = "Volumen en litros"; $("hy-vol").value = L;
-      $("hy-dir-lm").classList.add("primary"); $("hy-dir-ml").classList.remove("primary");
-      renderVol();
-    });
-    $("hy-dir-ml").addEventListener("click", () => {
-      const L = hyDir === "lm" ? +$("hy-vol").value : +$("hy-vol").value * 1000;
-      hyDir = "ml"; $("hy-vol-label").textContent = "Volumen en m³"; $("hy-vol").value = L / 1000;
-      $("hy-dir-ml").classList.add("primary"); $("hy-dir-lm").classList.remove("primary");
-      renderVol();
-    });
-    $("hy-vol").addEventListener("input", renderVol);
-    document.querySelectorAll("[data-vol]").forEach((b) => b.addEventListener("click", () => {
-      const L = +b.dataset.vol; $("hy-vol").value = hyDir === "lm" ? L : L / 1000; renderVol();
-    }));
-    $("hy-lps").addEventListener("input", () => { if (!hySync) setQ(+$("hy-lps").value || 0); });
-    $("hy-cms").addEventListener("input", () => { if (!hySync) setQ((+$("hy-cms").value || 0) * 1000); });
-    $("hy-cmh").addEventListener("input", () => { if (!hySync) setQ(((+$("hy-cmh").value || 0) / 3600) * 1000); });
-    ["hy-pq","hy-pqu","hy-ph","hy-pn","hy-z1","hy-z2","hy-loss","hy-fp"].forEach((id) => {
-      $(id).addEventListener("input", () => { renderP(); renderPot(); });
-    });
+
+    function renderizarHidrograma() {
+      const pTotal = $("hidro-path-total");
+      if (!pTotal) return;
+      const pBase = $("hidro-path-base");
+      const aBase = $("hidro-area-base");
+      const aDir = $("hidro-area-dir");
+      const markers = $("hidro-markers");
+      if (markers) markers.innerHTML = "";
+
+      const x0 = 50, x1 = 490, y0 = 240;
+      let points = [], basePoints = [];
+
+      if (vistaActualHidro === "crecida") {
+        points = [
+          {x: 50, y: 210}, {x: 100, y: 205}, {x: 140, y: 190},
+          {x: 180, y: 60},
+          {x: 230, y: 110}, {x: 300, y: 165}, {x: 380, y: 195}, {x: 490, y: 210}
+        ];
+        basePoints = [
+          {x: 50, y: 210}, {x: 140, y: 210}, {x: 230, y: 205}, {x: 380, y: 208}, {x: 490, y: 210}
+        ];
+        if (markers) {
+          markers.innerHTML += `
+            <circle cx="180" cy="60" r="6" fill="var(--gold)"></circle>
+            <text x="180" y="45" text-anchor="middle" class="highlight">Qpico = 145 m³/s (tp = 14 h)</text>
+          `;
+        }
+      } else if (vistaActualHidro === "pluvial") {
+        points = [
+          {x: 50, y: 215}, {x: 90, y: 210}, {x: 130, y: 195}, {x: 170, y: 160},
+          {x: 220, y: 90}, {x: 270, y: 55},
+          {x: 320, y: 80}, {x: 370, y: 130}, {x: 410, y: 175}, {x: 450, y: 205}, {x: 490, y: 215}
+        ];
+        basePoints = [
+          {x: 50, y: 220}, {x: 170, y: 210}, {x: 270, y: 190}, {x: 370, y: 200}, {x: 490, y: 220}
+        ];
+        if (markers) {
+          markers.innerHTML += `
+            <circle cx="270" cy="55" r="5" fill="var(--cyan)"></circle>
+            <text x="270" y="40" text-anchor="middle" class="highlight">Pico Invernal (Julio)</text>
+          `;
+        }
+      } else if (vistaActualHidro === "nival") {
+        points = [
+          {x: 50, y: 70}, {x: 90, y: 110}, {x: 140, y: 160}, {x: 200, y: 200},
+          {x: 260, y: 215}, {x: 320, y: 190}, {x: 380, y: 130}, {x: 440, y: 75}, {x: 490, y: 65}
+        ];
+        basePoints = [
+          {x: 50, y: 210}, {x: 200, y: 215}, {x: 320, y: 210}, {x: 490, y: 210}
+        ];
+        if (markers) {
+          markers.innerHTML += `
+            <circle cx="460" cy="70" r="5" fill="var(--gold)"></circle>
+            <text x="440" y="50" text-anchor="middle" class="highlight">Pico Deshielo (Dic - Ene)</text>
+          `;
+        }
+      } else {
+        points = [
+          {x: 50, y: 190}, {x: 100, y: 180}, {x: 150, y: 140},
+          {x: 210, y: 80},
+          {x: 260, y: 125},
+          {x: 340, y: 75},
+          {x: 420, y: 130}, {x: 490, y: 185}
+        ];
+        basePoints = [
+          {x: 50, y: 210}, {x: 210, y: 195}, {x: 340, y: 195}, {x: 490, y: 210}
+        ];
+        if (markers) {
+          markers.innerHTML += `
+            <text x="210" y="65" text-anchor="middle" class="highlight">Pico Lluvia (Jul)</text>
+            <text x="340" y="60" text-anchor="middle" class="highlight">Pico Deshielo (Nov)</text>
+          `;
+        }
+      }
+
+      const dTot = `M ${points[0].x},${points[0].y} ` + points.slice(1).map((p) => `L ${p.x},${p.y}`).join(" ");
+      pTotal.setAttribute("d", dTot);
+
+      if (pBase) {
+        const dBase = `M ${basePoints[0].x},${basePoints[0].y} ` + basePoints.slice(1).map((p) => `L ${p.x},${p.y}`).join(" ");
+        pBase.setAttribute("d", mostrarCaudalBase ? dBase : "");
+        pBase.style.display = mostrarCaudalBase ? "block" : "none";
+      }
+
+      if (aBase) {
+        const dAreaBase = `M ${basePoints[0].x},${y0} L ${basePoints[0].x},${basePoints[0].y} ` +
+                        basePoints.slice(1).map((p) => `L ${p.x},${p.y}`).join(" ") +
+                        ` L ${basePoints[basePoints.length - 1].x},${y0} Z`;
+        aBase.setAttribute("d", mostrarCaudalBase ? dAreaBase : "");
+        aBase.style.display = mostrarCaudalBase ? "block" : "none";
+      }
+
+      if (aDir) {
+        const bottomPath = mostrarCaudalBase ?
+          basePoints.slice().reverse().map((p) => `L ${p.x},${p.y}`).join(" ") :
+          `L ${points[points.length - 1].x},${y0} L ${points[0].x},${y0}`;
+
+        const dAreaDir = `M ${points[0].x},${points[0].y} ` +
+                       points.slice(1).map((p) => `L ${p.x},${p.y}`).join(" ") +
+                       " " + bottomPath + " Z";
+        aDir.setAttribute("d", dAreaDir);
+      }
+    }
+
+    function cargarEscenarioCDC(tipo) {
+      escenarioCDC = tipo;
+      if (tipo === "cordillerano") {
+        if ($("inp-cdc-qd")) $("inp-cdc-qd").value = 6.5;
+        if ($("inp-cdc-qeco")) $("inp-cdc-qeco").value = 1.2;
+        if ($("inp-cdc-hn")) $("inp-cdc-hn").value = 85;
+      } else if (tipo === "sur") {
+        if ($("inp-cdc-qd")) $("inp-cdc-qd").value = 4.2;
+        if ($("inp-cdc-qeco")) $("inp-cdc-qeco").value = 0.8;
+        if ($("inp-cdc-hn")) $("inp-cdc-hn").value = 38;
+      } else {
+        if ($("inp-cdc-qd")) $("inp-cdc-qd").value = 3.5;
+        if ($("inp-cdc-qeco")) $("inp-cdc-qeco").value = 0.6;
+        if ($("inp-cdc-hn")) $("inp-cdc-hn").value = 25;
+      }
+      actualizarCDC();
+    }
+
+    function obtenerCaudalExcedencia(pPct) {
+      const p = pPct / 100;
+      if (escenarioCDC === "cordillerano") {
+        return 14 * Math.exp(-2.2 * p) + 1.2;
+      } else if (escenarioCDC === "sur") {
+        return 11 * Math.exp(-1.8 * p) + 0.8;
+      } else {
+        return 6.5 * Math.exp(-0.9 * p) + 1.5;
+      }
+    }
+
+    function actualizarCDC() {
+      if (!$("inp-cdc-qd")) return;
+      const Qd = parseFloat($("inp-cdc-qd").value);
+      const Qeco = parseFloat($("inp-cdc-qeco").value);
+      const Hn = parseFloat($("inp-cdc-hn").value);
+      const eta = parseFloat($("inp-cdc-eta").value) / 100;
+
+      $("lbl-cdc-qd").textContent = Qd.toFixed(2) + " m³/s";
+      $("lbl-cdc-qeco").textContent = Qeco.toFixed(2) + " m³/s";
+      $("lbl-cdc-hn").textContent = Hn.toFixed(0) + " m";
+      $("lbl-cdc-eta").textContent = Math.round(eta * 100) + " %";
+
+      const N = 100;
+      let caudales = [];
+      let qMax = 0;
+      for (let i = 0; i <= N; i++) {
+        const q = obtenerCaudalExcedencia(i);
+        caudales.push(q);
+        if (q > qMax) qMax = q;
+      }
+      qMax = Math.max(qMax, Qd + Qeco + 1.5);
+
+      const xMin = 55, xMax = 490, yBottom = 230, yTop = 30;
+      function xCoord(pct) { return xMin + (pct / 100) * (xMax - xMin); }
+      function yCoord(qVal) { return yBottom - (Math.max(qVal, 0) / qMax) * (yBottom - yTop); }
+
+      let pathD = `M ${xCoord(0)},${yCoord(caudales[0])} `;
+      for (let i = 1; i <= N; i++) {
+        pathD += `L ${xCoord(i)},${yCoord(caudales[i])} `;
+      }
+      const cdcCurve = $("cdc-curve");
+      if (cdcCurve) cdcCurve.setAttribute("d", pathD);
+
+      const yQdTotal = yCoord(Qd + Qeco);
+      const yQeco = yCoord(Qeco);
+
+      const lineQd = $("cdc-line-qd");
+      if (lineQd) {
+        lineQd.setAttribute("y1", yQdTotal);
+        lineQd.setAttribute("y2", yQdTotal);
+      }
+
+      const lineEco = $("cdc-line-eco");
+      if (lineEco) {
+        lineEco.setAttribute("y1", yQeco);
+        lineEco.setAttribute("y2", yQeco);
+      }
+
+      const lblQd = $("lbl-svg-qd");
+      if (lblQd) {
+        lblQd.setAttribute("y", yQdTotal - 4);
+        lblQd.textContent = `Qd + Qeco (${(Qd + Qeco).toFixed(1)})`;
+      }
+
+      const lblEco = $("lbl-svg-eco");
+      if (lblEco) {
+        lblEco.setAttribute("y", yQeco - 4);
+        lblEco.textContent = `Qeco (${Qeco.toFixed(1)})`;
+      }
+
+      let dEco = `M ${xCoord(0)},${yBottom} `;
+      for (let i = 0; i <= N; i++) {
+        const qE = Math.min(caudales[i], Qeco);
+        dEco += `L ${xCoord(i)},${yCoord(qE)} `;
+      }
+      dEco += `L ${xCoord(100)},${yBottom} Z`;
+      const cdcAreaEco = $("cdc-area-eco");
+      if (cdcAreaEco) cdcAreaEco.setAttribute("d", dEco);
+
+      let dTurb = `M ${xCoord(0)},${yCoord(Math.min(caudales[0], Qeco))} `;
+      for (let i = 0; i <= N; i++) {
+        const qT = Math.min(caudales[i], Qd + Qeco);
+        dTurb += `L ${xCoord(i)},${yCoord(qT)} `;
+      }
+      for (let i = N; i >= 0; i--) {
+        const qE = Math.min(caudales[i], Qeco);
+        dTurb += `L ${xCoord(i)},${yCoord(qE)} `;
+      }
+      dTurb += `Z`;
+      const cdcAreaTurb = $("cdc-area-turbinable");
+      if (cdcAreaTurb) cdcAreaTurb.setAttribute("d", dTurb);
+
+      let dVert = `M ${xCoord(0)},${yCoord(Qd + Qeco)} `;
+      let hayVertido = false;
+      for (let i = 0; i <= N; i++) {
+        if (caudales[i] > Qd + Qeco) {
+          hayVertido = true;
+          dVert += `L ${xCoord(i)},${yCoord(caudales[i])} `;
+        } else {
+          dVert += `L ${xCoord(i)},${yCoord(Qd + Qeco)} `;
+        }
+      }
+      dVert += `L ${xCoord(0)},${yCoord(Qd + Qeco)} Z`;
+      const cdcAreaVert = $("cdc-area-vertido");
+      if (cdcAreaVert) cdcAreaVert.setAttribute("d", hayVertido ? dVert : "");
+
+      const Pnom = 1000 * 9.81 * Qd * Hn * eta / 1000;
+      let sumaEnergiaKWh = 0;
+      let sumaVertidoM3 = 0;
+      let sumaTotalRioM3 = 0;
+      let pPlenaCarga = 0;
+
+      for (let i = 0; i < N; i++) {
+        const qProm = (caudales[i] + caudales[i + 1]) / 2;
+        const dtHoras = 8760 / N;
+        sumaTotalRioM3 += qProm * dtHoras * 3600;
+
+        if (qProm > Qeco) {
+          const qAprov = qProm - Qeco;
+          const qTurb = Math.min(qAprov, Qd);
+          const pKW = 1000 * 9.81 * qTurb * Hn * eta / 1000;
+          sumaEnergiaKWh += pKW * dtHoras;
+
+          if (qAprov > Qd) {
+            sumaVertidoM3 += (qAprov - Qd) * dtHoras * 3600;
+          }
+          if (qAprov >= Qd) {
+            pPlenaCarga++;
+          }
+        }
+      }
+
+      const EanualMWh = sumaEnergiaKWh / 1000;
+      const FP = Pnom > 0 ? (EanualMWh * 1000) / (Pnom * 8760) * 100 : 0;
+      const heq = Pnom > 0 ? (EanualMWh * 1000 / Pnom) : 0;
+      const pctVertido = sumaTotalRioM3 > 0 ? (sumaVertidoM3 / sumaTotalRioM3) * 100 : 0;
+      const excedenciaQd = pPlenaCarga;
+
+      $("res-cdc-pnom").textContent = Math.round(Pnom).toLocaleString("es-CL");
+      $("res-cdc-eanual").textContent = Math.round(EanualMWh).toLocaleString("es-CL");
+      $("res-cdc-equiv").textContent = `Equivalente a ${Math.round(EanualMWh / 3.2).toLocaleString("es-CL")} hogares`;
+      $("res-cdc-fp").textContent = FP.toFixed(1);
+      $("res-cdc-heq").textContent = `${Math.round(heq).toLocaleString("es-CL")} horas equivalentes`;
+      $("res-cdc-vertido").textContent = pctVertido.toFixed(1);
+
+      $("res-cdc-tradeoff").innerHTML = `
+        <strong>Diagnóstico del diseño:</strong> Caudal nominal de <strong>${Qd.toFixed(2)} m³/s</strong> con excedencia de <strong>${excedenciaQd}%</strong> (${Math.round(excedenciaQd * 3.65)} días/año a plena capacidad).
+        ${excedenciaQd < 20 ?
+          '<span style="color:var(--warn)">Atención: Caudal sobredimensionado. La central operará a plena carga pocos días al año, elevando el costo unitario de la turbina.</span>' :
+          excedenciaQd > 55 ?
+          '<span style="color:var(--ok)">Diseño muy conservador con alto Factor de Planta, pero se desaprovecha un volumen considerable de energía excedentaria.</span>' :
+          '<span style="color:var(--cyan-2)">Dimensionamiento equilibrado según el estándar de la industria hidroeléctrica de pasada.</span>'}
+      `;
+    }
+
+    function verificarEjercicio1() {
+      const val = parseFloat($("ans-kc").value);
+      const feed = $("feed-1");
+      if (!feed) return;
+      if (Math.abs(val - 1.20) <= 0.03) {
+        feed.className = "quiz-feedback success";
+        feed.innerHTML = `
+          <strong>¡Excelente y correcto!</strong> K<sub>c</sub> = 0.282 · (38 / √80) = <strong>1.20</strong>.<br>
+          Al ser un valor muy cercano a 1.0 (cuenca casi circular), todos los afluentes tienen tiempos de recorrido similares, por lo que las aguas convergen casi al mismo tiempo en la desembocadura. <strong>Conclusión:</strong> Alta propensión a crecidas repentinas y violentas en la bocatoma.
+        `;
+      } else {
+        feed.className = "quiz-feedback error";
+        feed.innerHTML = `
+          <strong>Respuesta incorrecta.</strong> Revisa el cálculo: primero calcula √80 ≈ 8.944 km. Luego 38 / 8.944 ≈ 4.248. Finalmente multiplica por 0.282 para obtener <strong>1.20</strong>. Inténtalo de nuevo.
+        `;
+      }
+    }
+
+    function verificarEjercicio2() {
+      const val = parseFloat($("ans-pe").value);
+      const feed = $("feed-2");
+      if (!feed) return;
+      if (Math.abs(val - 946) <= 6) {
+        feed.className = "quiz-feedback success";
+        feed.innerHTML = `
+          <strong>¡Cálculo Impecable!</strong> P<sub>e</sub> = <strong>946 kW</strong> (0.95 MW).<br>
+          <strong>Desarrollo paso a paso:</strong><br>
+          1. Caudal turbinable: Q<sub>t</sub> = Q<sub>río</sub> - Q<sub>eco</sub> = 4.8 - 0.6 = <strong>4.2 m³/s</strong>.<br>
+          2. Potencia hidráulica bruta: P<sub>h</sub> = 1000 · 9.81 · 4.2 · 28 = 1,153,656 W (1,154 kW).<br>
+          3. Potencia eléctrica útil: P<sub>e</sub> = 1,153,656 · 0.82 = <strong>945,998 W ≈ 946 kW</strong>.
+        `;
+      } else {
+        feed.className = "quiz-feedback error";
+        feed.innerHTML = `
+          <strong>Respuesta incorrecta.</strong> No olvides restar primero el caudal ecológico obligatorio: Q<sub>util</sub> = 4.8 - 0.6 = 4.2 m³/s. Luego aplica P<sub>e</sub> = 1000 · 9.81 · 4.2 · 28 · 0.82. El resultado esperado ronda los <strong>946 kW</strong>.
+        `;
+      }
+    }
+
+    function verificarEjercicio3() {
+      const val = parseFloat($("ans-fp").value);
+      const feed = $("feed-3");
+      if (!feed) return;
+      if (Math.abs(val - 75.0) <= 0.5) {
+        feed.className = "quiz-feedback success";
+        feed.innerHTML = `
+          <strong>¡Muy bien!</strong> Factor de Planta (FP) = <strong>75.0%</strong>.<br>
+          <strong>Fórmula:</strong> FP = [ Energía Real Generada / (Potencia Nominal · 8,760 h) ] · 100%<br>
+          FP = [ 9,855 MWh / (1.5 MW · 8,760 h) ] · 100% = 9,855 / 13,140 · 100% = <strong>75.0%</strong>.<br>
+          Esto significa que la central generó el equivalente a operar a plena carga durante 6,570 horas en el año.
+        `;
+      } else {
+        feed.className = "quiz-feedback error";
+        feed.innerHTML = `
+          <strong>Respuesta incorrecta.</strong> La energía máxima teórica que podría haber generado la central es 1.5 MW · 8,760 h = 13,140 MWh. Luego calcula (9,855 / 13,140) · 100%. Debe dar <strong>75.0%</strong>.
+        `;
+      }
+    }
+
+    function setupHydroTooltips() {
+      const svgCdc = $("svg-cdc");
+      const tipCdc = $("tooltip-cdc");
+      if (svgCdc && tipCdc) {
+        svgCdc.addEventListener("mousemove", (e) => {
+          const rect = svgCdc.getBoundingClientRect();
+          const xClient = e.clientX - rect.left;
+          const yClient = e.clientY - rect.top;
+          const xPctRel = (xClient / rect.width);
+          const vbX = xPctRel * 520;
+          if (vbX >= 55 && vbX <= 490) {
+            const pctExc = Math.round(((vbX - 55) / (490 - 55)) * 100);
+            const qVal = obtenerCaudalExcedencia(pctExc);
+            tipCdc.style.display = "block";
+            tipCdc.style.left = `${Math.min(rect.width - 150, Math.max(10, xClient + 12))}px`;
+            tipCdc.style.top = `${Math.max(10, yClient - 42)}px`;
+            tipCdc.innerHTML = `<strong>Excedencia: ${pctExc}%</strong> (${Math.round(pctExc * 3.65)} d/año)<br>Caudal Q: <strong>${qVal.toFixed(2)} m³/s</strong>`;
+          } else {
+            tipCdc.style.display = "none";
+          }
+        });
+        svgCdc.addEventListener("mouseleave", () => {
+          tipCdc.style.display = "none";
+        });
+      }
+
+      const svgHidro = $("svg-hidro");
+      const tipHidro = $("tooltip-hidro");
+      if (svgHidro && tipHidro) {
+        svgHidro.addEventListener("mousemove", (e) => {
+          const rect = svgHidro.getBoundingClientRect();
+          const xClient = e.clientX - rect.left;
+          const yClient = e.clientY - rect.top;
+          const relX = (xClient / rect.width);
+          tipHidro.style.display = "block";
+          tipHidro.style.left = `${Math.min(rect.width - 150, Math.max(10, xClient + 12))}px`;
+          tipHidro.style.top = `${Math.max(10, yClient - 38)}px`;
+          if (vistaActualHidro === "crecida") {
+            const hora = Math.round(relX * 48);
+            tipHidro.innerHTML = `Tiempo: <strong>t = ${hora} h</strong>`;
+          } else {
+            const meses = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+            const mIdx = Math.min(11, Math.max(0, Math.floor(relX * 12)));
+            tipHidro.innerHTML = `Mes: <strong>${meses[mIdx]}</strong>`;
+          }
+        });
+        svgHidro.addEventListener("mouseleave", () => {
+          tipHidro.style.display = "none";
+        });
+      }
+
+      document.querySelectorAll("#panel-hydro nav.jump-nav a").forEach((a) => {
+        a.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetId = a.getAttribute("href");
+          const targetEl = document.querySelector(targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      });
+    }
+
+    // Expose handlers for HTML inline attributes
+    window.actualizarCuenca = actualizarCuenca;
+    window.calcProyecto = calcProyecto;
+    window.determinarTurbina = determinarTurbina;
+    window.seleccionarVistaHidrograma = seleccionarVistaHidrograma;
+    window.toggleCaudalBase = toggleCaudalBase;
+    window.renderizarHidrograma = renderizarHidrograma;
+    window.cargarEscenarioCDC = cargarEscenarioCDC;
+    window.obtenerCaudalExcedencia = obtenerCaudalExcedencia;
+    window.actualizarCDC = actualizarCDC;
+    window.verificarEjercicio1 = verificarEjercicio1;
+    window.verificarEjercicio2 = verificarEjercicio2;
+    window.verificarEjercicio3 = verificarEjercicio3;
 
     /* ===================== EFICIENCIA ENERGÉTICA ===================== */
     function effTemplate(name, kw, loads, envelope) {
@@ -6402,7 +8069,14 @@
       if (id === "btu") calcBtu();
       if (id === "arcade") calcArcade();
       if (id === "cocina") calcCocina();
-      if (id === "hydro") { renderVol(); renderQ(); renderP(); renderPot(); }
+      if (id === "hydro") {
+        if (typeof renderizarHidrograma === "function") {
+          requestAnimationFrame(() => renderizarHidrograma());
+        }
+        if (typeof actualizarCDC === "function") {
+          requestAnimationFrame(() => actualizarCDC());
+        }
+      }
       if (id === "solar") { calcSolar(); calcSolarHourly(); calcSolarOptimalTilt(); calcSolarAltitude(); calcSolarAzimuth(); }
       if (id === "consumo") renderConsumo();
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
@@ -6577,38 +8251,31 @@
       }
 
       if (id === "hydro") {
-        const volLabel = hyDir === "lm" ? "Volumen en litros" : "Volumen en m³";
-        blocks.push(pdfHeading("Conversor de volumen"));
-        blocks.push(pdfKv(volLabel, val("hy-vol")));
-        blocks.push(pdfKv("Equivalente", txt("hy-vol-out")));
-        blocks.push(pdfKv("Masa de agua", txt("hy-mass")));
-        blocks.push(pdfKv("Peso", txt("hy-weight")));
-        blocks.push(pdfHeading("Caudal"));
-        blocks.push(pdfKv("L/s", val("hy-lps")));
-        blocks.push(pdfKv("m³/s", val("hy-cms")));
-        blocks.push(pdfKv("m³/h", val("hy-cmh")));
-        blocks.push(pdfKv("L/min", txt("hy-lpm")));
-        blocks.push(pdfKv("Volumen 24 h", txt("hy-day")));
-        blocks.push(pdfHeading("Potencia de la central"));
-        blocks.push(pdfKv("Q", val("hy-pq") + " " + opt("hy-pqu")));
-        blocks.push(pdfKv("Salto neto H", val("hy-ph") + " m"));
-        blocks.push(pdfKv("η", val("hy-pn") + " %"));
-        blocks.push(pdfKv("Potencia eléctrica", txt("hy-pout")));
-        blocks.push(pdfKv("Clase", txt("hy-pclass")));
-        blocks.push(pdfKv("Q SI", txt("hy-qsi")));
-        blocks.push(pdfKv("P hidráulica", txt("hy-phyd")));
-        blocks.push(pdfKv("Energía 24 h", txt("hy-kwh")));
-        blocks.push(pdfKv("Agua 24 h", txt("hy-pvol")));
-        blocks.push(pdfHeading("Potencial hidráulico"));
-        blocks.push(pdfKv("Cota captación / casa", val("hy-z1") + " / " + val("hy-z2")));
-        blocks.push(pdfKv("ΔH pérdidas / Fp", val("hy-loss") + " m / " + val("hy-fp") + " %"));
-        blocks.push(pdfKv("Energía anual", txt("hy-eout")));
-        blocks.push(pdfKv("H bruto / neto", txt("hy-heads")));
-        blocks.push(pdfKv("P teórico / técnico", txt("hy-pteo")));
-        blocks.push(pdfKv("Horas eq.", txt("hy-hours")));
-        blocks.push(pdfKv("kWh/m³", txt("hy-spec")));
-        blocks.push(pdfHeading("Fórmula"));
-        blocks.push(pdfFormula("Hbruto = zcap − zcasa · Hneto = Hbruto − ΔH · Ptec = 9,81 Q Hneto η · E = Ptec × 8760 × Fp"));
+        blocks.push(pdfHeading("Morfometría de Cuenca"));
+        blocks.push(pdfKv("Área / Perímetro", val("input-area") + " km² / " + val("input-perim") + " km"));
+        blocks.push(pdfKv("Longitud / Desnivel", val("input-long") + " km / " + val("input-desnivel") + " m"));
+        blocks.push(pdfKv("Índice de Gravelius (Kc)", txt("res-kc") + " (" + txt("res-kc-diag") + ")"));
+        blocks.push(pdfKv("Tiempo de Concentración (tc)", txt("res-tc") + " h (" + txt("res-tc-min") + ")"));
+
+        blocks.push(pdfHeading("Proyecto Hidráulico y Potencia"));
+        blocks.push(pdfKv("Caudal Río / Q ecológico", val("inp-qrio") + " m³/s / " + val("inp-qeco") + " m³/s"));
+        blocks.push(pdfKv("Caudal de Diseño (Qd)", val("inp-qd") + " m³/s"));
+        blocks.push(pdfKv("Altura Bruta / % Pérdidas", val("inp-hb") + " m / " + val("inp-perdp") + " %"));
+        blocks.push(pdfKv("Rendimiento Turbina / Generador", val("inp-etat") + " % / " + val("inp-etag") + " %"));
+        blocks.push(pdfKv("Potencia Hidráulica Bruta", txt("res-ph") + " kW"));
+        blocks.push(pdfKv("Potencia Eléctrica Útil", txt("res-pe") + " kW (" + txt("res-pe-mw") + ")"));
+        blocks.push(pdfKv("Energía Anual Generable", txt("res-eanual") + " MWh/año"));
+        blocks.push(pdfKv("Factor de Planta", txt("res-fp")));
+        blocks.push(pdfKv("Turbina Recomendada", txt("res-turbina-nombre") + " · " + txt("res-turbina-tipo")));
+
+        blocks.push(pdfHeading("Curva de Duración de Caudales (CDC)"));
+        blocks.push(pdfKv("Potencia Nominal CDC", txt("res-cdc-pnom") + " kW"));
+        blocks.push(pdfKv("Energía Anual CDC", txt("res-cdc-eanual") + " MWh/año (" + txt("res-cdc-equiv") + ")"));
+        blocks.push(pdfKv("Factor de Planta CDC", txt("res-cdc-fp") + " % (" + txt("res-cdc-heq") + ")"));
+        blocks.push(pdfKv("Agua Vertida (Excedente)", txt("res-cdc-vertido") + " %"));
+
+        blocks.push(pdfHeading("Fórmulas Fundamentales"));
+        blocks.push(pdfFormula("Kc = 0.282 · P / √A  ·  tc = 0.0663 · (L^0.77 / S^0.385)  ·  Pe = ρ · g · Q · Hn · ηt · ηg  ·  E = Pe · horas"));
       }
 
       if (id === "solar") {
@@ -7441,17 +9108,16 @@
       calcLux();
     }
     function applyHydroSite(s) {
-      hyDir = "lm";
-      $("hy-vol-label").textContent = "Volumen en litros";
-      $("hy-vol").value = s.vol;
-      $("hy-dir-lm").classList.add("primary");
-      $("hy-dir-ml").classList.remove("primary");
-      setQ(s.lps);
-      $("hy-pq").value = s.pq; $("hy-pqu").value = s.pqu;
-      $("hy-ph").value = s.ph; $("hy-pn").value = s.pn;
-      $("hy-z1").value = s.z1; $("hy-z2").value = s.z2;
-      $("hy-loss").value = s.loss; $("hy-fp").value = s.fp;
-      renderVol(); renderP(); renderPot();
+      if (!s) return;
+      if ($("inp-qrio") && $("inp-qd")) {
+        const qCms = s.pqu === "lps" ? (s.pq || s.lps || 80) / 1000 : (s.pq || 0.08);
+        $("inp-qrio").value = Math.max(0.1, +(qCms * 1.25).toFixed(2));
+        $("inp-qd").value = Math.max(0.1, +qCms.toFixed(2));
+        if (s.ph && $("inp-hb")) $("inp-hb").value = s.ph;
+        if (s.pn && $("inp-etat")) $("inp-etat").value = s.pn;
+        if (s.fp && $("inp-horas")) $("inp-horas").value = Math.round(8760 * (s.fp / 100));
+        calcProyecto();
+      }
     }
     function applyConsumoSite(c) {
       $("c-v").value = c.V; $("c-kw").value = c.kw; $("c-tarifa").value = c.tarifa; $("c-season").value = c.season;
@@ -7534,7 +9200,7 @@
     window.__eaApplySite = applySite;
 
     /* init */
-    parseSev(); drawSev(); calcMalla(); calcLux(); calcBtu(); renderVol(); setQ(80); renderP(); renderPot(); calcSolar(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
+    parseSev(); drawSev(); calcMalla(); calcLux(); calcBtu(); actualizarCuenca(); calcProyecto(); seleccionarVistaHidrograma("crecida"); actualizarCDC(); setupHydroTooltips(); calcSolar(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
     buildSiteUi();
     buildPuRegionalTemplates();
     setupPhasorTemplates();
