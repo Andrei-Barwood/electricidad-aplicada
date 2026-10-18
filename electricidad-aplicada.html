@@ -367,6 +367,72 @@
     }
   
     /* ===================== GUÍA HIDRÁULICA Y PROYECTOS (Unidad 2 CFT) ===================== */
+    #panel-hydro .hydro-tpl-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 0 0 24px;
+      max-width: 100%;
+      background: var(--card-bg);
+      padding: 16px 20px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    }
+    @media (max-width: 820px) {
+      #panel-hydro .hydro-tpl-bar {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px;
+      }
+    }
+    #panel-hydro .hydro-tpl-bar .tpl-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    #panel-hydro .hydro-tpl-bar label.field {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+    #panel-hydro .hydro-tpl-bar .tpl-label-title {
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      color: var(--gold);
+    }
+    #panel-hydro .hydro-tpl-bar .tpl-label-badge {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      color: var(--cyan-2);
+      font-weight: 600;
+      background: rgba(14, 209, 255, 0.10);
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(14, 209, 255, 0.25);
+    }
+    #panel-hydro .hydro-tpl-bar select {
+      background: var(--input-bg);
+      border: 1px solid var(--line);
+      color: var(--foam);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-family: var(--sans);
+      font-size: 13.5px;
+      font-weight: 500;
+      width: 100%;
+      cursor: pointer;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    #panel-hydro .hydro-tpl-bar select:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 2px var(--focus-ring);
+      outline: none;
+    }
     #panel-hydro .wrap {
       max-width: 1200px;
       margin: 0 auto;
@@ -1307,6 +1373,31 @@
       <button class="ghost" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
     </div>
   </header>
+
+  <!-- BARRA DE SELECTORES DE PLANTILLAS -->
+  <div class="tpl-bar hydro-tpl-bar">
+    <div class="tpl-item">
+      <label class="field" for="tpl-hydro">
+        <span class="tpl-label-title">Plantilla Regional Los Ríos</span>
+        <span class="tpl-label-badge">Integrada 10–500 kW</span>
+      </label>
+      <select id="tpl-hydro" class="site-select"></select>
+    </div>
+    <div class="tpl-item">
+      <label class="field" for="tpl-hydro-proy">
+        <span class="tpl-label-title">Caso de Estudio CFT Paillaco</span>
+        <span class="tpl-label-badge">Turbina & Cuenca</span>
+      </label>
+      <select id="tpl-hydro-proy" class="hydro-proy-select" onchange="cargarCasoHidraulico(this.value)">
+        <option value="">— Elegir caso hidroeléctrico de referencia —</option>
+        <option value="pico-pelton">01 · Salto Cordillerano Alta Caída (Pelton · 50 kW · H=150 m)</option>
+        <option value="micro-banki">02 · Micro-Hidro Predial Los Ríos (Michell-Banki · 65 kW · H=35 m)</option>
+        <option value="mini-francis">03 · Mini-Hidro Río San Pedro (Francis · 600 kW · H=42 m)</option>
+        <option value="pasada-kaplan">04 · Central de Pasada Fluvial (Kaplan · 450 kW · H=8.5 m)</option>
+        <option value="tornillo-arquimedes">05 · Microcentral Ecológica (Arquímedes · 35 kW · H=4.5 m)</option>
+      </select>
+    </div>
+  </div>
 
   <!-- MENÚ DE SALTO RÁPIDO -->
   <nav class="jump-nav" aria-label="Navegación por módulos">
@@ -3442,7 +3533,7 @@
             menu.querySelectorAll("details.calc-fold").forEach((other) => {
               if (other !== fold) other.open = false;
             });
-            requestAnimationFrame(() => refreshPanelVisuals(panel.id.replace("panel-", "")));
+            if (typeof requestAnimationFrame === "function") requestAnimationFrame(() => refreshPanelVisuals(panel.id.replace("panel-", ""))); else setTimeout(() => refreshPanelVisuals(panel.id.replace("panel-", "")), 0);
           });
         });
       });
@@ -4830,6 +4921,70 @@
         });
       });
     }
+
+    const CASOS_HIDRAULICOS = {
+      "pico-pelton": {
+        nombre: "Salto Cordillerano Alta Caída (Pelton)",
+        area: 18, perim: 22, long: 7, desnivel: 650,
+        qrio: 0.08, qeco: 0.015, qd: 0.04,
+        hb: 150, perdp: 5.0, etat: 88, etag: 92, horas: 5000,
+        cdc: "nival"
+      },
+      "micro-banki": {
+        nombre: "Micro-Hidro Predial Los Ríos (Michell-Banki)",
+        area: 48, perim: 36, long: 12, desnivel: 140,
+        qrio: 0.45, qeco: 0.08, qd: 0.25,
+        hb: 35, perdp: 6.0, etat: 82, etag: 90, horas: 4800,
+        cdc: "sur"
+      },
+      "mini-francis": {
+        nombre: "Mini-Hidro Río San Pedro (Francis)",
+        area: 280, perim: 85, long: 38, desnivel: 380,
+        qrio: 2.80, qeco: 0.50, qd: 1.80,
+        hb: 42, perdp: 5.0, etat: 87, etag: 94, horas: 5400,
+        cdc: "mixta"
+      },
+      "pasada-kaplan": {
+        nombre: "Central de Pasada Fluvial (Kaplan)",
+        area: 720, perim: 150, long: 70, desnivel: 90,
+        qrio: 9.50, qeco: 1.80, qd: 6.50,
+        hb: 8.5, perdp: 4.0, etat: 90, etag: 95, horas: 5800,
+        cdc: "sur"
+      },
+      "tornillo-arquimedes": {
+        nombre: "Microcentral Ecológica (Tornillo de Arquímedes)",
+        area: 95, perim: 48, long: 22, desnivel: 45,
+        qrio: 1.80, qeco: 0.35, qd: 1.20,
+        hb: 4.5, perdp: 3.0, etat: 78, etag: 88, horas: 6000,
+        cdc: "sur"
+      }
+    };
+
+    function cargarCasoHidraulico(casoId) {
+      if (!casoId || !CASOS_HIDRAULICOS[casoId]) return;
+      const c = CASOS_HIDRAULICOS[casoId];
+
+      if ($("input-area")) $("input-area").value = c.area;
+      if ($("input-perim")) $("input-perim").value = c.perim;
+      if ($("input-long")) $("input-long").value = c.long;
+      if ($("input-desnivel")) $("input-desnivel").value = c.desnivel;
+      if (typeof actualizarCuenca === "function") actualizarCuenca();
+
+      if ($("inp-qrio")) $("inp-qrio").value = c.qrio;
+      if ($("inp-qeco")) $("inp-qeco").value = c.qeco;
+      if ($("inp-qd")) $("inp-qd").value = c.qd;
+      if ($("inp-hb")) $("inp-hb").value = c.hb;
+      if ($("inp-perdp")) $("inp-perdp").value = c.perdp;
+      if ($("inp-etat")) $("inp-etat").value = c.etat;
+      if ($("inp-etag")) $("inp-etag").value = c.etag;
+      if ($("inp-horas")) $("inp-horas").value = c.horas;
+      if (typeof calcProyecto === "function") calcProyecto();
+
+      if (c.cdc && typeof cargarEscenarioCDC === "function") {
+        cargarEscenarioCDC(c.cdc);
+      }
+    }
+    window.cargarCasoHidraulico = cargarCasoHidraulico;
 
     // Expose handlers for HTML inline attributes
     window.actualizarCuenca = actualizarCuenca;
@@ -9107,16 +9262,55 @@
       $("lx-inv-n").value = s.inv; $("lx-sup").value = s.sup; $("lx-len").value = s.len;
       calcLux();
     }
+    const SITES_CUENCA = {
+      "casa-6": { area: 18, perim: 22, long: 6, desnivel: 80, cdc: "sur" },
+      "queseria-15": { area: 28, perim: 26, long: 8, desnivel: 180, cdc: "sur" },
+      "ordena-25": { area: 45, perim: 34, long: 12, desnivel: 120, cdc: "sur" },
+      "apr-35": { area: 85, perim: 48, long: 18, desnivel: 280, cdc: "sur" },
+      "acopio-50": { area: 110, perim: 52, long: 24, desnivel: 160, cdc: "sur" },
+      "aserradero-75": { area: 140, perim: 58, long: 26, desnivel: 520, cdc: "mixta" },
+      "frigo-100": { area: 190, perim: 68, long: 32, desnivel: 380, cdc: "sur" },
+      "piscicultura-100": { area: 190, perim: 68, long: 32, desnivel: 380, cdc: "sur" },
+      "microhidro-180": { area: 280, perim: 85, long: 38, desnivel: 450, cdc: "sur" },
+      "molino-300": { area: 480, perim: 115, long: 55, desnivel: 220, cdc: "sur" },
+      "claseB-500": { area: 750, perim: 150, long: 75, desnivel: 180, cdc: "mixta" },
+      "parque-500": { area: 750, perim: 150, long: 75, desnivel: 180, cdc: "mixta" }
+    };
+
     function applyHydroSite(s) {
       if (!s) return;
       if ($("inp-qrio") && $("inp-qd")) {
         const qCms = s.pqu === "lps" ? (s.pq || s.lps || 80) / 1000 : (s.pq || 0.08);
-        $("inp-qrio").value = Math.max(0.1, +(qCms * 1.25).toFixed(2));
-        $("inp-qd").value = Math.max(0.1, +qCms.toFixed(2));
-        if (s.ph && $("inp-hb")) $("inp-hb").value = s.ph;
+        const qRio = Math.max(0.1, +(qCms * 1.35).toFixed(2));
+        const qEco = Math.max(0.01, +(qRio * 0.15).toFixed(2));
+        $("inp-qrio").value = qRio;
+        if ($("inp-qeco")) $("inp-qeco").value = qEco;
+        $("inp-qd").value = Math.max(0.05, +qCms.toFixed(2));
+        if (s.ph && $("inp-hb")) {
+          const hb = s.z1 && s.z2 ? Math.max(1, s.z1 - s.z2) : s.ph;
+          $("inp-hb").value = hb;
+          if (s.loss && $("inp-perdp")) {
+            $("inp-perdp").value = Math.min(25, +((s.loss / hb) * 100).toFixed(1));
+          }
+        }
         if (s.pn && $("inp-etat")) $("inp-etat").value = s.pn;
+        if ($("inp-etag")) $("inp-etag").value = 92;
         if (s.fp && $("inp-horas")) $("inp-horas").value = Math.round(8760 * (s.fp / 100));
-        calcProyecto();
+
+        const siteId = activeSite ? activeSite.id : null;
+        const cuencaData = (siteId && SITES_CUENCA[siteId]) || s.cuenca;
+        if (cuencaData && $("input-area")) {
+          $("input-area").value = cuencaData.area;
+          $("input-perim").value = cuencaData.perim;
+          $("input-long").value = cuencaData.long;
+          $("input-desnivel").value = cuencaData.desnivel;
+          if (typeof actualizarCuenca === "function") actualizarCuenca();
+          if (cuencaData.cdc && typeof cargarEscenarioCDC === "function") {
+            cargarEscenarioCDC(cuencaData.cdc);
+          }
+        }
+
+        if (typeof calcProyecto === "function") calcProyecto();
       }
     }
     function applyConsumoSite(c) {
