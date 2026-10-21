@@ -785,7 +785,7 @@
       badges.push({
         x: tg.x,
         y: tg.y + radiusY + 18,
-        text: baseText + heldSuffix,
+        text: tg.customBadge || (baseText + heldSuffix),
         small: true
       });
     });
@@ -1323,9 +1323,13 @@
       pc.grabbed = true;
       pc.vx = pc.vy = 0;
       if (pc.inBowl) {
+        const prevTg = pc.inTarget;
         pc.inBowl = false;
         pc.inTarget = null;
         pc.r = pc.rHand || pc.r;
+        if (world.kind === "passport" && phase === 3 && prevTg) {
+          world.flags.weightChangedBy = prevTg === world.targets[0] ? "lb" : "kg";
+        }
         recalcTargets();
       }
       dragOff.x = pc.x - x;
@@ -1418,6 +1422,9 @@
           }
           pc.inBowl = true;
           pc.inTarget = tg;
+          if (world.kind === "passport" && phase === 3) {
+            world.flags.weightChangedBy = tg === world.targets[0] ? "lb" : "kg";
+          }
           const nest = Math.min(14, (tg.r || 50) * 0.25);
           pc.rHand = pc.rHand || pc.r;
           if (pc.kind === "marble" || pc.kind === "proton" || pc.kind === "electron") pc.r = nest;
@@ -1834,20 +1841,22 @@
         w.meters.push({ label: "Tramos recorridos", value: 0, max: 10, color: "#c46a4a" });
       } else if (ph === 2) {
         w.pieces.push(piece("shoe", 340, 380, { r: 80, caption: "1 paso = 0.25 m" }));
-        w.pieces.push(piece("silk", 900, 360, { sprite: "silk-kilo", r: 115, caption: "1 silk = 1 m" }));
-        w.labels.push({ x: 640, y: 80, text: "Mide la mesa con el zapato o con el silk: la mesa mide lo mismo." });
-        w.meters.push({ label: "Medida en zapatos", value: 4, max: 10, color: "#8b6914" });
-        w.meters.push({ label: "Medida en silks", value: 1, max: 10, color: "#7b4ea3" });
+        w.pieces.push(piece("silk", 900, 360, { sprite: "silk-kilo", r: 115, caption: "1 silk = 1 m (4 pasos)" }));
+        w.labels.push({ x: 640, y: 80, text: "Arrastra el zapato o el silk por la mesa: 4 pasos equivalen a 1 silk." });
+        w.meters.push({ label: "Medida en zapatos (pasos)", value: 4, max: 12, color: "#8b6914" });
+        w.meters.push({ label: "Medida en silks (pasos ÷ 4)", value: 1, max: 3, color: "#7b4ea3" });
       } else {
         w.pieces.push(piece("scale", 980, 270, { r: 105, static: true, caption: "1 kg ≈ 2.2 lb" }));
         w.pieces.push(piece("bowl", 360, 420, { static: true, r: 90, sprite: "cuenco" }));
         w.pieces.push(piece("bowl", 640, 420, { static: true, r: 90, sprite: "cuenco" }));
-        w.targets.push({ x: 360, y: 420, r: 65, accept: "marble,proton", label: "libras (lb)" });
-        w.targets.push({ x: 640, y: 420, r: 65, accept: "marble,electron", label: "kilos (kg)" });
+        w.targets.push({ x: 360, y: 420, r: 65, accept: "marble,proton,electron", label: "libras (lb)" });
+        w.targets.push({ x: 640, y: 420, r: 65, accept: "marble,proton,electron", label: "kilos (kg)" });
         for (let i = 0; i < 8; i++) w.pieces.push(piece("proton", 80, 100 + i * 42, { q: 0, r: 16, rHand: 16 }));
         for (let i = 0; i < 8; i++) w.pieces.push(piece("electron", 1200, 100 + i * 42, { q: 0, r: 16, rHand: 16 }));
-        w.pieces.push(piece("register", 980, 500, { r: 80, caption: "conversor" }));
-        w.labels.push({ x: 640, y: 75, text: "Conversión de unidades: 1 kilo pesa lo mismo que 2,2 libras." });
+        w.pieces.push(piece("register", 980, 500, { r: 80, caption: "conversor: 0 lb = 0 kg" }));
+        w.meters.push({ label: "Libras (lb)", value: 0, max: 8, color: "#8b5a2b" });
+        w.meters.push({ label: "Kilogramos (kg = lb ÷ 2,2)", value: 0, max: 8, color: "#5e7a5e" });
+        w.labels.push({ x: 640, y: 75, text: "Pon canicas en libras o en kilos: el otro cuenco convierte automáticamente (1 kg = 2,2 lb)." });
       }
     },
     update() {
@@ -1862,6 +1871,93 @@
       if (phase === 1) {
         const car = world.pieces.find((pc) => pc.kind === "car");
         if (car && world.meters[0]) world.meters[0].value = Math.max(0, Math.min(10, (car.x - 180) / 90));
+      }
+      if (phase === 2) {
+        const shoe = world.pieces.find((pc) => pc.kind === "shoe");
+        const silk = world.pieces.find((pc) => pc.kind === "silk");
+        if (shoe && shoe.grabbed) {
+          const pasos = Math.max(1, Math.min(12, Math.round(((shoe.x - 160) / 80) * 10) / 10));
+          if (world.meters[0]) world.meters[0].value = pasos;
+          if (world.meters[1]) world.meters[1].value = +(pasos / 4).toFixed(2);
+        } else if (silk && silk.grabbed) {
+          const silks = Math.max(0.25, Math.min(3, Math.round(((silk.x - 160) / 320) * 100) / 100));
+          if (world.meters[1]) world.meters[1].value = silks;
+          if (world.meters[0]) world.meters[0].value = +(silks * 4).toFixed(1);
+        }
+      }
+      if (phase === 3) {
+        const tgLb = world.targets[0];
+        const tgKg = world.targets[1];
+        if (!tgLb || !tgKg) return;
+        const protons = world.pieces.filter((p) => p.kind === "proton");
+        const electrons = world.pieces.filter((p) => p.kind === "electron");
+        const reg = world.pieces.find((p) => p.kind === "register");
+
+        if (world.flags.weightChangedBy === "lb") {
+          const lbCount = world.pieces.filter((p) => p.inTarget === tgLb).length;
+          const kgExact = +(lbCount / 2.2).toFixed(2);
+          const availForKg = electrons.filter((p) => p.inTarget !== tgLb);
+          const targetKgMarbles = Math.min(availForKg.length, Math.round(lbCount / 2.2));
+          availForKg.forEach((el, idx) => {
+            if (el.grabbed) return;
+            if (idx < targetKgMarbles) {
+              if (el.inTarget !== tgKg) {
+                el.inBowl = true;
+                el.inTarget = tgKg;
+                el.r = Math.min(14, (tgKg.r || 65) * 0.25);
+                el.x = tgKg.x + ((idx % 3) - 1) * 16;
+                el.y = tgKg.y + (Math.floor(idx / 3) - 0.5) * 14 + 4;
+              }
+            } else if (el.inTarget === tgKg) {
+              el.inBowl = false;
+              el.inTarget = null;
+              el.r = el.rHand || 16;
+              el.x = el.origX;
+              el.y = el.origY;
+            }
+          });
+          tgLb.held = lbCount;
+          tgKg.held = kgExact;
+          tgLb.customBadge = `libras (lb): ${lbCount} lb`;
+          tgKg.customBadge = `kilos (kg): ${kgExact} kg`;
+          if (world.meters[0]) world.meters[0].value = lbCount;
+          if (world.meters[1]) world.meters[1].value = kgExact;
+          if (reg) reg.caption = `conversor: ${lbCount} lb = ${kgExact} kg`;
+          if (world.labels[0]) world.labels[0].text = `Conversión: ${lbCount} lb ÷ 2,2 = ${kgExact} kg (mismo tesoro, otro pasaporte).`;
+          world.flags.weightChangedBy = null;
+        } else if (world.flags.weightChangedBy === "kg") {
+          const kgCount = world.pieces.filter((p) => p.inTarget === tgKg).length;
+          const lbExact = +(kgCount * 2.2).toFixed(1);
+          const availForLb = protons.filter((p) => p.inTarget !== tgKg);
+          const targetLbMarbles = Math.min(availForLb.length, Math.round(kgCount * 2.2));
+          availForLb.forEach((pr, idx) => {
+            if (pr.grabbed) return;
+            if (idx < targetLbMarbles) {
+              if (pr.inTarget !== tgLb) {
+                pr.inBowl = true;
+                pr.inTarget = tgLb;
+                pr.r = Math.min(14, (tgLb.r || 65) * 0.25);
+                pr.x = tgLb.x + ((idx % 3) - 1) * 16;
+                pr.y = tgLb.y + (Math.floor(idx / 3) - 0.5) * 14 + 4;
+              }
+            } else if (pr.inTarget === tgLb) {
+              pr.inBowl = false;
+              pr.inTarget = null;
+              pr.r = pr.rHand || 16;
+              pr.x = pr.origX;
+              pr.y = pr.origY;
+            }
+          });
+          tgKg.held = kgCount;
+          tgLb.held = lbExact;
+          tgLb.customBadge = `libras (lb): ${lbExact} lb`;
+          tgKg.customBadge = `kilos (kg): ${kgCount} kg`;
+          if (world.meters[0]) world.meters[0].value = lbExact;
+          if (world.meters[1]) world.meters[1].value = kgCount;
+          if (reg) reg.caption = `conversor: ${kgCount} kg = ${lbExact} lb`;
+          if (world.labels[0]) world.labels[0].text = `Conversión: ${kgCount} kg × 2,2 = ${lbExact} lb (mismo tesoro, otro pasaporte).`;
+          world.flags.weightChangedBy = null;
+        }
       }
     }
   };
