@@ -23,6 +23,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="magia/magia.css" />
   <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
   <script>
     (function () {
       var t;
@@ -955,6 +958,962 @@
       #panel-hydro .tile .val { color: #000 !important; }
     }
 
+  
+    /* ===================== SUBESTACIONES (Localización & Diseño) ===================== */
+    #panel-subestaciones {
+      position: relative;
+    }
+
+    #panel-subestaciones .sub-module-nav {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 16px;
+      background: var(--meta-bg);
+      padding: 6px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+    }
+    @media (max-width: 768px) {
+      #panel-subestaciones .sub-module-nav {
+        flex-direction: column;
+      }
+    }
+    #panel-subestaciones .sub-mod-btn {
+      flex: 1;
+      padding: 10px 18px !important;
+      border-radius: 12px !important;
+      font-family: var(--sans) !important;
+      font-size: 13px !important;
+      font-weight: 600 !important;
+      color: var(--muted) !important;
+      background: transparent !important;
+      border: 1px solid transparent !important;
+      cursor: pointer !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    #panel-subestaciones .sub-mod-btn:hover {
+      color: var(--foam) !important;
+      background: var(--nav-hover) !important;
+      border-color: var(--line) !important;
+      transform: translateY(-1px) !important;
+    }
+    #panel-subestaciones .sub-mod-btn.active {
+      background: var(--nav-active) !important;
+      border-color: var(--nav-active-border) !important;
+      color: var(--foam) !important;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+      font-weight: 700 !important;
+    }
+
+    /* Strict 2-column Grid: Sidebar (480px) and Map (1fr) */
+    #panel-subestaciones .sub-layout {
+      display: grid !important;
+      grid-template-columns: 480px 1fr !important;
+      gap: 0 !important;
+      height: 750px !important;
+      min-height: 750px !important;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: var(--card-bg);
+      position: relative;
+      width: 100% !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (max-width: 1080px) {
+      #panel-subestaciones .sub-layout {
+        display: flex !important;
+        flex-direction: column !important;
+        height: auto !important;
+        min-height: 0 !important;
+      }
+    }
+
+    #panel-subestaciones .sub-sidebar {
+      width: 480px !important;
+      max-width: 480px !important;
+      min-width: 480px !important;
+      height: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      border-right: 1px solid var(--line) !important;
+      background: var(--card-bg) !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (max-width: 1080px) {
+      #panel-subestaciones .sub-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: 650px !important;
+        border-right: none !important;
+        border-bottom: 1px solid var(--line) !important;
+      }
+    }
+
+    #panel-subestaciones .sub-map-pane {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative !important;
+      min-height: 100% !important;
+      min-width: 0 !important;
+      background: #0f172a !important;
+      overflow: hidden !important;
+      box-sizing: border-box !important;
+    }
+
+    @media (max-width: 1080px) {
+      #panel-subestaciones .sub-map-pane {
+        width: 100% !important;
+        height: 520px !important;
+        min-height: 520px !important;
+      }
+    }
+
+    #panel-subestaciones #map {
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1 !important;
+    }
+
+    /* Fixed Sidebar Header */
+    #panel-subestaciones .sub-sidebar header {
+      background: #0f172a !important;
+      color: #ffffff !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      flex-shrink: 0 !important;
+      padding: 14px 16px 12px !important;
+    }
+    #panel-subestaciones .sub-sidebar header h1 {
+      color: #ffffff !important;
+      font-size: 15px !important;
+      font-weight: 700 !important;
+      margin: 0 !important;
+      line-height: 1.2 !important;
+    }
+    #panel-subestaciones .sub-sidebar header p {
+      color: #94a3b8 !important;
+      margin: 2px 0 0 !important;
+      font-size: 11px !important;
+    }
+
+    /* Tab bar in header */
+    #panel-subestaciones .sub-sidebar header nav {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border: 1px solid rgba(51, 65, 85, 0.8) !important;
+      border-radius: 8px !important;
+      padding: 3px !important;
+      display: flex !important;
+      gap: 3px !important;
+      margin-top: 10px !important;
+    }
+    #panel-subestaciones .sub-sidebar header nav button {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      border: none !important;
+      outline: none !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 6px !important;
+      padding: 6px 10px !important;
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      border-radius: 6px !important;
+      white-space: nowrap !important;
+      line-height: 1 !important;
+      flex: 1 !important;
+      transition: all 0.18s ease !important;
+      cursor: pointer !important;
+    }
+    #panel-subestaciones .sub-sidebar header nav button.bg-blue-600 {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8) !important;
+      color: #ffffff !important;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+      font-weight: 700 !important;
+    }
+    #panel-subestaciones .sub-sidebar header nav button.text-slate-400 {
+      background: transparent !important;
+      color: #94a3b8 !important;
+    }
+    #panel-subestaciones .sub-sidebar header nav button.text-slate-400:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #f8fafc !important;
+    }
+
+    /* Fixed Sidebar Footer */
+    #panel-subestaciones .sub-sidebar footer {
+      background: #0f172a !important;
+      color: #94a3b8 !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+      flex-shrink: 0 !important;
+      padding: 10px 14px !important;
+      font-size: 11px !important;
+    }
+
+    /* Scrollable Sidebar Body */
+    #panel-subestaciones .sub-sidebar .overflow-y-auto {
+      flex: 1 1 auto !important;
+      overflow-y: auto !important;
+      background: var(--bg0, #18181f) !important;
+      padding: 14px !important;
+    }
+    html[data-theme="day"] #panel-subestaciones .sub-sidebar .overflow-y-auto {
+      background: #f1f5f9 !important;
+    }
+
+    /* Floating Legend on Map (Always dark & high contrast against map tiles) */
+    #panel-subestaciones .sub-map-pane .absolute {
+      background: rgba(15, 23, 42, 0.94) !important;
+      color: #f8fafc !important;
+      border: 1px solid rgba(71, 85, 105, 0.6) !important;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4) !important;
+      border-radius: 10px !important;
+      z-index: 1000 !important;
+      pointer-events: auto !important;
+    }
+    #panel-subestaciones .sub-map-pane .absolute span,
+    #panel-subestaciones .sub-map-pane .absolute div {
+      color: inherit;
+    }
+    #panel-subestaciones .sub-map-pane .absolute .text-slate-300 { color: #cbd5e1 !important; }
+    #panel-subestaciones .sub-map-pane .absolute .text-slate-400 { color: #94a3b8 !important; }
+    #panel-subestaciones .sub-map-pane .absolute .text-slate-200 { color: #e2e8f0 !important; }
+
+    /* SVGs size lock */
+    #panel-subestaciones svg.w-3\.5,
+    #panel-subestaciones svg[class*="w-3.5"],
+    #panel-subestaciones [class*="w-3.5"] > svg {
+      width: 14px !important;
+      height: 14px !important;
+      min-width: 14px !important;
+      min-height: 14px !important;
+      max-width: 14px !important;
+      max-height: 14px !important;
+      flex-shrink: 0 !important;
+    }
+    #panel-subestaciones svg.w-4,
+    #panel-subestaciones svg[class*="w-4"],
+    #panel-subestaciones [class*="w-4"] > svg {
+      width: 16px !important;
+      height: 16px !important;
+      min-width: 16px !important;
+      min-height: 16px !important;
+      max-width: 16px !important;
+      max-height: 16px !important;
+      flex-shrink: 0 !important;
+    }
+    #panel-subestaciones svg.w-5,
+    #panel-subestaciones svg[class*="w-5"],
+    #panel-subestaciones [class*="w-5"] > svg {
+      width: 20px !important;
+      height: 20px !important;
+      min-width: 20px !important;
+      min-height: 20px !important;
+      max-width: 20px !important;
+      max-height: 20px !important;
+      flex-shrink: 0 !important;
+    }
+    #panel-subestaciones .w-8 { width: 32px !important; }
+    #panel-subestaciones .h-8 { height: 32px !important; }
+    #panel-subestaciones .w-10 { width: 40px !important; }
+    #panel-subestaciones .h-10 { height: 40px !important; }
+
+    /* Scrollbar */
+    #panel-subestaciones .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    #panel-subestaciones .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    #panel-subestaciones .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: var(--line);
+      border-radius: 4px;
+    }
+    #panel-subestaciones .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: var(--muted);
+    }
+
+    /* General layout utilities inside #panel-subestaciones */
+    #panel-subestaciones .flex { display: flex; }
+    #panel-subestaciones .inline-flex { display: inline-flex; }
+    #panel-subestaciones .grid { display: grid; }
+    #panel-subestaciones .block { display: block; }
+    #panel-subestaciones .hidden { display: none !important; }
+    #panel-subestaciones .flex-col { flex-direction: column; }
+    #panel-subestaciones .flex-row { flex-direction: row; }
+    #panel-subestaciones .items-center { align-items: center; }
+    #panel-subestaciones .items-start { align-items: flex-start; }
+    #panel-subestaciones .justify-between { justify-content: space-between; }
+    #panel-subestaciones .justify-center { justify-content: center; }
+    #panel-subestaciones .flex-1 { flex: 1 1 0%; }
+    #panel-subestaciones .flex-shrink-0 { flex-shrink: 0; }
+    #panel-subestaciones .space-y-1 > * + * { margin-top: 0.25rem; }
+    #panel-subestaciones .space-y-1\\.5 > * + * { margin-top: 0.375rem; }
+    #panel-subestaciones .space-y-2 > * + * { margin-top: 0.5rem; }
+    #panel-subestaciones .space-y-2\\.5 > * + * { margin-top: 0.625rem; }
+    #panel-subestaciones .space-y-3 > * + * { margin-top: 0.75rem; }
+    #panel-subestaciones .space-y-4 > * + * { margin-top: 1rem; }
+    #panel-subestaciones .space-y-5 > * + * { margin-top: 1.25rem; }
+    #panel-subestaciones .space-x-2 > * + * { margin-left: 0.5rem; }
+    #panel-subestaciones .gap-1 { gap: 0.25rem; }
+    #panel-subestaciones .gap-1\\.5 { gap: 0.375rem; }
+    #panel-subestaciones .gap-2 { gap: 0.5rem; }
+    #panel-subestaciones .gap-2\\.5 { gap: 0.625rem; }
+    #panel-subestaciones .gap-3 { gap: 0.75rem; }
+    #panel-subestaciones .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    #panel-subestaciones .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    #panel-subestaciones .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    /* Theme-adaptive Cards inside Sidebar */
+    #panel-subestaciones .sub-sidebar .bg-white {
+      background: var(--card-bg) !important;
+      border: 1px solid var(--line) !important;
+      color: var(--foam) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+    }
+    html[data-theme="day"] #panel-subestaciones .sub-sidebar .bg-white {
+      background: #ffffff !important;
+      border: 1px solid rgba(72, 81, 153, 0.18) !important;
+      color: #303030 !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    /* Balance General Card Border */
+    #panel-subestaciones .border-2.border-slate-800 {
+      border: 1.5px solid var(--line) !important;
+      background: var(--card-bg) !important;
+      border-radius: 10px !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+    }
+    html[data-theme="day"] #panel-subestaciones .border-2.border-slate-800 {
+      border: 1.5px solid rgba(30, 41, 59, 0.25) !important;
+      background: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    #panel-subestaciones .text-slate-800,
+    #panel-subestaciones .text-slate-900 { color: var(--foam) !important; }
+    html[data-theme="day"] #panel-subestaciones .text-slate-800,
+    html[data-theme="day"] #panel-subestaciones .text-slate-900 { color: #1e293b !important; }
+
+    #panel-subestaciones .text-slate-700 { color: var(--foam) !important; }
+    html[data-theme="day"] #panel-subestaciones .text-slate-700 { color: #334155 !important; }
+
+    #panel-subestaciones .text-slate-600,
+    #panel-subestaciones .text-slate-500 { color: var(--muted) !important; }
+    html[data-theme="day"] #panel-subestaciones .text-slate-600,
+    html[data-theme="day"] #panel-subestaciones .text-slate-500 { color: #64748b !important; }
+
+    #panel-subestaciones .text-slate-400 { color: var(--muted) !important; }
+
+    /* Inputs, Selects & Number spinners */
+    #panel-subestaciones .bg-slate-50,
+    #panel-subestaciones .bg-slate-100 {
+      background: var(--input-bg) !important;
+      color: var(--foam) !important;
+      border-color: var(--line) !important;
+    }
+    html[data-theme="day"] #panel-subestaciones .bg-slate-50,
+    html[data-theme="day"] #panel-subestaciones .bg-slate-100 {
+      background: #f8fafc !important;
+      color: #1e293b !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    #panel-subestaciones input[type="text"],
+    #panel-subestaciones input[type="number"],
+    #panel-subestaciones select {
+      background: var(--input-bg) !important;
+      border: 1px solid var(--line) !important;
+      color: var(--foam) !important;
+      border-radius: 8px !important;
+      font-family: var(--mono) !important;
+      outline: none !important;
+      transition: border-color 0.15s, box-shadow 0.15s !important;
+    }
+    html[data-theme="day"] #panel-subestaciones input[type="text"],
+    html[data-theme="day"] #panel-subestaciones input[type="number"],
+    html[data-theme="day"] #panel-subestaciones select {
+      background: #ffffff !important;
+      color: #1e293b !important;
+      border: 1px solid #cbd5e1 !important;
+    }
+    #panel-subestaciones input:focus,
+    #panel-subestaciones select:focus {
+      border-color: var(--focus) !important;
+      box-shadow: 0 0 0 3px var(--focus-ring) !important;
+    }
+    #panel-subestaciones input[type="checkbox"] {
+      accent-color: var(--cyan);
+    }
+
+    /* Number inputs in table */
+    #panel-subestaciones #transformer-rows input[type="number"],
+    #panel-subestaciones #mode-quick-panel input[type="number"] {
+      border-radius: 6px !important;
+      padding: 4px 8px !important;
+      font-family: var(--mono) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      text-align: center !important;
+      border: 1px solid var(--line) !important;
+      background: var(--input-bg) !important;
+      color: var(--foam) !important;
+      transition: all 0.15s ease !important;
+    }
+    html[data-theme="day"] #panel-subestaciones #transformer-rows input[type="number"],
+    html[data-theme="day"] #panel-subestaciones #mode-quick-panel input[type="number"] {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #1e293b !important;
+    }
+
+    /* Colors & Accents */
+    #panel-subestaciones .text-blue-600,
+    #panel-subestaciones .text-blue-700,
+    #panel-subestaciones .text-blue-900 { color: var(--cyan-2); }
+    html[data-theme="day"] #panel-subestaciones .text-blue-600,
+    html[data-theme="day"] #panel-subestaciones .text-blue-700,
+    html[data-theme="day"] #panel-subestaciones .text-blue-900 { color: #1d4ed8; }
+
+    #panel-subestaciones .bg-blue-50\\/80,
+    #panel-subestaciones .bg-blue-50 { background: var(--micro-bg); }
+    #panel-subestaciones .border-blue-200\\/80,
+    #panel-subestaciones .border-blue-200 { border-color: var(--nav-active-border); }
+
+    #panel-subestaciones .text-indigo-600,
+    #panel-subestaciones .text-indigo-700 { color: var(--violet); }
+    #panel-subestaciones .bg-indigo-50 { background: var(--micro-bg); }
+    #panel-subestaciones .border-indigo-200 { border-color: var(--line); }
+
+    #panel-subestaciones .text-amber-500,
+    #panel-subestaciones .text-amber-600 { color: var(--gold); }
+    #panel-subestaciones .bg-amber-500 { background: var(--gold); color: #000000; }
+    #panel-subestaciones .bg-amber-50 { background: var(--gold-dim); }
+
+    #panel-subestaciones .text-emerald-500,
+    #panel-subestaciones .text-emerald-600,
+    #panel-subestaciones .text-emerald-700 { color: var(--ok-text); }
+    #panel-subestaciones .bg-emerald-500 { background: var(--ok); color: #ffffff; }
+    #panel-subestaciones .bg-emerald-50 { background: var(--ok-bg); }
+
+    #panel-subestaciones .text-red-500,
+    #panel-subestaciones .text-red-600 { color: var(--hot); }
+    #panel-subestaciones .bg-red-500,
+    #panel-subestaciones .bg-red-600 { background: var(--hot); color: #ffffff; }
+    #panel-subestaciones .bg-red-50 { background: var(--hot-bg); }
+
+    #panel-subestaciones #sec-limit-badge {
+      background: rgba(90, 100, 191, 0.18) !important;
+      color: var(--cyan-2) !important;
+      border: 1px solid var(--line) !important;
+    }
+
+    /* =========================================================================
+       BUTTON STYLING (PRINCE BLUEBLOOD DESIGN SYSTEM)
+       Eliminates generic browser buttons and gives tactile, modern aesthetics
+       ========================================================================= */
+
+    /* Universal button reset inside #panel-subestaciones */
+    #panel-subestaciones button {
+      appearance: none !important;
+      -webkit-appearance: none !important;
+      font-family: var(--sans) !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      letter-spacing: 0.01em !important;
+      border: 1px solid transparent !important;
+      border-radius: 8px !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 7px !important;
+      padding: 8px 14px !important;
+      line-height: 1.3 !important;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1) !important;
+      user-select: none !important;
+      outline: none !important;
+      text-decoration: none !important;
+      box-sizing: border-box !important;
+    }
+
+    #panel-subestaciones button:active {
+      transform: scale(0.97) !important;
+    }
+
+    #panel-subestaciones button:focus-visible {
+      box-shadow: 0 0 0 3px var(--focus-ring) !important;
+    }
+
+    /* 1. HERO PRIMARY: "⚡ Calcular Centro de Cargas y Localizar Subestación" */
+    #panel-subestaciones #btn-calc-substation {
+      width: 100% !important;
+      padding: 12px 18px !important;
+      font-size: 13px !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.02em !important;
+      border-radius: 10px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #1d4ed8 0%, #3b82f6 50%, #4338ca 100%) !important;
+      border: 1px solid rgba(147, 197, 253, 0.45) !important;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+      position: relative !important;
+      overflow: hidden !important;
+    }
+
+    #panel-subestaciones #btn-calc-substation:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 50%, #4f46e5 100%) !important;
+      box-shadow: 0 6px 22px rgba(37, 99, 235, 0.55), 0 0 16px rgba(14, 209, 255, 0.45) !important;
+      border-color: var(--cyan) !important;
+      transform: translateY(-1.5px) !important;
+    }
+
+    #panel-subestaciones #btn-calc-substation svg {
+      color: #fde047 !important;
+      filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.4)) !important;
+    }
+
+    /* 2. SUCCESS SAVE: "✓ Guardar Cuadro y Actualizar Mapa" */
+    #panel-subestaciones button[onclick*="saveActiveZoneData"] {
+      width: 100% !important;
+      padding: 10px 16px !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%) !important;
+      border: 1px solid rgba(110, 231, 183, 0.4) !important;
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+    }
+
+    #panel-subestaciones button[onclick*="saveActiveZoneData"]:hover {
+      background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+      box-shadow: 0 5px 16px rgba(5, 150, 105, 0.45) !important;
+      border-color: #a7f3d0 !important;
+      transform: translateY(-1px) !important;
+    }
+
+    #panel-subestaciones button[onclick*="saveActiveZoneData"] svg {
+      color: #ffffff !important;
+    }
+
+    /* 3. STEP 2 CLIMATE FLOW: "Proceder a Datos Climatológicos (Paso 2) →" */
+    #panel-subestaciones button[onclick*="goToClimateStep"] {
+      width: 100% !important;
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #047857 0%, #059669 100%) !important;
+      border: 1px solid rgba(52, 211, 153, 0.4) !important;
+      box-shadow: 0 3px 8px rgba(4, 120, 87, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    #panel-subestaciones button[onclick*="goToClimateStep"]:hover {
+      background: linear-gradient(135deg, #065f46 0%, #047857 100%) !important;
+      box-shadow: 0 5px 15px rgba(4, 120, 87, 0.45) !important;
+      border-color: #6ee7b7 !important;
+      transform: translateY(-1px) !important;
+    }
+
+    /* 4. DASHED ADD BUTTON: "+ Añadir grupo de transformadores" */
+    #panel-subestaciones button[onclick*="addCustomTransformerRow"] {
+      width: 100% !important;
+      padding: 9px 14px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      color: var(--cyan-2) !important;
+      background: rgba(14, 209, 255, 0.05) !important;
+      border: 1.5px dashed var(--line) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="addCustomTransformerRow"] {
+      color: #2563eb !important;
+      background: #f0f7ff !important;
+      border-color: #93c5fd !important;
+    }
+
+    #panel-subestaciones button[onclick*="addCustomTransformerRow"]:hover {
+      background: rgba(14, 209, 255, 0.12) !important;
+      border-color: var(--cyan) !important;
+      color: var(--foam) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 8px rgba(14, 209, 255, 0.15) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="addCustomTransformerRow"]:hover {
+      background: #e0f0fe !important;
+      border-color: #3b82f6 !important;
+      color: #1d4ed8 !important;
+    }
+
+    /* 5. QUICK ADD CHIPS: "+15kVA", "+30kVA", etc. */
+    #panel-subestaciones button[onclick*="addStandardTransformerRow"] {
+      padding: 4px 9px !important;
+      font-size: 11px !important;
+      font-family: var(--mono) !important;
+      font-weight: 600 !important;
+      border-radius: 6px !important;
+      background: var(--input-bg) !important;
+      color: var(--foam) !important;
+      border: 1px solid var(--line) !important;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="addStandardTransformerRow"] {
+      background: #ffffff !important;
+      color: #334155 !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    #panel-subestaciones button[onclick*="addStandardTransformerRow"]:hover {
+      border-color: var(--cyan) !important;
+      color: var(--cyan) !important;
+      background: var(--nav-hover) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="addStandardTransformerRow"]:hover {
+      border-color: #2563eb !important;
+      color: #1d4ed8 !important;
+      background: #eff6ff !important;
+    }
+
+    /* 6. SEGMENTED SWITCHER: "Desglose Detallado" vs "Modo Rápido" */
+    #panel-subestaciones .inline-flex.rounded-md.shadow-sm {
+      background: var(--meta-bg) !important;
+      border: 1px solid var(--line) !important;
+      border-radius: 8px !important;
+      padding: 2px !important;
+      gap: 2px !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones .inline-flex.rounded-md.shadow-sm {
+      background: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+    }
+
+    #panel-subestaciones #mode-btn-detailed,
+    #panel-subestaciones #mode-btn-quick {
+      padding: 5px 12px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      border-radius: 6px !important;
+      border: none !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
+    #panel-subestaciones #mode-btn-detailed.bg-white,
+    #panel-subestaciones #mode-btn-quick.bg-white {
+      background: #ffffff !important;
+      color: #1d4ed8 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12) !important;
+      font-weight: 700 !important;
+    }
+
+    #panel-subestaciones #mode-btn-detailed.text-slate-600,
+    #panel-subestaciones #mode-btn-quick.text-slate-600 {
+      background: transparent !important;
+      color: #64748b !important;
+    }
+
+    #panel-subestaciones #mode-btn-detailed.text-slate-600:hover,
+    #panel-subestaciones #mode-btn-quick.text-slate-600:hover {
+      color: #0f172a !important;
+      background: rgba(0, 0, 0, 0.04) !important;
+    }
+
+    html[data-theme="night"] #panel-subestaciones #mode-btn-detailed.bg-white,
+    html[data-theme="night"] #panel-subestaciones #mode-btn-quick.bg-white {
+      background: var(--nav-active) !important;
+      color: var(--cyan-2) !important;
+      border: 1px solid var(--nav-active-border) !important;
+    }
+
+    html[data-theme="night"] #panel-subestaciones #mode-btn-detailed.text-slate-600,
+    html[data-theme="night"] #panel-subestaciones #mode-btn-quick.text-slate-600 {
+      background: transparent !important;
+      color: var(--muted) !important;
+    }
+
+    /* 7. GRID TRIGGER BUTTON: "Haz clic en el mapa para trazar cuadro" */
+    #panel-subestaciones #btn-add-grid {
+      width: 100% !important;
+      padding: 10px 16px !important;
+      font-size: 12.5px !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+      border: 1px solid rgba(147, 197, 253, 0.35) !important;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    #panel-subestaciones #btn-add-grid:hover {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    /* 8. TABLE ROW REMOVE BUTTON: "✕" */
+    #panel-subestaciones button[onclick*="removeTransformerRow"],
+    #panel-subestaciones .btn-remove-row {
+      background: transparent !important;
+      border: 1px solid transparent !important;
+      color: #ef4444 !important;
+      padding: 4px !important;
+      width: 26px !important;
+      height: 26px !important;
+      border-radius: 6px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
+    #panel-subestaciones button[onclick*="removeTransformerRow"]:hover,
+    #panel-subestaciones .btn-remove-row:hover {
+      background: rgba(239, 68, 68, 0.12) !important;
+      border-color: rgba(239, 68, 68, 0.25) !important;
+      color: #dc2626 !important;
+      transform: scale(1.08) !important;
+    }
+
+    #panel-subestaciones button[onclick*="removeTransformerRow"] svg,
+    #panel-subestaciones .btn-remove-row svg {
+      width: 14px !important;
+      height: 14px !important;
+      pointer-events: none !important;
+    }
+
+    /* 9. DESTRUCTIVE / RESET BUTTONS */
+    #panel-subestaciones button[onclick*="clearAllData"] {
+      background: transparent !important;
+      border: 1px solid rgba(239, 68, 68, 0.3) !important;
+      color: #ef4444 !important;
+      border-radius: 8px !important;
+      padding: 6px 12px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+      cursor: pointer !important;
+      transition: all 0.15s ease !important;
+    }
+
+    #panel-subestaciones button[onclick*="clearAllData"]:hover {
+      background: rgba(239, 68, 68, 0.1) !important;
+      border-color: #ef4444 !important;
+      color: #dc2626 !important;
+      transform: translateY(-1px) !important;
+    }
+
+    #panel-subestaciones button[onclick*="deleteActiveZone"] {
+      background: rgba(239, 68, 68, 0.08) !important;
+      border: 1px solid rgba(239, 68, 68, 0.25) !important;
+      color: #ef4444 !important;
+      border-radius: 6px !important;
+      padding: 4px 9px !important;
+      font-size: 11px !important;
+      font-weight: 600 !important;
+    }
+
+    #panel-subestaciones button[onclick*="deleteActiveZone"]:hover {
+      background: rgba(239, 68, 68, 0.18) !important;
+      border-color: #ef4444 !important;
+      color: #dc2626 !important;
+    }
+
+    /* 10. CLIMATE CONFIRM BUTTON: "Confirmar Datos Climatológicos" */
+    #panel-subestaciones button[onclick*="saveClimateData"] {
+      flex: 1 !important;
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+      border: 1px solid rgba(147, 197, 253, 0.4) !important;
+      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    }
+
+    #panel-subestaciones button[onclick*="saveClimateData"]:hover {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.45) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    /* 11. SECONDARY ACTION BUTTONS: "Ver Memoria 👉", "Descargar Datos (.json)" */
+    #panel-subestaciones button[onclick*="switchTab('report')"]:not(#tab-btn-report) {
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+      font-weight: 700 !important;
+      border-radius: 8px !important;
+      color: #ffffff !important;
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+    }
+
+    #panel-subestaciones button[onclick*="switchTab('report')"]:not(#tab-btn-report):hover {
+      background: linear-gradient(135deg, #334155 0%, #1e293b 100%) !important;
+      border-color: var(--cyan) !important;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    #panel-subestaciones button[onclick*="exportJsonData"] {
+      width: 100% !important;
+      padding: 10px 16px !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      border-radius: 8px !important;
+      color: var(--foam) !important;
+      background: var(--input-bg) !important;
+      border: 1px solid var(--line) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="exportJsonData"] {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #1e293b !important;
+    }
+
+    #panel-subestaciones button[onclick*="exportJsonData"]:hover {
+      background: var(--nav-hover) !important;
+      border-color: var(--cyan) !important;
+      color: var(--cyan) !important;
+      transform: translateY(-1px) !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones button[onclick*="exportJsonData"]:hover {
+      background: #f8fafc !important;
+      border-color: #2563eb !important;
+      color: #1d4ed8 !important;
+    }
+
+    #panel-subestaciones #tab-content-report .pdf-btn {
+      padding: 6px 14px !important;
+      font-size: 11.5px !important;
+      font-weight: 600 !important;
+      border-radius: 6px !important;
+      color: var(--foam) !important;
+      background: var(--input-bg) !important;
+      border: 1px solid var(--line) !important;
+      cursor: pointer !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 6px !important;
+      transition: all 0.2s ease !important;
+    }
+
+    html[data-theme="day"] #panel-subestaciones #tab-content-report .pdf-btn {
+      background: #ffffff !important;
+      border-color: #cbd5e1 !important;
+      color: #1e293b !important;
+    }
+
+    #panel-subestaciones #tab-content-report .pdf-btn:hover {
+      border-color: var(--cyan) !important;
+      color: var(--cyan) !important;
+      background: var(--nav-hover) !important;
+    }
+
+    /* Leaflet tooltip grid styling */
+    .leaflet-tooltip.grid-tooltip {
+      background: rgba(15, 23, 42, 0.92) !important;
+      color: #f8fafc !important;
+      border: 1px solid rgba(71, 85, 105, 0.7) !important;
+      border-radius: 8px !important;
+      padding: 5px 10px !important;
+      font-family: var(--sans) !important;
+      font-size: 11px !important;
+      line-height: 1.3 !important;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35) !important;
+      text-align: center !important;
+    }
+    .leaflet-tooltip.grid-tooltip::before {
+      border-top-color: rgba(15, 23, 42, 0.92) !important;
+    }
+
+    /* Overlay */
+    #panel-subestaciones #calc-overlay {
+      background: rgba(30, 30, 30, 0.90);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 10;
+    }
+    html[data-theme="day"] #panel-subestaciones #calc-overlay {
+      background: rgba(234, 238, 244, 0.92);
+    }
+
+    /* Animations */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.85); opacity: 0.9; }
+      50% { transform: scale(1.4); opacity: 0.2; }
+      100% { transform: scale(0.85); opacity: 0.9; }
+    }
+    .substation-pulse {
+      position: absolute;
+      width: 38px;
+      height: 38px;
+      left: -7px;
+      top: -7px;
+      border-radius: 50%;
+      background-color: rgba(237, 67, 41, 0.45);
+      animation: pulse-ring 2s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    /* Print styles */
+    @media print {
+      #panel-subestaciones .sub-map-pane,
+      #panel-subestaciones .sub-module-nav,
+      #panel-subestaciones .sub-sidebar header nav,
+      #panel-subestaciones #toast,
+      #panel-subestaciones button {
+        display: none !important;
+      }
+      #panel-subestaciones .sub-layout {
+        display: block !important;
+        height: auto !important;
+        border: none !important;
+        box-shadow: none !important;
+      }
+      #panel-subestaciones .sub-sidebar {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        height: auto !important;
+        border: none !important;
+      }
+      #panel-subestaciones #tab-content-grid,
+      #panel-subestaciones #tab-content-climate,
+      #panel-subestaciones #tab-content-report {
+        display: block !important;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -983,7 +1942,8 @@
         <button class="nav-btn" data-panel="eficiencia"><span class="ico">◒</span> Eficiencia energética</button>
         <button class="nav-btn" data-panel="tan"><span class="ico">▣</span> TAN / AHF</button>
         <button class="nav-btn" data-panel="pu"><span class="ico">⚡</span> Por Unidad (PU)</button>
-        <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
+        <button class="nav-btn" data-panel="subestaciones"><span class="ico">⚡</span> Subestaciones</button>
+      <button class="nav-btn" data-panel="fasores"><span class="ico">∠</span> Fasores</button>
         <button class="nav-btn" data-panel="color"><span class="ico">◐</span> Color HEX → HSB</button>
       </div>
       <div class="nav-foot">Material de apoyo académico. No sustituye catálogo, ensayo de tipo ni memoria de cálculo del proyecto.</div>
@@ -1010,6 +1970,7 @@
           <article class="card home" data-go="eficiencia"><h3>Eficiencia energética</h3><p class="sub">24 plantillas de 5 a 500 kW: potencia útil, pérdidas, eficiencia y aislamiento térmico de referencia.</p></article>
           <article class="card home" data-go="tan"><h3>TAN / AHF</h3><p class="sub">Proyectar tablero IEC 61439 (In, Icc, ΔT, XL³) y DSP 3P+N: Clarke, THDi y banco 24 V.</p></article>
           <article class="card home" data-go="pu"><h3>Sistema Por Unidad (PU)</h3><p class="sub">Bases trifásicas Sb/Vb, cambio de base Zpu, cálculo de cortocircuito trifásico Icc3φ y diagrama unilineal SLD.</p></article>
+          <article class="card home" data-go="subestaciones"><h3>Subestaciones</h3><p class="sub">Localización de centro de carga (cuadrícula 0.5×0.5 km) y caracterización climatológica (a–g) en Los Ríos, junto al laboratorio PU para transformador elevador, línea y patio.</p></article>
           <article class="card home" data-go="fasores"><h3>Fasores</h3><p class="sub">Conversión bidireccional entre forma rectangular (a + jb) y notación fasorial (magnitud ∠ ángulo).</p></article>
           <article class="card home" data-go="color"><h3>HEX → HSB</h3><p class="sub">Conversor de color con vista previa, RGB y copia de tono, saturación y brillo.</p></article>
         </div>
@@ -2798,6 +3759,817 @@
         </div>
       </section>
 
+      
+      <!-- ==========================================
+           MÓDULO: SUBESTACIONES ELÉCTRICAS
+           ========================================== -->
+      <section class="panel" id="panel-subestaciones">
+        <div class="hero">
+          <div>
+            <h2>Subestaciones <span>Eléctricas</span></h2>
+            <p class="lede">Estudio de localización de centro de cargas (cuadrícula 0.5×0.5 km) y caracterización climatológica (a–g) en Los Ríos, junto al laboratorio PU para transformadores elevadores, transmisión y equipos de patio.</p>
+          </div>
+          <div class="hero-actions">
+            <button class="btn primary pdf-btn" type="button" data-pdf="subestaciones">Exportar PDF</button>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE MÓDULOS DE SUBESTACIONES -->
+        <div class="sub-module-nav">
+          <button type="button" class="sub-mod-btn active" id="btn-mod-estudio" onclick="switchSubestacionModule('estudio')">
+            <span class="ico">🗺️</span> 1. Estudio de Localización & Clima (Los Ríos · 500m×500m · SEC Clase B)
+          </button>
+          <button type="button" class="sub-mod-btn" id="btn-mod-laboratorio" onclick="switchSubestacionModule('laboratorio')">
+            <span class="ico">⚡</span> 2. Laboratorio de Subestaciones (PU, Transformadores & Patio)
+          </button>
+        </div>
+
+        <!-- ========================================================================= -->
+        <!-- MÓDULO 1: ESTUDIO DE LOCALIZACIÓN Y DISEÑO (05 - estudio_subestaci_n_los_r_os.html) -->
+        <!-- ========================================================================= -->
+        <div id="sub-module-estudio">
+          <div class="sub-layout">
+    <!-- SIDEBAR DE CONTROL Y CÁLCULOS -->
+    <div class="sub-sidebar w-full md:w-[480px] lg:w-[530px] flex flex-col h-full bg-white shadow-2xl z-20 border-r border-slate-200 flex-shrink-0">
+        
+        <!-- Header Principal -->
+        <header class="bg-slate-900 text-white p-4 pb-3 flex-shrink-0 shadow-md">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white shadow-md">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-base font-bold tracking-tight text-white leading-tight">Calculadora de Subestación</h1>
+                        <p class="text-[11px] text-slate-400 font-medium">Método de Cuadrícula & Caracterización Climatológica</p>
+                    </div>
+                </div>
+                <span class="text-[10px] bg-slate-800 border border-slate-700 text-slate-300 px-2 py-0.5 rounded font-mono">Los Ríos</span>
+            </div>
+
+            <!-- Navegación por Pestañas (Las 2 Fases de las Imágenes) -->
+            <nav class="flex gap-1 mt-3 bg-slate-800/80 p-1 rounded-lg border border-slate-700/60 text-xs">
+                <button onclick="switchTab('grid')" id="tab-btn-grid" class="flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all bg-blue-600 text-white shadow-sm flex items-center justify-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    <span>1. Cuadrícula & Cargas</span>
+                </button>
+                <button onclick="switchTab('climate')" id="tab-btn-climate" class="flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z"></path></svg>
+                    <span>2. Climatología (a-g)</span>
+                </button>
+                <button onclick="switchTab('report')" id="tab-btn-report" class="flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                    <span>3. Memoria</span>
+                </button>
+            </nav>
+        </header>
+
+        <!-- CONTENIDO CON SCROLL -->
+        <div class="flex-1 overflow-y-auto p-4 space-y-5 custom-scrollbar bg-slate-50/70">
+            
+            <!-- ========================================== -->
+            <!-- TAB 1: LOCALIZACIÓN POR CUADRÍCULA (0.5x0.5 km) -->
+            <!-- ========================================== -->
+            <div id="tab-content-grid" class="space-y-4">
+                
+                <!-- Cita y Explicación del Método (Imagen 1) -->
+                <div class="bg-blue-50/80 border border-blue-200/80 rounded-lg p-3 text-xs text-blue-900 shadow-sm leading-relaxed">
+                    <div class="flex items-start gap-2">
+                        <span class="text-blue-600 font-bold text-sm">💡</span>
+                        <div>
+                            <strong class="font-semibold block text-blue-950 mb-0.5">Método de Localización (0.5 × 0.5 km):</strong>
+                            <p class="text-blue-800 italic">
+                                "En un plano grande de una ciudad se traza, a escala, una cuadrícula que puede ser de 0.5 × 0.5 km. En cada cuadro de medio kilómetro de lado, se obtiene estadísticamente la capacidad instalada, contando el número de transformadores de distribución repartidos en el área y sumando la potencia en kVA de todos ellos."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Herramientas de Mapeo -->
+                <div class="bg-white border border-slate-200 p-3 rounded-lg shadow-sm space-y-2.5">
+                    <div class="flex items-center justify-between text-xs font-semibold text-slate-700">
+                        <span>Zona Base de Estudio</span>
+                        <div class="flex items-center gap-1.5 text-[11px] text-slate-500 font-normal">
+                            <input type="checkbox" id="snap-grid-chk" checked class="rounded text-blue-600 focus:ring-blue-500">
+                            <label for="snap-grid-chk" class="cursor-pointer">Ajustar a malla (500m)</label>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Comuna Base</label>
+                                <select id="city-select" onchange="onCityChange()" class="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-300 rounded-md text-xs font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                                    <option value="valdivia">Valdivia (Ciudad / Costa)</option>
+                                    <option value="panguipulli">Panguipulli (Lacustre)</option>
+                                    <option value="la_union">La Unión (Valle Ranco)</option>
+                                    <option value="paillaco">Paillaco (Valle Central)</option>
+                                    <option value="rio_bueno">Río Bueno (Cuenca Sur)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-semibold text-slate-600 mb-0.5">Malla Regular</label>
+                                <div class="h-[30px] flex items-center px-2 bg-slate-50 border border-slate-200 rounded-md text-[11px] text-slate-600">
+                                    <span>Paso: <strong>500m (0.25km²)</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Menú Desplegable con las 18 Plantillas (kVA vs Límite SEC Clase B) -->
+                        <div class="space-y-1.5 pt-1 border-t border-slate-100">
+                            <div class="flex items-center justify-between">
+                                <label for="template-select" class="text-xs font-bold text-slate-800 flex items-center gap-1">
+                                    <span class="text-indigo-600">⚡</span>
+                                    <span>Plantilla de Referencia (18 Tamaños):</span>
+                                </label>
+                                <span class="text-[10px] text-indigo-700 font-mono font-semibold bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded" id="sec-limit-badge">Tope: 500 kVA</span>
+                            </div>
+                            <select id="template-select" onchange="loadSelectedTemplate(this.value)" class="w-full px-2.5 py-2 bg-gradient-to-r from-indigo-50/90 to-blue-50/90 border border-indigo-200 hover:border-indigo-400 text-slate-800 rounded-md text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none transition-colors cursor-pointer shadow-xs">
+                                <option value="" disabled selected>✨ Selecciona una plantilla (15 a 500 kVA)...</option>
+                                <optgroup label="🌱 Pequeña Potencia / Sector Rural (15 a 45 kVA)">
+                                    <option value="tpl_15">01. 15 kVA (3.0% SEC) — Caserío Rural / APR (Valdivia)</option>
+                                    <option value="tpl_25">02. 25 kVA (5.0% SEC) — Agrícola Familiar (Paillaco)</option>
+                                    <option value="tpl_30">03. 30 kVA (6.0% SEC) — Villa Rural Concentrada (Panguipulli)</option>
+                                    <option value="tpl_45">04. 45 kVA (9.0% SEC) — Aserradero / Taller Maderero (La Unión)</option>
+                                </optgroup>
+                                <optgroup label="🏡 Rango Residencial / Comercial Bajo (60 a 150 kVA)">
+                                    <option value="tpl_60">05. 60 kVA (12.0% SEC) — Condominio de Parcelas (Panguipulli)</option>
+                                    <option value="tpl_75">06. 75 kVA (15.0% SEC) — Strip Center & Servicios (Río Bueno)</option>
+                                    <option value="tpl_100">07. 100 kVA (20.0% SEC) — Barrio Residencial (Valdivia)</option>
+                                    <option value="tpl_112">08. 112.5 kVA (22.5% SEC) — Cooperativa Lechera (La Unión)</option>
+                                    <option value="tpl_150">09. 150 kVA (30.0% SEC) — Sector Urbano Residencial (Paillaco)</option>
+                                </optgroup>
+                                <optgroup label="🏭 Rango Agroindustrial / Mixto (180 a 300 kVA)">
+                                    <option value="tpl_180">10. 180 kVA (36.0% SEC) — Loteo Residencial & Comercio (Valdivia)</option>
+                                    <option value="tpl_200">11. 200 kVA (40.0% SEC) — Agroindustria & Packing (Río Bueno)</option>
+                                    <option value="tpl_250">12. 250 kVA (50.0% SEC) — Eje Comercial y Servicios (La Unión)</option>
+                                    <option value="tpl_300">13. 300 kVA (60.0% SEC) — Barrio Céntrico Mixto (Valdivia)</option>
+                                </optgroup>
+                                <optgroup label="⚡ Rango Mayor / Límite SEC Clase B (350 a 500 kVA)">
+                                    <option value="tpl_350">14. 350 kVA (70.0% SEC) — Complejo Turístico Lacustre (Panguipulli)</option>
+                                    <option value="tpl_400">15. 400 kVA (80.0% SEC) — Parque Logístico / Bodegas (Paillaco)</option>
+                                    <option value="tpl_450">16. 450 kVA (90.0% SEC) — Polígono Mixto y Salud (Valdivia)</option>
+                                    <option value="tpl_480">17. 480 kVA (96.0% SEC) — Cuadrante Urbano Consolidado (La Unión)</option>
+                                    <option value="tpl_500">18. 500 kVA (100.0% SEC) — [MÁXIMO SEC CLASE B] Subestación Límite (Valdivia)</option>
+                                </optgroup>
+                            </select>
+
+                            <!-- Widget de Diagnóstico SEC Clase B -->
+                            <div id="sec-indicator-box" class="bg-slate-50 border border-slate-200 rounded-md p-2.5 text-xs space-y-1.5">
+                                <div class="flex items-center justify-between text-[11px]">
+                                    <span class="text-slate-600 font-medium flex items-center gap-1">
+                                        <span>Alcance Licencia SEC Clase B:</span>
+                                        <strong class="text-slate-800 font-mono">500 kW / 500 kVA máx</strong>
+                                    </span>
+                                    <span class="font-mono font-bold text-indigo-700" id="sec-progress-pct">0.0%</span>
+                                </div>
+                                <div class="w-full bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                                    <div id="sec-progress-fill" class="h-1.5 rounded-full bg-emerald-500 transition-all duration-500" style="width: 0%"></div>
+                                </div>
+                                <div class="flex items-center justify-between text-[10px]">
+                                    <span id="sec-status-text" class="text-slate-500 font-medium">Selecciona una plantilla para cargar valores completos.</span>
+                                    <span class="text-slate-400 font-mono">D.S. N° 92 SEC</span>
+                                </div>
+                                <p id="sec-template-desc" class="text-[10px] text-slate-600 italic border-t border-slate-200/60 pt-1 mt-1 hidden"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2 pt-1 border-t border-slate-100 text-xs">
+                        <button onclick="enableAddGridMode()" id="btn-add-grid" class="flex-1 py-2 px-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md shadow-sm transition-colors flex items-center justify-center gap-1.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            <span>Haz clic en el mapa para trazar cuadro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de la Cuadrícula Seleccionada -->
+                <div class="bg-white border border-slate-200 rounded-lg shadow-sm relative overflow-hidden transition-all" id="calc-container">
+                    
+                    <!-- Overlay cuando no hay cuadrícula seleccionada -->
+                    <div id="calc-overlay" class="absolute inset-0 bg-slate-50/85 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center p-6 text-center">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 flex items-center justify-center text-slate-500 mb-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"></path></svg>
+                        </div>
+                        <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">Ningún cuadro seleccionado</h4>
+                        <p class="text-xs text-slate-500 max-w-[240px]">Haz clic en el mapa para trazar o pulsa sobre una cuadrícula existente para censar sus transformadores.</p>
+                    </div>
+
+                    <!-- Cabecera de Cuadro -->
+                    <div class="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-amber-500 text-white font-bold text-xs" id="active-zone-id">#1</span>
+                            <div>
+                                <h3 class="text-xs font-bold text-slate-800" id="active-zone-title">Cuadrícula 500m × 500m</h3>
+                                <p class="text-[10px] text-slate-500 font-mono" id="active-zone-coords">Área: 0.25 km²</p>
+                            </div>
+                        </div>
+                        <button onclick="deleteActiveZone()" title="Eliminar este cuadro" class="text-red-500 hover:text-red-700 hover:bg-red-50 p-1.5 rounded transition-colors text-xs font-medium flex items-center gap-1">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            <span>Eliminar</span>
+                        </button>
+                    </div>
+
+                    <div class="p-4 space-y-4">
+                        
+                        <!-- Pestañitas para elegir modo de cálculo -->
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs font-bold text-slate-700">Censo de Transformadores:</label>
+                            <div class="inline-flex rounded-md shadow-sm p-0.5 bg-slate-100 border border-slate-200 text-[11px]">
+                                <button type="button" onclick="setEntryMode('detailed')" id="mode-btn-detailed" class="px-2 py-1 rounded font-medium bg-white text-blue-700 shadow-xs">Desglose Detallado</button>
+                                <button type="button" onclick="setEntryMode('quick')" id="mode-btn-quick" class="px-2 py-1 rounded font-medium text-slate-600 hover:text-slate-900">Modo Rápido</button>
+                            </div>
+                        </div>
+
+                        <!-- MODO 1: DETALLADO (Suma de potencias normalizadas kVA) -->
+                        <div id="mode-detailed-panel" class="space-y-3">
+                            <p class="text-[11px] text-slate-500">
+                                Añade los transformadores de distribución instalados en este cuadro. Suma automática de potencia (kVA):
+                            </p>
+
+                            <!-- Botones rápidos de potencias estándar en Chile -->
+                            <div class="flex flex-wrap gap-1.5">
+                                <span class="text-[10px] text-slate-400 font-semibold self-center mr-1">Comunes:</span>
+                                <button type="button" onclick="addStandardTransformerRow(15)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+15kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(30)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+30kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(45)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+45kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(75)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+75kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(112.5)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+112.5kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(150)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+150kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(300)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+300kVA</button>
+                                <button type="button" onclick="addStandardTransformerRow(500)" class="px-1.5 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 rounded text-[11px] font-mono">+500kVA</button>
+                            </div>
+
+                            <!-- Tabla Dinámica de Transformadores -->
+                            <div class="border border-slate-200 rounded-md overflow-hidden bg-white">
+                                <table class="w-full text-xs text-left">
+                                    <thead class="bg-slate-100 text-slate-600 font-semibold border-b border-slate-200">
+                                        <tr>
+                                            <th class="py-1.5 px-2">Cantidad</th>
+                                            <th class="py-1.5 px-2">Potencia (kVA)</th>
+                                            <th class="py-1.5 px-2 text-right">Subtotal</th>
+                                            <th class="py-1.5 px-1 w-8"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="transformer-rows" class="divide-y divide-slate-100 font-mono text-[11px]">
+                                        <!-- Filas dinámicas generadas por JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <button type="button" onclick="addCustomTransformerRow(1, 75)" class="w-full py-1 border border-dashed border-slate-300 hover:border-blue-400 text-blue-600 hover:bg-blue-50/50 rounded text-xs font-medium transition-colors flex items-center justify-center gap-1">
+                                <span>+ Añadir grupo de transformadores</span>
+                            </button>
+                        </div>
+
+                        <!-- MODO 2: RÁPIDO (Cantidad x Promedio) -->
+                        <div id="mode-quick-panel" class="hidden space-y-3">
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">N° Transformadores</label>
+                                    <input type="number" id="quick-count" min="0" placeholder="Ej: 6" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 text-xs font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-600 mb-1">Potencia Promedio (kVA)</label>
+                                    <input type="number" id="quick-power" min="0" placeholder="Ej: 150" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 text-xs font-mono">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Resumen del Cuadro Actual -->
+                        <div class="bg-slate-50 border border-slate-200 rounded-lg p-3 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider block">Capacidad en este Cuadro</span>
+                                <div class="flex items-baseline gap-1.5">
+                                    <span class="text-xl font-extrabold text-blue-900 font-mono" id="card-cell-kva">0</span>
+                                    <span class="text-xs font-bold text-blue-700">kVA</span>
+                                    <span class="text-[11px] text-slate-500 font-mono" id="card-cell-mva">(= 0.00 MVA)</span>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-[10px] text-slate-500 block">Transformadores</span>
+                                <span class="text-sm font-bold text-slate-800 font-mono" id="card-cell-count">0 unid.</span>
+                            </div>
+                        </div>
+
+                        <button onclick="saveActiveZoneData()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-semibold py-2 px-3 rounded-md shadow text-xs transition-colors flex items-center justify-center gap-1.5">
+                            <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>Guardar Cuadro y Actualizar Mapa</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- RESUMEN GLOBAL Y BOTÓN PARA LOCALIZAR LA SUBESTACIÓN -->
+                <div class="bg-white border-2 border-slate-800 rounded-lg p-4 shadow-md space-y-3">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <h3 class="text-xs font-bold text-slate-900 uppercase tracking-wide">Balance General de Cargas</h3>
+                        </div>
+                        <span class="text-[11px] font-mono bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold" id="global-zones-badge">0 cuadrículas</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 text-xs">
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-100">
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold block">Potencia Instalada Total</span>
+                            <div class="flex items-baseline gap-1 mt-0.5">
+                                <span class="text-lg font-extrabold text-slate-900 font-mono" id="global-total-kva">0</span>
+                                <span class="text-[11px] font-bold text-slate-600">kVA</span>
+                            </div>
+                            <span class="text-[10px] text-emerald-700 font-mono font-medium block" id="global-total-mva">0.00 MVA</span>
+                        </div>
+                        <div class="bg-slate-50 p-2.5 rounded border border-slate-100">
+                            <span class="text-[10px] text-slate-500 uppercase font-semibold block">Transformadores Totales</span>
+                            <div class="flex items-baseline gap-1 mt-0.5">
+                                <span class="text-lg font-extrabold text-slate-900 font-mono" id="global-total-transformers">0</span>
+                                <span class="text-[11px] font-bold text-slate-600">unidades</span>
+                            </div>
+                            <span class="text-[10px] text-slate-500 font-mono block" id="global-density">0 kVA/km²</span>
+                        </div>
+                    </div>
+
+                    <!-- Botón de Acción Principal del Método (Imagen 1 -> Imagen 2) -->
+                    <button onclick="calculateSubstationLocation()" id="btn-calc-substation" class="w-full bg-gradient-to-r from-blue-700 via-indigo-700 to-blue-800 hover:from-blue-800 hover:to-indigo-900 text-white font-bold py-2.5 px-4 rounded-md shadow-md text-xs transition-all flex items-center justify-center gap-2">
+                        <svg class="w-4 h-4 text-amber-300" fill="currentColor" viewBox="0 0 20 20" width="16" height="16"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd"></path></svg>
+                        <span>Calcular Centro de Cargas y Localizar Subestación</span>
+                    </button>
+
+                    <!-- Resultado de la Localización de Subestación -->
+                    <div id="substation-result-box" class="hidden bg-emerald-50 border border-emerald-300 rounded-lg p-3 text-xs space-y-2">
+                        <div class="flex items-center gap-2 text-emerald-900 font-bold">
+                            <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path></svg>
+                            <span>¡Terreno Necesario Localizado!</span>
+                        </div>
+                        <p class="text-emerald-800 text-[11px] leading-relaxed">
+                            Se ha determinado el <strong>Centro de Cargas Eléctrico</strong> óptimo mediante el baricentro de potencia de todas las cuadrículas.
+                        </p>
+                        <div class="bg-white/80 p-2 rounded border border-emerald-200 font-mono text-[11px] text-slate-800 flex justify-between">
+                            <span>Coordenadas Óptimas:</span>
+                            <strong id="substation-coords-label">-39.8142, -73.2459</strong>
+                        </div>
+                        <button onclick="goToClimateStep()" class="w-full py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded font-semibold text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+                            <span>Proceder a Datos Climatológicos (Paso 2)</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center pt-2 border-t border-slate-100">
+                        <button onclick="clearAllData()" class="text-[11px] text-red-600 hover:text-red-800 hover:underline">
+                            Limpiar mapa y reiniciar estudio
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TAB 2: DATOS CLIMATOLÓGICOS (a - g)       -->
+            <!-- ========================================== -->
+            <div id="tab-content-climate" class="hidden space-y-4">
+                
+                <!-- Cita Textual de la Imagen 2 -->
+                <div class="bg-amber-50/90 border border-amber-200/90 rounded-lg p-3 text-xs text-amber-900 shadow-sm leading-relaxed">
+                    <div class="flex items-start gap-2">
+                        <span class="text-amber-600 font-bold text-sm">📋</span>
+                        <div>
+                            <strong class="font-semibold block text-amber-950 mb-0.5">Metodología de Terreno (Imagen 2):</strong>
+                            <p class="text-amber-900 italic">
+                                "Localizado el terreno necesario, se procede a la obtención de los datos climatológicos de la región: a) Temperaturas, máxima y mínima, b) Velocidad máxima del viento, c) Altura sobre el nivel del mar, d) Nivel isoceráunico, e) Nivel sísmico, f) Nivel pluviométrico, g) Grado de contaminación."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selector de Plantilla y Terreno -->
+                <div class="bg-white border border-slate-200 p-3 rounded-lg shadow-sm space-y-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-xs font-bold text-slate-800">Plantilla Climática de Referencia</label>
+                        <span class="text-[10px] text-slate-500 font-mono">Región de Los Ríos</span>
+                    </div>
+                    <select id="climate-preset-select" onchange="applyClimatePreset()" class="w-full px-3 py-1.5 bg-slate-50 border border-slate-300 rounded-md text-xs font-medium text-slate-800 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="valdivia">Valdivia (Costa / Ciudad Capital)</option>
+                        <option value="panguipulli">Panguipulli (Zona Lacustre / Precordillera)</option>
+                        <option value="la_union">La Unión (Valle Central / Agrícola)</option>
+                        <option value="paillaco">Paillaco (Valle Longitudinal)</option>
+                        <option value="rio_bueno">Río Bueno (Cuenca Sur)</option>
+                        <option value="custom">-- Parámetros Personalizados por el Usuario --</option>
+                    </select>
+                    <p class="text-[11px] text-slate-500">
+                        Los valores pueden ser ajustados manualmente según mediciones de la estación meteorológica local o especificaciones de la distribuidora.
+                    </p>
+                </div>
+
+                <!-- Formulario Normativo de los 7 Parámetros Climatológicos (a a g) -->
+                <div class="bg-white border border-slate-200 rounded-lg shadow-sm divide-y divide-slate-100 text-xs">
+                    
+                    <!-- a) Temperaturas -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">a</span>
+                                Temperaturas, máxima y mínima
+                            </span>
+                            <span class="text-[10px] text-slate-400">IEEE C57 / IEC 60076</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="text-[10px] text-slate-500 block mb-0.5 font-medium">Temp. Máxima (°C)</label>
+                                <input type="number" id="climate-temp-max" step="0.1" class="w-full px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 block mb-0.5 font-medium">Temp. Mínima (°C)</label>
+                                <input type="number" id="climate-temp-min" step="0.1" class="w-full px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Determina el enfriamiento del transformador (ONAN/ONAF) y la ampacidad térmica de conductores.</p>
+                    </div>
+
+                    <!-- b) Velocidad máxima del viento -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">b</span>
+                                Velocidad máxima del viento
+                            </span>
+                            <span class="text-[10px] text-slate-400">NCh432 / Viento de Diseño</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="number" id="climate-wind" step="1" class="w-32 px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            <span class="text-xs text-slate-600 font-mono">km/h</span>
+                            <span class="text-[10px] text-slate-400 font-mono" id="wind-pressure-label">(~ 0 N/m²)</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Esfuerzos mecánicos en pórticos, estructuras de anclaje, aisladores de soporte y tiro de líneas.</p>
+                    </div>
+
+                    <!-- c) Altura sobre el nivel del mar -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">c</span>
+                                Altura sobre el nivel del mar
+                            </span>
+                            <span class="text-[10px] text-slate-400">IEC 60071 / Derating</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="number" id="climate-altitude" step="1" class="w-32 px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            <span class="text-xs text-slate-600 font-mono">m.s.n.m.</span>
+                            <span class="text-[10px] text-emerald-700 font-mono font-medium" id="altitude-factor-label">Factor Ka: 1.00 (Normal)</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Rigidez dieléctrica del aire. Afecta distancias de seguridad y tensión de sostenimiento si > 1.000 m.</p>
+                    </div>
+
+                    <!-- d) Nivel isoceráunico -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">d</span>
+                                Nivel isoceráunico
+                            </span>
+                            <span class="text-[10px] text-slate-400">IEEE 998 / Pararrayos</span>
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <input type="number" id="climate-isokeraunic" step="1" class="w-32 px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            <span class="text-xs text-slate-600 font-mono">días tormenta/año</span>
+                            <span class="text-[10px] text-slate-500 font-mono" id="flash-density-label">Ng: ~0.8 rayos/km²·año</span>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Determina el diseño de apantallamiento (hilos de guardia, puntas Franklin) y clase de descargadores de sobretensión (DPS).</p>
+                    </div>
+
+                    <!-- e) Nivel sísmico -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">e</span>
+                                Nivel sísmico
+                            </span>
+                            <span class="text-[10px] text-slate-400">NCh433 / ETG-1.015</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <select id="climate-seismic-zone" class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-medium" onchange="onClimateInputChange()">
+                                <option value="Zona 3 (A0 = 0.40g - Alta)">Zona 3 (A0 = 0.40g - Los Ríos)</option>
+                                <option value="Zona 2 (A0 = 0.30g - Media)">Zona 2 (A0 = 0.30g - Media)</option>
+                                <option value="Zona 1 (A0 = 0.20g - Baja)">Zona 1 (A0 = 0.20g - Baja)</option>
+                            </select>
+                            <input type="text" id="climate-seismic-spec" value="Norma Sísmica Chilena NCh433" class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs text-slate-700 font-medium" onchange="onClimateInputChange()">
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Diseño de fundaciones, riostras, anclajes antisísmicos y terminales flexibles en bornes de transformadores.</p>
+                    </div>
+
+                    <!-- f) Nivel pluviométrico -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">f</span>
+                                Nivel pluviométrico
+                            </span>
+                            <span class="text-[10px] text-slate-400">Drenajes y Cámaras</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="text-[10px] text-slate-500 block mb-0.5">Media Anual (mm/año)</label>
+                                <input type="number" id="climate-rain-annual" step="10" class="w-full px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-slate-500 block mb-0.5">Máx 24h (mm)</label>
+                                <input type="number" id="climate-rain-24h" step="5" class="w-full px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-mono font-semibold" onchange="onClimateInputChange()">
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Dimensionamiento de canales de drenaje del patio de llaves, cunetas y trampa de captación de aceite.</p>
+                    </div>
+
+                    <!-- g) Grado de contaminación -->
+                    <div class="p-3 space-y-1.5">
+                        <div class="flex items-center justify-between">
+                            <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                                <span class="w-4 h-4 rounded bg-blue-100 text-blue-700 flex items-center justify-center font-mono text-[10px]">g</span>
+                                Grado de contaminación
+                            </span>
+                            <span class="text-[10px] text-slate-400">IEC 60815 / Aislamiento</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <select id="climate-pollution-level" class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs font-medium" onchange="onClimateInputChange()">
+                                <option value="Medio">Medio (SCD = 20 mm/kV)</option>
+                                <option value="Ligero">Ligero (SCD = 16 mm/kV)</option>
+                                <option value="Pesado">Pesado (SCD = 25 mm/kV)</option>
+                                <option value="Muy Pesado">Muy Pesado (SCD = 31 mm/kV)</option>
+                            </select>
+                            <input type="text" id="climate-pollution-desc" value="Humo de biomasa + humedad" class="px-2.5 py-1 bg-slate-50 border border-slate-300 rounded text-xs text-slate-700" onchange="onClimateInputChange()">
+                        </div>
+                        <p class="text-[10px] text-slate-500 italic">Línea de fuga específica mínima para aisladores cerámicos o poliméricos para evitar flameo (flashover).</p>
+                    </div>
+
+                </div>
+
+                <div class="flex gap-2">
+                    <button onclick="saveClimateData()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-3 rounded-md shadow text-xs transition-colors flex items-center justify-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="16" height="16"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                        <span>Confirmar Datos Climatológicos</span>
+                    </button>
+                    <button onclick="switchTab('report')" class="py-2 px-3 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-md shadow text-xs transition-colors">
+                        Ver Memoria 👉
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- ========================================== -->
+            <!-- TAB 3: MEMORIA TÉCNICA Y REPORTE         -->
+            <!-- ========================================== -->
+            <div id="tab-content-report" class="hidden space-y-4">
+                
+                <div class="bg-white border border-slate-200 rounded-lg p-4 shadow-sm space-y-4">
+                    <div class="border-b border-slate-200 pb-3 flex justify-between items-start">
+                        <div>
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-blue-600">Estudio de Ingeniería Eléctrica</span>
+                            <h2 class="text-sm font-bold text-slate-900">Ficha Técnica de la Subestación</h2>
+                            <p class="text-xs text-slate-500" id="report-date-str">Región de Los Ríos - Año 2026</p>
+                        </div>
+                        <button type="button" class="btn primary pdf-btn" data-pdf="subestaciones">Exportar PDF</button>
+                    </div>
+
+                    <!-- Bloque 1: Datos Eléctricos Dimensionados -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5 text-blue-800">
+                            <span>1. Capacidad Eléctrica Requerida (Suma de Cargas)</span>
+                        </h4>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span class="text-[10px] text-slate-500 block">Capacidad Instalada ΣkVA</span>
+                                <span class="text-base font-extrabold text-slate-900 font-mono" id="rep-total-kva">0 kVA</span>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span class="text-[10px] text-slate-500 block">Capacidad en MVA</span>
+                                <span class="text-base font-extrabold text-blue-700 font-mono" id="rep-total-mva">0.00 MVA</span>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span class="text-[10px] text-slate-500 block">Transformadores Censados</span>
+                                <span class="text-sm font-bold text-slate-800 font-mono" id="rep-total-trans">0 unid.</span>
+                            </div>
+                            <div class="p-2.5 bg-slate-50 rounded border border-slate-200">
+                                <span class="text-[10px] text-slate-500 block">Transformador Subestación Sugerido</span>
+                                <span class="text-sm font-bold text-emerald-700 font-mono" id="rep-suggested-trans">Sugerido: -</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloque 2: Terreno y Coordenadas -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5 text-blue-800">
+                            <span>2. Terreno Localizado (Centro de Cargas)</span>
+                        </h4>
+                        <div class="p-2.5 bg-slate-50 rounded border border-slate-200 text-xs space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Coordenadas Centroide:</span>
+                                <span class="font-mono font-bold text-slate-800" id="rep-substation-coords">-</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-500">Área urbana evaluada:</span>
+                                <span class="font-mono text-slate-700" id="rep-area-eval">0.00 km²</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bloque 3: Tabla Climatológica (a - g) -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5 text-blue-800">
+                            <span>3. Parámetros Climatológicos de Diseño (a - g)</span>
+                        </h4>
+                        <div class="border border-slate-200 rounded overflow-hidden text-xs">
+                            <table class="w-full text-left">
+                                <tbody class="divide-y divide-slate-100 font-mono text-[11px]">
+                                    <tr class="bg-white"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">a) Temperaturas (máx / mín)</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-a">-</td></tr>
+                                    <tr class="bg-slate-50/50"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">b) Velocidad máxima del viento</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-b">-</td></tr>
+                                    <tr class="bg-white"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">c) Altura sobre el nivel del mar</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-c">-</td></tr>
+                                    <tr class="bg-slate-50/50"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">d) Nivel isoceráunico</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-d">-</td></tr>
+                                    <tr class="bg-white"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">e) Nivel sísmico</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-e">-</td></tr>
+                                    <tr class="bg-slate-50/50"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">f) Nivel pluviométrico</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-f">-</td></tr>
+                                    <tr class="bg-white"><td class="py-1.5 px-2 font-sans font-medium text-slate-600">g) Grado de contaminación</td><td class="py-1.5 px-2 text-right font-bold text-slate-900" id="rep-param-g">-</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Bloque 4: Evaluación Normativa SEC Licencia Clase B -->
+                    <div class="space-y-2">
+                        <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide flex items-center gap-1.5 text-indigo-800">
+                            <span>4. Evaluación Regulatoria SEC (Superintendencia de Electricidad y Combustibles)</span>
+                        </h4>
+                        <div class="p-3 bg-indigo-50/60 rounded-lg border border-indigo-200 text-xs space-y-1.5">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600">Tope Legal Licencia Clase B:</span>
+                                <span class="font-mono font-bold text-slate-900">500 kW / 500 kVA (D.S. N° 92)</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-600">Demanda Proyecto Actual:</span>
+                                <span class="font-mono font-bold text-indigo-900" id="rep-sec-current-kva">0 kVA (0.0% del tope)</span>
+                            </div>
+                            <div class="pt-1 border-t border-indigo-100 flex justify-between items-center">
+                                <span class="text-slate-600">Competencia de Instalador:</span>
+                                <span class="font-mono text-[11px]" id="rep-sec-assessment">Sin datos evaluados</span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 pt-0.5 leading-relaxed">
+                                * Marco Regulatorio Chileno: La Licencia SEC Clase B autoriza a Técnicos Electricistas para proyectar y ejecutar instalaciones en baja tensión y transformadores asociados hasta 500 kW/kVA de potencia conectada. Proyectos que superen los 500 kVA o que intervengan directamente redes exclusivas de alta/media tensión requieren Instalador Autorizado SEC Clase A (Ingeniero Civil o de Ejecución Electricista).
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="pt-2">
+                        <button onclick="exportJsonData()" class="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-xs font-semibold border border-slate-300 transition-colors flex items-center justify-center gap-1.5">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            <span>Descargar Datos del Estudio (.json)</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Footer Informativo -->
+        <footer class="p-3 bg-slate-900 text-slate-400 text-[11px] border-t border-slate-800 flex items-center justify-between">
+            <span class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Cuadrícula: <strong>500m × 500m (0.25 km²)</strong></span>
+            </span>
+            <span class="font-mono text-slate-500">CFT - Circuitos Trifásicos</span>
+        </footer>
+
+    </div>
+
+    <!-- CONTENEDOR DEL MAPA (DERECHA) -->
+    <div class="sub-map-pane flex-1 h-full relative z-0">
+        <div id="map" class="w-full h-full"></div>
+        
+        <!-- Leyenda Flotante en el Mapa -->
+        <div class="absolute bottom-6 right-6 z-[1000] bg-slate-900/90 backdrop-blur-sm text-white p-3 rounded-lg shadow-xl border border-slate-700 text-xs space-y-2 pointer-events-auto max-w-[220px]">
+            <div class="font-bold text-[11px] uppercase tracking-wider text-slate-300 flex items-center justify-between border-b border-slate-700 pb-1">
+                <span>Densidad de Carga</span>
+                <span class="text-[10px] text-slate-400 font-mono">0.5×0.5km</span>
+            </div>
+            <div class="space-y-1 font-mono text-[10px]">
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style="background-color: #38bdf8; opacity: 0.8;"></span>
+                    <span>1 - 250 kVA (Baja)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style="background-color: #3b82f6; opacity: 0.8;"></span>
+                    <span>251 - 750 kVA (Media)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style="background-color: #f59e0b; opacity: 0.8;"></span>
+                    <span>751 - 1500 kVA (Alta)</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded" style="background-color: #ef4444; opacity: 0.8;"></span>
+                    <span>&gt; 1500 kVA (Muy Alta)</span>
+                </div>
+                <div class="flex items-center gap-2 pt-1 border-t border-slate-700">
+                    <span class="w-3.5 h-3.5 rounded-full bg-red-600 text-white flex items-center justify-center font-bold text-[9px]">⚡</span>
+                    <span class="font-sans font-semibold text-slate-200">Subestación (Centroide)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+          </div>
+        </div>
+
+
+    <!-- ========================================================================= -->
+    <!-- MÓDULO 2: LABORATORIO DE SUBESTACIONES (Contenido Previo: PU, Línea, Patio) -->
+    <!-- ========================================================================= -->
+    <div id="sub-module-laboratorio" class="hidden" style="margin-top: 16px;">
+      <div class="card">
+        <h3>Plantilla y base del estudio</h3>
+        <div class="fields four">
+          <div class="mini-input"><label for="sub-template">Escenario</label>
+            <select id="sub-template">
+              <option value="">Personalizado</option>
+              <option value="elevadora" selected>S/E elevadora 13,8/110 kV</option>
+              <option value="transmision">S/E transmisión 23/220 kV</option>
+              <option value="distribucion">S/E distribución 66/13,8 kV</option>
+            </select>
+          </div>
+          <div class="mini-input"><label for="sub-sb">Sb común [MVA]</label><input id="sub-sb" type="number" min="0.1" step="any" value="50" /></div>
+          <div class="mini-input"><label for="sub-vlv">Barra LV [kV]</label><input id="sub-vlv" type="number" min="0.1" step="any" value="13.8" /></div>
+          <div class="mini-input"><label for="sub-vhv">Barra HV [kV]</label><input id="sub-vhv" type="number" min="0.1" step="any" value="110" /></div>
+        </div>
+        <p class="hint" id="sub-template-note" style="margin-top:10px">Modelo de estudio: red equivalente → trafo elevador → línea → barra HV. Los valores se pueden reemplazar por datos extraídos de planos y fichas técnicas.</p>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card">
+          <h3>Transformador y transmisión</h3>
+          <div class="fields three">
+            <div class="mini-input"><label for="sub-trafo-mva">Trafo [MVA]</label><input id="sub-trafo-mva" type="number" min="0.1" step="any" value="40" /></div>
+            <div class="mini-input"><label for="sub-uk">Uk [%]</label><input id="sub-uk" type="number" min="0.1" step="any" value="10" /></div>
+            <div class="mini-input"><label for="sub-load-mw">Carga activa [MW]</label><input id="sub-load-mw" type="number" min="0" step="any" value="28" /></div>
+            <div class="mini-input"><label for="sub-pf">Factor de potencia</label><input id="sub-pf" type="number" min="0.1" max="1" step="0.01" value="0.92" /></div>
+            <div class="mini-input"><label for="sub-length">Línea [km]</label><input id="sub-length" type="number" min="0" step="any" value="35" /></div>
+            <div class="mini-input"><label for="sub-r-km">R línea [Ω/km]</label><input id="sub-r-km" type="number" min="0" step="any" value="0.08" /></div>
+            <div class="mini-input"><label for="sub-x-km">X línea [Ω/km]</label><input id="sub-x-km" type="number" min="0" step="any" value="0.35" /></div>
+            <div class="mini-input"><label for="sub-scc">Scc red [MVA]</label><input id="sub-scc" type="number" min="1" step="any" value="800" /></div>
+            <div class="mini-input"><label for="sub-vf">V pre-falla [pu]</label><input id="sub-vf" type="number" min="0.5" max="1.2" step="0.01" value="1" /></div>
+          </div>
+          <p class="formula" style="margin-top:10px">Zb = Vb²/Sb · Ib = Sb/(√3·Vb) · Ztrafo,pu = Uk/100 · Sb/Str</p>
+        </div>
+        <div class="card">
+          <h3>Equipos de medida y aislamiento</h3>
+          <div class="fields two">
+            <div class="mini-input"><label for="sub-tc-primary">TC primario [A]</label><input id="sub-tc-primary" type="number" min="1" step="any" value="300" /></div>
+            <div class="mini-input"><label for="sub-tc-secondary">TC secundario [A]</label><select id="sub-tc-secondary"><option value="1">1 A</option><option value="5" selected>5 A</option></select></div>
+            <div class="mini-input"><label for="sub-tp-primary">TP primario [kV]</label><input id="sub-tp-primary" type="number" min="0.1" step="any" value="110" /></div>
+            <div class="mini-input"><label for="sub-tp-secondary">TP secundario [V]</label><input id="sub-tp-secondary" type="number" min="1" step="any" value="110" /></div>
+            <div class="mini-input"><label for="sub-bushing-voltage">Bushing Um [kV]</label><input id="sub-bushing-voltage" type="number" min="0.1" step="any" value="123" /></div>
+            <div class="mini-input"><label for="sub-bushing-current">Bushing In [A]</label><input id="sub-bushing-current" type="number" min="1" step="any" value="400" /></div>
+          </div>
+          <p class="hint" id="sub-equipment-note" style="margin-top:10px">La selección de clase, aislamiento, BIL, carga de precisión y saturación del TC requiere ficha del fabricante.</p>
+        </div>
+      </div>
+      <div class="grid g2" style="margin-top:16px">
+        <div class="card">
+          <h3>Puesta a tierra preliminar</h3>
+          <div class="fields four">
+            <div class="mini-input"><label for="sub-rho">ρ terreno [Ω·m]</label><input id="sub-rho" type="number" min="1" step="any" value="150" /></div>
+            <div class="mini-input"><label for="sub-grid-l">Largo malla [m]</label><input id="sub-grid-l" type="number" min="1" step="any" value="32" /></div>
+            <div class="mini-input"><label for="sub-grid-w">Ancho malla [m]</label><input id="sub-grid-w" type="number" min="1" step="any" value="24" /></div>
+            <div class="mini-input"><label for="sub-grid-depth">Profundidad [m]</label><input id="sub-grid-depth" type="number" min="0.1" step="any" value="0.6" /></div>
+          </div>
+          <p class="formula" style="margin-top:10px">Rg ≈ ρ · [1/Lt + 1/√(20A)] · Ig · Rg &lt; 1 Ω como alerta académica</p>
+        </div>
+        <div class="card">
+          <h3>Resultados del escenario</h3>
+          <div class="result"><div class="k">Estado smart</div><div class="v" id="sub-status">—</div></div>
+          <dl class="meta-grid">
+            <div class="meta"><dt>Ib LV / HV</dt><dd id="sub-base-current">—</dd></div>
+            <div class="meta"><dt>Zb LV / HV</dt><dd id="sub-base-impedance">—</dd></div>
+            <div class="meta"><dt>Trafo / carga</dt><dd id="sub-loading">—</dd></div>
+            <div class="meta"><dt>Caída transmisión</dt><dd id="sub-voltage-drop">—</dd></div>
+            <div class="meta"><dt>Icc LV / HV</dt><dd id="sub-fault-current">—</dd></div>
+            <div class="meta"><dt>TC / TP</dt><dd id="sub-ratios">—</dd></div>
+            <div class="meta"><dt>Malla Rg / Lt</dt><dd id="sub-ground">—</dd></div>
+            <div class="meta"><dt>Bushing</dt><dd id="sub-bushing">—</dd></div>
+          </dl>
+          <p class="hint" id="sub-advice" style="margin-top:10px">—</p>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <h3>Lectura del modelo</h3>
+        <p class="sub">Usa esta pestaña para practicar con valores publicados, diagramas unilineales y fichas técnicas. La importación directa de DWG no está incluida en esta primera versión; transcribe los parámetros relevantes y conserva la fuente del plano.</p>
+        <div class="formula">Zlinea,pu = (R + jX) / ZbHV · Icc ≈ Vpre / |Zred + Ztrafo + Zlinea| · Ibase</div>
+      </div>
+    </div>
+
+
+    <!-- Toast de Notificaciones -->
+    <div id="toast" class="fixed top-4 right-4 z-[3000] bg-slate-900 text-white px-4 py-2.5 rounded-lg shadow-2xl transform transition-all duration-300 translate-y-[-150%] opacity-0 border border-slate-700 flex items-center gap-2 text-xs font-medium">
+        <span id="toast-icon">ℹ️</span>
+        <span id="toast-message">Mensaje</span>
+    </div>
+
+
+      </section>
+
+
       <section class="panel" id="panel-fasores">
         <div class="hero">
           <div>
@@ -2960,6 +4732,8 @@
       if (typeof calcLux === "function") calcLux();
       if (typeof calcDsp === "function") calcDsp();
       if (phasorSketch) phasorSketch.redraw();
+      const m = (typeof map !== "undefined" && map) ? map : (window.map || (window.subestacionesMap ? window.subestacionesMap() : null));
+      if (m && m.invalidateSize) setTimeout(() => m.invalidateSize(), 150);
     }
     $("theme-day").addEventListener("click", () => setTheme("day"));
     $("theme-night").addEventListener("click", () => setTheme("night"));
@@ -2982,6 +4756,19 @@
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
+      if (id === "subestaciones") {
+        const modEstudio = $("sub-module-estudio");
+        if (!modEstudio || !modEstudio.classList.contains("hidden")) {
+          if (typeof window.initSubestacionesOnce === "function") window.initSubestacionesOnce();
+          const m = (typeof map !== "undefined" && map) ? map : (window.map || (window.subestacionesMap ? window.subestacionesMap() : null));
+          if (m && m.invalidateSize) {
+            setTimeout(() => m.invalidateSize(), 50);
+            setTimeout(() => m.invalidateSize(), 200);
+            setTimeout(() => m.invalidateSize(), 500);
+          }
+        }
+        if (typeof window.calcSubestaciones === "function") window.calcSubestaciones();
+      }
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
     }
@@ -2992,8 +4779,8 @@
       window.scrollTo(0, 0);
       const templateBanner = $("tpl-banner");
       if (templateBanner) {
-        templateBanner.hidden = id === "pu" || id === "magia" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && id !== "magia" && !!activeSite);
+        templateBanner.hidden = id === "pu" || id === "magia" || id === "subestaciones" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && id !== "magia" && id !== "subestaciones" && !!activeSite);
       }
       refreshPanelVisuals(id);
       if (window.EA_MAGIA) {
@@ -3003,7 +4790,7 @@
     }
     function organizeCalcMenus() {
       document.querySelectorAll("section.panel").forEach((panel) => {
-        if (panel.id === "panel-home" || panel.id === "panel-magia" || panel.id === "panel-hydro") return;
+        if (panel.id === "panel-home" || panel.id === "panel-magia" || panel.id === "panel-hydro" || panel.id === "panel-subestaciones") return;
         const nodes = [];
         Array.from(panel.children).forEach((el) => {
           if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu")) return;
@@ -5842,6 +7629,11 @@
       if (id === "eficiencia" && $("eff-template") && $("eff-template").options.length) calcEfficiency();
       if (id === "tan") { calcTan(); calcDsp(); calcBank(); }
       if (id === "pu") calcPu();
+      if (id === "subestaciones") {
+        if (typeof window.initSubestacionesOnce === "function") window.initSubestacionesOnce();
+        if (typeof window.syncClimateWithReport === "function") window.syncClimateWithReport();
+        if (typeof window.calcSubestaciones === "function") window.calcSubestaciones();
+      }
       if (id === "fasores") calcFasores();
       if (id === "color") renderColor();
     }
@@ -5859,11 +7651,12 @@
         eficiencia: ["Informe de eficiencia energética", "24 plantillas de 5 a 500 kW: potencia útil, pérdidas y aislamiento térmico de referencia."],
         tan: ["Informe TAN-Telecom / AHF", "Proyección IEC 61439, DSP 3P+N y banco 24 V · 120 W."],
         pu: ["Informe Sistema Por Unidad (PU) y SEP", "Bases trifásicas Sb/Vb, cambio de base Zpu, cortocircuito trifásico y diagrama SLD."],
+        subestaciones: ["Informe de Subestaciones Eléctricas · Los Ríos", "Estudio de localización de centro de cargas (cuadrícula 0.5×0.5 km, SEC Clase B) y análisis técnico de subestación (PU, transformador, transmisión, equipos de patio y malla de tierra)."],
         fasores: ["Informe calculadora de fasores", "Conversión bidireccional entre forma rectangular y notación fasorial."],
         color: ["Informe conversor HEX → HSB", "Conversión de color hexadecimal a tono, saturación y brillo."],
       }[id];
       if (!meta) throw new Error("Servicio desconocido: " + id);
-      const siteLine = id !== "pu" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
+      const siteLine = id !== "pu" && id !== "subestaciones" && activeSite ? (activeSite.kw + " kW · " + activeSite.name + " · " + activeSite.place) : "";
       blocks.push(pdfHeader(meta[0], (siteLine ? siteLine + ". " : "") + meta[1]));
 
       if (id === "sev") {
@@ -6251,6 +8044,83 @@
 
         blocks.push(pdfHeading("Diagrama Unilineal (SLD)"));
         blocks.push(pdfFigure(canvasUrl("pu-sld-canvas"), "Diagrama unilineal: Red/Generador, Transformador, Línea y Barra de Falla 3φ."));
+      }
+
+      if (id === "subestaciones") {
+        blocks.push(pdfHeading("1. Localización y Centro de Cargas (SEC Clase B)"));
+        [
+          ["Comuna / Localidad base", opt("city-select") || "Región de Los Ríos"],
+          ["Plantilla de demanda censada", opt("template-select") || "Personalizada"],
+          ["Capacidad instalada ΣkVA", txt("rep-total-kva")],
+          ["Demanda total en MVA", txt("rep-total-mva")],
+          ["Transformadores de distribución", txt("rep-total-trans")],
+          ["Área territorial evaluada", txt("rep-area-eval")],
+          ["Baricentro de cargas (Lat, Lng)", txt("rep-substation-coords")],
+          ["Transformador de subestación sugerido", txt("rep-suggested-trans")],
+          ["Evaluación regulatoria SEC (D.S. N° 92)", txt("rep-sec-assessment")],
+          ["Demanda vs tope legal Clase B (500 kVA)", txt("rep-sec-current-kva")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("Lat_sub = Σ(kVA_i · Lat_i) / Σ kVA_i  ·  Lng_sub = Σ(kVA_i · Lng_i) / Σ kVA_i"));
+
+        const zList = (typeof window.subestacionesZones === "function") ? window.subestacionesZones() : [];
+        if (zList && zList.length > 0) {
+          blocks.push(pdfHeading("Cuadrículas Urbanas Censadas (0.5 × 0.5 km)"));
+          const flex = [1, 1.4, 1.3, 1];
+          blocks.push(pdfTableRow(["Cuadrícula", "Centroide (Lat, Lng)", "Transformadores", "Carga kVA"], flex, true));
+          zList.forEach((z) => {
+            const trafoDesc = z.transformers && z.transformers.length
+              ? z.transformers.map((t) => t.count + "×" + t.power + " kVA").join(", ")
+              : (z.totalCount + " trafos");
+            blocks.push(pdfTableRow([
+              "Cuadro #" + z.id,
+              (z.center ? z.center[0].toFixed(4) + ", " + z.center[1].toFixed(4) : "—"),
+              trafoDesc,
+              (z.totalKva ? z.totalKva.toLocaleString("es-CL") + " kVA" : "0 kVA")
+            ], flex, false));
+          });
+        }
+
+        blocks.push(pdfHeading("2. Caracterización Climatológica de Diseño (a – g)"));
+        [
+          ["a) Temperaturas de servicio (máx / mín)", txt("rep-param-a")],
+          ["b) Velocidad máxima del viento", txt("rep-param-b")],
+          ["c) Altitud sobre el nivel del mar", txt("rep-param-c")],
+          ["d) Nivel isoceráunico", txt("rep-param-d")],
+          ["e) Nivel sísmico", txt("rep-param-e")],
+          ["f) Nivel pluviométrico", txt("rep-param-f")],
+          ["g) Grado de contaminación ambiental", txt("rep-param-g")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfNote("Los factores climatológicos a) a g) condicionan la solicitación térmica para disipación de transformadores, distancias dieléctricas mínimas en aire con corrección barométrica por altitud, línea de fuga específica de aisladores según IEC 60815, factor de amplificación sísmica estructural según NCh 2369 y coordinación de aislamiento frente a descargas atmosféricas."));
+
+        blocks.push(pdfHeading("3. Laboratorio: Transformador de Poder y Línea de Transmisión"));
+        [
+          ["Preset de Subestación", opt("sub-template") || "Personalizado"],
+          ["Estado y consistencia técnica", txt("sub-status")],
+          ["Potencia base del sistema (Sb)", val("sub-sb") + " MVA"],
+          ["Tensión base BT / AT (Vb)", val("sub-vlv") + " kV / " + val("sub-vhv") + " kV"],
+          ["Corriente base BT / AT (Ib)", txt("sub-base-current")],
+          ["Impedancia base BT / AT (Zb)", txt("sub-base-impedance")],
+          ["Transformador elevador Strafo / Uk%", val("sub-trafo-mva") + " MVA / " + val("sub-uk") + "%"],
+          ["Carga y demanda en trafo", txt("sub-loading")],
+          ["Demanda activa transmitida", val("sub-load-mw") + " MW (FP " + val("sub-pf") + ")"],
+          ["Línea de transmisión (L · R/km · X/km)", val("sub-length") + " km · " + val("sub-r-km") + " Ω/km · " + val("sub-x-km") + " Ω/km"],
+          ["Regulación y caída de tensión (ΔV%)", txt("sub-voltage-drop")],
+          ["Parámetros equivalentes en PU", txt("sub-equipment-note")],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("Zb = Vb² / Sb  ·  Zt,pu = (Uk% / 100) · (Sb / Strafo)  ·  ΔV% = 100 · (1 − |VR,pu|)"));
+
+        blocks.push(pdfHeading("4. Cortocircuito 3φ, Equipos de Patio y Malla de Tierra IEEE Std 80"));
+        [
+          ["Potencia cortocircuito red (Scc)", val("sub-scc") + " MVA (Vf = " + val("sub-vf") + " pu)"],
+          ["Corriente de falla trifásica (Icc LV / HV)", txt("sub-fault-current")],
+          ["Relaciones de medida (TC / TP)", txt("sub-ratios")],
+          ["Bushing de alta tensión", txt("sub-bushing")],
+          ["Malla de puesta a tierra (IEEE Std 80)", txt("sub-ground") + " (ρ = " + val("sub-rho") + " Ω·m)"],
+          ["Dimensiones de la malla (L × W)", val("sub-grid-l") + " × " + val("sub-grid-w") + " m (profundidad h = " + val("sub-grid-depth") + " m)"],
+          ["Recomendaciones y advertencias de diseño", txt("sub-advice") || "Sin advertencias de diseño."],
+        ].forEach(([k, v]) => blocks.push(pdfKv(k, v)));
+        blocks.push(pdfFormula("Icc = Vf / (√3 · Vb · |Zth,pu|)  ·  Rg ≈ ρ · [ 1 / (4·r) + 1 / L_tot ] (IEEE Std 80)"));
+        blocks.push(pdfNote("Los equipos de patio deben seleccionarse con capacidad de ruptura simétrica Icu ≥ Icc y dinamismo térmico Ith ≥ Icc (1s). La malla de tierra preliminar calculada por formulación Laurent & Niemann / Sverak debe verificarse para garantizar tensiones de contacto (Touch) y paso (Step) tolerables ante la corriente de cortocircuito de dispersión."));
       }
 
       if (id === "fasores") {
@@ -6891,7 +8761,182 @@
 
     /* init */
     parseSev(); drawSev(); calcMalla(); calcLux(); calcBtu(); actualizarCuenca(); calcProyecto(); seleccionarVistaHidrograma('crecida'); actualizarCDC(); setupHydroTooltips(); calcSolar(); renderConsumo(); calcTan(); calcDsp(); calcBank(); calcPu(); calcFasores(); renderColor();
-    buildSiteUi();
+
+    /* ===================== LABORATORIO DE SUBESTACIONES (PU & EQUIPOS) ===================== */
+    const SUBESTACION_TEMPLATES = {
+      elevadora: {
+        note: "S/E elevadora típica para parque de generación hacia red de transmisión.",
+        values: {
+          "sub-sb": 50, "sub-vlv": 13.8, "sub-vhv": 110, "sub-trafo-mva": 40, "sub-uk": 10,
+          "sub-load-mw": 28, "sub-pf": 0.92, "sub-length": 35, "sub-r-km": 0.08, "sub-x-km": 0.35,
+          "sub-scc": 800, "sub-vf": 1.0, "sub-tc-primary": 300, "sub-tc-secondary": 5,
+          "sub-tp-primary": 110, "sub-tp-secondary": 110, "sub-bushing-voltage": 123, "sub-bushing-current": 400,
+          "sub-rho": 150, "sub-grid-l": 32, "sub-grid-w": 24, "sub-grid-depth": 0.6
+        }
+      },
+      transmision: {
+        note: "S/E seccionadora o de interconexión en 220 kV con alta potencia de cortocircuito.",
+        values: {
+          "sub-sb": 100, "sub-vlv": 23, "sub-vhv": 220, "sub-trafo-mva": 90, "sub-uk": 12,
+          "sub-load-mw": 72, "sub-pf": 0.94, "sub-length": 60, "sub-r-km": 0.05, "sub-x-km": 0.30,
+          "sub-scc": 2500, "sub-vf": 1.02, "sub-tc-primary": 600, "sub-tc-secondary": 5,
+          "sub-tp-primary": 220, "sub-tp-secondary": 110, "sub-bushing-voltage": 245, "sub-bushing-current": 800,
+          "sub-rho": 180, "sub-grid-l": 45, "sub-grid-w": 35, "sub-grid-depth": 0.7
+        }
+      },
+      distribucion: {
+        note: "S/E reductora para abastecimiento urbano/industrial en 13,8 kV.",
+        values: {
+          "sub-sb": 25, "sub-vlv": 13.8, "sub-vhv": 66, "sub-trafo-mva": 20, "sub-uk": 8,
+          "sub-load-mw": 14, "sub-pf": 0.90, "sub-length": 18, "sub-r-km": 0.12, "sub-x-km": 0.38,
+          "sub-scc": 450, "sub-vf": 0.99, "sub-tc-primary": 200, "sub-tc-secondary": 5,
+          "sub-tp-primary": 66, "sub-tp-secondary": 110, "sub-bushing-voltage": 72.5, "sub-bushing-current": 315,
+          "sub-rho": 110, "sub-grid-l": 26, "sub-grid-w": 20, "sub-grid-depth": 0.6
+        }
+      }
+    };
+
+    function applySubestacionTemplate() {
+      const key = $("sub-template") ? $("sub-template").value : "";
+      if (!key || !SUBESTACION_TEMPLATES[key]) {
+        if ($("sub-template-note")) $("sub-template-note").textContent = "Modo personalizado: ingresa los parámetros unilineales del proyecto.";
+        calcSubestaciones();
+        return;
+      }
+      const tpl = SUBESTACION_TEMPLATES[key];
+      Object.entries(tpl.values).forEach(([id, val]) => {
+        const el = $(id);
+        if (el) el.value = val;
+      });
+      if ($("sub-template-note")) $("sub-template-note").textContent = tpl.note;
+      calcSubestaciones();
+    }
+
+    function calcSubestaciones() {
+      const sb = Math.max(0.1, num("sub-sb", 50));
+      const vlv = Math.max(0.1, num("sub-vlv", 13.8));
+      const vhv = Math.max(0.1, num("sub-vhv", 110));
+      const trafoMva = Math.max(0.1, num("sub-trafo-mva", 40));
+      const ukPct = Math.max(0.1, num("sub-uk", 10));
+      const loadMw = Math.max(0, num("sub-load-mw", 28));
+      const pf = Math.max(0.1, Math.min(1, num("sub-pf", 0.92)));
+      const lengthKm = Math.max(0, num("sub-length", 35));
+      const rKm = Math.max(0, num("sub-r-km", 0.08));
+      const xKm = Math.max(0, num("sub-x-km", 0.35));
+      const scc = Math.max(1, num("sub-scc", 800));
+      const vf = Math.max(0.5, Math.min(1.2, num("sub-vf", 1)));
+      const tcPri = Math.max(1, num("sub-tc-primary", 300));
+      const tcSec = Math.max(0.1, num("sub-tc-secondary", 5));
+      const tpPri = Math.max(0.1, num("sub-tp-primary", 110));
+      const tpSec = Math.max(1, num("sub-tp-secondary", 110));
+      const bushingV = Math.max(0.1, num("sub-bushing-voltage", 123));
+      const bushingI = Math.max(1, num("sub-bushing-current", 400));
+      const rho = Math.max(1, num("sub-rho", 150));
+      const gridL = Math.max(1, num("sub-grid-l", 32));
+      const gridW = Math.max(1, num("sub-grid-w", 24));
+      const gridDepth = Math.max(0.1, num("sub-grid-depth", 0.6));
+
+      const iblv = sb / (Math.sqrt(3) * vlv);
+      const ibhv = sb / (Math.sqrt(3) * vhv);
+      const zblv = (vlv * vlv) / sb;
+      const zbhv = (vhv * vhv) / sb;
+
+      const loadMva = pf > 0 ? loadMw / pf : 0;
+      const loading = trafoMva > 0 ? (loadMva / trafoMva) * 100 : 0;
+
+      const zTrafoPu = (ukPct / 100) * (sb / trafoMva);
+      const lineR = rKm * lengthKm;
+      const lineX = xKm * lengthKm;
+      const lineRpu = lineR / zbhv;
+      const lineXpu = lineX / zbhv;
+      const zNetPu = sb / scc;
+
+      const totalRpu = lineRpu;
+      const totalXpu = zNetPu + zTrafoPu + lineXpu;
+      const zTotalPu = Math.sqrt(totalRpu * totalRpu + totalXpu * totalXpu);
+
+      const iccPu = zTotalPu > 0 ? vf / zTotalPu : 0;
+      const iccLv = iccPu * iblv;
+      const iccHv = iccPu * ibhv;
+
+      const loadLv = loadMva / (Math.sqrt(3) * vlv);
+      const loadHv = loadMva / (Math.sqrt(3) * vhv);
+
+      const sinPhi = Math.sqrt(Math.max(0, 1 - pf * pf));
+      const voltageDrop = ((loadMw * lineR + loadMw * (sinPhi / pf) * lineX) / (vhv * vhv)) * 100;
+
+      const area = gridL * gridW;
+      const perimeter = 2 * (gridL + gridW);
+      const nSpacings = 6;
+      const totalConductor = (nSpacings + 1) * gridL + (nSpacings + 1) * gridW;
+      const rg = rho * ((1 / totalConductor) + (1 / Math.sqrt(20 * area))) * (1 + 1 / (1 + gridDepth * Math.sqrt(20 / area)));
+
+      const tcRatio = tcPri / tcSec;
+      const tpRatio = (tpPri * 1000) / tpSec;
+
+      const advice = [];
+      if (loading > 100) advice.push("Sobrecarga de trafo (" + fmt(loading, 1) + "%).");
+      if (voltageDrop > 5) advice.push("Caída de tensión en línea elevada (" + fmt(voltageDrop, 1) + "%).");
+      if (loadHv * 1000 > tcPri) advice.push("La corriente nominal HV (" + fmt(loadHv * 1000, 0) + " A) supera el primario del TC (" + tcPri + " A).");
+      if (vhv > bushingV) advice.push("Tensión de barra HV (" + vhv + " kV) excede Um de bushing (" + bushingV + " kV).");
+      if (loadHv * 1000 > bushingI) advice.push("Corriente de carga HV supera corriente nominal del bushing.");
+      if (rg > 1.0) advice.push("Resistencia de puesta a tierra preliminar > 1 Ω (" + fmt(rg, 2) + " Ω); revisar malla y electrodos.");
+
+      const statusClass = advice.length ? "warn" : "ok";
+      if ($("sub-status")) $("sub-status").innerHTML = '<span class="status ' + statusClass + '">' + (advice.length ? "REVISAR" : "COHERENTE") + "</span>";
+      if ($("sub-base-current")) $("sub-base-current").textContent = fmt(iblv, 2) + " / " + fmt(ibhv, 2) + " kA";
+      if ($("sub-base-impedance")) $("sub-base-impedance").textContent = fmt(zblv, 3) + " / " + fmt(zbhv, 3) + " Ω";
+      if ($("sub-loading")) $("sub-loading").textContent = fmt(loading, 1) + " % · " + fmt(loadMva, 2) + " MVA";
+      if ($("sub-voltage-drop")) $("sub-voltage-drop").textContent = fmt(voltageDrop, 2) + " %";
+      if ($("sub-fault-current")) $("sub-fault-current").textContent = fmt(iccLv, 2) + " / " + fmt(iccHv, 2) + " kA";
+      if ($("sub-ratios")) $("sub-ratios").textContent = "TC " + fmt(tcRatio, 1) + ":1 · TP " + fmt(tpRatio, 1) + ":1";
+      if ($("sub-ground")) $("sub-ground").textContent = fmt(rg, 3) + " Ω · Lt ≈ " + fmt(totalConductor, 0) + " m · h " + fmt(gridDepth, 2) + " m";
+      if ($("sub-bushing")) $("sub-bushing").textContent = fmt(bushingV, 1) + " kV · " + fmt(bushingI, 0) + " A";
+      if ($("sub-advice")) $("sub-advice").textContent = advice.join(" ");
+      if ($("sub-equipment-note")) $("sub-equipment-note").textContent = "I carga LV/HV ≈ " + fmt(loadLv, 2) + " / " + fmt(loadHv, 2) + " kA · Ztrafo = " + fmt(zTrafoPu, 4) + " pu · línea = " + fmt(lineRpu, 4) + " + j" + fmt(lineXpu, 4) + " pu.";
+    }
+
+    function switchSubestacionModule(mod) {
+      const modEstudio = $("sub-module-estudio");
+      const modLab = $("sub-module-laboratorio");
+      const btnEstudio = $("btn-mod-estudio");
+      const btnLab = $("btn-mod-laboratorio");
+      if (mod === "estudio") {
+        if (modEstudio) modEstudio.classList.remove("hidden");
+        if (modLab) modLab.classList.add("hidden");
+        if (btnEstudio) btnEstudio.classList.add("active");
+        if (btnLab) btnLab.classList.remove("active");
+        if (typeof window.initSubestacionesOnce === "function") window.initSubestacionesOnce();
+        const m = (typeof map !== "undefined" && map) ? map : (window.map || (window.subestacionesMap ? window.subestacionesMap() : null));
+        if (m && m.invalidateSize) {
+          setTimeout(() => m.invalidateSize(), 50);
+          setTimeout(() => m.invalidateSize(), 200);
+          setTimeout(() => m.invalidateSize(), 500);
+        }
+      } else {
+        if (modEstudio) modEstudio.classList.add("hidden");
+        if (modLab) modLab.classList.remove("hidden");
+        if (btnEstudio) btnEstudio.classList.remove("active");
+        if (btnLab) btnLab.classList.add("active");
+        if (typeof window.calcSubestaciones === "function") window.calcSubestaciones();
+      }
+    }
+    window.switchSubestacionModule = switchSubestacionModule;
+    window.calcSubestaciones = calcSubestaciones;
+    window.applySubestacionTemplate = applySubestacionTemplate;
+
+
+    /* ===================== LABORATORIO DE SUBESTACIONES (INICIALIZACIÓN) ===================== */
+    ["sub-sb","sub-vlv","sub-vhv","sub-trafo-mva","sub-uk","sub-load-mw","sub-pf","sub-length","sub-r-km","sub-x-km","sub-scc","sub-vf","sub-tc-primary","sub-tc-secondary","sub-tp-primary","sub-tp-secondary","sub-bushing-voltage","sub-bushing-current","sub-rho","sub-grid-l","sub-grid-w","sub-grid-depth"]
+      .forEach((id) => {
+        const el = $(id);
+        if (el) el.addEventListener("input", calcSubestaciones);
+      });
+    const subTpl = $("sub-template");
+    if (subTpl) subTpl.addEventListener("change", applySubestacionTemplate);
+    calcSubestaciones();
+
+        buildSiteUi();
     buildPuRegionalTemplates();
     setupPhasorTemplates();
     setupPhasorSketch();
@@ -6906,5 +8951,1248 @@
     }
   })();
   </script>
+
+  <!-- SUBESTACIONES SCRIPT (05 - ESTUDIO DE LOCALIZACIÓN Y CLIMA LOS RÍOS) -->
+  <script>
+
+        // =========================================================================
+        // 1. BASE DE DATOS CLIMATOLÓGICOS (Región de Los Ríos - Año 2026)
+        // =========================================================================
+        const climateDataPresets = {
+            valdivia: {
+                name: "Valdivia (Ciudad / Costa)",
+                coords: [-39.8142, -73.2459],
+                zoom: 13,
+                a_max: 28.5,
+                a_min: 1.8,
+                b_wind: 110,
+                c_alt: 12,
+                d_isokeraunic: 12,
+                e_seismic_zone: "Zona 3 (A0 = 0.40g - Alta)",
+                e_seismic_spec: "NCh433 / ETG-1.015 (Costera)",
+                f_rain_annual: 2150,
+                f_rain_24h: 95,
+                g_pollution: "Medio",
+                g_pollution_desc: "Aerosoles marinos + humo invernal"
+            },
+            panguipulli: {
+                name: "Panguipulli (Zona Lacustre / Precordillera)",
+                coords: [-39.6453, -72.3347],
+                zoom: 13,
+                a_max: 31.0,
+                a_min: -4.5,
+                b_wind: 90,
+                c_alt: 140,
+                d_isokeraunic: 18,
+                e_seismic_zone: "Zona 3 (A0 = 0.40g - Alta)",
+                e_seismic_spec: "NCh433 / ETG-1.015 (Precordillera)",
+                f_rain_annual: 2600,
+                f_rain_24h: 110,
+                g_pollution: "Ligero",
+                g_pollution_desc: "Baja emisión industrial"
+            },
+            la_union: {
+                name: "La Unión (Valle Central / Ranco)",
+                coords: [-40.2955, -73.0815],
+                zoom: 13,
+                a_max: 29.8,
+                a_min: -1.5,
+                b_wind: 95,
+                c_alt: 32,
+                d_isokeraunic: 14,
+                e_seismic_zone: "Zona 3 (A0 = 0.40g - Alta)",
+                e_seismic_spec: "NCh433 / ETG-1.015 (Valle)",
+                f_rain_annual: 1850,
+                f_rain_24h: 85,
+                g_pollution: "Medio",
+                g_pollution_desc: "Zona agrícola / residencial"
+            },
+            paillaco: {
+                name: "Paillaco (Valle Longitudinal)",
+                coords: [-40.0700, -72.8800],
+                zoom: 13,
+                a_max: 30.2,
+                a_min: -2.0,
+                b_wind: 85,
+                c_alt: 48,
+                d_isokeraunic: 13,
+                e_seismic_zone: "Zona 3 (A0 = 0.40g - Alta)",
+                e_seismic_spec: "NCh433 / ETG-1.015 (Valle)",
+                f_rain_annual: 1920,
+                f_rain_24h: 88,
+                g_pollution: "Medio",
+                g_pollution_desc: "Polvo agrícola y combustión leña"
+            },
+            rio_bueno: {
+                name: "Río Bueno (Cuenca Sur)",
+                coords: [-40.3308, -72.9567],
+                zoom: 13,
+                a_max: 29.5,
+                a_min: -1.8,
+                b_wind: 90,
+                c_alt: 42,
+                d_isokeraunic: 14,
+                e_seismic_zone: "Zona 3 (A0 = 0.40g - Alta)",
+                e_seismic_spec: "NCh433 / ETG-1.015 (Cuenca)",
+                f_rain_annual: 1880,
+                f_rain_24h: 85,
+                g_pollution: "Medio",
+                g_pollution_desc: "Agroindustrial y residencial"
+            }
+        };
+
+        
+        // =========================================================================
+        // 1.1 CATÁLOGO DE 18 PLANTILLAS DE REFERENCIA (15 kVA A 500 kVA - SEC CLASE B)
+        // =========================================================================
+        const substationTemplates = {
+            tpl_15: {
+                id: 'tpl_15',
+                name: '01. 15 kVA — Caserío Rural / APR',
+                city: 'valdivia',
+                center: [-39.8650, -73.3400],
+                zoom: 14,
+                totalKva: 15,
+                description: 'Abastecimiento a comité de Agua Potable Rural (APR) y caserío costero en Niebla.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 15 }], totalCount: 1, totalKva: 15 }
+                ]
+            },
+            tpl_25: {
+                id: 'tpl_25',
+                name: '02. 25 kVA — Sector Agrícola Familiar',
+                city: 'paillaco',
+                center: [-40.0850, -72.9100],
+                zoom: 14,
+                totalKva: 25,
+                description: 'Sector agrícola familiar, lechería artesanal y viviendas rurales.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 25 }], totalCount: 1, totalKva: 25 }
+                ]
+            },
+            tpl_30: {
+                id: 'tpl_30',
+                name: '03. 30 kVA — Villa Rural Concentrada',
+                city: 'panguipulli',
+                center: [-39.6600, -72.3600],
+                zoom: 14,
+                totalKva: 30,
+                description: 'Poblado rural concentrado precordillerano con escuela básica y alumbrado.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 2, power: 15 }], totalCount: 2, totalKva: 30 }
+                ]
+            },
+            tpl_45: {
+                id: 'tpl_45',
+                name: '04. 45 kVA — Aserradero / Taller Maderero',
+                city: 'la_union',
+                center: [-40.2800, -73.0600],
+                zoom: 14,
+                totalKva: 45,
+                description: 'Pequeña industria maderera con fuerza motriz y viviendas aledañas.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 45 }], totalCount: 1, totalKva: 45 }
+                ]
+            },
+            tpl_60: {
+                id: 'tpl_60',
+                name: '05. 60 kVA — Condominio de Parcelas',
+                city: 'panguipulli',
+                center: [-39.6300, -72.3100],
+                zoom: 14,
+                totalKva: 60,
+                description: 'Loteo de parcelas de agrado lacustres de 5.000 m² con red de baja tensión.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 2, power: 15 }], totalCount: 2, totalKva: 30 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 2, power: 15 }], totalCount: 2, totalKva: 30 }
+                ]
+            },
+            tpl_75: {
+                id: 'tpl_75',
+                name: '06. 75 kVA — Strip Center & Servicios',
+                city: 'rio_bueno',
+                center: [-40.3308, -72.9567],
+                zoom: 14,
+                totalKva: 75,
+                description: 'Centro de servicios comerciales, estación de servicio y locales gastronómicos.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_100: {
+                id: 'tpl_100',
+                name: '07. 100 kVA — Barrio Residencial Periférico',
+                city: 'valdivia',
+                center: [-39.8350, -73.2200],
+                zoom: 14,
+                totalKva: 100,
+                description: 'Conjunto habitacional suburbano con urbanización subterránea.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 45 }, { count: 1, power: 15 }], totalCount: 2, totalKva: 60 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 25 }, { count: 1, power: 15 }], totalCount: 2, totalKva: 40 }
+                ]
+            },
+            tpl_112: {
+                id: 'tpl_112',
+                name: '08. 112.5 kVA — Cooperativa Lechera',
+                city: 'la_union',
+                center: [-40.3100, -73.1000],
+                zoom: 14,
+                totalKva: 112.5,
+                description: 'Planta de acopio y enfriamiento lechero con transformador trifásico normalizado.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 112.5 }], totalCount: 1, totalKva: 112.5 }
+                ]
+            },
+            tpl_150: {
+                id: 'tpl_150',
+                name: '09. 150 kVA — Sector Urbano Residencial',
+                city: 'paillaco',
+                center: [-40.0700, -72.8800],
+                zoom: 14,
+                totalKva: 150,
+                description: 'Cuadrante urbano residencial consolidado de Paillaco (30% tope SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_180: {
+                id: 'tpl_180',
+                name: '10. 180 kVA — Loteo Residencial & Comercio',
+                city: 'valdivia',
+                center: [-39.8250, -73.2350],
+                zoom: 14,
+                totalKva: 180,
+                description: 'Extensión residencial con locales comerciales en eje estructurante (36% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 2, power: 15 }], totalCount: 2, totalKva: 30 }
+                ]
+            },
+            tpl_200: {
+                id: 'tpl_200',
+                name: '11. 200 kVA — Agroindustria & Packing',
+                city: 'rio_bueno',
+                center: [-40.3200, -72.9700],
+                zoom: 14,
+                totalKva: 200,
+                description: 'Planta de selección, frío y empaque de arándanos y frutas de exportación (40% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 50 }], totalCount: 1, totalKva: 50 }
+                ]
+            },
+            tpl_250: {
+                id: 'tpl_250',
+                name: '12. 250 kVA — Eje Comercial y Servicios',
+                city: 'la_union',
+                center: [-40.2955, -73.0815],
+                zoom: 14,
+                totalKva: 250,
+                description: 'Avenida comercial céntrica con supermercado, bancos y oficinas (50% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 100 }], totalCount: 1, totalKva: 100 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_300: {
+                id: 'tpl_300',
+                name: '13. 300 kVA — Barrio Céntrico Mixto',
+                city: 'valdivia',
+                center: [-39.8180, -73.2420],
+                zoom: 14,
+                totalKva: 300,
+                description: 'Zona céntrica mixta de Valdivia con edificios de departamentos y comercio (60% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_350: {
+                id: 'tpl_350',
+                name: '14. 350 kVA — Complejo Turístico Lacustre',
+                city: 'panguipulli',
+                center: [-39.6453, -72.3347],
+                zoom: 14,
+                totalKva: 350,
+                description: 'Ribera lacustre con hoteles, cabañas, restaurantes y marina náutica (70% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 100 }], totalCount: 1, totalKva: 100 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 100 }], totalCount: 1, totalKva: 100 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 1, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_400: {
+                id: 'tpl_400',
+                name: '15. 400 kVA — Parque Logístico / Bodegas',
+                city: 'paillaco',
+                center: [-40.0600, -72.8700],
+                zoom: 14,
+                totalKva: 400,
+                description: 'Centro de distribución y almacenaje sobre Ruta 5 Sur (80% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 50 }], totalCount: 1, totalKva: 50 },
+                    { dLat: 1, dLng: 1, transformers: [{ count: 1, power: 50 }], totalCount: 1, totalKva: 50 }
+                ]
+            },
+            tpl_450: {
+                id: 'tpl_450',
+                name: '16. 450 kVA — Polígono Mixto y Salud',
+                city: 'valdivia',
+                center: [-39.8220, -73.2380],
+                zoom: 14,
+                totalKva: 450,
+                description: 'Sector con centros médicos, laboratorios, condominios y colegios (90% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 },
+                    { dLat: 1, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            },
+            tpl_480: {
+                id: 'tpl_480',
+                name: '17. 480 kVA — Cuadrante Urbano Consolidado',
+                city: 'la_union',
+                center: [-40.2900, -73.0750],
+                zoom: 14,
+                totalKva: 480,
+                description: 'Área urbana consolidada de alta densidad previa al límite Clase B (96% SEC Clase B).',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 112.5 }], totalCount: 1, totalKva: 112.5 },
+                    { dLat: 1, dLng: 1, transformers: [{ count: 1, power: 45 }, { count: 1, power: 15 }, { count: 1, power: 7.5 }], totalCount: 3, totalKva: 67.5 }
+                ]
+            },
+            tpl_500: {
+                id: 'tpl_500',
+                name: '18. 500 kVA — [MÁXIMO SEC CLASE B] Subestación Límite',
+                city: 'valdivia',
+                center: [-39.8142, -73.2459],
+                zoom: 14,
+                totalKva: 500,
+                description: 'Máxima potencia instalada permitida por SEC para Instalador Eléctrico Licencia Clase B (D.S. 92). Valdivia Centro.',
+                cells: [
+                    { dLat: 0, dLng: 0, transformers: [{ count: 1, power: 150 }, { count: 1, power: 25 }], totalCount: 2, totalKva: 175 },
+                    { dLat: 0, dLng: 1, transformers: [{ count: 1, power: 150 }], totalCount: 1, totalKva: 150 },
+                    { dLat: 1, dLng: 0, transformers: [{ count: 1, power: 100 }], totalCount: 1, totalKva: 100 },
+                    { dLat: 1, dLng: 1, transformers: [{ count: 1, power: 75 }], totalCount: 1, totalKva: 75 }
+                ]
+            }
+        };
+
+        // Estado Global de la Aplicación
+        let activeTab = 'grid';
+        let zones = [];
+        let activeZone = null;
+        let zoneIdCounter = 1;
+        let entryMode = 'detailed'; // 'detailed' o 'quick'
+        let substationLocation = null;
+        let substationMarker = null;
+        let substationFeederLines = [];
+        let isAddGridActive = false;
+
+        // =========================================================================
+        // 2. INICIALIZACIÓN DEL MAPA LEAFLET
+        // =========================================================================
+        let map = null;
+        let subestacionesInitialized = false;
+        window.subestacionesMap = () => map;
+
+        function initSubestacionesOnce() {
+            if (subestacionesInitialized) {
+                const m = map || window.map;
+                if (m && m.invalidateSize) {
+                    setTimeout(() => m.invalidateSize(), 50);
+                    setTimeout(() => m.invalidateSize(), 200);
+                    setTimeout(() => m.invalidateSize(), 600);
+                }
+                return;
+            }
+            const mapContainer = document.getElementById('map');
+            if (!mapContainer) return;
+            if (typeof L === "undefined") {
+                console.warn("Leaflet L is not loaded yet, retrying...");
+                setTimeout(initSubestacionesOnce, 300);
+                return;
+            }
+
+            try {
+                map = L.map('map', { 
+                    zoomControl: false,
+                    attributionControl: true 
+                }).setView([-39.8142, -73.2459], 13);
+                window.map = map;
+
+                // Capa ESRI World Street Map (Alta resolución, estable y sin API key)
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 19,
+                    attribution: 'Tiles &copy; Esri &mdash; Subestaciones Los Ríos'
+                }).addTo(map);
+
+                L.control.zoom({ position: 'topright' }).addTo(map);
+                L.control.scale({ metric: true, imperial: false, position: 'bottomleft' }).addTo(map);
+
+                map.on('click', function(e) {
+                    const snapChk = document.getElementById('snap-grid-chk');
+                    const snap = snapChk ? snapChk.checked : true;
+                    const gridGeom = calculateGridBounds(e.latlng.lat, e.latlng.lng, snap);
+
+                    if (snap) {
+                        const exists = zones.some(z => {
+                            const distLat = Math.abs(z.center[0] - gridGeom.center[0]);
+                            const distLng = Math.abs(z.center[1] - gridGeom.center[1]);
+                            return distLat < 0.001 && distLng < 0.001;
+                        });
+                        if (exists) {
+                            showToast("Ya existe un cuadro en esa posición de la malla", "⚠️");
+                            return;
+                        }
+                    }
+
+                    createZone(gridGeom.bounds, gridGeom.center);
+                });
+
+                applyClimatePreset();
+                updateGlobalBalance();
+
+                const tplSelect = document.getElementById('template-select');
+                if (tplSelect) tplSelect.value = 'tpl_500';
+                loadSelectedTemplate('tpl_500');
+
+                subestacionesInitialized = true;
+                setTimeout(() => { if (map && map.invalidateSize) map.invalidateSize(); }, 100);
+                setTimeout(() => { if (map && map.invalidateSize) map.invalidateSize(); }, 300);
+                setTimeout(() => { if (map && map.invalidateSize) map.invalidateSize(); }, 800);
+            } catch (err) {
+                console.error("Leaflet map initialization error:", err);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            const m = map || window.map;
+            if (m && m.invalidateSize) m.invalidateSize();
+        });
+
+        // =========================================================================
+        // 3. MATEMÁTICAS DE CUADRÍCULA (0.5 km × 0.5 km)
+        // =========================================================================
+        // 500 metros en grados geográficos a la latitud especificada
+        function calculateGridBounds(lat, lng, snapToGrid = false) {
+            const metersHalf = 250; // 250m a cada lado = 500m totales
+            const latDelta = metersHalf / 111320;
+            const lngDelta = metersHalf / (111320 * Math.cos(lat * Math.PI / 180));
+
+            let centerLat = lat;
+            let centerLng = lng;
+
+            if (snapToGrid) {
+                const stepLat = 500 / 111320;
+                const stepLng = 500 / (111320 * Math.cos(lat * Math.PI / 180));
+                centerLat = Math.round(lat / stepLat) * stepLat;
+                centerLng = Math.round(lng / stepLng) * stepLng;
+            }
+
+            return {
+                center: [centerLat, centerLng],
+                bounds: [
+                    [centerLat - latDelta, centerLng - lngDelta],
+                    [centerLat + latDelta, centerLng + lngDelta]
+                ]
+            };
+        }
+
+        // Color según densidad de carga del cuadro
+        function getZoneColor(kva) {
+            if (kva === 0) return { border: "#64748b", fill: "#94a3b8" };
+            if (kva <= 250) return { border: "#0284c7", fill: "#38bdf8" };
+            if (kva <= 750) return { border: "#2563eb", fill: "#3b82f6" };
+            if (kva <= 1500) return { border: "#d97706", fill: "#f59e0b" };
+            return { border: "#dc2626", fill: "#ef4444" };
+        }
+
+        // =========================================================================
+        // 4. GESTIÓN DE EVENTOS DE CUADRÍCULA EN EL MAPA
+        // =========================================================================
+// map.on('click') is attached inside initSubestacionesOnce()
+
+        function createZone(bounds, center, initialData = null) {
+            const zoneId = zoneIdCounter++;
+            const colors = getZoneColor(initialData ? initialData.totalKva : 0);
+
+            const rect = L.rectangle(bounds, {
+                color: colors.border,
+                weight: 2,
+                fillColor: colors.fill,
+                fillOpacity: 0.35
+            }).addTo(map);
+
+            const zone = {
+                id: zoneId,
+                layer: rect,
+                center: center,
+                bounds: bounds,
+                transformers: initialData ? initialData.transformers : [
+                    { count: 1, power: 75 }
+                ],
+                totalCount: initialData ? initialData.totalCount : 1,
+                totalKva: initialData ? initialData.totalKva : 75
+            };
+
+            // Evento click en el rectángulo para seleccionarlo
+            rect.on('click', function(ev) {
+                if (ev.originalEvent) {
+                    ev.originalEvent.stopPropagation();
+                }
+                L.DomEvent.stopPropagation(ev);
+                selectZone(zone);
+            });
+
+            zones.push(zone);
+
+            // Actualizar Tooltip
+            updateZoneTooltip(zone);
+
+            // Seleccionar automáticamente
+            selectZone(zone);
+
+            // Actualizar balances
+            updateGlobalBalance();
+            return zone;
+        }
+
+        function updateZoneTooltip(zone) {
+            const content = `
+                <div class="text-center font-sans">
+                    <div class="font-bold text-slate-200">Cuadro #${zone.id} (0.5×0.5km)</div>
+                    <div class="text-amber-400 font-mono font-bold text-xs">${zone.totalKva.toLocaleString('es-CL')} kVA</div>
+                    <div class="text-[10px] text-slate-300">${zone.totalCount} transf. dist.</div>
+                </div>
+            `;
+
+            if (zone.layer.getTooltip()) {
+                zone.layer.setTooltipContent(content);
+            } else {
+                zone.layer.bindTooltip(content, {
+                    permanent: true,
+                    direction: 'center',
+                    className: 'grid-tooltip'
+                });
+            }
+        }
+
+        function selectZone(zone) {
+            // Restaurar estilo normal de los demás cuadros
+            zones.forEach(z => {
+                const c = getZoneColor(z.totalKva);
+                z.layer.setStyle({ color: c.border, fillColor: c.fill, fillOpacity: 0.35, weight: 2 });
+            });
+
+            activeZone = zone;
+
+            // Resaltar cuadro activo en amarillo brillante con borde grueso
+            activeZone.layer.setStyle({ color: "#f59e0b", fillColor: "#fbbf24", fillOpacity: 0.55, weight: 3.5 });
+
+            // Habilitar Formulario
+            document.getElementById('calc-overlay').classList.add('hidden');
+            document.getElementById('active-zone-id').innerText = `#${zone.id}`;
+            document.getElementById('active-zone-title').innerText = `Cuadro #${zone.id} (0.5 × 0.5 km)`;
+            document.getElementById('active-zone-coords').innerText = `Coord: ${zone.center[0].toFixed(4)}, ${zone.center[1].toFixed(4)} | 0.25 km²`;
+
+            // Renderizar filas de transformadores
+            renderTransformerRows();
+            updateActiveCardDisplays();
+        }
+
+        // =========================================================================
+        // 5. GESTIÓN DEL CENSO DE TRANSFORMADORES
+        // =========================================================================
+        function setEntryMode(mode) {
+            entryMode = mode;
+            if (mode === 'detailed') {
+                document.getElementById('mode-detailed-panel').classList.remove('hidden');
+                document.getElementById('mode-quick-panel').classList.add('hidden');
+                document.getElementById('mode-btn-detailed').className = "px-2 py-1 rounded font-medium bg-white text-blue-700 shadow-xs";
+                document.getElementById('mode-btn-quick').className = "px-2 py-1 rounded font-medium text-slate-600 hover:text-slate-900";
+            } else {
+                document.getElementById('mode-detailed-panel').classList.add('hidden');
+                document.getElementById('mode-quick-panel').classList.remove('hidden');
+                document.getElementById('mode-btn-detailed').className = "px-2 py-1 rounded font-medium text-slate-600 hover:text-slate-900";
+                document.getElementById('mode-btn-quick').className = "px-2 py-1 rounded font-medium bg-white text-blue-700 shadow-xs";
+                
+                // Precargar valores al modo rápido
+                if (activeZone) {
+                    document.getElementById('quick-count').value = activeZone.totalCount || '';
+                    const avg = activeZone.totalCount > 0 ? Math.round(activeZone.totalKva / activeZone.totalCount) : '';
+                    document.getElementById('quick-power').value = avg;
+                }
+            }
+        }
+
+        function renderTransformerRows() {
+            const container = document.getElementById('transformer-rows');
+            container.innerHTML = '';
+
+            if (!activeZone || !activeZone.transformers || activeZone.transformers.length === 0) {
+                container.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400 italic font-sans text-xs">Sin transformadores agregados</td></tr>`;
+                return;
+            }
+
+            activeZone.transformers.forEach((item, index) => {
+                const subtotal = (item.count * item.power) || 0;
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="py-1 px-2">
+                        <input type="number" min="1" value="${item.count}" onchange="updateTransformerRow(${index}, 'count', this.value)" class="w-16 px-1.5 py-0.5 border border-slate-200 rounded text-center bg-slate-50 focus:bg-white text-xs">
+                    </td>
+                    <td class="py-1 px-2">
+                        <input type="number" min="1" step="0.5" value="${item.power}" onchange="updateTransformerRow(${index}, 'power', this.value)" class="w-20 px-1.5 py-0.5 border border-slate-200 rounded text-center bg-slate-50 focus:bg-white text-xs">
+                    </td>
+                    <td class="py-1 px-2 text-right font-bold text-slate-700">${subtotal.toLocaleString('es-CL')} kVA</td>
+                    <td class="py-1 px-1 text-center">
+                        <button type="button" onclick="removeTransformerRow(${index})" class="btn-remove-row" title="Eliminar fila">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" width="14" height="14"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        </button>
+                    </td>
+                `;
+                container.appendChild(tr);
+            });
+        }
+
+        function addStandardTransformerRow(powerKva) {
+            if (!activeZone) return;
+            // Buscar si ya existe esa potencia para incrementar cantidad
+            const existing = activeZone.transformers.find(t => t.power === powerKva);
+            if (existing) {
+                existing.count += 1;
+            } else {
+                activeZone.transformers.push({ count: 1, power: powerKva });
+            }
+            recalculateActiveZone();
+        }
+
+        function addCustomTransformerRow(count = 1, power = 75) {
+            if (!activeZone) return;
+            activeZone.transformers.push({ count, power });
+            recalculateActiveZone();
+        }
+
+        function updateTransformerRow(index, field, value) {
+            if (!activeZone || !activeZone.transformers[index]) return;
+            const num = parseFloat(value) || 0;
+            activeZone.transformers[index][field] = num;
+            recalculateActiveZone();
+        }
+
+        function removeTransformerRow(index) {
+            if (!activeZone || !activeZone.transformers[index]) return;
+            activeZone.transformers.splice(index, 1);
+            recalculateActiveZone();
+        }
+
+        function recalculateActiveZone() {
+            if (!activeZone) return;
+
+            if (entryMode === 'detailed') {
+                let totalC = 0;
+                let totalK = 0;
+                activeZone.transformers.forEach(t => {
+                    totalC += t.count;
+                    totalK += (t.count * t.power);
+                });
+                activeZone.totalCount = totalC;
+                activeZone.totalKva = totalK;
+            } else {
+                const count = parseFloat(document.getElementById('quick-count').value) || 0;
+                const power = parseFloat(document.getElementById('quick-power').value) || 0;
+                activeZone.totalCount = count;
+                activeZone.totalKva = count * power;
+                activeZone.transformers = [{ count, power }];
+            }
+
+            renderTransformerRows();
+            updateActiveCardDisplays();
+            updateZoneTooltip(activeZone);
+
+            // Actualizar estilo visual del polígono en tiempo real
+            const c = getZoneColor(activeZone.totalKva);
+            activeZone.layer.setStyle({ color: "#f59e0b", fillColor: c.fill, fillOpacity: 0.55 });
+            
+            updateGlobalBalance();
+        }
+
+        function updateActiveCardDisplays() {
+            if (!activeZone) return;
+            document.getElementById('card-cell-kva').innerText = activeZone.totalKva.toLocaleString('es-CL');
+            document.getElementById('card-cell-mva').innerText = `(= ${(activeZone.totalKva / 1000).toFixed(3)} MVA)`;
+            document.getElementById('card-cell-count').innerText = `${activeZone.totalCount} unid.`;
+        }
+
+        function saveActiveZoneData() {
+            if (!activeZone) return;
+            if (entryMode === 'quick') {
+                recalculateActiveZone();
+            }
+            showToast(`Cuadro #${activeZone.id} guardado con éxito (${activeZone.totalKva} kVA)`, "✅");
+            
+            // Si la subestación ya estaba calculada, refrescar su cálculo
+            if (substationLocation) {
+                calculateSubstationLocation(false);
+            }
+        }
+
+        function deleteActiveZone() {
+            if (!activeZone) return;
+            const id = activeZone.id;
+            map.removeLayer(activeZone.layer);
+            zones = zones.filter(z => z.id !== id);
+            activeZone = null;
+
+            document.getElementById('calc-overlay').classList.remove('hidden');
+            updateGlobalBalance();
+            if (substationLocation) {
+                calculateSubstationLocation(false);
+            }
+            showToast(`Cuadro #${id} eliminado`, "🗑️");
+        }
+
+        // =========================================================================
+        // 6. CÁLCULO DEL CENTRO DE CARGA Y LOCALIZACIÓN DE SUBESTACIÓN (IMAGEN 1 -> 2)
+        // =========================================================================
+        function updateGlobalBalance() {
+            let sumKva = 0;
+            let sumTransformers = 0;
+
+            zones.forEach(z => {
+                sumKva += z.totalKva;
+                sumTransformers += z.totalCount;
+            });
+
+            const areaKm2 = zones.length * 0.25; // 0.25 km² por cuadro de 0.5x0.5km
+            const density = areaKm2 > 0 ? (sumKva / areaKm2) : 0;
+
+            document.getElementById('global-zones-badge').innerText = `${zones.length} cuadrículas (${areaKm2.toFixed(2)} km²)`;
+            document.getElementById('global-total-kva').innerText = sumKva.toLocaleString('es-CL');
+            document.getElementById('global-total-mva').innerText = `${(sumKva / 1000).toFixed(3)} MVA`;
+            document.getElementById('global-total-transformers').innerText = sumTransformers.toLocaleString('es-CL');
+            document.getElementById('global-density').innerText = `${Math.round(density).toLocaleString('es-CL')} kVA/km²`;
+
+            // Actualizar también pestañas de Memoria y Widget SEC Clase B
+            updateReportDisplays(sumKva, sumTransformers, areaKm2);
+            updateSecProgressBar(sumKva);
+        }
+
+        function calculateSubstationLocation(showNotifications = true) {
+            if (zones.length === 0) {
+                showToast("Por favor traza al menos un cuadro de 0.5×0.5 km en el mapa", "⚠️");
+                return;
+            }
+
+            let sumKva = 0;
+            let weightedLat = 0;
+            let weightedLng = 0;
+
+            zones.forEach(z => {
+                const k = z.totalKva > 0 ? z.totalKva : 1; // Ponderar al menos con 1 si es 0
+                sumKva += k;
+                weightedLat += (k * z.center[0]);
+                weightedLng += (k * z.center[1]);
+            });
+
+            // Centro de Gravedad de Carga (Baricentro Eléctrico)
+            const optimalLat = weightedLat / sumKva;
+            const optimalLng = weightedLng / sumKva;
+            substationLocation = [optimalLat, optimalLng];
+
+            // Limpiar marcador anterior si existe
+            if (substationMarker) map.removeLayer(substationMarker);
+            substationFeederLines.forEach(l => map.removeLayer(l));
+            substationFeederLines = [];
+
+            // Icono Customizado de Subestación Eléctrica con Pulso
+            const substationIcon = L.divIcon({
+                className: 'substation-icon-wrapper',
+                html: `
+                    <div style="position: relative; width: 24px; height: 24px;">
+                        <div class="substation-pulse"></div>
+                        <div style="width: 24px; height: 24px; background: #dc2626; border: 2.5px solid #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.4); color: white; font-size: 13px; font-weight: bold;">
+                            ⚡
+                        </div>
+                    </div>
+                `,
+                iconSize: [24, 24],
+                iconAnchor: [12, 12]
+            });
+
+            substationMarker = L.marker(substationLocation, {
+                icon: substationIcon,
+                zIndexOffset: 1000
+            }).addTo(map);
+
+            const totalMva = (sumKva / 1000).toFixed(2);
+            substationMarker.bindPopup(`
+                <div class="text-xs p-1 font-sans">
+                    <strong class="text-red-700 font-bold block text-sm flex items-center gap-1">
+                        ⚡ Subestación Proyectada
+                    </strong>
+                    <p class="text-slate-600 mt-0.5">Ubicación calculada: <strong>Centro de Cargas Eléctrico</strong></p>
+                    <div class="mt-2 pt-1 border-t border-slate-200 font-mono text-[11px] space-y-0.5">
+                        <div>Coord: <strong>${optimalLat.toFixed(5)}, ${optimalLng.toFixed(5)}</strong></div>
+                        <div>Demanda: <strong>${sumKva.toLocaleString('es-CL')} kVA (${totalMva} MVA)</strong></div>
+                        <div>Cuadros alimentados: <strong>${zones.length} cuadrículas</strong></div>
+                    </div>
+                </div>
+            `).openPopup();
+
+            // Dibujar líneas alimentadoras desde la subestación hacia cada centro de carga
+            zones.forEach(z => {
+                const line = L.polyline([substationLocation, z.center], {
+                    color: '#6366f1',
+                    weight: 2,
+                    dashArray: '4, 6',
+                    opacity: 0.65
+                }).addTo(map);
+                substationFeederLines.push(line);
+            });
+
+            // Mostrar caja de resultado
+            const resultBox = document.getElementById('substation-result-box');
+            resultBox.classList.remove('hidden');
+            document.getElementById('substation-coords-label').innerText = `${optimalLat.toFixed(5)}, ${optimalLng.toFixed(5)}`;
+
+            // Pan suave hacia la subestación
+            map.panTo(substationLocation, { animate: true });
+
+            if (showNotifications) {
+                showToast("¡Subestación localizada en el Centro de Cargas!", "⚡");
+            }
+
+            // Actualizar memoria
+            document.getElementById('rep-substation-coords').innerText = `${optimalLat.toFixed(5)}, ${optimalLng.toFixed(5)}`;
+        }
+
+        function goToClimateStep() {
+            switchTab('climate');
+            showToast("Localizado el terreno, proceda a obtener los datos climatológicos", "📋");
+        }
+
+        // =========================================================================
+        // 7. GESTIÓN DE DATOS CLIMATOLÓGICOS (IMAGEN 2: a a g)
+        // =========================================================================
+        function applyClimatePreset() {
+            const key = document.getElementById('climate-preset-select').value;
+            if (key === 'custom') return;
+
+            const p = climateDataPresets[key];
+            if (!p) return;
+
+            document.getElementById('climate-temp-max').value = p.a_max;
+            document.getElementById('climate-temp-min').value = p.a_min;
+            document.getElementById('climate-wind').value = p.b_wind;
+            document.getElementById('climate-altitude').value = p.c_alt;
+            document.getElementById('climate-isokeraunic').value = p.d_isokeraunic;
+            document.getElementById('climate-seismic-zone').value = p.e_seismic_zone;
+            document.getElementById('climate-seismic-spec').value = p.e_seismic_spec;
+            document.getElementById('climate-rain-annual').value = p.f_rain_annual;
+            document.getElementById('climate-rain-24h').value = p.f_rain_24h;
+            document.getElementById('climate-pollution-level').value = p.g_pollution;
+            document.getElementById('climate-pollution-desc').value = p.g_pollution_desc;
+
+            onClimateInputChange();
+            showToast(`Plantilla climática de ${p.name} cargada`, "⛅");
+        }
+
+        function onClimateInputChange() {
+            const wind = parseFloat(document.getElementById('climate-wind').value) || 0;
+            // Presión dinámica del viento q = 0.5 * rho * v² ~ 0.0613 * V² (N/m²)
+            const v_ms = wind / 3.6;
+            const q = Math.round(0.5 * 1.225 * v_ms * v_ms);
+            document.getElementById('wind-pressure-label').innerText = `(~ ${q} N/m² presión dinámica)`;
+
+            const alt = parseFloat(document.getElementById('climate-altitude').value) || 0;
+            // Corrección dieléctrica Ka (IEC 60071 si altitud > 1000m)
+            if (alt > 1000) {
+                const ka = Math.exp((alt - 1000) / 8150).toFixed(2);
+                document.getElementById('altitude-factor-label').innerText = `Factor Ka: ${ka} (Aplica derating IEC)`;
+                document.getElementById('altitude-factor-label').className = "text-[10px] text-amber-700 font-mono font-bold";
+            } else {
+                document.getElementById('altitude-factor-label').innerText = `Factor Ka: 1.00 (Normal ≤ 1000m)`;
+                document.getElementById('altitude-factor-label').className = "text-[10px] text-emerald-700 font-mono font-medium";
+            }
+
+            const iso = parseFloat(document.getElementById('climate-isokeraunic').value) || 0;
+            // Densidad de rayos a tierra Ng = 0.04 * Td^1.25 (flashes/km²·año)
+            const ng = (0.04 * Math.pow(iso, 1.25)).toFixed(2);
+            document.getElementById('flash-density-label').innerText = `Ng: ~${ng} rayos/km²·año`;
+
+            // Reflejar en la memoria técnica
+            syncClimateWithReport();
+        }
+
+        function saveClimateData() {
+            syncClimateWithReport();
+            showToast("Datos climatológicos a) - g) confirmados y guardados", "✅");
+        }
+
+        function syncClimateWithReport() {
+            const tMax = document.getElementById('climate-temp-max').value;
+            const tMin = document.getElementById('climate-temp-min').value;
+            const wind = document.getElementById('climate-wind').value;
+            const alt = document.getElementById('climate-altitude').value;
+            const iso = document.getElementById('climate-isokeraunic').value;
+            const seismic = document.getElementById('climate-seismic-zone').value;
+            const rainA = document.getElementById('climate-rain-annual').value;
+            const rain24 = document.getElementById('climate-rain-24h').value;
+            const polLevel = document.getElementById('climate-pollution-level').value;
+            const polDesc = document.getElementById('climate-pollution-desc').value;
+
+            document.getElementById('rep-param-a').innerText = `${tMax}°C / ${tMin}°C`;
+            document.getElementById('rep-param-b').innerText = `${wind} km/h`;
+            document.getElementById('rep-param-c').innerText = `${alt} m.s.n.m.`;
+            document.getElementById('rep-param-d').innerText = `${iso} días tormenta/año`;
+            document.getElementById('rep-param-e').innerText = `${seismic}`;
+            document.getElementById('rep-param-f').innerText = `${rainA} mm/año (Máx 24h: ${rain24}mm)`;
+            document.getElementById('rep-param-g').innerText = `${polLevel} (${polDesc})`;
+        }
+
+        // =========================================================================
+        // 8. MEMORIA TÉCNICA Y REPORTES
+        // =========================================================================
+        function updateReportDisplays(sumKva, sumTransformers, areaKm2) {
+            document.getElementById('rep-total-kva').innerText = `${sumKva.toLocaleString('es-CL')} kVA`;
+            const mva = sumKva / 1000;
+            document.getElementById('rep-total-mva').innerText = `${mva.toFixed(3)} MVA`;
+            document.getElementById('rep-total-trans').innerText = `${sumTransformers} unidades`;
+            document.getElementById('rep-area-eval').innerText = `${areaKm2.toFixed(2)} km² (${zones.length} cuadrículas de 0.5×0.5 km)`;
+
+            // Sugerir capacidad de transformador de poder normalizado (con 25% de reserva)
+            const requiredMva = mva * 1.25;
+            let suggested = "5 MVA";
+            if (requiredMva <= 5) suggested = "5 MVA";
+            else if (requiredMva <= 7.5) suggested = "7.5 MVA";
+            else if (requiredMva <= 10) suggested = "10 MVA";
+            else if (requiredMva <= 15) suggested = "15 MVA";
+            else if (requiredMva <= 20) suggested = "20 MVA";
+            else if (requiredMva <= 25) suggested = "25 MVA";
+            else if (requiredMva <= 30) suggested = "30 MVA";
+            else suggested = `${Math.ceil(requiredMva / 5) * 5} MVA (Banco)`;
+
+            document.getElementById('rep-suggested-trans').innerText = `Trafo: ${suggested} (ONAN/ONAF)`;
+        }
+
+        function exportJsonData() {
+            const data = {
+                title: "Estudio de Localización y Diseño de Subestación",
+                region: "Región de Los Ríos",
+                fecha: new Date().toISOString(),
+                resumen_electrico: {
+                    cuadriculas_evaluadas: zones.length,
+                    area_total_km2: zones.length * 0.25,
+                    capacidad_instalada_total_kva: parseFloat(document.getElementById('global-total-kva').innerText.replace(/\./g, '')),
+                    transformadores_totales: parseInt(document.getElementById('global-total-transformers').innerText.replace(/\./g, '')),
+                    subestacion_optima: substationLocation ? { lat: substationLocation[0], lng: substationLocation[1] } : null
+                },
+                cuadriculas: zones.map(z => ({
+                    id: z.id,
+                    centro: z.center,
+                    capacidad_kva: z.totalKva,
+                    transformadores_count: z.totalCount,
+                    desglose: z.transformers
+                })),
+                parametros_climatologicos: {
+                    a_temperaturas: document.getElementById('rep-param-a').innerText,
+                    b_velocidad_viento: document.getElementById('rep-param-b').innerText,
+                    c_altura_msnm: document.getElementById('rep-param-c').innerText,
+                    d_nivel_isoceraunico: document.getElementById('rep-param-d').innerText,
+                    e_nivel_sismico: document.getElementById('rep-param-e').innerText,
+                    f_nivel_pluviometrico: document.getElementById('rep-param-f').innerText,
+                    g_grado_contaminacion: document.getElementById('rep-param-g').innerText
+                }
+            };
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `estudio_subestacion_los_rios_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast("Archivo JSON descargado", "📥");
+        }
+
+        // =========================================================================
+        // 9. NAVEGACIÓN ENTRE PESTAÑAS Y UTILIDADES
+        // =========================================================================
+        function switchTab(tab) {
+            activeTab = tab;
+            
+            // Ocultar todos los contenidos
+            document.getElementById('tab-content-grid').classList.add('hidden');
+            document.getElementById('tab-content-climate').classList.add('hidden');
+            document.getElementById('tab-content-report').classList.add('hidden');
+
+            // Reset estilos de botones
+            const inactiveClass = "flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all text-slate-400 hover:text-slate-200 flex items-center justify-center gap-1.5";
+            const activeClass = "flex-1 py-1.5 px-2 rounded-md font-medium text-center transition-all bg-blue-600 text-white shadow-sm flex items-center justify-center gap-1.5";
+
+            document.getElementById('tab-btn-grid').className = inactiveClass;
+            document.getElementById('tab-btn-climate').className = inactiveClass;
+            document.getElementById('tab-btn-report').className = inactiveClass;
+
+            if (tab === 'grid') {
+                document.getElementById('tab-content-grid').classList.remove('hidden');
+                document.getElementById('tab-btn-grid').className = activeClass;
+            } else if (tab === 'climate') {
+                document.getElementById('tab-content-climate').classList.remove('hidden');
+                document.getElementById('tab-btn-climate').className = activeClass;
+            } else if (tab === 'report') {
+                document.getElementById('tab-content-report').classList.remove('hidden');
+                document.getElementById('tab-btn-report').className = activeClass;
+                syncClimateWithReport();
+            }
+        }
+
+        function onCityChange() {
+            const cityKey = document.getElementById('city-select').value;
+            const preset = climateDataPresets[cityKey];
+            if (!preset) return;
+
+            map.flyTo(preset.coords, preset.zoom, { animate: true, duration: 1.2 });
+            
+            // Sincronizar también el selector climático
+            document.getElementById('climate-preset-select').value = cityKey;
+            applyClimatePreset();
+        }
+
+        function enableAddGridMode() {
+            showToast("Haz clic en cualquier punto del mapa para colocar un cuadro de 0.5×0.5 km", "📍");
+        }
+
+        // =========================================================================
+        // 9.1 CARGA Y GESTIÓN DE LAS 18 PLANTILLAS (REFERENCIA SEC CLASE B)
+        // =========================================================================
+        function loadSelectedTemplate(templateId) {
+            const tpl = substationTemplates[templateId];
+            if (!tpl) return;
+
+            // Limpiar datos y mapa sin modal de confirmación
+            clearAllData(false);
+
+            // Sincronizar selectores de ciudad y preset climatológico
+            const citySelect = document.getElementById('city-select');
+            const climateSelect = document.getElementById('climate-preset-select');
+            if (citySelect) citySelect.value = tpl.city;
+            if (climateSelect) climateSelect.value = tpl.city;
+            
+            // Cargar los 7 datos climatológicos (a a g) de esa zona
+            applyClimatePreset();
+
+            // Mover el mapa a la zona de estudio de la plantilla
+            map.setView(tpl.center, tpl.zoom || 14);
+
+            // Dimensionamiento a escala 500m x 500m
+            const stepLat = 500 / 111320;
+            const stepLng = 500 / (111320 * Math.cos(tpl.center[0] * Math.PI / 180));
+
+            // Trazar y censar cada cuadrícula
+            tpl.cells.forEach(cell => {
+                const cLat = tpl.center[0] + (cell.dLat * stepLat);
+                const cLng = tpl.center[1] + (cell.dLng * stepLng);
+                const geom = calculateGridBounds(cLat, cLng, false);
+                createZone(geom.bounds, geom.center, {
+                    transformers: JSON.parse(JSON.stringify(cell.transformers)),
+                    totalCount: cell.totalCount,
+                    totalKva: cell.totalKva
+                });
+            });
+
+            // Calcular y posicionar automáticamente la Subestación en el Centro de Cargas
+            calculateSubstationLocation(false);
+
+            // Seleccionar automáticamente el primer cuadro para mostrar el inspector
+            if (zones.length > 0) {
+                selectZone(zones[0]);
+            }
+
+            // Actualizar widget de diagnóstico SEC Clase B
+            updateSecProgressBar(tpl.totalKva, tpl.name, tpl.description);
+
+            showToast(`Plantilla cargada: ${tpl.totalKva} kVA — ${tpl.name}`, '⚡');
+        }
+
+        function updateSecProgressBar(kva, tplName = '', tplDesc = '') {
+            const secLimit = 500; // 500 kW / 500 kVA tope Clase B
+            const pct = Math.min(100, (kva / secLimit) * 100);
+
+            const badge = document.getElementById('sec-limit-badge');
+            const fillBar = document.getElementById('sec-progress-fill');
+            const labelPct = document.getElementById('sec-progress-pct');
+            const descEl = document.getElementById('sec-template-desc');
+            const statusText = document.getElementById('sec-status-text');
+
+            if (badge) {
+                badge.innerText = `${kva.toLocaleString('es-CL')} / 500 kVA (${pct.toFixed(1)}%)`;
+                if (pct >= 100) {
+                    badge.className = "text-[10px] text-red-700 font-mono font-bold bg-red-100 border border-red-300 px-1.5 py-0.5 rounded animate-pulse";
+                } else if (pct >= 75) {
+                    badge.className = "text-[10px] text-amber-700 font-mono font-bold bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded";
+                } else {
+                    badge.className = "text-[10px] text-indigo-700 font-mono font-semibold bg-indigo-50 border border-indigo-200 px-1.5 py-0.5 rounded";
+                }
+            }
+
+            if (fillBar) {
+                fillBar.style.width = `${pct}%`;
+                if (pct < 45) {
+                    fillBar.className = "h-1.5 rounded-full bg-emerald-500 transition-all duration-500";
+                } else if (pct < 80) {
+                    fillBar.className = "h-1.5 rounded-full bg-blue-500 transition-all duration-500";
+                } else if (pct < 100) {
+                    fillBar.className = "h-1.5 rounded-full bg-amber-500 transition-all duration-500";
+                } else {
+                    fillBar.className = "h-1.5 rounded-full bg-red-600 transition-all duration-500";
+                }
+            }
+
+            if (labelPct) labelPct.innerText = `${pct.toFixed(1)}%`;
+
+            if (descEl) {
+                if (tplDesc) {
+                    descEl.innerText = tplDesc;
+                    descEl.classList.remove('hidden');
+                } else {
+                    descEl.classList.add('hidden');
+                }
+            }
+
+            if (statusText) {
+                if (kva === 0) {
+                    statusText.innerHTML = `<span class="text-slate-500 font-medium">Selecciona una plantilla para cargar valores completos.</span>`;
+                } else if (kva < 500) {
+                    statusText.innerHTML = `<span class="text-emerald-700 font-bold">✓ Apto Licencia SEC Clase B</span> (${(500 - kva).toLocaleString('es-CL')} kVA de margen)`;
+                } else if (kva === 500) {
+                    statusText.innerHTML = `<span class="text-amber-700 font-bold">⚠️ LÍMITE MÁXIMO NORMATIVO SEC CLASE B (100.0%)</span>`;
+                } else {
+                    statusText.innerHTML = `<span class="text-red-600 font-bold">✕ EXCEDE CLASE B</span> (Requiere Licencia SEC Clase A)`;
+                }
+            }
+
+            // Actualizar Memoria Técnica Tab 3
+            const repSecCurr = document.getElementById('rep-sec-current-kva');
+            if (repSecCurr) repSecCurr.innerText = `${kva.toLocaleString('es-CL')} kVA (${pct.toFixed(1)}% del tope legal)`;
+
+            const repSecAss = document.getElementById('rep-sec-assessment');
+            if (repSecAss) {
+                if (kva === 0) {
+                    repSecAss.innerText = 'Sin datos de carga evaluados';
+                    repSecAss.className = 'font-mono text-slate-500';
+                } else if (kva <= 500) {
+                    repSecAss.innerText = `Apto para Instalador Autorizado SEC Clase B (Cumple D.S. N° 92 / ${pct.toFixed(1)}% del límite)`;
+                    repSecAss.className = 'font-mono font-bold text-emerald-800';
+                } else {
+                    repSecAss.innerText = `Excede límite legal de 500 kW/kVA. Requiere Instalador Autorizado SEC Clase A`;
+                    repSecAss.className = 'font-mono font-bold text-red-600';
+                }
+            }
+        }
+
+        function loadSampleDemo() {
+            // Compatibilidad: carga la plantilla de 500 kVA
+            loadSelectedTemplate('tpl_500');
+        }
+
+        function clearAllData(confirmUser = true) {
+            if (confirmUser && zones.length > 0) {
+                if (!confirm("¿Está seguro de limpiar todo el mapa y reiniciar el estudio?")) return;
+            }
+
+            zones.forEach(z => map.removeLayer(z.layer));
+            zones = [];
+            activeZone = null;
+            zoneIdCounter = 1;
+
+            if (substationMarker) {
+                map.removeLayer(substationMarker);
+                substationMarker = null;
+            }
+            substationFeederLines.forEach(l => map.removeLayer(l));
+            substationFeederLines = [];
+            substationLocation = null;
+
+            document.getElementById('calc-overlay').classList.remove('hidden');
+            document.getElementById('substation-result-box').classList.add('hidden');
+            updateGlobalBalance();
+            showToast("Mapa y datos reiniciados", "🔄");
+        }
+
+        function showToast(message, icon = "ℹ️") {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-icon').innerText = icon;
+            document.getElementById('toast-message').innerText = message;
+
+            toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-[-150%]', 'opacity-0');
+            }, 3200);
+        }
+
+        // =========================================================================
+        // 10. INICIALIZACIÓN AL CARGAR LA PÁGINA
+        // =========================================================================
+        function checkInitSubestaciones() {
+            applyClimatePreset();
+            updateGlobalBalance();
+            const startPanel = (typeof window !== "undefined" && window.location && window.location.hash ? window.location.hash : "#home").slice(1).split("/")[0];
+            if (startPanel === "subestaciones") {
+                initSubestacionesOnce();
+            }
+        }
+        if (document.readyState === "loading") {
+            document.addEventListener('DOMContentLoaded', checkInitSubestaciones);
+        } else {
+            checkInitSubestaciones();
+        }
+
+    
+
+
+    // Expose all subestaciones functions to global window scope for inline handlers
+    window.initSubestacionesOnce = initSubestacionesOnce;
+    window.switchTab = switchTab;
+    window.onCityChange = onCityChange;
+    window.loadSelectedTemplate = loadSelectedTemplate;
+    window.enableAddGridMode = enableAddGridMode;
+    window.setEntryMode = setEntryMode;
+    window.addStandardTransformerRow = addStandardTransformerRow;
+    window.addCustomTransformerRow = addCustomTransformerRow;
+    window.updateTransformerRow = updateTransformerRow;
+    window.removeTransformerRow = removeTransformerRow;
+    window.saveActiveZoneData = saveActiveZoneData;
+    window.deleteActiveZone = deleteActiveZone;
+    window.calculateSubstationLocation = calculateSubstationLocation;
+    window.goToClimateStep = goToClimateStep;
+    window.applyClimatePreset = applyClimatePreset;
+    window.onClimateInputChange = onClimateInputChange;
+    window.saveClimateData = saveClimateData;
+    window.exportJsonData = exportJsonData;
+    window.clearAllData = clearAllData;
+    window.showToast = showToast;
+    window.updateSecProgressBar = updateSecProgressBar;
+    window.subestacionesZones = () => zones;
+    window.syncClimateWithReport = syncClimateWithReport;
+
+  </script>
+
 </body>
 </html>
