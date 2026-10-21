@@ -624,11 +624,12 @@
     world.targets.forEach((tg) => drawTarget(p, tg));
     const order = [...world.pieces].sort((a, b) => zOf(a) - zOf(b));
     order.forEach((pc) => drawPiece(p, pc));
-    world.labels.forEach((lb) => drawLabel(p, lb));
-    world.meters.forEach((m, i) => drawMeter(p, m, i));
-    world.sliders.forEach((s) => drawSlider(p, s));
     const k = KINDS[world.kind];
     if (k && k.draw) k.draw(p, world);
+    // Capa frontal: todas las etiquetas (piezas, zócalos y carteles) se dibujan encima de los juguetes sin solaparse
+    drawAllForegroundLabels(p);
+    world.meters.forEach((m, i) => drawMeter(p, m, i));
+    world.sliders.forEach((s) => drawSlider(p, s));
     drawSparks(p);
   }
 
@@ -739,21 +740,107 @@
       p.fill(255, 230, 120, 55);
       p.circle(tg.x, tg.y, (tg.r || 50) * 1.85);
     }
-    if (tg.label) drawLabel(p, { x: tg.x, y: tg.y + (tg.r || 50) + 18, text: tg.label + (tg.held ? ` (${tg.held})` : "") });
+    if (world && world.kind === "powers_of_ten" && tg.label) {
+      drawLabel(p, { x: tg.x, y: tg.y + (tg.r || 50) + 18, text: tg.label });
+    }
     p.pop();
+  }
+
+  function pieceHalfHeight(pc) {
+    const img = imgOf(pc);
+    const useVectorForCustomDims = (pc.kind === "kapla" && (pc.w || pc.h)) || pc.kind === "churro" || pc.kind === "tile" || pc.kind === "pendulum" || pc.kind === "arrow";
+    if (img && img.width && !useVectorForCustomDims) {
+      return pc.r * (img.height / img.width);
+    }
+    if (pc.kind === "kapla" && pc.h) return pc.h / 2;
+    if (pc.kind === "churro") return (pc.thick || 16) / 2;
+    return pc.r || 32;
+  }
+
+  function drawAllForegroundLabels(p) {
+    if (!world) return;
+    const badges = [];
+    const mergedPieces = new Set();
+
+    // 1. Etiquetas de zócalos (targets), fusionadas con piezas contenedoras en la misma coordenada
+    world.targets.forEach((tg) => {
+      if (!tg.label) return;
+      const colocated = world.pieces.find((pc) => pc.static && Math.hypot(pc.x - tg.x, pc.y - tg.y) < 36);
+      let radiusY = tg.r || 50;
+      let baseText = tg.label;
+      if (colocated) {
+        mergedPieces.add(colocated);
+        radiusY = Math.max(radiusY, pieceHalfHeight(colocated));
+        if (colocated.caption && colocated.caption.toLowerCase() !== tg.label.toLowerCase()) {
+          if (tg.label.toLowerCase().includes(colocated.caption.toLowerCase())) {
+            baseText = tg.label;
+          } else if (colocated.caption.toLowerCase().includes(tg.label.toLowerCase())) {
+            baseText = colocated.caption;
+          } else {
+            baseText = `${colocated.caption} · ${tg.label}`;
+          }
+        }
+      }
+      const heldSuffix = tg.held ? ` (${tg.held})` : "";
+      badges.push({
+        x: tg.x,
+        y: tg.y + radiusY + 18,
+        text: baseText + heldSuffix,
+        small: true
+      });
+    });
+
+    // 2. Etiquetas de piezas individuales (captions) que no fueron fusionadas con un target
+    world.pieces.forEach((pc) => {
+      if (!pc.caption || mergedPieces.has(pc)) return;
+      // Si es un sombrero puesto sobre Potato Head, ya se muestra en el caption de Potato Head
+      if (pc.kind === "hat" && pc.worn) return;
+      const hh = pieceHalfHeight(pc);
+      let ly = pc.y + hh + 16;
+      if (pc.kind === "arrow") {
+        ly = pc.y + Math.max(0, pc.dy || 0) + 24;
+      }
+      badges.push({
+        x: pc.x,
+        y: ly,
+        text: pc.caption,
+        small: true
+      });
+    });
+
+    // 3. Evitar solapamiento vertical entre etiquetas cercanas de piezas/zócalos
+    badges.sort((a, b) => a.y - b.y);
+    for (let i = 0; i < badges.length; i++) {
+      for (let j = i + 1; j < badges.length; j++) {
+        if (Math.abs(badges[i].x - badges[j].x) < 130 && Math.abs(badges[j].y - badges[i].y) < 25) {
+          badges[j].y = badges[i].y + 26;
+        }
+      }
+      badges[i].y = Math.min(H - 18, Math.max(18, badges[i].y));
+    }
+
+    badges.forEach((b) => drawLabel(p, b));
+
+    // 4. Carteles principales de instrucción del nivel (world.labels) siempre arriba y nítidos
+    world.labels.forEach((lb) => drawLabel(p, lb));
   }
 
   function drawLabel(p, lb) {
     if (!lb || !lb.text) return;
     p.push();
     p.rectMode(p.CENTER);
+    p.stroke("#c4a574");
+    p.strokeWeight(1.5);
+    p.fill(255, 250, 243, 242);
+    const isSmall = !!lb.small;
+    const fontSize = isSmall ? 12 : 13.5;
+    p.textSize(fontSize);
+    const w = Math.min(680, Math.max(64, 24 + p.textWidth(lb.text)));
+    const h = isSmall ? 24 : 30;
+    p.rect(lb.x, lb.y, w, h, 8);
     p.noStroke();
-    p.fill(255, 250, 243, 228);
-    const w = Math.min(480, Math.max(80, 22 + (lb.text || "").length * 7.6));
-    p.rect(lb.x, lb.y, w, 28, 8);
     p.fill(lb.color || INK);
     p.textAlign(p.CENTER, p.CENTER);
-    p.textSize(13);
     p.text(lb.text, lb.x, lb.y);
     p.pop();
   }
@@ -883,18 +970,6 @@
       p.textAlign(p.CENTER, p.CENTER);
       p.textSize(12);
       p.text(pc.q > 0 ? "+" : "−", pc.r * 0.55, -pc.r * 0.55);
-    }
-
-    if (pc.caption) {
-      p.rectMode(p.CENTER);
-      p.noStroke();
-      p.fill(255, 250, 243, 215);
-      const cw = Math.max(48, pc.caption.length * 7.2 + 14);
-      p.rect(0, pc.r + 14, cw, 20, 6);
-      p.fill(INK);
-      p.textAlign(p.CENTER, p.CENTER);
-      p.textSize(11.5);
-      p.text(pc.caption, 0, pc.r + 14);
     }
     p.pop();
   }
@@ -1665,19 +1740,20 @@
         for (let i = 0; i < 8; i++) {
           w.pieces.push(piece("electron", 1180 - (i % 2) * 38, 120 + Math.floor(i / 2) * 38, { q: 0, r: 18, rHand: 18 }));
         }
+        w.labels.push({ x: 640, y: 72, text: "Arrastra canicas a los tres cuencos: cada tamaño sube un peldaño (×10)." });
         w.meters.push({ label: "Canicas en cuencos", value: 0, max: 10, color: "#5e7a5e" });
       } else if (ph === 2) {
         w.pieces.push(piece("cups", 420, 400, { r: 80, n: 1, pourable: true, caption: "vaso 1 (verter)" }));
-        w.pieces.push(piece("cups", 860, 380, { r: 130, n: 5, static: true, caption: "vaso 5" }));
-        w.targets.push({ x: 860, y: 380, r: 90, label: "vaso gordo (5 vertidos)", accept: "cups,cup", maxPour: 5 });
+        w.pieces.push(piece("cups", 860, 380, { r: 130, n: 5, static: true }));
+        w.targets.push({ x: 860, y: 380, r: 90, label: "vaso 5 · gordo (5 vertidos)", accept: "cups,cup", maxPour: 5 });
         w.labels.push({ x: 640, y: 80, text: "Arrastra el vaso chico al gordo varias veces para verter." });
         w.meters.push({ label: "Vertidos (décimos)", value: 0, max: 5, color: "#6a8eae" });
       } else {
         for (let i = 0; i < 10; i++) {
           w.pieces.push(piece("coin", 170 + (i % 5) * 118, 250 + Math.floor(i / 5) * 85, { sprite: "bill-1", r: 50, n: "1" }));
         }
-        w.pieces.push(piece("coin", 1020, 400, { sprite: "bill-10", r: 92, static: true, caption: "billete 10" }));
-        w.targets.push({ x: 1020, y: 400, r: 95, label: "cambia 10 de 1 por un 10", accept: "coin" });
+        w.pieces.push(piece("coin", 1020, 400, { sprite: "bill-10", r: 92, static: true }));
+        w.targets.push({ x: 1020, y: 400, r: 95, label: "billete 10 · cambia 10 de 1", accept: "coin" });
         w.labels.push({ x: 640, y: 80, text: "Diez billetes de 1 valen lo mismo que un billete de 10." });
         w.meters.push({ label: "Billetes de 1 cambiados", value: 0, max: 10, color: "#d4a017" });
       }
@@ -1713,14 +1789,16 @@
         w.labels.push({ x: 640, y: 65, text: "Toca cualquier sombrero-prefijo para ponérselo en la cabeza." });
       } else if (ph === 2) {
         w.pieces.push(piece("cups", 400, 400, { r: 85, n: 1, pourable: true, caption: "vaso chico" }));
-        w.pieces.push(piece("cups", 880, 380, { r: 140, n: 5, static: true, caption: "vaso grande" }));
-        w.targets.push({ x: 880, y: 380, r: 90, label: "misma agua, otro disfraz", accept: "cups,cup", maxPour: 5 });
+        w.pieces.push(piece("cups", 880, 380, { r: 140, n: 5, static: true }));
+        w.targets.push({ x: 880, y: 380, r: 90, label: "vaso grande · misma agua, otro disfraz", accept: "cups,cup", maxPour: 5 });
+        w.labels.push({ x: 640, y: 75, text: "Vierte el vaso chico en el grande: cambia el envase, no la cantidad de agua." });
         w.meters.push({ label: "Vertidos", value: 0, max: 5, color: "#6a8eae" });
       } else {
         for (let i = 0; i < 6; i++) {
           w.pieces.push(piece("coin", 180 + (i % 3) * 130, 240 + Math.floor(i / 3) * 95, { sprite: "bill-10", r: 56, caption: "1.000" }));
         }
         w.targets.push({ x: 1000, y: 400, r: 95, accept: "coin", label: "6 kilos = 6.000" });
+        w.labels.push({ x: 640, y: 75, text: "Reúne los 6 billetes de mil en el círculo: 6 × 10³ = 6 kilo." });
         w.meters.push({ label: "Kilos reunidos", value: 0, max: 6, color: "#d4a017" });
       }
     },
@@ -1761,14 +1839,15 @@
         w.meters.push({ label: "Medida en zapatos", value: 4, max: 10, color: "#8b6914" });
         w.meters.push({ label: "Medida en silks", value: 1, max: 10, color: "#7b4ea3" });
       } else {
-        w.pieces.push(piece("scale", 980, 280, { r: 105, static: true, caption: "1 kg ≈ 2.2 lb" }));
-        w.pieces.push(piece("bowl", 360, 420, { static: true, r: 90, sprite: "cuenco", caption: "libras (lb)" }));
-        w.pieces.push(piece("bowl", 640, 420, { static: true, r: 90, sprite: "cuenco", caption: "kilos (kg)" }));
-        w.targets.push({ x: 360, y: 420, r: 65, accept: "marble,proton", label: "libras" });
-        w.targets.push({ x: 640, y: 420, r: 65, accept: "marble,electron", label: "kilos" });
+        w.pieces.push(piece("scale", 980, 270, { r: 105, static: true, caption: "1 kg ≈ 2.2 lb" }));
+        w.pieces.push(piece("bowl", 360, 420, { static: true, r: 90, sprite: "cuenco" }));
+        w.pieces.push(piece("bowl", 640, 420, { static: true, r: 90, sprite: "cuenco" }));
+        w.targets.push({ x: 360, y: 420, r: 65, accept: "marble,proton", label: "libras (lb)" });
+        w.targets.push({ x: 640, y: 420, r: 65, accept: "marble,electron", label: "kilos (kg)" });
         for (let i = 0; i < 8; i++) w.pieces.push(piece("proton", 80, 100 + i * 42, { q: 0, r: 16, rHand: 16 }));
         for (let i = 0; i < 8; i++) w.pieces.push(piece("electron", 1200, 100 + i * 42, { q: 0, r: 16, rHand: 16 }));
-        w.pieces.push(piece("register", 1080, 520, { r: 80, caption: "conversor" }));
+        w.pieces.push(piece("register", 980, 500, { r: 80, caption: "conversor" }));
+        w.labels.push({ x: 640, y: 75, text: "Conversión de unidades: 1 kilo pesa lo mismo que 2,2 libras." });
       }
     },
     update() {
