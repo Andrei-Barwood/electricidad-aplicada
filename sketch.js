@@ -57,11 +57,27 @@ function inCanvasResizeHandle(mx, my) {
   return mx >= width - 26 && mx <= width && my >= height - 26 && my <= height;
 }
 
+function updateCanvasResponsiveStyle() {
+  if (!canvasElt || !canvasElt.style) return;
+  if (typeof canvasElt.style.setProperty === "function") {
+    canvasElt.style.setProperty("width", "100%", "important");
+    canvasElt.style.setProperty("max-width", `${width}px`, "important");
+    canvasElt.style.setProperty("height", "auto", "important");
+    canvasElt.style.setProperty("aspect-ratio", `${width} / ${height}`);
+  } else {
+    canvasElt.style.width = "100%";
+    canvasElt.style.maxWidth = `${width}px`;
+    canvasElt.style.height = "auto";
+    canvasElt.style.aspectRatio = `${width} / ${height}`;
+  }
+}
+
 function setTableroSize(nw, nh) {
   tableroBox.w = Math.max(tableroBox.minW, Math.min(tableroBox.maxW, nw));
   tableroBox.h = Math.max(tableroBox.minH, Math.min(tableroBox.maxH, nh));
   if (typeof resizeCanvas === "function" && tableroBox.y + tableroBox.h + 24 > height) {
     resizeCanvas(width, tableroBox.y + tableroBox.h + 30);
+    updateCanvasResponsiveStyle();
   }
   updatePeNodesPosition();
 }
@@ -3509,6 +3525,7 @@ function setup() {
   const canvas = createCanvas(1340, 680);
   canvas.parent("simulator-canvas");
   canvasElt = canvas.elt;
+  updateCanvasResponsiveStyle();
   pixelDensity(typeof window !== "undefined" && window.devicePixelRatio ? Math.min(window.devicePixelRatio, 2) : 1);
   textFont("IBM Plex Sans, system-ui");
   const select = document.querySelector("#level-select");
@@ -4045,7 +4062,10 @@ function mouseDragged() {
   if (resizingCanvas) {
     const nw = Math.max(1040, Math.min(2200, canvasResizeStart.w + (mouseX - canvasResizeStart.mx)));
     const nh = Math.max(660, Math.min(1800, canvasResizeStart.h + (mouseY - canvasResizeStart.my)));
-    if (typeof resizeCanvas === "function") resizeCanvas(nw, nh);
+    if (typeof resizeCanvas === "function") {
+      resizeCanvas(nw, nh);
+      updateCanvasResponsiveStyle();
+    }
     return false;
   }
 
@@ -4254,6 +4274,32 @@ function mouseReleased() {
   if (changed) analizarCircuito();
 }
 
+function windowResized() {
+  updateCanvasResponsiveStyle();
+}
+
+function touchStarted() {
+  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    const res = mousePressed();
+    return res !== undefined ? res : false;
+  }
+}
+
+function touchMoved() {
+  if (mouseX >= 0 && mouseX <= width && mouseY >= 0 && mouseY <= height) {
+    const res = mouseDragged();
+    return res !== undefined ? res : false;
+  }
+}
+
+function touchEnded() {
+  if (draggingFrom || draggingComponent || resizingComponent || resizingTablero || resizingCanvas || heldPush) {
+    const res = mouseReleased();
+    return res !== undefined ? res : false;
+  }
+  return mouseReleased();
+}
+
 window.__sim = {
   LEVELS,
   loadLevel,
@@ -4273,7 +4319,14 @@ window.__sim = {
   },
   tableroBox: () => tableroBox,
   setTableroSize,
-  resizeCanvas: (w, h) => { if (typeof resizeCanvas === "function") resizeCanvas(w, h); },
+  resizeCanvas: (w, h) => {
+    if (typeof resizeCanvas === "function") {
+      resizeCanvas(w, h);
+      updateCanvasResponsiveStyle();
+    }
+  },
+  updateCanvasResponsiveStyle,
+  getCanvasElt: () => canvasElt,
   setShowLoadTable: (val) => {
     showLoadTable = val;
     if (!val) {

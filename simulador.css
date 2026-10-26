@@ -92,13 +92,22 @@ select { width: 100%; background: var(--panel); color: var(--text); border: 1px 
 .board-card { padding: 12px; }
 #simulator-canvas {
   position: relative;
-  overflow: auto;
+  width: 100%;
   max-width: 100%;
+  overflow: hidden;
   border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--card-bg, #0b0e14);
 }
 #simulator-canvas canvas {
   display: block;
   margin: 0 auto;
+  width: 100% !important;
+  max-width: 1340px;
+  height: auto !important;
+  aspect-ratio: 1340 / 680;
   border-radius: 12px;
   touch-action: none;
   user-select: none;
@@ -130,9 +139,19 @@ button:disabled { opacity: .45; cursor: default; }
 .legend { font-size: .85rem; }
 .disclaimer { color: #707991; font-size: .78rem; text-align: center; margin: 20px 0 0; }
 @media (max-width: 680px) {
-  .app-shell { width: min(100% - 18px, 1080px); padding-top: 22px; }
-  .status-grid { grid-template-columns: 1fr; }
-  .tier-tabs button { flex-basis: calc(50% - 8px); }
+  .app-shell { width: min(100% - 16px, 1080px); padding: 18px 0 24px; }
+  .board-card { padding: 8px 6px; border-radius: 14px; }
+  .toolbar { padding: 10px 4px 2px; gap: 8px; }
+  .wire-tools { gap: 6px; }
+  .wire-tool, .button { padding: 6px 10px; font-size: 0.85rem; }
+  .status-grid { grid-template-columns: 1fr; gap: 10px; }
+  .status-card { padding: 14px 16px; border-radius: 14px; }
+  .tier-tabs button { flex-basis: calc(50% - 8px); padding: 6px 10px; }
+}
+
+@media (max-width: 480px) {
+  .toolbar-actions { width: 100%; justify-content: flex-start; }
+  .wire-tools { width: 100%; }
 }
 
 .status-card.instructions {
