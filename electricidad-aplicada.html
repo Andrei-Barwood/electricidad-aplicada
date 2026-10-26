@@ -1931,6 +1931,7 @@
       <button class="btn mobile-toggle" type="button" id="nav-toggle">Menú</button>
       <div class="nav-links" id="nav-links">
         <button class="nav-btn active" data-panel="home"><span class="ico">⌂</span> Inicio</button>
+        <button class="nav-btn" data-panel="simulador"><span class="ico">⚡</span> Simulador</button>
         <button class="nav-btn" data-panel="magia"><span class="ico">✦</span> Magia</button>
         <button class="nav-btn" data-panel="sev"><span class="ico">∿</span> SEV</button>
         <button class="nav-btn" data-panel="malla"><span class="ico">▦</span> Malla de tierra</button>
@@ -1959,6 +1960,7 @@
           </div>
         </div>
         <div class="grid g2">
+          <article class="card home" data-go="simulador"><h3>Simulador · Domiciliario</h3><p class="sub">Setenta y dos conexiones domiciliarias interactivas bajo normativa SEC y pliegos RIC: 9/12, 9/15, 9/32, conmutadas 9/24, cruces, timbres y cuadro de cargas.</p></article>
           <article class="card home" data-go="magia"><h3>Magia · Vaelithor</h3><p class="sub">La electricidad, según el mago Vaelithor. Catorce pisos, cuatro puntos de vista. Se juega con las manos.</p></article>
           <article class="card home" data-go="sev"><h3>SEV · Schlumberger</h3><p class="sub">Problema directo Pekeris + filtro Ghosh de 9 puntos. Ajuste de capas, curva log-log y sección geoeléctrica.</p></article>
           <article class="card home" data-go="malla"><h3>Malla de tierra BT</h3><p class="sub">IEEE Std 80: Rg, tensiones de paso y contacto, Cs, sección de conductor y vista de la grilla.</p></article>
@@ -1978,6 +1980,23 @@
           <h3>Plantillas Los Ríos · 10 a 500 kW</h3>
           <p class="sub">Instalaciones frecuentes de la región (lechería INDAP, acopio, aserradero, APR, microhidro RGR N°04, Clase B). Una plantilla carga SEV, malla, alumbrado, hidráulica, consumo, TAN y color. Cifras de proyección académica, no reemplazan memoria de cálculo.</p>
           <div class="grid g2" id="site-gallery"></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-simulador">
+        <div class="hero">
+          <div>
+            <h2>Simulador <span>eléctrico domiciliario</span></h2>
+            <p class="lede">Setenta y dos conexiones domiciliarias en cuatro dificultades: 9/12, 9/15, 9/32, 9/24, cruzamientos, timbres y enchufes con tierra PE bajo normativa chilena SEC (Pliegos RIC).</p>
+          </div>
+          <div class="hero-actions">
+            <a href="simulador.html" target="_blank" rel="noopener" class="btn primary" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px;">
+              <span>↗</span> Abrir en pantalla completa
+            </a>
+          </div>
+        </div>
+        <div class="card" style="padding:0; overflow:hidden; border-radius:12px; height:860px; background:#10131c; border:1px solid var(--line, #2a3146);">
+          <iframe src="simulador.html" title="Simulador Eléctrico Domiciliario" style="width:100%; height:100%; border:none; display:block;" allow="fullscreen"></iframe>
         </div>
       </section>
 
@@ -4779,8 +4798,8 @@
       window.scrollTo(0, 0);
       const templateBanner = $("tpl-banner");
       if (templateBanner) {
-        templateBanner.hidden = id === "pu" || id === "magia" || id === "subestaciones" || !activeSite;
-        templateBanner.classList.toggle("show", id !== "pu" && id !== "magia" && id !== "subestaciones" && !!activeSite);
+        templateBanner.hidden = id === "pu" || id === "magia" || id === "subestaciones" || id === "simulador" || !activeSite;
+        templateBanner.classList.toggle("show", id !== "pu" && id !== "magia" && id !== "subestaciones" && id !== "simulador" && !!activeSite);
       }
       refreshPanelVisuals(id);
       if (window.EA_MAGIA) {
@@ -4790,7 +4809,7 @@
     }
     function organizeCalcMenus() {
       document.querySelectorAll("section.panel").forEach((panel) => {
-        if (panel.id === "panel-home" || panel.id === "panel-magia" || panel.id === "panel-hydro" || panel.id === "panel-subestaciones") return;
+        if (panel.id === "panel-home" || panel.id === "panel-magia" || panel.id === "panel-hydro" || panel.id === "panel-subestaciones" || panel.id === "panel-simulador") return;
         const nodes = [];
         Array.from(panel.children).forEach((el) => {
           if (el.classList.contains("hero") || el.classList.contains("tpl-bar") || el.classList.contains("calc-menu")) return;
