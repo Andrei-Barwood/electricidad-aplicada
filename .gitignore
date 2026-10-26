@@ -5,7 +5,9 @@ Thumbs.db
 .idea/
 .vscode/
 
-# Local QA and batch exports (not published)
+# Dependencies
+node_modules/
+
 _pdf_out/
 _pdf_verify.py
 _tpl_verify.py

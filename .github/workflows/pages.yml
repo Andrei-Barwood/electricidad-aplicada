@@ -1,7 +1,7 @@
 name: Deploy Pages
 on:
   push:
-    branches: [main]
+    branches: [main, vaelithor]
   workflow_dispatch:
 permissions:
   contents: read
@@ -21,7 +21,7 @@ jobs:
       - name: Stage static site
         run: |
           mkdir -p dist
-          cp index.html CNAME .nojekyll _headers dist/
+          cp index.html simulador.html simulador.css sketch.js CNAME .nojekyll _headers dist/
           cp favicon.jpeg dist/
           cp -R vendor dist/
           cp -R magia dist/

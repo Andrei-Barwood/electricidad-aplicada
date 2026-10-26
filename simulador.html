@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulador eléctrico | Electricidad Aplicada</title>
+  <meta name="description" content="Setenta y dos conexiones domiciliarias en cuatro dificultades: 9/12, 9/15, 9/32, 9/24, cruce, enchufes y timbre.">
+  <link rel="stylesheet" href="simulador.css">
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.11.1/lib/p5.min.js"></script>
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      
+      <p class="eyebrow">Electricidad Aplicada · laboratorio</p>
+      <h1>Simulador eléctrico</h1>
+      <p class="intro">Setenta y dos conexiones de una vivienda, en cuatro dificultades. Arrastra de un borne a otro para tender la fase o el neutro.</p>
+      <!-- <a href="industrial.html" class="button ready" style="position:absolute; top:20px; right:20px; text-decoration:none;">⚡ Modo Industrial</a> -->
+    </header>
+
+    <section class="catalog" aria-label="Dificultad y plantilla">
+      <div class="tier-tabs" role="radiogroup" aria-label="Dificultad">
+        <button type="button" data-tier="basico" data-first="dormitorio-912" data-blurb="Un mando y el camino entre fase y neutro." aria-pressed="true">
+          Básico
+          <small>16 plantillas</small>
+        </button>
+        <button type="button" data-tier="medio" data-first="dormitorio-915" data-blurb="Más de una carga, doble efecto o corte de fase y neutro." aria-pressed="false">
+          Medio
+          <small>22 plantillas</small>
+        </button>
+        <button type="button" data-tier="avanzado" data-first="escalera-924" data-blurb="La misma luz se enciende desde dos o tres lugares." aria-pressed="false">
+          Avanzado
+          <small>20 plantillas</small>
+        </button>
+        <button type="button" data-tier="taller" data-first="cocina" data-blurb="Dos circuitos de una misma vivienda, en un solo tablero." aria-pressed="false">
+          Taller
+          <small>14 plantillas</small>
+        </button>
+      </div>
+      <label class="level-picker">Plantilla
+        <select id="level-select" aria-label="Plantilla de conexión domiciliaria">
+          <optgroup label="Básico (1 a 16)">
+            <option value="dormitorio-912" data-tier="basico" data-tier-label="Básico" data-index="1" selected>1 · Dormitorio · 9/12</option>
+            <option value="dos-luces" data-tier="basico" data-tier-label="Básico" data-index="2">2 · Pasillo · dos luces</option>
+            <option value="enchufe-10" data-tier="basico" data-tier-label="Básico" data-index="3">3 · Living · enchufe 10 A</option>
+            <option value="dos-enchufes" data-tier="basico" data-tier-label="Básico" data-index="4">4 · Muro · dos enchufes</option>
+            <option value="timbre" data-tier="basico" data-tier-label="Básico" data-index="5">5 · Acceso · timbre</option>
+            <option value="pieza" data-tier="basico" data-tier-label="Básico" data-index="6">6 · Pieza · luz y enchufe</option>
+            <option value="basico-serie2" data-tier="basico" data-tier-label="Básico" data-index="7">7 · 9/12 dos luces serie</option>
+            <option value="basico-paralelo3" data-tier="basico" data-tier-label="Básico" data-index="8">8 · Comedor · tres luces</option>
+            <option value="basico-timbre-doble" data-tier="basico" data-tier-label="Básico" data-index="9">9 · Acceso · dos pulsadores</option>
+            <option value="basico-timbres-paralelos" data-tier="basico" data-tier-label="Básico" data-index="10">10 · Acceso · dos timbres</option>
+            <option value="basico-enchufe-cuad" data-tier="basico" data-tier-label="Básico" data-index="11">11 · Zapatilla · 4 enchufes</option>
+            <option value="basico-diag-912" data-tier="basico" data-tier-label="Básico" data-index="12">12 · Diagnóstico · Fase directa</option>
+            <option value="basico-diag-corto" data-tier="basico" data-tier-label="Básico" data-index="13">13 · Diagnóstico · Cortocircuito</option>
+            <option value="basico-extractor" data-tier="basico" data-tier-label="Básico" data-index="14">14 · Baño · Extractor</option>
+            <option value="basico-exterior" data-tier="basico" data-tier-label="Básico" data-index="15">15 · Patio · Luz exterior</option>
+            <option value="basico-pasillo-corto" data-tier="basico" data-tier-label="Básico" data-index="16">16 · Pasillo corto</option>
+          </optgroup>
+          <optgroup label="Medio (17 a 38)">
+            <option value="dormitorio-915" data-tier="medio" data-tier-label="Medio" data-index="17">17 · Dormitorio · 9/15</option>
+            <option value="living-932" data-tier="medio" data-tier-label="Medio" data-index="18">18 · Living · 9/32</option>
+            <option value="bano-bipolar" data-tier="medio" data-tier-label="Medio" data-index="19">19 · Baño · corte bipolar</option>
+            <option value="lavadora" data-tier="medio" data-tier-label="Medio" data-index="20">20 · Lavadero · enchufe 16 A</option>
+            <option value="dos-pulsadores" data-tier="medio" data-tier-label="Medio" data-index="21">21 · Acceso · dos pulsadores</option>
+            <option value="dos-timbres" data-tier="medio" data-tier-label="Medio" data-index="22">22 · Casa · dos timbres</option>
+            <option value="luz-enchufes" data-tier="medio" data-tier-label="Medio" data-index="23">23 · Estar · luz y enchufes</option>
+            <option value="luces-enchufe" data-tier="medio" data-tier-label="Medio" data-index="24">24 · Dormitorio · luces y enchufe</option>
+            <option value="medio-915-tres" data-tier="medio" data-tier-label="Medio" data-index="25">25 · Living · 9/15 y tres luces</option>
+            <option value="medio-915-ext" data-tier="medio" data-tier-label="Medio" data-index="26">26 · Baño · Luz y extractor</option>
+            <option value="medio-932-parcial" data-tier="medio" data-tier-label="Medio" data-index="27">27 · Sala · 9/32 parcial</option>
+            <option value="medio-logia" data-tier="medio" data-tier-label="Medio" data-index="28">28 · Logia completa</option>
+            <option value="medio-cocina" data-tier="medio" data-tier-label="Medio" data-index="29">29 · Cocina estándar</option>
+            <option value="medio-diag-915" data-tier="medio" data-tier-label="Medio" data-index="30">30 · Diagnóstico · 9/15 cruzado</option>
+            <option value="medio-932-ext" data-tier="medio" data-tier-label="Medio" data-index="31">31 · Jardín · 9/32</option>
+            <option value="medio-dos-915" data-tier="medio" data-tier-label="Medio" data-index="32">32 · Habitaciones · Dos 9/15</option>
+            <option value="medio-falso-cont" data-tier="medio" data-tier-label="Medio" data-index="33">33 · Diagnóstico · Neutro cortado</option>
+            <option value="medio-mixto-bano" data-tier="medio" data-tier-label="Medio" data-index="34">34 · Baño mixto</option>
+            <option value="medio-sensor" data-tier="medio" data-tier-label="Medio" data-index="35">35 · Exterior · Sensor</option>
+            <option value="medio-garaje" data-tier="medio" data-tier-label="Medio" data-index="36">36 · Garaje · Enchufes</option>
+            <option value="medio-escalera-simple" data-tier="medio" data-tier-label="Medio" data-index="37">37 · Escalera simple</option>
+            <option value="medio-repaso" data-tier="medio" data-tier-label="Medio" data-index="38">38 · Repaso general</option>
+          </optgroup>
+          <optgroup label="Avanzado (39 a 58)">
+            <option value="escalera-924" data-tier="avanzado" data-tier-label="Avanzado" data-index="39">39 · Escalera · 9/24</option>
+            <option value="pasillo-924" data-tier="avanzado" data-tier-label="Avanzado" data-index="40">40 · Pasillo · 9/24 y dos luces</option>
+            <option value="tres-accesos" data-tier="avanzado" data-tier-label="Avanzado" data-index="41">41 · Tres accesos · cruce</option>
+            <option value="pasillo-enchufe" data-tier="avanzado" data-tier-label="Avanzado" data-index="42">42 · Pasillo · 9/24 y enchufe</option>
+            <option value="dos-dormitorios" data-tier="avanzado" data-tier-label="Avanzado" data-index="43">43 · Dos piezas · dos 9/12</option>
+            <option value="principal" data-tier="avanzado" data-tier-label="Avanzado" data-index="44">44 · Principal · 9/15 y enchufe</option>
+            <option value="avanzado-924-corto" data-tier="avanzado" data-tier-label="Avanzado" data-index="45">45 · Escalera corto</option>
+            <option value="avanzado-924-largo" data-tier="avanzado" data-tier-label="Avanzado" data-index="46">46 · Escalera largo</option>
+            <option value="avanzado-diag-924" data-tier="avanzado" data-tier-label="Avanzado" data-index="47">47 · Diagnóstico · 9/24 cortocircuito</option>
+            <option value="avanzado-mixto-placa" data-tier="avanzado" data-tier-label="Avanzado" data-index="48">48 · 9/24 + 9/12 modular</option>
+            <option value="avanzado-tres-accesos-2" data-tier="avanzado" data-tier-label="Avanzado" data-index="49">49 · Tres accesos pasillo</option>
+            <option value="avanzado-cuatro-accesos" data-tier="avanzado" data-tier-label="Avanzado" data-index="50">50 · Salón · Cuatro accesos</option>
+            <option value="avanzado-cinco-accesos" data-tier="avanzado" data-tier-label="Avanzado" data-index="51">51 · Hotel · Cinco accesos</option>
+            <option value="avanzado-pasillo-enchufes" data-tier="avanzado" data-tier-label="Avanzado" data-index="52">52 · Pasillo y fuerza</option>
+            <option value="avanzado-ext-cruce" data-tier="avanzado" data-tier-label="Avanzado" data-index="53">53 · Jardín tres accesos</option>
+            <option value="avanzado-diag-924-falso" data-tier="avanzado" data-tier-label="Avanzado" data-index="54">54 · Diagnóstico · 9/24 vs 9/15</option>
+            <option value="avanzado-924-cruzado" data-tier="avanzado" data-tier-label="Avanzado" data-index="55">55 · Puentes cruzados</option>
+            <option value="avanzado-tres-pisos" data-tier="avanzado" data-tier-label="Avanzado" data-index="56">56 · Caja de paso</option>
+            <option value="avanzado-galpon" data-tier="avanzado" data-tier-label="Avanzado" data-index="57">57 · Galpón industrial</option>
+            <option value="avanzado-diag-cruce" data-tier="avanzado" data-tier-label="Avanzado" data-index="58">58 · Diagnóstico · Cruce</option>
+          </optgroup>
+          <optgroup label="Taller (59 a 72)">
+            <option value="cocina" data-tier="taller" data-tier-label="Taller" data-index="59">59 · Cocina · luz y fuerza</option>
+            <option value="marquesina" data-tier="taller" data-tier-label="Taller" data-index="60">60 · Marquesina · timbre y luz</option>
+            <option value="living-completo" data-tier="taller" data-tier-label="Taller" data-index="61">61 · Living · 9/15 y enchufes</option>
+            <option value="departamento" data-tier="taller" data-tier-label="Taller" data-index="62">62 · Departamento · pasillo y baño</option>
+            <option value="taller-tda-2" data-tier="taller" data-tier-label="Taller" data-index="63">63 · TDA Básico</option>
+            <option value="taller-tda-3" data-tier="taller" data-tier-label="Taller" data-index="64">64 · TDA Completo</option>
+            <option value="taller-casa-peq" data-tier="taller" data-tier-label="Taller" data-index="65">65 · Casa pequeña</option>
+            <option value="taller-depto" data-tier="taller" data-tier-label="Taller" data-index="66">66 · Departamento</option>
+            <option value="taller-oficina" data-tier="taller" data-tier-label="Taller" data-index="67">67 · Oficina</option>
+            <option value="taller-comercial" data-tier="taller" data-tier-label="Taller" data-index="68">68 · Local comercial</option>
+            <option value="taller-restaurante" data-tier="taller" data-tier-label="Taller" data-index="69">69 · Restaurante</option>
+            <option value="taller-diag-corto" data-tier="taller" data-tier-label="Taller" data-index="70">70 · Diagnóstico · Cortocircuito TDA</option>
+            <option value="taller-diag-retorno" data-tier="taller" data-tier-label="Taller" data-index="71">71 · Diagnóstico · Retorno</option>
+            <option value="taller-proyecto-maestro" data-tier="taller" data-tier-label="Taller" data-index="72">72 · Proyecto Final Maestro</option>
+          </optgroup>
+        </select>
+      </label>
+      <p id="level-difficulty" class="difficulty" data-tier="basico">Básico · plantilla 1 de 72</p>
+      <p id="tier-blurb" class="tier-note">Un mando y el camino entre fase y neutro.</p>
+    </section>
+
+    <section class="board-card" aria-label="Tablero del simulador">
+      <div id="simulator-canvas"></div>
+      <div class="toolbar">
+        <div class="wire-tools" role="group" aria-label="Selector de cables">
+          <span class="toolbar-label">Cable</span>
+          <button class="wire-tool active" data-wire-type="fase" type="button"><i class="swatch fase"></i> Fase</button>
+          <button class="wire-tool" data-wire-type="neutro" type="button"><i class="swatch neutro"></i> Neutro</button>
+          <button class="wire-tool" data-wire-type="tierra" type="button"><i class="swatch tierra"></i> Tierra (PE)</button>
+          <button class="wire-tool" data-wire-type="eraser" type="button"><span style="margin-right: 4px;">✂</span> Borrador</button>
+        </div>
+        <div class="toolbar-actions">
+          <button id="wire-tda" class="button secondary" type="button" style="margin-right: 8px;">🔌 Cablear Tablero</button>
+          <button id="toggle-load-table" class="button secondary" type="button" style="margin-right: 8px;">📋 Cuadro de Cargas</button>
+          <button id="theme-toggle" class="button secondary" type="button" style="margin-right: 8px;">◑ Tema</button>
+          <button id="undo-wire" class="button secondary" type="button" style="margin-right: 8px;">↩ Deshacer</button>
+          <button id="clear-wires" class="button secondary" type="button">Limpiar todo</button>
+          <button id="next-level" class="button" type="button">Siguiente plantilla</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="status-grid">
+      <article class="status-card">
+        <span class="status-label">Estado del circuito</span>
+        <strong id="circuit-status" aria-live="polite">Circuito en Espera</strong>
+        <p id="circuit-help">Canaliza Fase (L) y Neutro (N) desde el tablero TDA hacia los mandos y artefactos según el objetivo.</p>
+      </article>
+      <article class="status-card instructions">
+        <span class="status-label">Objetivo</span>
+        <strong id="level-title">Dormitorio · interruptor 9/12</strong>
+        <p id="level-objective">Lleva la fase desde el tablero al 9/12, de su salida a la lámpara, y el neutro de la lámpara de vuelta al tablero. Cierra el interruptor.</p>
+        
+        <details class="tutorial-box" style="margin-top: 12px; background: var(--card-bg, rgba(0,0,0,0.2)); border: 1px solid var(--line); border-radius: 8px; padding: 10px;">
+          <summary style="cursor: pointer; color: var(--cyan); font-weight: bold; font-size: 0.9em;">📖 Ver tutorial paso a paso</summary>
+          <ol id="level-tutorial" style="margin: 8px 0 0 16px; padding: 0; color: var(--muted); font-size: 0.85em; line-height: 1.6;"></ol>
+        </details>
+    
+        <p id="level-parts" class="legend">Un interruptor 9/12 y una lámpara.</p>
+        <p class="legend"><span class="dot fase"></span> Fase <span class="dot neutro"></span> Neutro <span class="dot tierra"></span> Tierra (PE) <span class="dot carga"></span> Carga <span class="dot mando"></span> Mando</p>
+      </article>
+    </section>
+    <p class="disclaimer">Simulación técnica interactiva para el taller. Cumple con la normativa chilena SEC (Pliegos RIC): canalización de Fase, Neutro y Tierra de Protección (PE) obligatoria en tomacorrientes e instalaciones interiores.</p>
+  </main>
+  <script src="sketch.js"></script>
+</body>
+</html>
