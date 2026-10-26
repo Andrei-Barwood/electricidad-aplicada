@@ -2108,7 +2108,7 @@ const LEVELS = [
 
     {
     id: "principal",
-    headline: "Dormitorio Principal · Conmutada 9/24 y enchufe con tierra PE",
+    headline: "Dormitorio Principal · Doble efecto 9/15 y enchufe con tierra PE",
     objective: "Alumbrado de Dormitorio: Conecta la Fase desde la barra L del TDA al común del interruptor 9/15, canaliza sus retornos hacia los contactos centrales de las lámparas L1 y L2 y cierra con Neutro a los casquillos. Enchufe de Cabecera: Conecta Fase y Neutro desde el TDA al tomacorriente para suministro continuo de 220 V. Puesta a Tierra PE (Normativa RIC N°10): Conecta el cable verde desde la barra PE del TDA al borne PE del enchufe. Verificación: Comprueba el funcionamiento de las luminarias y la presencia de 220 V con tierra reglamentaria en el tomacorriente.",
     success: "Alumbrado y enchufe de cabecera con tierra PE operando conforme a norma RIC N°10.",
     parts: "Un interruptor 9/15, dos lámparas y un enchufe con tierra PE.",
