@@ -1,0 +1,478 @@
+/* ==========================================================================
+   UI Components - SubstationTopologySim
+   Elementos interactivos, paneles laterales, inputs y bibliotecas.
+   ========================================================================== */
+
+/* Secciones de panel */
+.panel-section {
+  padding: var(--space-md);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-sm);
+}
+
+.panel-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+}
+
+.panel-subtitle {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-md);
+}
+
+/* Biblioteca de componentes (Paleta) */
+.component-palette {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.palette-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 10px;
+  background-color: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  cursor: grab;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.palette-item:hover {
+  background-color: var(--color-bg-surface-hover);
+  border-color: var(--color-border-medium);
+  transform: translateX(2px);
+}
+
+.palette-item:active {
+  cursor: grabbing;
+}
+
+.palette-item-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-bg-base);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border-subtle);
+  flex-shrink: 0;
+}
+
+.palette-item-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.palette-item-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.palette-item-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.palette-item-desc {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+/* Botones */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-medium);
+  background-color: var(--color-bg-surface-elevated);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn:hover {
+  background-color: var(--color-bg-surface-hover);
+  border-color: var(--color-border-active);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
+}
+
+.btn-danger {
+  background-color: rgba(220, 38, 38, 0.15);
+  border-color: rgba(220, 38, 38, 0.4);
+  color: #fca5a5;
+}
+
+.btn-danger:hover {
+  background-color: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #ffffff;
+}
+
+.btn-icon {
+  padding: 6px;
+  width: 28px;
+  height: 28px;
+}
+
+.btn-icon svg {
+  width: 14px;
+  height: 14px;
+}
+
+.btn-icon.active {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+  color: #ffffff;
+}
+
+.btn-sm {
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.btn-group .btn {
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--color-border-subtle);
+}
+
+.btn-group .btn:last-child {
+  border-right: none;
+}
+
+/* Formularios del Inspector de Propiedades */
+.prop-group {
+  margin-bottom: var(--space-md);
+}
+
+.prop-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
+}
+
+.prop-input, .prop-select {
+  width: 100%;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-family: var(--font-family-sans);
+  background-color: var(--color-bg-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  transition: border-color 0.15s ease;
+}
+
+.prop-input:focus, .prop-select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent-focus);
+}
+
+.prop-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+}
+
+.prop-readonly {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+}
+
+/* Badges e indicadores visuales */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-family: var(--font-family-mono);
+  font-weight: 600;
+}
+
+.badge-closed {
+  background-color: rgba(239, 68, 68, 0.2);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.badge-open {
+  background-color: rgba(16, 185, 129, 0.2);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.4);
+}
+
+.badge-energized {
+  background-color: rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.badge-deenergized {
+  background-color: rgba(100, 116, 139, 0.2);
+  color: #cbd5e1;
+  border: 1px solid rgba(100, 116, 139, 0.4);
+}
+
+.badge-oos {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: #fdba74;
+  border: 1px solid rgba(249, 115, 22, 0.4);
+}
+
+/* Estado vacío en Inspector */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl) var(--space-md);
+  text-align: center;
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  width: 40px;
+  height: 40px;
+  stroke: var(--color-border-medium);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state-text {
+  font-size: 12px;
+}
+
+/* ==========================================================================
+   Selector de Topologías Predefinidas y Ficha Técnica (Fase 3)
+   ========================================================================== */
+.preset-tag-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  font-family: var(--font-family-mono);
+}
+
+.presets-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-md);
+}
+
+.preset-card-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  padding: 8px 10px;
+  background-color: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--color-text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.preset-card-btn:hover {
+  background-color: var(--color-bg-surface-hover);
+  border-color: var(--color-border-medium);
+  transform: translateX(2px);
+}
+
+.preset-card-btn.active {
+  border-color: #38bdf8;
+  background-color: rgba(56, 189, 248, 0.08);
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.3);
+}
+
+.preset-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 2px;
+}
+
+.preset-card-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.preset-card-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.preset-card-sub {
+  font-size: 10px;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-sans);
+}
+
+/* Ficha Técnica de Topología */
+.preset-tech-sheet {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm) var(--space-md);
+  margin-top: var(--space-sm);
+  animation: fadeIn 0.2s ease-in;
+}
+
+.tech-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 4px;
+  margin-bottom: 6px;
+}
+
+.tech-sheet-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #38bdf8;
+}
+
+.tech-sheet-std {
+  font-size: 9px;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+}
+
+.tech-sheet-desc {
+  font-size: 10px;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+  margin-bottom: 8px;
+}
+
+.tech-sheet-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  background: var(--color-bg-main);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  margin-bottom: 8px;
+  font-size: 10px;
+}
+
+.tech-meta-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.meta-label {
+  color: var(--color-text-muted);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta-val {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.tech-sheet-points {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.points-col {
+  font-size: 10px;
+}
+
+.points-title {
+  font-weight: 700;
+  font-size: 10px;
+  margin-bottom: 3px;
+  display: block;
+}
+
+.points-col.pros .points-title {
+  color: #34d399;
+}
+
+.points-col.cons .points-title {
+  color: #f87171;
+}
+
+.points-col ul {
+  padding-left: 14px;
+  margin: 0;
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}

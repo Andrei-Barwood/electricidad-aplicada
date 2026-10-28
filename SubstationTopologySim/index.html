@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubstationTopologySim — Simulador de Topologías de Subestaciones Eléctricas</title>
+  
+  <!-- Hojas de estilo modulares -->
+  <link rel="stylesheet" href="./src/styles/tokens.css">
+  <link rel="stylesheet" href="./src/styles/layout.css">
+  <link rel="stylesheet" href="./src/styles/editor.css">
+  <link rel="stylesheet" href="./src/styles/components.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header Superior -->
+    <header class="app-header">
+      <div class="header-brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+        </svg>
+        <span class="brand-title">SubstationTopologySim</span>
+        <span class="brand-badge">Fase 3 · Topologías Predefinidas</span>
+      </div>
+
+      <div class="header-actions">
+        <button id="btn-save-project" class="btn" title="Guardar proyecto localmente">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+            <polyline points="17 21 17 13 7 13 7 21"/>
+            <polyline points="7 3 7 8 15 8"/>
+          </svg>
+          Guardar
+        </button>
+        <button id="btn-load-project" class="btn" title="Recuperar proyecto de almacenamiento local">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="7 10 12 15 17 10"/>
+            <line x1="12" y1="15" x2="12" y2="3"/>
+          </svg>
+          Cargar
+        </button>
+        <div style="width: 1px; height: 24px; background: var(--color-border-subtle); margin: 0 4px;"></div>
+        <button id="btn-export-dxf" class="btn" disabled title="Disponible en Fase 7 (Exportador CAD)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 16 12 12 8 16"/>
+            <line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+          Exportar DXF
+        </button>
+      </div>
+    </header>
+
+    <!-- Espacio Principal de Trabajo -->
+    <main class="app-workspace">
+      <!-- Panel Lateral Izquierdo: Biblioteca y Presets -->
+      <aside class="sidebar-left">
+        <div class="panel-section">
+          <div class="panel-header">
+            <span class="panel-title">Biblioteca de Equipos</span>
+          </div>
+          <div class="panel-subtitle">Arrastra o haz clic para agregar al unifilar:</div>
+
+          <div class="component-palette">
+            <!-- Barra -->
+            <div class="palette-item" draggable="true" data-component-type="BUSBAR" title="Barra colectora principal o de transferencia">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <rect x="2" y="10" width="20" height="4" rx="1" fill="#38bdf8" />
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Barra Colectora</span>
+                <span class="palette-item-desc">Riel AT/MT</span>
+              </div>
+            </div>
+
+            <!-- Interruptor de Potencia -->
+            <div class="palette-item" draggable="true" data-component-type="CIRCUIT_BREAKER" title="Interruptor de potencia con capacidad de corte de cortocircuito">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2">
+                  <rect x="5" y="5" width="14" height="14" rx="2" fill="#1e293b"/>
+                  <line x1="8" y1="8" x2="16" y2="16" stroke="#ef4444" stroke-width="2"/>
+                  <line x1="16" y1="8" x2="8" y2="16" stroke="#ef4444" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Interruptor (CB)</span>
+                <span class="palette-item-desc">Apertura bajo carga</span>
+              </div>
+            </div>
+
+            <!-- Seccionador -->
+            <div class="palette-item" draggable="true" data-component-type="DISCONNECTOR" title="Seccionador de aislamiento galvánico visible">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#f1f5f9" stroke-width="2">
+                  <circle cx="12" cy="5" r="2" fill="#ffffff" />
+                  <circle cx="12" cy="19" r="2" fill="#10b981" />
+                  <line x1="12" y1="19" x2="17" y2="7" stroke="#10b981" stroke-width="2"/>
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Seccionador (DS)</span>
+                <span class="palette-item-desc">Aislamiento visible</span>
+              </div>
+            </div>
+
+            <!-- Transformador -->
+            <div class="palette-item" draggable="true" data-component-type="TRANSFORMER" title="Transformador de potencia de 2 devanados">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <circle cx="12" cy="9" r="6" />
+                  <circle cx="12" cy="15" r="6" stroke="#f97316" />
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Transformador</span>
+                <span class="palette-item-desc">2 devanados (AT/MT)</span>
+              </div>
+            </div>
+
+            <!-- Carga / Alimentador -->
+            <div class="palette-item" draggable="true" data-component-type="FEEDER_LOAD" title="Salida de alimentador o carga concentrada">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <line x1="12" y1="4" x2="12" y2="10" />
+                  <polygon points="12,20 6,10 18,10" fill="#0284c7" stroke="#38bdf8" />
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Alimentador / Carga</span>
+                <span class="palette-item-desc">Consumo industrial/red</span>
+              </div>
+            </div>
+
+            <!-- Fuente / Red -->
+            <div class="palette-item" draggable="true" data-component-type="SOURCE" title="Acometida de red o generador">
+              <div class="palette-item-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2">
+                  <circle cx="12" cy="12" r="8" />
+                  <path d="M 8 12 Q 10 9 12 12 T 16 12" stroke="#60a5fa" stroke-width="2" fill="none" />
+                </svg>
+              </div>
+              <div class="palette-item-info">
+                <span class="palette-item-name">Red / Generación</span>
+                <span class="palette-item-desc">Infeed equivalente</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selector de Topologías Predefinidas (Fase 3) -->
+        <div class="panel-section presets-section" id="presets-panel-container">
+          <!-- Renderizado dinámicamente por PresetsPanel -->
+        </div>
+      </aside>
+
+      <!-- Panel Central: Lienzo SVG y Controles de Navegación -->
+      <section class="canvas-container" id="canvas-container">
+        <!-- Controles flotantes en la esquina inferior derecha -->
+        <div class="canvas-floating-controls">
+          <div class="btn-group">
+            <button id="btn-tool-select" class="btn btn-icon active" title="Herramienta Selección (V)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 3l7 18 3-7 7-3L3 3z" />
+              </svg>
+            </button>
+            <button id="btn-tool-pan" class="btn btn-icon" title="Herramienta Panorámica (Espacio)">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/>
+                <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+                <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+                <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/>
+              </svg>
+            </button>
+          </div>
+
+          <div style="width: 1px; height: 20px; background: var(--color-border-subtle); margin: 0 2px;"></div>
+
+          <button id="btn-zoom-in" class="btn btn-icon" title="Acercar (+)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <line x1="11" y1="8" x2="11" y2="14"/>
+              <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+          </button>
+          <button id="btn-zoom-out" class="btn btn-icon" title="Alejar (-)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+          </button>
+          <button id="btn-zoom-fit" class="btn btn-icon" title="Ajustar a la vista">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15 3 21 3 21 9"/>
+              <polyline points="9 21 3 21 3 15"/>
+              <line x1="21" y1="3" x2="14" y2="10"/>
+              <line x1="3" y1="21" x2="10" y2="14"/>
+            </svg>
+          </button>
+          <button id="btn-zoom-reset" class="btn btn-icon" title="Restablecer 100%">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <text x="12" y="16" font-size="10" text-anchor="middle" fill="currentColor" font-weight="bold">1:1</text>
+            </svg>
+          </button>
+
+          <div style="width: 1px; height: 20px; background: var(--color-border-subtle); margin: 0 2px;"></div>
+
+          <button id="btn-toggle-grid" class="btn btn-icon active" title="Alternar Cuadrícula">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <line x1="3" y1="9" x2="21" y2="9"/>
+              <line x1="3" y1="15" x2="21" y2="15"/>
+              <line x1="9" y1="3" x2="9" y2="21"/>
+              <line x1="15" y1="3" x2="15" y2="21"/>
+            </svg>
+          </button>
+          <button id="btn-toggle-snap" class="btn btn-icon active" title="Ajuste a Cuadrícula (Snap)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="2"/>
+              <path d="M12 2v4M12 18v4M2 12h4M18 12h4"/>
+            </svg>
+          </button>
+
+          <div style="width: 1px; height: 20px; background: var(--color-border-subtle); margin: 0 2px;"></div>
+
+          <button id="btn-duplicate-selected" class="btn btn-icon" disabled title="Duplicar elemento (Ctrl+D)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+          </button>
+          <button id="btn-delete-selected" class="btn btn-icon btn-danger" disabled title="Eliminar elemento (Supr)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="3 6 5 6 21 6"/>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Panel Lateral Derecho: Inspector de Parámetros -->
+      <aside class="sidebar-right" id="properties-container">
+        <!-- Renderizado dinámico desde PropertiesPanel -->
+      </aside>
+    </main>
+
+    <!-- Barra de Estado Inferior -->
+    <footer class="app-statusbar">
+      <div class="statusbar-section">
+        <span class="status-indicator">
+          <span class="status-dot active"></span>
+          <span id="status-topology-summary">Topología Inicializada</span>
+        </span>
+        <span id="status-selection-info">Ningún elemento seleccionado</span>
+      </div>
+
+      <div class="statusbar-section">
+        <span id="status-component-count">0 componentes</span>
+        <span>Escala: <strong id="status-zoom-level">100%</strong></span>
+        <span>Rejilla: <strong>20px (Snap ON)</strong></span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Entrada del Módulo ES -->
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
