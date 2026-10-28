@@ -849,3 +849,219 @@ input:checked + .switch-slider:before {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.3); }
 }
+
+/* ==========================================================================
+   Panel de Confiabilidad y Contingencias N-1 (Fase 5)
+   ========================================================================== */
+.reliability-actions-bar {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.kpi-card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-bg-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.kpi-title {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 2px;
+}
+
+.kpi-value {
+  font-size: 16px;
+  font-weight: 700;
+  font-family: var(--font-family-mono);
+  color: #38bdf8;
+  line-height: 1.2;
+}
+
+.kpi-unit {
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+.worst-contingency-box {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-size: 11px;
+}
+
+.worst-title {
+  font-weight: 700;
+  color: #fca5a5;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.worst-desc {
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+/* Lista de Contingencias */
+.contingencies-count-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 9px;
+  font-family: var(--font-family-mono);
+  padding: 1px 6px;
+  border-radius: 10px;
+}
+
+.contingencies-table-container {
+  max-height: 380px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-base);
+}
+
+.contingencies-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.contingency-item {
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contingency-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.cont-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cont-asset-name {
+  font-weight: 700;
+  color: #f1f5f9;
+  font-size: 11px;
+}
+
+.cont-lost-mw {
+  font-size: 10px;
+  font-family: var(--font-family-mono);
+  font-weight: 700;
+}
+
+.lost-red {
+  color: #f87171;
+}
+
+.lost-green {
+  color: #34d399;
+}
+
+.cont-item-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+.cont-item-action {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 2px;
+}
+
+.btn-xs {
+  font-size: 9px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+}
+
+.btn-xs:hover {
+  background: var(--color-bg-surface-hover);
+  color: #f1f5f9;
+}
+
+/* Benchmark comparativo */
+.benchmark-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.benchmark-item {
+  background: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+}
+
+.bm-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.bm-rank {
+  font-weight: 700;
+  color: #38bdf8;
+  font-size: 11px;
+  margin-right: 6px;
+}
+
+.bm-name {
+  font-weight: 700;
+  color: #f1f5f9;
+  font-size: 11px;
+  flex: 1;
+}
+
+.bm-metrics {
+  display: flex;
+  gap: 10px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  margin-bottom: 6px;
+}
+
+.bm-bar-track {
+  width: 100%;
+  height: 6px;
+  background: var(--color-bg-base);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.bm-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #ef4444);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+}

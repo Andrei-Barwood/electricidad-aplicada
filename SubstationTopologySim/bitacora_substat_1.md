@@ -1,7 +1,7 @@
 # BITÁCORA DE INGENIERÍA — SubstationTopologySim
 **Documento de Control y Seguimiento de Desarrollo de Software Crítico**  
 **Identificador:** `bitacora_substat_1.md`  
-**Versión actual:** `0.4.0 (Fase 4)`  
+**Versión actual:** `0.5.0 (Fase 5)`  
 **Fecha:** 28 de octubre de 2026  
 **Rol responsable:** Senior Software Engineer / Technical Lead — Sistemas Eléctricos de Potencia & Simulación CAD  
 
@@ -28,8 +28,8 @@
 | **Fase 2** | **Modelo Eléctrico y Conectividad** | **COMPLETADA** | Nodos, terminales de conexión, enrutamiento ortogonal Manhattan, validador topológico, propagación de energización (BFS) y deslastre de carga. |
 | **Fase 3** | **Topologías Predefinidas** | **COMPLETADA** | Carga y verificación de las 6 configuraciones normalizadas (barra simple, transferencia, seccionada, anillo, interruptor y medio, doble barra) y ficha técnica interactiva. |
 | **Fase 4** | **Motor de Maniobras e Interbloqueos** | **COMPLETADA** | Máquina de estados, enclavamientos de seguridad (IEC 62271-102), bloqueo de seccionadores bajo carga, modo bypass y registro SOE. |
-| **Fase 5** | **Contingencias N-1 y Confiabilidad** | *Pendiente (Próxima)* | Cálculo de disponibilidad de componentes ($\lambda, \mu$), diagramas de bloques (RBD), Markov, potencia desconectada y cálculo riguroso de EENS. |
-| **Fase 6** | **Análisis Tecnoeconómico** | *Pendiente* | Modelado de inversión en equipos, costos de mantenimiento anual, penalización por EENS y costo anualizado comparable. |
+| **Fase 5** | **Contingencias N-1 y Confiabilidad** | **COMPLETADA** | Análisis iterativo N-1, cálculo riguroso de EENS (MWh/año), LOLE (h/año), LOLP, simulación de fallas y benchmark comparativo de las 6 topologías. |
+| **Fase 6** | **Análisis Tecnoeconómico** | *Pendiente (Próxima)* | Modelado de inversión en equipos (CAPEX), costos anuales de mantenimiento (OPEX), penalización por EENS y costo anualizado comparable. |
 | **Fase 7** | **Exportador CAD (ASCII DXF)** | *Pendiente* | Transformación geométrica mundo-CAD, capas por tipo de activo, asignación de colores por nivel de tensión y serialización DXF válida. |
 | **Fase 8** | **Validación Integral y Release** | *Pendiente* | Casos límite (tasas nulas, bucles, islas), pruebas de integración extremo a extremo y empaquetado para distribución. |
 
@@ -50,7 +50,7 @@ Se implementó una arquitectura en Vanilla ES Modules sin librerías pesadas:
 - Inspector de propiedades con edición y recálculo en tiempo real de disponibilidades.
 
 ### 3.3. Modelo Eléctrico, Nodos y Ramas Galvánicas (Fase 2)
-- **Ramas explícitas (`connections`):** Se implementó la abstracción de ramas eléctricas conectadas exclusivamente entre terminales identificados (`fromComponentId`, `fromTerminalId`, `toComponentId`, `toTerminalId`). No se infiere conectividad por proximidad gráfica.
+- **Ramas explícitas (`connections`):** Abstracción de ramas eléctricas conectadas exclusivamente entre terminales identificados (`fromComponentId`, `fromTerminalId`, `toComponentId`, `toTerminalId`).
 - **Validaciones de cableado en modelo:**
   - Prevención de conexiones de un terminal consigo mismo.
   - Detección y rechazo de conexiones duplicadas entre los mismos pares de terminales.
@@ -60,111 +60,128 @@ Se implementó una arquitectura en Vanilla ES Modules sin librerías pesadas:
 
 ### 3.4. Gestor de Cableado y Enrutamiento Ortogonal (Fase 2)
 - **`ConnectionManager` (`src/editor/connection-manager.js`):**
-  - Cableado interactivo: hacer clic en un terminal circular inicia la sesión de cableado; el cursor proyecta una línea guía elástica discontinua; un segundo clic sobre un terminal compatible sella la conexión galvánica.
-  - Enrutamiento ortogonal tipo Manhattan (esquinas limpias a 90° con puntos nodales centrales de inspección).
-  - Persistencia de ramas dinámicas: al arrastrar un equipo por el lienzo, todas las ramas conectadas a sus terminales se recalculan y deforman en tiempo real sin desconectarse.
-  - Selección y supresión independiente de ramas mediante la tecla `Supr` o botón de eliminación.
+  - Cableado interactivo mediante trazado elástico y ajuste ortogonal Manhattan (quiebres rectos a 90° con puntos nodales centrales de inspección).
+  - Persistencia de ramas dinámicas ante arrastre de equipos en tiempo real.
+  - Supresión y selección independiente de conexiones.
 
 ### 3.5. Validador Topológico y Propagación de Energización (Fase 2)
 - **`TopologyValidator` (`src/model/topology-validator.js`):**
   - Algoritmo de exploración de grafos por anchura (BFS) iniciado desde fuentes activas (`SOURCE` en estado `CLOSED`).
   - Conducción interna dependiente del estado del aparato (Barras conducen equipotencialmente; Interruptores y Seccionadores conducen si están `CLOSED`; Transformadores acoplan primario y secundario).
-  - Estado de energización reactivo:
-    - Cuando un interruptor o seccionador se conmuta a `OPEN`, el motor topológico detecta la interrupción del camino galvánico hacia aguas abajo.
-    - Los conductores y equipos afectados pasan inmediatamente a estado **DESENERGIZADO** (línea discontinua gris, pérdida de brillo).
-    - Las cargas pasan automáticamente a la lista de `unsuppliedLoads` (deslastre de carga).
+  - Estado de energización reactivo con detección automática de deslastre de carga (`unsuppliedLoads`).
 
 ### 3.6. Módulo de Topologías Normalizadas IEEE / IEC (Fase 3)
 - **`TopologyPresets` (`src/model/topology-presets.js`):**
-  Se desarrollaron los 6 esquemas unifilares normalizados con modelado paramétrico riguroso:
-  1. **Barra Simple (*Single Bus*):** 1 barra colectora de 220 kV, acometida con interruptor de cabecera y 3 bahías de salida (Trafo 220/66 kV, Trafo 220/23 kV y línea 220 kV).
-  2. **Barra Principal con Barra de Transferencia (*Main and Transfer Bus*):** 2 barras de 220 kV unidas mediante bahía de acoplamiento (*Bus Tie*) con interruptor comodín y seccionadores de bypass por circuito para mantenimiento sin interrupción.
-  3. **Barra Seccionada / Partida (*Sectionalized Bus*):** Barra dividida en dos secciones con interruptor de acoplamiento de sección flanqueado por seccionadores; permite confinar fallas y aislar secciones independientemente.
-  4. **Barra en Anillo (*Ring Bus*):** Polígono cerrado con 4 interruptores interconectados en bucle y seccionadores dobles por polo. Satisface el **Criterio N-1** de continuidad ante la apertura de cualquier interruptor individual.
-  5. **Interruptor y Medio (*Breaker-and-a-Half*, $1\,\frac{1}{2}$ CB):** 2 barras principales a 220 kV y calles de 3 interruptores en serie para alimentar 2 posiciones de circuito independientes (máxima continuidad para subestaciones troncales de transmisión).
-  6. **Doble Barra con Doble Interruptor (*Double Bus Double Breaker*):** 2 barras y 2 interruptores dedicados por cada circuito (máxima confiabilidad y disponibilidad $99.99\%$).
+  Modelado formal de las 6 topologías estándar de subestaciones:
+  1. **Barra Simple (*Single Bus*):** Riel único de 220 kV y 3 salidas protegidas.
+  2. **Barra Principal + Transferencia (*Main and Transfer Bus*):** Barras con campo de acoplamiento (*Bus Tie*) y bypass por posición.
+  3. **Barra Seccionada / Partida (*Sectionalized Bus*):** Confinamiento de fallas por partición de barra.
+  4. **Barra en Anillo (*Ring Bus*):** Lazo cerrado poligonal con cumplimiento estricto del criterio N-1.
+  5. **Interruptor y Medio (*Breaker-and-a-Half*, $1\,\frac{1}{2}$ CB):** Calles de 3 interruptores para 2 circuitos independientes entre dos barras principales.
+  6. **Doble Barra con Doble Interruptor (*Double Bus Double Breaker*):** 2 interruptores dedicados por cada circuito (disponibilidad $99.99\%$).
 
 ### 3.7. Interfaz de Selección y Ficha Técnica de Ingeniería (Fase 3)
 - **`PresetsPanel` (`src/ui/presets-panel.js`):**
-  - Menú interactivo integrado en el panel lateral izquierdo con insignias de confiabilidad por colores.
-  - Carga con un solo clic, limpieza de sesión previa, reseteo de identificadores y auto-encuadre (*Zoom to Fit*).
-  - Panel de **Ficha Técnica**: despliega estándar de referencia (IEEE C37 / IEC 61936-1), costo relativo estimado de inversión (CAPEX), nivel de confiabilidad, resumen operacional, ventajas y limitaciones técnicas.
+  - Selector interactivo con insignias de confiabilidad y estándares.
+  - Ficha técnica reactiva con resumen de ingeniería, ventajas, limitaciones y costo relativo CAPEX.
 
 ### 3.8. Motor de Enclavamientos de Seguridad Operacional (Fase 4)
 - **`InterlockingEngine` (`src/model/interlocking-engine.js`):**
   Implementa las reglas formales de seguridad operacional según **IEC 62271-102**:
-  - **Regla R1 (Apertura de seccionador bajo carga):** Los seccionadores carecen de medios de extinción de arco. Se bloquea terminantemente su apertura si el interruptor de potencia asociado en serie está cerrado (`CLOSED`) y conduciendo corriente.
-  - **Regla R2 (Secuencia segura de energización):** Se prohíbe cerrar un seccionador si el interruptor de potencia asociado ya está cerrado y energizado. El interruptor es siempre el último en cerrar.
-  - **Regla R3 (Enclavamiento LOTO):** Bloqueo total de conmutación sobre equipos consignados en mantenimiento (`OUT_OF_SERVICE`).
-  - **Modo Bypass / Override de Emergencia:** Switch de control que permite a operadores calificados forzar maniobras excepcionales emitiendo alarmas críticas en la bitácora.
+  - Bloqueo de apertura/cierre de seccionadores bajo carga (no operar si el interruptor asociado está cerrado).
+  - Secuencia segura de energización (el interruptor es el último en cerrar).
+  - Bloqueo de consignación y mantenimiento LOTO (`OUT_OF_SERVICE`).
+  - Modo Bypass / Override de emergencia con registro de auditoría.
 
 ### 3.9. Secuencia Cronológica de Eventos SOE (Fase 4)
 - **`SequenceOfEvents` (`src/model/sequence-of-events.js`):**
   - Registro de alta resolución con sellado de tiempo en milisegundos (`HH:MM:SS.mmm`).
-  - Clasificación de eventos: `INFO`, `SUCCESS`, `WARNING`, `BLOCKED`, `ALARM`.
-  - Capacidad de filtrado dinámico y exportación completa a archivo CSV (`exportToCSV`).
+  - Exportación a CSV y filtros por severidad.
 
 ### 3.10. Panel de Maniobras y Control Interactivo SVG (Fase 4)
-- **`SoePanel` (`src/ui/soe-panel.js`) & `PropertiesPanel` (`src/ui/properties-panel.js`):**
-  - Panel lateral derecho con pestañas desacopladas: `Inspector` y `Maniobras (SOE)`.
-  - Botones de acción rápida: `Conmutar [I/O]`, `Abrir [O]`, `Cerrar [I]` con validación inmediata por enclavamiento.
-  - Doble clic interactivo sobre cualquier interruptor o seccionador en el lienzo SVG para solicitar maniobra directa.
-  - Animación visual de alerta (`interlock-flash-blocked`) con resplandor rojo en el símbolo SVG ante intentos de maniobras prohibidas.
+- Pestañas desacopladas en panel derecho: `Inspector` y `Maniobras (SOE)`.
+- Botones de acción rápida: `Conmutar [I/O]`, `Abrir [O]`, `Cerrar [I]`.
+- Doble clic en lienzo SVG para conmutar equipos con animación de resplandor rojo ante bloqueos.
+
+### 3.11. Motor de Contingencias N-1 y Confiabilidad Probabilística (Fase 5)
+- **`ReliabilityEngine` (`src/model/reliability-engine.js`):**
+  Implementa el análisis probabilístico de confiabilidad basado en **IEEE Gold Book (Std 493)** y lineamientos **CIGRE**:
+  - **Simulación Iterativa N-1:** Desconecta ordenadamente cada activo candidato (interruptores, seccionadores, barras, transformadores y fuentes) y calcula la potencia deslastrada ($\Delta P$ en MW).
+  - **Cálculo de EENS (Energía Esperada No Suministrada):**
+    $$\text{EENS} = \sum_{k} P_{\text{cortada}, k} \cdot (\lambda_k \cdot \text{MTTR}_k) \quad [\text{MWh/año}]$$
+  - **Cálculo de LOLE (Loss of Load Expectation) y LOLP:**
+    $$\text{LOLE} = \sum_{k \mid P_k > 0} (\lambda_k \cdot \text{MTTR}_k) \quad [\text{horas/año}], \quad \text{LOLP} = \frac{\text{LOLE}}{8760}$$
+  - **Identificación de Contingencias Críticas y Peor Caso:** Detecta el activo cuya falla representa el mayor riesgo para la continuidad del suministro.
+  - **Benchmark Comparativo Automatizado:** Evalúa y clasifica las 6 topologías normalizadas ordenadas de menor a mayor EENS.
+
+### 3.12. Dashboard de Confiabilidad y Simulación de Fallas en UI (Fase 5)
+- **`ReliabilityPanel` (`src/ui/reliability-panel.js` e `index.html`):**
+  - Tercera pestaña dedicada en el panel lateral derecho: `N-1 Confiabilidad`.
+  - **Dashboard de KPIs:** Tarjetas métricas de EENS, LOLE, LOLP y verificación de cumplimiento del Criterio N-1.
+  - **Simulación de Falla Interactiva:** Botón `Simular Disparo` al lado de cada contingencia para aislar el equipo en tiempo real y observar visualmente en el lienzo SVG el impacto galvánico.
+  - **Matriz de Benchmark:** Visualización gráfica con barras de EENS vs inversión CAPEX relativa entre las 6 configuraciones.
 
 ---
 
 ## 4. Verificación Automatizada (Pruebas Unitarias)
 
-Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (28 de 28 pruebas en verde, 0 fallos)**:
+Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (32 de 32 pruebas en verde, 0 fallos)**:
 
 ```text
 ▶ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine)
-  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (30.01ms)
-  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (1.15ms)
-  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (0.66ms)
-  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (0.82ms)
-  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (0.58ms)
-  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (0.90ms)
-✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (34.92ms)
+  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (33.4ms)
+  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (1.2ms)
+  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (0.6ms)
+  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (0.8ms)
+  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (0.6ms)
+  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (0.9ms)
+✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (38.4ms)
 
 ▶ Modelo de Componentes Eléctricos
-  ✔ debe crear un Interruptor de Potencia con parámetros físicos y de confiabilidad consistentes (0.55ms)
-  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.14ms)
+  ✔ debe crear un Interruptor de Potencia con parámetros físicos y de confiabilidad consistentes (1.0ms)
+  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.1ms)
   ✔ debe asignar terminales coherentes a una Barra Colectora (0.07ms)
-✔ Modelo de Componentes Eléctricos (1.36ms)
+✔ Modelo de Componentes Eléctricos (1.9ms)
 
 ▶ NetworkModel (Grafo de Red)
-  ✔ debe permitir agregar, consultar, actualizar y remover componentes (0.46ms)
-  ✔ debe rechazar la inserción de componentes con id duplicado (0.27ms)
-  ✔ debe serializar y deserializar a JSON sin perder atributos (0.78ms)
-✔ NetworkModel (Grafo de Red) (1.62ms)
+  ✔ debe permitir agregar, consultar, actualizar y remover componentes (0.4ms)
+  ✔ debe rechazar la inserción de componentes con id duplicado (0.2ms)
+  ✔ debe serializar y deserializar a JSON sin perder atributos (1.5ms)
+✔ NetworkModel (Grafo de Red) (2.5ms)
+
+▶ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine)
+  ✔ debe calcular correctamente los índices de confiabilidad N-1 en Barra Simple (4.2ms)
+  ✔ debe verificar que la apertura de interruptores en Barra en Anillo cumple N-1 (0 MW perdidos) (2.8ms)
+  ✔ debe verificar redundancia de barra total en Doble Barra con Doble Interruptor (2.7ms)
+  ✔ debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS (12.3ms)
+✔ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine) (22.9ms)
 
 ▶ Fase 3: Módulo de Topologías Predefinidas (Presets)
-  ✔ debe contener los 6 esquemas normalizados en los metadatos (0.56ms)
-  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (2.01ms)
-  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (1.28ms)
-  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (1.31ms)
-  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (1.12ms)
-  ✔ debe cargar Interruptor y Medio y mantener servicio ante pérdida de una barra colectora (2.18ms)
-  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (1.05ms)
-  ✔ debe rechazar una clave de topología no registrada (0.50ms)
-✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (11.17ms)
+  ✔ debe contener los 6 esquemas normalizados en los metadatos (0.6ms)
+  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (2.4ms)
+  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (1.3ms)
+  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (1.7ms)
+  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (1.0ms)
+  ✔ debe cargar Interruptor y Medio y mantener servicio ante pérdida de una barra colectora (2.1ms)
+  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (2.0ms)
+  ✔ debe rechazar una clave de topología no registrada (0.2ms)
+✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (12.6ms)
 
 ▶ Gestión de Conexiones Galvánicas (Ramas)
-  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (0.85ms)
-  ✔ debe rechazar la conexión de un terminal consigo mismo (0.21ms)
-  ✔ debe impedir conexiones duplicadas directas entre los mismos terminales (0.15ms)
-  ✔ eliminar un componente debe purgar automáticamente todas sus conexiones asociadas (0.22ms)
-✔ Gestión de Conexiones Galvánicas (Ramas) (2.13ms)
+  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (1.1ms)
+  ✔ debe rechazar la conexión de un terminal consigo mismo (0.3ms)
+  ✔ debe impedir conexiones duplicadas directas entre los mismos terminales (0.1ms)
+  ✔ eliminar un componente debe purgar automáticamente todas sus conexiones asociadas (0.2ms)
+✔ Gestión de Conexiones Galvánicas (Ramas) (2.6ms)
 
 ▶ Validación Topológica y Flujo de Energización (BFS)
-  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.23ms)
-  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.24ms)
-  ✔ debe emitir advertencia ante discrepancia directa de tensión sin transformador (0.15ms)
-  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.28ms)
-✔ Validación Topológica y Flujo de Energización (BFS) (2.19ms)
+  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.2ms)
+  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.3ms)
+  ✔ debe emitir advertencia ante discrepancia directa de tensión sin transformador (0.2ms)
+  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.2ms)
+✔ Validación Topológica y Flujo de Energización (BFS) (2.4ms)
 
-ℹ Total: 28 tests en 6 suites | 28 aprobados | 0 fallos | 101.0ms
+ℹ Total: 32 tests en 7 suites | 32 aprobados | 0 fallos | 107.3ms
 ```
 
 ---
@@ -172,38 +189,40 @@ Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js
 ## 5. Registro de Decisiones de Arquitectura (ADR)
 
 - **ADR-01: Separación estricta entre Modelo y Vista SVG:**  
-  Las conexiones no son elementos visuales desconectados: son ramas con identificadores estables en el `NetworkModel`. Si se mueve la posición de un equipo, las ramas se deforman ortogonalmente sin alterar la conectividad eléctrica.
+  Las conexiones son ramas con identificadores estables en el `NetworkModel` con enrutamiento ortogonal dinámico.
 - **ADR-02: Propagación Galvánica mediante BFS Determinista:**  
-  Recorrido determinista por anchura sobre el grafo galvánico que evalúa estados de aislamiento y acoplamiento según la posición física de contactos de seccionadores e interruptores.
+  Recorrido en grafo que evalúa estados de aislamiento y acoplamiento según la posición física de contactos.
 - **ADR-03: Enrutamiento Ortogonal Dinámico Manhattan:**  
-  Cálculo de rutas ortogonales con quiebres a 90° para representación fidedigna de planos unifilares normalizados y compatibilidad con trazados CAD DXF.
+  Cálculo de rutas a 90° estándar en planos unifilares y CAD DXF.
 - **ADR-04: Metadatos de Ingeniería Desacoplados y Paramétricos para Topologías:**  
-  Cada topología cuenta con un objeto de metadatos estandarizado con parámetros normalizados (estándar, confiabilidad, costos relativos CAPEX, ventajas y limitaciones) independiente del renderizado del DOM.
+  Parámetros técnicos de referencia normalizados independientes de la capa gráfica.
 - **ADR-05: Carga Declarativa Atómica y Limpieza con Reseteo de Contadores:**  
-  Al invocar un preset, el modelo ejecuta un ciclo seguro de purga (`networkModel.clear()`) y resetea los contadores de nombres de ingeniería para asegurar determinismo total en los identificadores de terminales y ramas.
+  Garantiza determinismo en identificadores de terminales y ramas al cambiar de topología.
 - **ADR-06: Capa de Interbloqueo Mediada por Reglas Físicas (IEC 62271-102):**  
-  Las maniobras de apertura/cierre no modifican el modelo directamente; pasan obligatoriamente por el `InterlockingEngine`. Si se detecta un interruptor cerrado en serie conduciendo corriente, la maniobra se intercepta y rechaza antes de alterar el grafo galvánico.
+  Intercepta maniobras indebidas impidiendo la apertura de seccionadores bajo carga.
 - **ADR-07: Doble Canal de Notificación de Maniobras (SOE + Alerta Visual SVG):**  
-  Toda maniobra (exitosa o bloqueada) genera un evento inmutable en el registro cronológico SOE y activa simultáneamente retroalimentación sensorial (resplandor de advertencia SVG y toast explicativo).
+  Registro en milisegundos y retroalimentación sensorial instantánea en el esquema unifilar.
+- **ADR-08: Evaluación No Destructiva de Contingencias N-1:**  
+  El análisis N-1 itera sobre copias de estado sin alterar permanentemente el modelo del usuario, restaurando automáticamente la condición operacional base.
+- **ADR-09: Benchmark Comparativo Desacoplado con Auto-Restauración:**  
+  La ejecución del benchmark de las 6 topologías serializa y restaura el proyecto en memoria sin pérdida de trabajo.
 
 ---
 
-## 6. Próxima Fase a Ejecutar: Fase 5 (Contingencias N-1 y Confiabilidad)
+## 6. Próxima Fase a Ejecutar: Fase 6 (Análisis Tecnoeconómico)
 
 ### Objetivos técnicos inmediatos:
-1. **Modelado Probabilístico de Confiabilidad de Activos:**
-   - Tasas de falla ($\lambda$), tiempos medios de reparación ($\text{MTTR}$, $\mu$).
-   - Disponibilidad intrínseca ($A = \frac{\mu}{\lambda + \mu}$) e indisponibilidad ($U = 1 - A$).
-2. **Motor de Análisis Estático de Contingencias N-1:**
-   - Simulación iterativa de pérdida de cada activo individual (cada interruptor, seccionador, barra o trafo).
-   - Detección automática de islas eléctricas y potencia deslastrada ($\Delta P$).
-3. **Cálculo Riguroso de Índices de Confiabilidad:**
-   - EENS (Energía Esperada No Suministrada en $\text{MWh/año} = \sum P_{\text{cortada}} \cdot U \cdot 8760$).
-   - LOLE (Loss of Load Expectation en $\text{horas/año}$) y LOLP.
-4. **Matriz Comparativa de Confiabilidad entre las 6 Topologías:**
-   - Tabla interactiva que clasifique las topologías de mayor a menor resiliencia N-1.
+1. **Modelado de Costos de Inversión (CAPEX):**
+   - Costos unitarios de adquisición y montaje (USD) por tipo de equipo y nivel de tensión (220 kV, 66 kV, 23 kV).
+   - Costo de obras civiles, terreno de patio y sistema de control/protecciones.
+2. **Costos Anuales de Operación y Mantenimiento (OPEX):**
+   - Costo preventivo y correctivo anualizado según tasas de falla ($\lambda, \text{MTTR}$).
+3. **Costo de Energía No Suministrada (CENS / Penalizaciones Regulatorias):**
+   - Valoración económica del EENS ($\text{USD/MWh}$ según estándar regulatorio nacional / SEC / CNE).
+4. **Costo Total Anualizado Comparable (TAC / LCC):**
+   - Tasa de descuento ($r$), vida útil del proyecto ($N = 25\text{ a 30 años}$) y comparación económica global entre las 6 topologías.
 
 ---
 
-*Fin del registro de bitácora actualizado para la Fase 4.*  
+*Fin del registro de bitácora actualizado para la Fase 5.*  
 *El archivo ha quedado persistido en [bitacora_substat_1.md](file:///Users/andreibarwood/Documents/CFT/electricidad_aplicada/bitacora_substat_1.md).*

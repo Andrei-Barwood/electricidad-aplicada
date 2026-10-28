@@ -13,6 +13,7 @@ import { Toolbar } from '../ui/toolbar.js';
 import { PropertiesPanel } from '../ui/properties-panel.js';
 import { PresetsPanel } from '../ui/presets-panel.js';
 import { SoePanel } from '../ui/soe-panel.js';
+import { ReliabilityPanel } from '../ui/reliability-panel.js';
 import { TOPOLOGY_PRESET_KEYS } from '../model/topology-presets.js';
 import { SequenceOfEvents } from '../model/sequence-of-events.js';
 import { InterlockingEngine } from '../model/interlocking-engine.js';
@@ -85,6 +86,16 @@ export class Application {
       );
     }
 
+    const relContainer = document.getElementById('reliability-panel-container');
+    if (relContainer) {
+      this.reliabilityPanel = new ReliabilityPanel(
+        relContainer,
+        this.networkModel,
+        this.eventBus,
+        this.svgEditor
+      );
+    }
+
     this.initTabs();
     this.initPalette();
     this.subscribeGlobalEvents();
@@ -95,7 +106,7 @@ export class Application {
       this.loadInitialSchematic();
     }
 
-    console.info('[SubstationTopologySim] Fase 4 inicializada: Motor de maniobras e interbloqueos activo.');
+    console.info('[SubstationTopologySim] Fase 5 inicializada: Motor de contingencias N-1 y confiabilidad activo.');
   }
 
   /**
@@ -104,21 +115,23 @@ export class Application {
   initTabs() {
     const tabBtnProp = document.getElementById('tab-btn-properties');
     const tabBtnSoe = document.getElementById('tab-btn-soe');
+    const tabBtnRel = document.getElementById('tab-btn-reliability');
     const tabContentProp = document.getElementById('tab-content-properties');
     const tabContentSoe = document.getElementById('tab-content-soe');
+    const tabContentRel = document.getElementById('tab-content-reliability');
 
-    tabBtnProp?.addEventListener('click', () => {
-      tabBtnProp.classList.add('active');
-      tabBtnSoe?.classList.remove('active');
-      tabContentProp?.classList.add('active');
-      tabContentSoe?.classList.remove('active');
-    });
+    const activateTab = (activeBtn, activeContent) => {
+      [tabBtnProp, tabBtnSoe, tabBtnRel].forEach(btn => btn?.classList.remove('active'));
+      [tabContentProp, tabContentSoe, tabContentRel].forEach(c => c?.classList.remove('active'));
+      activeBtn?.classList.add('active');
+      activeContent?.classList.add('active');
+    };
 
-    tabBtnSoe?.addEventListener('click', () => {
-      tabBtnSoe.classList.add('active');
-      tabBtnProp?.classList.remove('active');
-      tabContentSoe?.classList.add('active');
-      tabContentProp?.classList.remove('active');
+    tabBtnProp?.addEventListener('click', () => activateTab(tabBtnProp, tabContentProp));
+    tabBtnSoe?.addEventListener('click', () => activateTab(tabBtnSoe, tabContentSoe));
+    tabBtnRel?.addEventListener('click', () => {
+      activateTab(tabBtnRel, tabContentRel);
+      this.reliabilityPanel?.runAnalysis();
     });
 
     this.eventBus.on('soe:event-logged', () => {
@@ -126,7 +139,7 @@ export class Application {
       if (badge) badge.textContent = this.soe.events.length;
     });
 
-    // Si se bloquea una maniobra, alternar temporalmente o alertar en pestaña SOE
+    // Si se bloquea una maniobra, alertar en pestaña SOE
     this.eventBus.on('interlocking:blocked', () => {
       const badge = document.getElementById('tab-soe-badge');
       if (badge) {

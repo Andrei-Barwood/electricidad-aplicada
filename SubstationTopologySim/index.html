@@ -20,7 +20,7 @@
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
         <span class="brand-title">SubstationTopologySim</span>
-        <span class="brand-badge">Fase 4 · Maniobras e Interbloqueos</span>
+        <span class="brand-badge">Fase 5 · Contingencias N-1 y Confiabilidad</span>
       </div>
 
       <div class="header-actions">
@@ -243,15 +243,18 @@
         </div>
       </section>
 
-      <!-- Panel Lateral Derecho: Inspector de Parámetros y SOE -->
+      <!-- Panel Lateral Derecho: Inspector, SOE y Confiabilidad N-1 -->
       <aside class="sidebar-right">
         <div class="sidebar-tabs-nav">
           <button id="tab-btn-properties" class="sidebar-tab-btn active" title="Inspector de Equipos y Ramas">
             Inspector
           </button>
           <button id="tab-btn-soe" class="sidebar-tab-btn" title="Secuencia de Eventos y Enclavamientos">
-            Maniobras (SOE)
+            Maniobras
             <span class="tab-badge-counter" id="tab-soe-badge">0</span>
+          </button>
+          <button id="tab-btn-reliability" class="sidebar-tab-btn" title="Análisis de Confiabilidad y Contingencias N-1">
+            N-1 Confiabilidad
           </button>
         </div>
 
@@ -261,6 +264,10 @@
 
         <div id="tab-content-soe" class="sidebar-tab-content">
           <div id="soe-panel-container"></div>
+        </div>
+
+        <div id="tab-content-reliability" class="sidebar-tab-content">
+          <div id="reliability-panel-container"></div>
         </div>
       </aside>
     </main>
