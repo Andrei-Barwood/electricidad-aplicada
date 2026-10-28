@@ -1,0 +1,256 @@
+/* ==========================================================================
+   Editor CSS - SubstationTopologySim
+   Estilos específicos del lienzo SVG, renderizado de componentes y controles.
+   ========================================================================== */
+
+.canvas-viewport {
+  width: 100%;
+  height: 100%;
+  display: block;
+  cursor: crosshair;
+}
+
+.canvas-viewport.mode-pan {
+  cursor: grab;
+}
+
+.canvas-viewport.mode-pan:active {
+  cursor: grabbing;
+}
+
+.canvas-viewport.mode-wiring {
+  cursor: crosshair;
+}
+
+/* Rejilla de fondo SVG */
+.grid-pattern-minor line {
+  stroke: var(--grid-line-minor);
+  stroke-width: 1;
+}
+
+.grid-pattern-major line {
+  stroke: var(--grid-line-major);
+  stroke-width: 1.25;
+}
+
+/* Agrupaciones de componentes */
+.substation-component {
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.substation-component:hover {
+  filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
+}
+
+.substation-component.energized {
+  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4));
+}
+
+.substation-component.dragging {
+  cursor: grabbing;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+}
+
+.substation-component.selected .component-selection-bbox {
+  display: block;
+}
+
+.component-selection-bbox {
+  display: none;
+  fill: var(--canvas-selection-box);
+  stroke: var(--canvas-selection-border);
+  stroke-width: 1.5;
+  stroke-dasharray: 4 2;
+  pointer-events: none;
+}
+
+/* Terminales / Pines de conexión */
+.component-terminal {
+  fill: #0ea5e9;
+  stroke: #ffffff;
+  stroke-width: 1.5;
+  cursor: crosshair;
+  transition: r 0.15s ease, fill 0.15s ease;
+}
+
+.component-terminal:hover {
+  r: 6;
+  fill: #38bdf8;
+  filter: drop-shadow(0 0 6px #38bdf8);
+}
+
+.component-terminal.connected {
+  fill: #10b981;
+}
+
+.component-terminal.energized {
+  fill: #ef4444;
+}
+
+/* Ramas Eléctricas / Conexiones */
+.electrical-connection {
+  cursor: pointer;
+}
+
+.electrical-connection .connection-line {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.25s ease, stroke-width 0.15s ease;
+}
+
+.electrical-connection.energized .connection-line {
+  stroke: #ef4444;
+  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+}
+
+.electrical-connection.deenergized .connection-line {
+  stroke: #64748b;
+  stroke-dasharray: 4 3;
+}
+
+.electrical-connection:hover .connection-line {
+  stroke-width: 3.5;
+  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
+}
+
+.electrical-connection.selected .connection-line {
+  stroke: #3b82f6 !important;
+  stroke-width: 3.5;
+  stroke-dasharray: 5 2;
+}
+
+.connection-junction-dot {
+  fill: #38bdf8;
+  stroke: #090d14;
+  stroke-width: 1;
+  transition: fill 0.25s ease;
+}
+
+.electrical-connection.energized .connection-junction-dot {
+  fill: #ef4444;
+}
+
+.wiring-preview {
+  stroke: #38bdf8;
+  stroke-width: 2;
+  stroke-dasharray: 5 4;
+  pointer-events: none;
+}
+
+/* Símbolos eléctricos */
+.symbol-busbar-body {
+  stroke-linecap: round;
+  transition: stroke 0.2s ease;
+}
+
+.symbol-body {
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.symbol-breaker-box {
+  stroke: #f1f5f9;
+  stroke-width: 2;
+  fill: #1e293b;
+}
+
+.symbol-breaker-cross {
+  stroke: #ef4444;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.symbol-breaker-cross.state-open {
+  display: none;
+}
+
+.symbol-breaker-open-indicator {
+  stroke: #10b981;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.symbol-disconnector-blade {
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  transition: transform 0.25s ease-out;
+  transform-origin: center;
+}
+
+.symbol-transformer-winding {
+  stroke-width: 2.2;
+  fill: none;
+}
+
+/* Etiquetas técnicas SVG */
+.component-label {
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--color-text-primary);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.component-sublabel {
+  font-family: var(--font-family-mono);
+  font-size: 9px;
+  fill: var(--color-text-secondary);
+  text-anchor: middle;
+  pointer-events: none;
+  user-select: none;
+}
+
+.state-badge-text {
+  font-family: var(--font-family-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+/* Barra flotante de controles del lienzo */
+.canvas-floating-controls {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  display: flex;
+  align-items: center;
+  background-color: rgba(23, 31, 44, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  gap: 4px;
+  box-shadow: var(--shadow-md);
+  z-index: 15;
+}
+
+.canvas-floating-info {
+  position: absolute;
+  top: var(--space-md);
+  left: var(--space-md);
+  background-color: rgba(23, 31, 44, 0.85);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 4px 10px;
+  font-family: var(--font-family-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  pointer-events: none;
+  z-index: 15;
+}
+
+/* Overlay de arrastre desde paleta */
+.drag-ghost {
+  position: fixed;
+  pointer-events: none;
+  opacity: 0.8;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
+}

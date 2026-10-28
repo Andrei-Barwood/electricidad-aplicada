@@ -1,0 +1,83 @@
+/* ==========================================================================
+   Design Tokens - SubstationTopologySim
+   Paleta industrial / SCADA moderna inspirada en centros de control eléctrico.
+   ========================================================================== */
+
+:root {
+  /* Paleta base de interfaz (Dark Engineering Theme) */
+  --color-bg-base: #0f141c;
+  --color-bg-surface: #171f2c;
+  --color-bg-surface-elevated: #1f2a3a;
+  --color-bg-surface-hover: #273548;
+  --color-bg-canvas: #090d14;
+  
+  --color-border-subtle: #243042;
+  --color-border-medium: #33445c;
+  --color-border-active: #3b82f6;
+
+  /* Tipografía y textos */
+  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --color-text-primary: #f1f5f9;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #090d14;
+
+  /* Estados eléctricos y de maniobra (IEC / IEEE con doble codificación: color + símbolo) */
+  --color-state-closed: #ef4444;       /* Rojo: circuito cerrado / energizado / vivo */
+  --color-state-open: #10b981;         /* Verde: circuito abierto / aislado / seguro para tocar */
+  --color-state-energized: #ef4444;    /* Energizado activo */
+  --color-state-deenergized: #475569;  /* Desenergizado inactivo */
+  --color-state-grounded: #eab308;     /* Puesta a tierra */
+  --color-state-maintenance: #f97316;  /* Fuera de servicio / Bloqueo enclavado */
+  --color-state-fault: #dc2626;        /* Falla / Disparo */
+
+  /* Niveles de tensión unifilares típicos */
+  --voltage-500kv: #e11d48;
+  --voltage-220kv: #f97316;
+  --voltage-110kv: #eab308;
+  --voltage-66kv:  #10b981;
+  --voltage-23kv:  #06b6d4;
+  --voltage-13kv:  #3b82f6;
+  --voltage-default: #38bdf8;
+
+  /* Rejilla y guía CAD */
+  --grid-line-major: rgba(255, 255, 255, 0.08);
+  --grid-line-minor: rgba(255, 255, 255, 0.03);
+  --canvas-selection-box: rgba(59, 130, 246, 0.2);
+  --canvas-selection-border: #3b82f6;
+
+  /* UI Interacciones */
+  --color-accent: #2563eb;
+  --color-accent-hover: #1d4ed8;
+  --color-accent-focus: rgba(37, 99, 235, 0.35);
+
+  --color-danger: #dc2626;
+  --color-warning: #f59e0b;
+  --color-success: #10b981;
+  --color-info: #0284c7;
+
+  /* Espaciado y radios */
+  --space-2xs: 2px;
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+
+  /* Elevaciones */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
+
+  /* Tamaños fijos de paneles */
+  --header-height: 52px;
+  --sidebar-left-width: 260px;
+  --sidebar-right-width: 320px;
+  --statusbar-height: 32px;
+}
