@@ -20,7 +20,7 @@
           <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
         </svg>
         <span class="brand-title">SubstationTopologySim</span>
-        <span class="brand-badge">Fase 3 · Topologías Predefinidas</span>
+        <span class="brand-badge">Fase 4 · Maniobras e Interbloqueos</span>
       </div>
 
       <div class="header-actions">
@@ -243,9 +243,25 @@
         </div>
       </section>
 
-      <!-- Panel Lateral Derecho: Inspector de Parámetros -->
-      <aside class="sidebar-right" id="properties-container">
-        <!-- Renderizado dinámico desde PropertiesPanel -->
+      <!-- Panel Lateral Derecho: Inspector de Parámetros y SOE -->
+      <aside class="sidebar-right">
+        <div class="sidebar-tabs-nav">
+          <button id="tab-btn-properties" class="sidebar-tab-btn active" title="Inspector de Equipos y Ramas">
+            Inspector
+          </button>
+          <button id="tab-btn-soe" class="sidebar-tab-btn" title="Secuencia de Eventos y Enclavamientos">
+            Maniobras (SOE)
+            <span class="tab-badge-counter" id="tab-soe-badge">0</span>
+          </button>
+        </div>
+
+        <div id="tab-content-properties" class="sidebar-tab-content active">
+          <div id="properties-container"></div>
+        </div>
+
+        <div id="tab-content-soe" class="sidebar-tab-content">
+          <div id="soe-panel-container"></div>
+        </div>
       </aside>
     </main>
 

@@ -4,7 +4,7 @@
  * estados operativos y confiabilidad.
  */
 
-import { OperationalState } from '../model/components.js';
+import { ComponentType, OperationalState } from '../model/components.js';
 
 export class PropertiesPanel {
   /**
@@ -12,12 +12,14 @@ export class PropertiesPanel {
    * @param {import('../model/network-model.js').NetworkModel} networkModel
    * @param {import('../app/event-bus.js').EventBus} eventBus
    * @param {import('../editor/selection-manager.js').SelectionManager} selectionManager
+   * @param {import('../model/interlocking-engine.js').InterlockingEngine} [interlockingEngine]
    */
-  constructor(container, networkModel, eventBus, selectionManager) {
+  constructor(container, networkModel, eventBus, selectionManager, interlockingEngine = null) {
     this.container = container;
     this.networkModel = networkModel;
     this.eventBus = eventBus;
     this.selectionManager = selectionManager;
+    this.interlockingEngine = interlockingEngine;
 
     this.selectedConnectionId = null;
 
@@ -201,7 +203,22 @@ export class PropertiesPanel {
           </select>
         </div>
 
-        <div class="prop-grid-2">
+        ${comp.type === ComponentType.CIRCUIT_BREAKER || comp.type === ComponentType.DISCONNECTOR ? `
+        <div class="maneuver-quick-actions">
+          <button id="btn-maneuver-toggle" class="btn btn-sm btn-action-toggle" title="Conmutar estado">
+            Conmutar [I/O]
+          </button>
+          <button id="btn-maneuver-open" class="btn btn-sm btn-action-open" title="Abrir aparato">
+            Abrir [O]
+          </button>
+          <button id="btn-maneuver-close" class="btn btn-sm btn-action-close" title="Cerrar aparato">
+            Cerrar [I]
+          </button>
+        </div>
+        <div id="maneuver-feedback-msg" class="maneuver-feedback" style="display: none;"></div>
+        ` : ''}
+
+        <div class="prop-grid-2" style="margin-top: 10px;">
           <div class="prop-group">
             <label class="prop-label">Posición X (px)</label>
             <input type="number" id="prop-pos-x" class="prop-input" value="${comp.position.x}" step="20" />
@@ -277,6 +294,33 @@ export class PropertiesPanel {
   }
 
   bindPropertyInputs(compId) {
+    const showManeuverFeedback = (success, msg) => {
+      const fb = document.getElementById('maneuver-feedback-msg');
+      if (fb) {
+        fb.style.display = 'block';
+        fb.className = `maneuver-feedback ${success ? 'fb-success' : 'fb-blocked'}`;
+        fb.textContent = msg;
+      }
+    };
+
+    const handleSwitching = (targetState) => {
+      const comp = this.networkModel.getComponent(compId);
+      if (!comp) return;
+
+      if (this.interlockingEngine) {
+        const res = this.interlockingEngine.executeSwitching(compId, targetState, this.networkModel);
+        if (!res.success) {
+          showManeuverFeedback(false, res.reason);
+          const stateSelect = document.getElementById('prop-state-select');
+          if (stateSelect) stateSelect.value = comp.operationalState;
+        } else {
+          showManeuverFeedback(true, res.reason);
+        }
+      } else {
+        this.networkModel.updateComponent(compId, { operationalState: targetState });
+      }
+    };
+
     const nameInput = document.getElementById('prop-name-input');
     nameInput?.addEventListener('input', (e) => {
       this.networkModel.updateComponent(compId, { name: e.target.value });
@@ -284,7 +328,23 @@ export class PropertiesPanel {
 
     const stateSelect = document.getElementById('prop-state-select');
     stateSelect?.addEventListener('change', (e) => {
-      this.networkModel.updateComponent(compId, { operationalState: e.target.value });
+      handleSwitching(e.target.value);
+    });
+
+    document.getElementById('btn-maneuver-toggle')?.addEventListener('click', () => {
+      const comp = this.networkModel.getComponent(compId);
+      if (comp) {
+        const next = comp.operationalState === OperationalState.CLOSED ? OperationalState.OPEN : OperationalState.CLOSED;
+        handleSwitching(next);
+      }
+    });
+
+    document.getElementById('btn-maneuver-open')?.addEventListener('click', () => {
+      handleSwitching(OperationalState.OPEN);
+    });
+
+    document.getElementById('btn-maneuver-close')?.addEventListener('click', () => {
+      handleSwitching(OperationalState.CLOSED);
     });
 
     const posXInput = document.getElementById('prop-pos-x');

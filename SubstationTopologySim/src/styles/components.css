@@ -476,3 +476,376 @@
   from { opacity: 0; transform: translateY(4px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Pestañas del Panel Derecho (Inspector vs Maniobras SOE)
+   ========================================================================== */
+.sidebar-tabs-nav {
+  display: flex;
+  background-color: var(--color-bg-base);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: 4px 6px 0 6px;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.sidebar-tab-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.sidebar-tab-btn:hover {
+  color: var(--color-text-primary);
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.sidebar-tab-btn.active {
+  color: #38bdf8;
+  border-bottom-color: #38bdf8;
+  background-color: var(--color-bg-surface);
+}
+
+.tab-badge-counter {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  font-size: 9px;
+  font-family: var(--font-family-mono);
+  padding: 1px 5px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.tab-badge-counter.badge-alert {
+  background: #ef4444;
+  color: #ffffff;
+  animation: pulse-alert 0.6s ease-in-out 3;
+}
+
+.sidebar-tab-content {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.sidebar-tab-content.active {
+  display: flex;
+}
+
+/* ==========================================================================
+   Motor de Maniobras, SOE y Switch de Enclavamientos (Fase 4)
+   ========================================================================== */
+.interlock-switch-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 8px 10px;
+  margin-top: 6px;
+}
+
+.switch-container {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.switch-container input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switch-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #475569;
+  transition: .3s;
+  border-radius: 20px;
+}
+
+.switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .switch-slider {
+  background-color: #10b981;
+}
+
+input:checked + .switch-slider:before {
+  transform: translateX(16px);
+}
+
+.switch-text-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.switch-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.switch-desc {
+  font-size: 9px;
+  color: var(--color-text-muted);
+}
+
+/* Acciones rápidas de maniobra en Inspector */
+.maneuver-quick-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+}
+
+.btn-action-toggle {
+  background: var(--color-bg-surface-hover);
+  border: 1px solid var(--color-border-medium);
+  color: #f1f5f9;
+}
+
+.btn-action-open {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+.btn-action-open:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+.btn-action-close {
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.btn-action-close:hover {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.maneuver-feedback {
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  line-height: 1.35;
+  animation: fadeIn 0.2s ease;
+}
+
+.maneuver-feedback.fb-success {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #6ee7b7;
+}
+
+.maneuver-feedback.fb-blocked {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.5);
+  color: #fca5a5;
+}
+
+/* Secuencia de Eventos (SOE) */
+.soe-section {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.soe-counter-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  font-size: 9px;
+  font-family: var(--font-family-mono);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.soe-filters-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.soe-filter-chips {
+  display: flex;
+  gap: 4px;
+}
+
+.soe-chip {
+  flex: 1;
+  padding: 3px 6px;
+  background: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.soe-chip.active {
+  background: var(--color-border-medium);
+  color: #f1f5f9;
+  border-color: #38bdf8;
+}
+
+.soe-chip.chip-blocked.active {
+  background: rgba(239, 68, 68, 0.25);
+  border-color: #ef4444;
+  color: #fca5a5;
+}
+
+.soe-chip.chip-alarm.active {
+  background: rgba(245, 158, 11, 0.25);
+  border-color: #f59e0b;
+  color: #fde68a;
+}
+
+.soe-chip.chip-success.active {
+  background: rgba(16, 185, 129, 0.25);
+  border-color: #10b981;
+  color: #6ee7b7;
+}
+
+.soe-search-input {
+  font-size: 11px;
+  padding: 4px 8px;
+}
+
+.soe-table-container {
+  flex: 1;
+  max-height: 480px;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg-base);
+}
+
+.soe-events-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.soe-empty-msg {
+  padding: 16px;
+  text-align: center;
+  font-size: 11px;
+  color: var(--color-text-muted);
+}
+
+.soe-item {
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.soe-item:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.soe-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.soe-time {
+  font-family: var(--font-family-mono);
+  color: var(--color-text-muted);
+  font-size: 9px;
+}
+
+.soe-comp {
+  font-weight: 700;
+  color: #f1f5f9;
+}
+
+.soe-sev-badge {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+}
+
+.soe-sev-badge.sev-blocked {
+  background: rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.5);
+}
+
+.soe-sev-badge.sev-alarm {
+  background: rgba(245, 158, 11, 0.25);
+  color: #fde68a;
+  border: 1px solid rgba(245, 158, 11, 0.5);
+}
+
+.soe-sev-badge.sev-success {
+  background: rgba(16, 185, 129, 0.25);
+  color: #6ee7b7;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+}
+
+.soe-sev-badge.sev-info {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
+
+.soe-msg {
+  color: var(--color-text-secondary);
+  line-height: 1.35;
+}
+
+.soe-rule-code {
+  font-size: 9px;
+  font-family: var(--font-family-mono);
+  color: #f87171;
+}
+
+/* Animación de destello al bloquear componente en SVG */
+@keyframes interlock-blocked-glow {
+  0% { filter: drop-shadow(0 0 12px #ef4444); stroke: #ef4444; }
+  50% { filter: drop-shadow(0 0 24px #ef4444); stroke: #ffffff; }
+  100% { filter: none; stroke: inherit; }
+}
+
+.substation-component.interlock-flash-blocked {
+  animation: interlock-blocked-glow 0.8s ease-in-out;
+}
+
+@keyframes pulse-alert {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.3); }
+}

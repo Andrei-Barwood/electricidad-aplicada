@@ -12,7 +12,10 @@ import { SvgEditor } from '../editor/svg-editor.js';
 import { Toolbar } from '../ui/toolbar.js';
 import { PropertiesPanel } from '../ui/properties-panel.js';
 import { PresetsPanel } from '../ui/presets-panel.js';
+import { SoePanel } from '../ui/soe-panel.js';
 import { TOPOLOGY_PRESET_KEYS } from '../model/topology-presets.js';
+import { SequenceOfEvents } from '../model/sequence-of-events.js';
+import { InterlockingEngine } from '../model/interlocking-engine.js';
 
 export class Application {
   constructor() {
@@ -20,6 +23,8 @@ export class Application {
     this.stateStore = new StateStore(this.eventBus);
     this.networkModel = new NetworkModel(this.eventBus);
     this.selectionManager = new SelectionManager(this.stateStore, this.eventBus);
+    this.soe = new SequenceOfEvents(this.eventBus);
+    this.interlockingEngine = new InterlockingEngine(this.eventBus, this.soe);
   }
 
   /**
@@ -54,7 +59,8 @@ export class Application {
       propertiesContainer,
       this.networkModel,
       this.eventBus,
-      this.selectionManager
+      this.selectionManager,
+      this.interlockingEngine
     );
 
     const presetsContainer = document.getElementById('presets-panel-container');
@@ -68,6 +74,18 @@ export class Application {
       );
     }
 
+    const soeContainer = document.getElementById('soe-panel-container');
+    if (soeContainer) {
+      this.soePanel = new SoePanel(
+        soeContainer,
+        this.interlockingEngine,
+        this.soe,
+        this.networkModel,
+        this.eventBus
+      );
+    }
+
+    this.initTabs();
     this.initPalette();
     this.subscribeGlobalEvents();
 
@@ -77,7 +95,46 @@ export class Application {
       this.loadInitialSchematic();
     }
 
-    console.info('[SubstationTopologySim] Fase 3 inicializada: Topologías normalizadas IEEE/IEC activas.');
+    console.info('[SubstationTopologySim] Fase 4 inicializada: Motor de maniobras e interbloqueos activo.');
+  }
+
+  /**
+   * Inicializa la navegación por pestañas en el panel lateral derecho.
+   */
+  initTabs() {
+    const tabBtnProp = document.getElementById('tab-btn-properties');
+    const tabBtnSoe = document.getElementById('tab-btn-soe');
+    const tabContentProp = document.getElementById('tab-content-properties');
+    const tabContentSoe = document.getElementById('tab-content-soe');
+
+    tabBtnProp?.addEventListener('click', () => {
+      tabBtnProp.classList.add('active');
+      tabBtnSoe?.classList.remove('active');
+      tabContentProp?.classList.add('active');
+      tabContentSoe?.classList.remove('active');
+    });
+
+    tabBtnSoe?.addEventListener('click', () => {
+      tabBtnSoe.classList.add('active');
+      tabBtnProp?.classList.remove('active');
+      tabContentSoe?.classList.add('active');
+      tabContentProp?.classList.remove('active');
+    });
+
+    this.eventBus.on('soe:event-logged', () => {
+      const badge = document.getElementById('tab-soe-badge');
+      if (badge) badge.textContent = this.soe.events.length;
+    });
+
+    // Si se bloquea una maniobra, alternar temporalmente o alertar en pestaña SOE
+    this.eventBus.on('interlocking:blocked', () => {
+      const badge = document.getElementById('tab-soe-badge');
+      if (badge) {
+        badge.classList.remove('badge-alert');
+        void badge.offsetWidth;
+        badge.classList.add('badge-alert');
+      }
+    });
   }
 
   /**
@@ -127,6 +184,11 @@ export class Application {
       });
       this.networkModel.addComponent(newComp);
       this.selectionManager.select(newComp.id);
+    });
+
+    // Maniobra directa de conmutación desde el lienzo
+    this.eventBus.on('editor:component-toggle-requested', ({ componentId }) => {
+      this.interlockingEngine.toggleComponent(componentId, this.networkModel);
     });
 
     // Guardado y carga local

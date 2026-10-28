@@ -372,6 +372,15 @@ export class SvgEditor {
         position: snappedPos
       });
     });
+
+    // Doble clic sobre interruptor o seccionador para conmutar directamente
+    this.svg.addEventListener('dblclick', (e) => {
+      const compElement = e.target.closest('.substation-component');
+      if (compElement) {
+        const compId = compElement.dataset.componentId;
+        this.eventBus.emit('editor:component-toggle-requested', { componentId: compId });
+      }
+    });
   }
 
   /**
@@ -436,6 +445,17 @@ export class SvgEditor {
 
     this.eventBus.on('viewport:changed', () => {
       this.applyViewportTransform();
+    });
+
+    this.eventBus.on('interlocking:blocked', ({ component }) => {
+      const compEl = this.componentsLayer.querySelector(`[data-component-id="${component.id}"]`);
+      if (compEl) {
+        compEl.classList.remove('interlock-flash-blocked');
+        // Forzar reflow para reiniciar animación CSS
+        void compEl.getBoundingClientRect();
+        compEl.classList.add('interlock-flash-blocked');
+        setTimeout(() => compEl.classList.remove('interlock-flash-blocked'), 1200);
+      }
     });
   }
 
