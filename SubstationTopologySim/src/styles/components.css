@@ -1064,4 +1064,45 @@ input:checked + .switch-slider:before {
   border-radius: 3px;
   transition: width 0.3s ease;
 }
+
+/* ==========================================================================
+   Fase 6: Panel de Evaluación Tecnoeconómica (LCC, CAPEX, OPEX, CENS)
+   ========================================================================== */
+.econ-params-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-sm);
+  background: var(--color-bg-main);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-sm);
+  margin-top: var(--space-xs);
+}
+
+.econ-breakdown-box {
+  background: var(--color-bg-base);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+  margin-top: 10px;
+}
+
+.breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  padding: 4px 0;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.06);
+  color: var(--color-text-secondary);
+}
+
+.breakdown-row:last-child {
+  border-bottom: none;
+}
+
+.breakdown-row strong {
+  color: #f1f5f9;
+  font-family: var(--font-family-mono);
+  font-size: 10.5px;
 }

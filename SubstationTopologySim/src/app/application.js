@@ -14,6 +14,7 @@ import { PropertiesPanel } from '../ui/properties-panel.js';
 import { PresetsPanel } from '../ui/presets-panel.js';
 import { SoePanel } from '../ui/soe-panel.js';
 import { ReliabilityPanel } from '../ui/reliability-panel.js';
+import { EconomicsPanel } from '../ui/economics-panel.js';
 import { TOPOLOGY_PRESET_KEYS } from '../model/topology-presets.js';
 import { SequenceOfEvents } from '../model/sequence-of-events.js';
 import { InterlockingEngine } from '../model/interlocking-engine.js';
@@ -96,6 +97,15 @@ export class Application {
       );
     }
 
+    const econContainer = document.getElementById('economics-panel-container');
+    if (econContainer) {
+      this.economicsPanel = new EconomicsPanel(
+        econContainer,
+        this.networkModel,
+        this.eventBus
+      );
+    }
+
     this.initTabs();
     this.initPalette();
     this.subscribeGlobalEvents();
@@ -106,7 +116,7 @@ export class Application {
       this.loadInitialSchematic();
     }
 
-    console.info('[SubstationTopologySim] Fase 5 inicializada: Motor de contingencias N-1 y confiabilidad activo.');
+    console.info('[SubstationTopologySim] Fase 6 inicializada: Análisis Tecnoeconómico LCC activo.');
   }
 
   /**
@@ -116,13 +126,15 @@ export class Application {
     const tabBtnProp = document.getElementById('tab-btn-properties');
     const tabBtnSoe = document.getElementById('tab-btn-soe');
     const tabBtnRel = document.getElementById('tab-btn-reliability');
+    const tabBtnEcon = document.getElementById('tab-btn-economics');
     const tabContentProp = document.getElementById('tab-content-properties');
     const tabContentSoe = document.getElementById('tab-content-soe');
     const tabContentRel = document.getElementById('tab-content-reliability');
+    const tabContentEcon = document.getElementById('tab-content-economics');
 
     const activateTab = (activeBtn, activeContent) => {
-      [tabBtnProp, tabBtnSoe, tabBtnRel].forEach(btn => btn?.classList.remove('active'));
-      [tabContentProp, tabContentSoe, tabContentRel].forEach(c => c?.classList.remove('active'));
+      [tabBtnProp, tabBtnSoe, tabBtnRel, tabBtnEcon].forEach(btn => btn?.classList.remove('active'));
+      [tabContentProp, tabContentSoe, tabContentRel, tabContentEcon].forEach(c => c?.classList.remove('active'));
       activeBtn?.classList.add('active');
       activeContent?.classList.add('active');
     };
@@ -132,6 +144,10 @@ export class Application {
     tabBtnRel?.addEventListener('click', () => {
       activateTab(tabBtnRel, tabContentRel);
       this.reliabilityPanel?.runAnalysis();
+    });
+    tabBtnEcon?.addEventListener('click', () => {
+      activateTab(tabBtnEcon, tabContentEcon);
+      this.economicsPanel?.runEconomics();
     });
 
     this.eventBus.on('soe:event-logged', () => {

@@ -1,7 +1,7 @@
 # BITÁCORA DE INGENIERÍA — SubstationTopologySim
 **Documento de Control y Seguimiento de Desarrollo de Software Crítico**  
 **Identificador:** `bitacora_substat_1.md`  
-**Versión actual:** `0.5.0 (Fase 5)`  
+**Versión actual:** `0.6.0 (Fase 6)`  
 **Fecha:** 28 de octubre de 2026  
 **Rol responsable:** Senior Software Engineer / Technical Lead — Sistemas Eléctricos de Potencia & Simulación CAD  
 
@@ -29,8 +29,8 @@
 | **Fase 3** | **Topologías Predefinidas** | **COMPLETADA** | Carga y verificación de las 6 configuraciones normalizadas (barra simple, transferencia, seccionada, anillo, interruptor y medio, doble barra) y ficha técnica interactiva. |
 | **Fase 4** | **Motor de Maniobras e Interbloqueos** | **COMPLETADA** | Máquina de estados, enclavamientos de seguridad (IEC 62271-102), bloqueo de seccionadores bajo carga, modo bypass y registro SOE. |
 | **Fase 5** | **Contingencias N-1 y Confiabilidad** | **COMPLETADA** | Análisis iterativo N-1, cálculo riguroso de EENS (MWh/año), LOLE (h/año), LOLP, simulación de fallas y benchmark comparativo de las 6 topologías. |
-| **Fase 6** | **Análisis Tecnoeconómico** | *Pendiente (Próxima)* | Modelado de inversión en equipos (CAPEX), costos anuales de mantenimiento (OPEX), penalización por EENS y costo anualizado comparable. |
-| **Fase 7** | **Exportador CAD (ASCII DXF)** | *Pendiente* | Transformación geométrica mundo-CAD, capas por tipo de activo, asignación de colores por nivel de tensión y serialización DXF válida. |
+| **Fase 6** | **Análisis Tecnoeconómico** | **COMPLETADA** | Modelado de inversión en equipos (CAPEX), costos anuales de mantenimiento (OPEX), penalización por EENS/VoLL, evaluación LCC y costo anualizado comparable (TAC). |
+| **Fase 7** | **Exportador CAD (ASCII DXF)** | *Pendiente (Próxima)* | Transformación geométrica mundo-CAD, capas por tipo de activo, asignación de colores por nivel de tensión y serialización DXF válida. |
 | **Fase 8** | **Validación Integral y Release** | *Pendiente* | Casos límite (tasas nulas, bucles, islas), pruebas de integración extremo a extremo y empaquetado para distribución. |
 
 ---
@@ -121,67 +121,107 @@ Se implementó una arquitectura en Vanilla ES Modules sin librerías pesadas:
   - **Simulación de Falla Interactiva:** Botón `Simular Disparo` al lado de cada contingencia para aislar el equipo en tiempo real y observar visualmente en el lienzo SVG el impacto galvánico.
   - **Matriz de Benchmark:** Visualización gráfica con barras de EENS vs inversión CAPEX relativa entre las 6 configuraciones.
 
+### 3.13. Motor de Análisis Tecnoeconómico y Ciclo de Vida LCC (Fase 6)
+- **`EconomicEngine` (`src/model/economic-engine.js`):**
+  Implementa la evaluación integral de ciclo de vida de activos y costo anualizado comparable según prácticas internacionales de ingeniería (CIGRE / IEEE / EPRI):
+  - **Estructura Detallada de Inversión (CAPEX):**
+    - Costos unitarios de adquisición y montaje de equipos primarios parametrizados por nivel de tensión (220 kV, 110 kV, 66 kV, 23 kV).
+    - Modelo de costos de transformadores con escalamiento no lineal por potencia y tensión:
+      $$C_{\text{trafo}} = C_{\text{base}} \cdot \left(\frac{S}{S_{\text{base}}}\right)^{0.75} \cdot \left(\frac{V_1}{V_{\text{base}}}\right)^{0.40}$$
+    - Factor de obras civiles y patio de llaves: $+30\%$ sobre el costo electromecánico.
+    - Factor de control, protecciones secundarias y SCADA: $+15\%$.
+    - Factor de ingeniería de detalle y gerenciamiento de proyecto: $+8\%$.
+  - **Costos Anuales de Operación y Mantenimiento (OPEX):**
+    - Parametrizado como $2.5\%$ anual del CAPEX total de la subestación.
+  - **Penalización Económica por Energía No Suministrada (CENS):**
+    - Cuantifica la pérdida social y regulatoria de energía interrumpida mediante el Costo de Falla (*Value of Lost Load*, $\text{VoLL} = 2{,}000\text{ USD/MWh}$ por defecto):
+      $$\text{CENS}_{\text{anual}} = \text{EENS} \cdot \text{VoLL} \quad [\text{USD/año}]$$
+  - **Factor de Recuperación de Capital (CRF):**
+    $$\text{CRF} = \frac{r(1+r)^N}{(1+r)^N - 1} \quad (r = 7\%,\; N = 30\text{ años} \implies \text{CRF} \approx 0.080586)$$
+  - **Costo Total Anualizado Comparable (TAC):**
+    $$\text{TAC} = \text{CAPEX} \cdot \text{CRF} + \text{OPEX}_{\text{anual}} + \text{CENS}_{\text{anual}} \quad [\text{USD/año}]$$
+  - **Costo de Ciclo de Vida a Valor Presente (LCC):**
+    $$\text{LCC} = \text{CAPEX} + \frac{\text{OPEX}_{\text{anual}} + \text{CENS}_{\text{anual}}}{\text{CRF}} \quad [\text{USD}]$$
+  - **Benchmark Tecnoeconómico de las 6 Topologías:**
+    Clasificación económica global demostrando cuantitativamente que esquemas de mayor inversión inicial (como Barra en Anillo o Interruptor y Medio) resultan en un TAC y LCC considerablemente más económicos al mitigar millonarias penalizaciones por energía no servida.
+
+### 3.14. Panel de Evaluación Económica y Benchmark LCC en UI (Fase 6)
+- **`EconomicsPanel` (`src/ui/economics-panel.js` e `index.html`):**
+  - Cuarta pestaña dedicada en el panel lateral derecho: `Economía LCC`.
+  - **Controles de Sensibilidad en Tiempo Real:** Ajuste dinámico de Tasa de Descuento ($r\%$), Vida Útil ($N$ años) y Valor de Falla ($\text{VoLL}$ USD/MWh).
+  - **Dashboard de Métricas:** KPIs de TAC, CAPEX Total, OPEX Anual, Penalización CENS y LCC Total.
+  - **Desglose de Inversión Inicial (CAPEX):** Detalle de aparamenta electromecánica, obras civiles, control/protecciones e ingeniería.
+  - **Vista Comparativa de Benchmark TAC:** Clasificación gráfica de las 6 topologías con indicador de cumplimiento N-1 y barras proporcionales de costo total anualizado.
+
 ---
 
 ## 4. Verificación Automatizada (Pruebas Unitarias)
 
-Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (32 de 32 pruebas en verde, 0 fallos)**:
+Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (37 de 37 pruebas en verde, 0 fallos)**:
 
 ```text
+▶ Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine)
+  ✔ debe calcular con exactitud el Factor de Recuperación de Capital (CRF) (0.7ms)
+  ✔ debe estimar costos de transformadores con escalamiento no lineal por potencia y tensión (0.1ms)
+  ✔ debe evaluar el CAPEX, OPEX, CENS y TAC completo para Barra Simple (5.0ms)
+  ✔ debe reflejar el impacto directo del costo de falla VoLL sobre la penalización CENS (2.1ms)
+  ✔ debe ejecutar el Benchmark Tecnoeconómico de las 6 topologías comparando CAPEX vs CENS (18.4ms)
+✔ Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine) (27.2ms)
+
 ▶ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine)
-  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (33.4ms)
-  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (1.2ms)
-  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (0.6ms)
-  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (0.8ms)
-  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (0.6ms)
-  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (0.9ms)
-✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (38.4ms)
+  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (36.5ms)
+  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (1.8ms)
+  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (1.1ms)
+  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (1.3ms)
+  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (0.7ms)
+  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (1.2ms)
+✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (43.3ms)
 
 ▶ Modelo de Componentes Eléctricos
   ✔ debe crear un Interruptor de Potencia con parámetros físicos y de confiabilidad consistentes (1.0ms)
-  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.1ms)
-  ✔ debe asignar terminales coherentes a una Barra Colectora (0.07ms)
+  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.2ms)
+  ✔ debe asignar terminales coherentes a una Barra Colectora (0.08ms)
 ✔ Modelo de Componentes Eléctricos (1.9ms)
 
 ▶ NetworkModel (Grafo de Red)
-  ✔ debe permitir agregar, consultar, actualizar y remover componentes (0.4ms)
-  ✔ debe rechazar la inserción de componentes con id duplicado (0.2ms)
-  ✔ debe serializar y deserializar a JSON sin perder atributos (1.5ms)
-✔ NetworkModel (Grafo de Red) (2.5ms)
+  ✔ debe permitir agregar, consultar, actualizar y remover componentes (0.6ms)
+  ✔ debe rechazar la inserción de componentes con id duplicado (0.3ms)
+  ✔ debe serializar y deserializar a JSON sin perder atributos (1.6ms)
+✔ NetworkModel (Grafo de Red) (2.8ms)
 
 ▶ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine)
-  ✔ debe calcular correctamente los índices de confiabilidad N-1 en Barra Simple (4.2ms)
-  ✔ debe verificar que la apertura de interruptores en Barra en Anillo cumple N-1 (0 MW perdidos) (2.8ms)
-  ✔ debe verificar redundancia de barra total en Doble Barra con Doble Interruptor (2.7ms)
-  ✔ debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS (12.3ms)
-✔ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine) (22.9ms)
+  ✔ debe calcular correctamente los índices de confiabilidad N-1 en Barra Simple (4.6ms)
+  ✔ debe verificar que la apertura de interruptores en Barra en Anillo cumple N-1 (0 MW perdidos) (2.5ms)
+  ✔ debe verificar redundancia de barra total en Doble Barra con Doble Interruptor (3.7ms)
+  ✔ debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS (15.6ms)
+✔ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine) (27.1ms)
 
 ▶ Fase 3: Módulo de Topologías Predefinidas (Presets)
-  ✔ debe contener los 6 esquemas normalizados en los metadatos (0.6ms)
-  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (2.4ms)
-  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (1.3ms)
-  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (1.7ms)
-  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (1.0ms)
-  ✔ debe cargar Interruptor y Medio y mantener servicio ante pérdida de una barra colectora (2.1ms)
-  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (2.0ms)
-  ✔ debe rechazar una clave de topología no registrada (0.2ms)
-✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (12.6ms)
+  ✔ debe contener los 6 esquemas normalizados en los metadatos (0.9ms)
+  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (2.7ms)
+  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (1.9ms)
+  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (1.2ms)
+  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (1.3ms)
+  ✔ debe cargar Interruptor y Medio y mantener servicio ante pérdida de una barra colectora (3.5ms)
+  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (2.8ms)
+  ✔ debe rechazar una clave de topología no registrada (0.5ms)
+✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (16.3ms)
 
 ▶ Gestión de Conexiones Galvánicas (Ramas)
-  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (1.1ms)
-  ✔ debe rechazar la conexión de un terminal consigo mismo (0.3ms)
-  ✔ debe impedir conexiones duplicadas directas entre los mismos terminales (0.1ms)
-  ✔ eliminar un componente debe purgar automáticamente todas sus conexiones asociadas (0.2ms)
-✔ Gestión de Conexiones Galvánicas (Ramas) (2.6ms)
+  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (0.9ms)
+  ✔ debe rechazar la conexión de un terminal consigo mismo (0.2ms)
+  ✔ debe impedir conexiones duplicadas directas entre los mismos terminales (0.2ms)
+  ✔ eliminar un componente debe purgar automáticamente todas sus conexiones asociadas (0.5ms)
+✔ Gestión de Conexiones Galvánicas (Ramas) (2.8ms)
 
 ▶ Validación Topológica y Flujo de Energización (BFS)
-  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.2ms)
-  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.3ms)
+  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.6ms)
+  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.4ms)
   ✔ debe emitir advertencia ante discrepancia directa de tensión sin transformador (0.2ms)
-  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.2ms)
-✔ Validación Topológica y Flujo de Energización (BFS) (2.4ms)
+  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.6ms)
+✔ Validación Topológica y Flujo de Energización (BFS) (3.2ms)
 
-ℹ Total: 32 tests en 7 suites | 32 aprobados | 0 fallos | 107.3ms
+ℹ Total: 37 tests en 8 suites | 37 aprobados | 0 fallos | 119.1ms
 ```
 
 ---
@@ -206,23 +246,36 @@ Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js
   El análisis N-1 itera sobre copias de estado sin alterar permanentemente el modelo del usuario, restaurando automáticamente la condición operacional base.
 - **ADR-09: Benchmark Comparativo Desacoplado con Auto-Restauración:**  
   La ejecución del benchmark de las 6 topologías serializa y restaura el proyecto en memoria sin pérdida de trabajo.
+- **ADR-10: Modelo Paramétrico de Costos con Escalamiento No Lineal:**  
+  Transformadores y bahías escalan con ley exponencial económica ($S^{0.75} \cdot V^{0.40}$), reflejando con exactitud los estándares de cotización de la industria electromecánica.
+- **ADR-11: Formulación Anualizada Comparable (TAC) para Arbitraje CAPEX vs Confiabilidad:**  
+  El TAC integra la anualización de inversión (vía CRF), el costo de mantenimiento anual y la penalización estocástica por energía no suministrada (CENS), permitiendo comparar esquemas simples de bajo CAPEX contra esquemas redundantes de alto CAPEX en una misma escala anual de dólares.
 
 ---
 
-## 6. Próxima Fase a Ejecutar: Fase 6 (Análisis Tecnoeconómico)
+## 6. Próxima Fase a Ejecutar: Fase 7 (Exportador CAD ASCII DXF)
 
 ### Objetivos técnicos inmediatos:
-1. **Modelado de Costos de Inversión (CAPEX):**
-   - Costos unitarios de adquisición y montaje (USD) por tipo de equipo y nivel de tensión (220 kV, 66 kV, 23 kV).
-   - Costo de obras civiles, terreno de patio y sistema de control/protecciones.
-2. **Costos Anuales de Operación y Mantenimiento (OPEX):**
-   - Costo preventivo y correctivo anualizado según tasas de falla ($\lambda, \text{MTTR}$).
-3. **Costo de Energía No Suministrada (CENS / Penalizaciones Regulatorias):**
-   - Valoración económica del EENS ($\text{USD/MWh}$ según estándar regulatorio nacional / SEC / CNE).
-4. **Costo Total Anualizado Comparable (TAC / LCC):**
-   - Tasa de descuento ($r$), vida útil del proyecto ($N = 25\text{ a 30 años}$) y comparación económica global entre las 6 topologías.
+1. **Generador Estándar DXF ASCII:**
+   - Creación del módulo `src/model/dxf-exporter.js` para producir ficheros DXF compatibles con AutoCAD, LibreCAD y QCad.
+   - Definición de secciones obligatorias DXF: `HEADER`, `TABLES` (capas, tipos de línea, estilos de texto), `BLOCKS` y `ENTITIES`.
+2. **Capas Normalizadas por Disciplina:**
+   - `0_BARRAS`: Barras colectoras con grosor de línea prioritario (polilíneas LWPOLYLINE).
+   - `0_EQUIPOS`: Símbolos vectoriales normalizados de interruptores, seccionadores y transformadores.
+   - `0_CONEXIONES`: Trazado Manhattan de conductores y barras de bajada.
+   - `0_TEXTOS`: Rótulos de equipos, tensiones y potencias en capa de anotación.
+3. **Mapeo de Colores CAD ACI (AutoCAD Color Index) por Nivel de Tensión:**
+   - 220 kV: Rojo (ACI 1).
+   - 110 kV: Amarillo (ACI 2).
+   - 66 kV: Verde (ACI 3).
+   - 23 kV: Cyan (ACI 4).
+   - 13.8 kV: Azul (ACI 5).
+4. **Transformación de Coordenadas Pantalla-a-Mundo:**
+   - Conversión de coordenadas SVG (origen superior-izquierdo, Y positivo hacia abajo) a coordenadas CAD universales (origen inferior-izquierdo, Y positivo hacia arriba).
+5. **Acción de Exportación en UI:**
+   - Habilitar el botón `#btn-export-dxf` en el header con descarga automática del archivo `.dxf`.
 
 ---
 
-*Fin del registro de bitácora actualizado para la Fase 5.*  
+*Fin del registro de bitácora actualizado para la Fase 6.*  
 *El archivo ha quedado persistido en [bitacora_substat_1.md](file:///Users/andreibarwood/Documents/CFT/electricidad_aplicada/bitacora_substat_1.md).*
