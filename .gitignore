@@ -18,3 +18,19 @@ magia/_qa/
 magia/_check.py
 magia/assets/raw_crops/
 magia/assets/keyed_raw/
+
+# Ruby / Bundler
+scada_ruby/.bundle/
+scada_ruby/vendor/
+scada_ruby/Gemfile.lock
+
+# Root temp packages
+package.json
+package-lock.json
+
+# Local patch scripts
+patch*.py
+fix*.py
+add*.py
+export_pdfs.py
+process_toys.py

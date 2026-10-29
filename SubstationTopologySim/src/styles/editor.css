@@ -1,6 +1,7 @@
 /* ==========================================================================
    Editor CSS - SubstationTopologySim
    Estilos específicos del lienzo SVG, renderizado de componentes y controles.
+   Completamente adaptado a los temas Noche y Día de Electricidad Aplicada.
    ========================================================================== */
 
 .canvas-viewport {
@@ -40,17 +41,17 @@
 }
 
 .substation-component:hover {
-  filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.5));
+  filter: drop-shadow(0 0 6px var(--color-accent-focus));
 }
 
 .substation-component.energized {
-  filter: drop-shadow(0 0 2px rgba(239, 68, 68, 0.4));
+  filter: drop-shadow(0 0 2px var(--color-state-closed));
 }
 
 .substation-component.dragging {
   cursor: grabbing;
   opacity: 0.9;
-  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.6));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
 }
 
 .substation-component.selected .component-selection-bbox {
@@ -68,8 +69,8 @@
 
 /* Terminales / Pines de conexión */
 .component-terminal {
-  fill: #0ea5e9;
-  stroke: #ffffff;
+  fill: var(--color-info);
+  stroke: var(--color-text-inverse);
   stroke-width: 1.5;
   cursor: crosshair;
   transition: r 0.15s ease, fill 0.15s ease;
@@ -77,16 +78,16 @@
 
 .component-terminal:hover {
   r: 6;
-  fill: #38bdf8;
-  filter: drop-shadow(0 0 6px #38bdf8);
+  fill: var(--color-accent);
+  filter: drop-shadow(0 0 6px var(--color-accent));
 }
 
 .component-terminal.connected {
-  fill: #10b981;
+  fill: var(--color-state-open);
 }
 
 .component-terminal.energized {
-  fill: #ef4444;
+  fill: var(--color-state-closed);
 }
 
 /* Ramas Eléctricas / Conexiones */
@@ -102,39 +103,39 @@
 }
 
 .electrical-connection.energized .connection-line {
-  stroke: #ef4444;
-  filter: drop-shadow(0 0 4px rgba(239, 68, 68, 0.6));
+  stroke: var(--color-state-closed);
+  filter: drop-shadow(0 0 4px var(--color-state-closed));
 }
 
 .electrical-connection.deenergized .connection-line {
-  stroke: #64748b;
+  stroke: var(--color-state-deenergized);
   stroke-dasharray: 4 3;
 }
 
 .electrical-connection:hover .connection-line {
   stroke-width: 3.5;
-  filter: drop-shadow(0 0 6px rgba(59, 130, 246, 0.8));
+  filter: drop-shadow(0 0 6px var(--color-accent));
 }
 
 .electrical-connection.selected .connection-line {
-  stroke: #3b82f6 !important;
+  stroke: var(--color-border-active) !important;
   stroke-width: 3.5;
   stroke-dasharray: 5 2;
 }
 
 .connection-junction-dot {
-  fill: #38bdf8;
-  stroke: #090d14;
+  fill: var(--color-info);
+  stroke: var(--color-text-inverse);
   stroke-width: 1;
   transition: fill 0.25s ease;
 }
 
 .electrical-connection.energized .connection-junction-dot {
-  fill: #ef4444;
+  fill: var(--color-state-closed);
 }
 
 .wiring-preview {
-  stroke: #38bdf8;
+  stroke: var(--color-accent);
   stroke-width: 2;
   stroke-dasharray: 5 4;
   pointer-events: none;
@@ -152,13 +153,13 @@
 }
 
 .symbol-breaker-box {
-  stroke: #f1f5f9;
+  stroke: var(--color-border-medium);
   stroke-width: 2;
-  fill: #1e293b;
+  fill: var(--color-bg-surface-elevated);
 }
 
 .symbol-breaker-cross {
-  stroke: #ef4444;
+  stroke: var(--color-state-closed);
   stroke-width: 2.5;
   stroke-linecap: round;
 }
@@ -168,7 +169,7 @@
 }
 
 .symbol-breaker-open-indicator {
-  stroke: #10b981;
+  stroke: var(--color-state-open);
   stroke-width: 2;
   stroke-linecap: round;
 }
@@ -194,6 +195,10 @@
   text-anchor: middle;
   pointer-events: none;
   user-select: none;
+  paint-order: stroke fill;
+  stroke: var(--color-bg-canvas);
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
 }
 
 .component-sublabel {
@@ -203,6 +208,10 @@
   text-anchor: middle;
   pointer-events: none;
   user-select: none;
+  paint-order: stroke fill;
+  stroke: var(--color-bg-canvas);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .state-badge-text {
@@ -213,14 +222,121 @@
   dominant-baseline: central;
 }
 
+/* Barra superior de navegación rápida del lienzo */
+.canvas-top-navbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--top-nav-height);
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  z-index: 14;
+  backdrop-filter: blur(8px);
+}
+
+.canvas-nav-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.canvas-nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.nav-select {
+  background-color: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-primary);
+  font-size: 11.5px;
+  font-family: var(--font-family-sans);
+  font-weight: 500;
+  padding: 4px 8px;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+}
+
+.nav-select:focus {
+  border-color: var(--color-accent);
+}
+
+.canvas-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* Barras de navegación / Scrollbars del lienzo interactivo */
+.canvas-nav-bar {
+  position: absolute;
+  z-index: 13;
+  display: flex;
+  background: transparent;
+  user-select: none;
+}
+
+.canvas-nav-bar-h {
+  bottom: 0;
+  left: 0;
+  right: 14px;
+  height: 12px;
+}
+
+.canvas-nav-bar-v {
+  top: var(--top-nav-height);
+  right: 0;
+  bottom: 12px;
+  width: 12px;
+}
+
+.canvas-nav-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--scrollbar-track);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.canvas-nav-thumb {
+  position: absolute;
+  background: var(--scrollbar-thumb);
+  border-radius: 6px;
+  cursor: grab;
+  transition: background 0.15s ease, transform 0.1s ease;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.canvas-nav-thumb:hover,
+.canvas-nav-thumb.dragging {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.canvas-nav-thumb:active,
+.canvas-nav-thumb.dragging {
+  cursor: grabbing;
+}
+
 /* Barra flotante de controles del lienzo */
 .canvas-floating-controls {
   position: absolute;
-  bottom: var(--space-md);
-  right: var(--space-md);
+  bottom: 22px;
+  right: 22px;
   display: flex;
   align-items: center;
-  background-color: rgba(23, 31, 44, 0.92);
+  background-color: var(--color-bg-surface);
   backdrop-filter: blur(8px);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);
@@ -232,9 +348,9 @@
 
 .canvas-floating-info {
   position: absolute;
-  top: var(--space-md);
+  top: calc(var(--top-nav-height) + var(--space-sm));
   left: var(--space-md);
-  background-color: rgba(23, 31, 44, 0.85);
+  background-color: var(--color-bg-surface);
   backdrop-filter: blur(6px);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-md);

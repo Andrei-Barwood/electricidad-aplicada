@@ -246,33 +246,33 @@
 }
 
 .badge-closed {
-  background-color: rgba(239, 68, 68, 0.2);
-  color: #fca5a5;
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  background-color: rgba(237, 67, 41, 0.16);
+  color: var(--color-state-closed);
+  border: 1px solid rgba(237, 67, 41, 0.35);
 }
 
 .badge-open {
-  background-color: rgba(16, 185, 129, 0.2);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.4);
+  background-color: rgba(146, 194, 29, 0.16);
+  color: var(--color-state-open);
+  border: 1px solid rgba(146, 194, 29, 0.35);
 }
 
 .badge-energized {
-  background-color: rgba(239, 68, 68, 0.25);
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.5);
+  background-color: rgba(237, 67, 41, 0.18);
+  color: var(--color-state-closed);
+  border: 1px solid rgba(237, 67, 41, 0.4);
 }
 
 .badge-deenergized {
-  background-color: rgba(100, 116, 139, 0.2);
-  color: #cbd5e1;
-  border: 1px solid rgba(100, 116, 139, 0.4);
+  background-color: rgba(136, 135, 160, 0.16);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-subtle);
 }
 
 .badge-oos {
-  background-color: rgba(249, 115, 22, 0.2);
-  color: #fdba74;
-  border: 1px solid rgba(249, 115, 22, 0.4);
+  background-color: rgba(249, 115, 22, 0.16);
+  color: var(--color-state-maintenance);
+  border: 1px solid rgba(249, 115, 22, 0.35);
 }
 
 /* Estado vacío en Inspector */
@@ -301,9 +301,9 @@
    Selector de Topologías Predefinidas y Ficha Técnica (Fase 3)
    ========================================================================== */
 .preset-tag-badge {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(14, 209, 255, 0.15);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-sm);
   font-size: 10px;
   font-weight: 700;

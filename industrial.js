@@ -57,10 +57,41 @@ class Wire {
 class Component {
   constructor(id, x, y, label, w, h) {
     this.id = id; this.x = x; this.y = y; this.label = label; this.w = w; this.h = h;
+    this.initialW = w;
+    this.initialH = h;
     this.nodes = []; this.interactive = false;
     components.push(this);
   }
-  addNode(id, dx, dy, type, label) { const n = new Node(id, this.x + dx, this.y + dy, type, label); n.dx = dx; n.dy = dy; this.nodes.push(n); nodes.push(n); return n; }
+  addNode(id, dx, dy, type, label) {
+    const n = new Node(id, this.x + dx, this.y + dy, type, label);
+    n.dx = dx; n.dy = dy;
+    n.initialDx = dx; n.initialDy = dy;
+    n.initialRadius = n.radius;
+    this.nodes.push(n);
+    nodes.push(n);
+    return n;
+  }
+  getScale() {
+    const sx = this.initialW ? this.w / this.initialW : 1;
+    const sy = this.initialH ? this.h / this.initialH : 1;
+    return { sx, sy, s: Math.min(sx, sy) };
+  }
+  resize(nw, nh) {
+    this.w = Math.max(50, nw);
+    this.h = Math.max(40, nh);
+    const { sx, sy, s } = this.getScale();
+    this.nodes.forEach(n => {
+      if (n.initialDx !== undefined && n.initialDy !== undefined) {
+        n.dx = n.initialDx * sx;
+        n.dy = n.initialDy * sy;
+        n.x = this.x + n.dx;
+        n.y = this.y + n.dy;
+      }
+      if (n.initialRadius !== undefined) {
+        n.radius = Math.round(Math.max(8, Math.min(24, n.initialRadius * Math.sqrt(s))));
+      }
+    });
+  }
   internalEdges() { return []; }
   evaluateElectromagnetics() { return false; }
   onPress() {}
@@ -70,15 +101,28 @@ class Component {
     this.nodes.forEach(n => { n.x = this.x + n.dx; n.y = this.y + n.dy; });
   }
   inResizeHandle(mx, my) {
+    const { s } = this.getScale();
     const hw = this.w / 2; const hh = this.h / 2;
-    return mx > this.x + hw - 20 && mx < this.x + hw + 10 && my > this.y + hh - 20 && my < this.y + hh + 10;
+    const rHit = Math.max(16, 20 * s);
+    return mx > this.x + hw - rHit && mx < this.x + hw + 10 && my > this.y + hh - rHit && my < this.y + hh + 10;
   }
   drawBox(accent) {
-    push(); rectMode(CENTER); fill(COLORS.panel); stroke(accent); strokeWeight(2); rect(this.x, this.y, this.w, this.h, 14);
-    noStroke(); fill(COLORS.text); textAlign(CENTER, TOP); textSize(12); text(this.label, this.x, this.y + this.h / 2 + 8);
+    const { s } = this.getScale();
+    push();
+    rectMode(CENTER);
+    fill(COLORS.panel);
+    stroke(accent);
+    strokeWeight(Math.max(1.5, 2 * s));
+    rect(this.x, this.y, this.w, this.h, Math.max(6, 14 * s));
+    noStroke();
+    fill(COLORS.text);
+    textAlign(CENTER, TOP);
+    textSize(Math.max(9, Math.round(12 * s)));
+    text(this.label, this.x, this.y + this.h / 2 + Math.max(5, 8 * s));
     // Draw resize handle
     fill(COLORS.muted);
-    triangle(this.x + this.w/2, this.y + this.h/2 - 10, this.x + this.w/2, this.y + this.h/2, this.x + this.w/2 - 10, this.y + this.h/2);
+    const hs = Math.max(8, 12 * s);
+    triangle(this.x + this.w/2, this.y + this.h/2 - hs, this.x + this.w/2, this.y + this.h/2, this.x + this.w/2 - hs, this.y + this.h/2);
     pop();
   }
   contains(mx, my, pad=0) { return Math.abs(mx - this.x) <= this.w / 2 + pad && Math.abs(my - this.y) <= this.h / 2 + pad; }
@@ -124,12 +168,17 @@ class Contactor extends Component {
   }
   reset() { this.active = false; }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(this.active ? COLORS.green : COLORS.switch);
-    push(); stroke(this.active ? COLORS.green : COLORS.muted); strokeWeight(2);
+    push();
+    stroke(this.active ? COLORS.green : COLORS.muted);
+    strokeWeight(Math.max(1.5, 2 * s));
     // Draw symbols
-    line(this.a1.x, this.a1.y+15, this.a1.x, this.a1.y+25);
-    line(this.a2.x, this.a2.y-15, this.a2.x, this.a2.y-25);
-    rectMode(CENTER); fill(COLORS.panel); rect(this.a1.x, this.y, 20, 30);
+    line(this.a1.x, this.a1.y + 15 * s, this.a1.x, this.a1.y + 25 * s);
+    line(this.a2.x, this.a2.y - 15 * s, this.a2.x, this.a2.y - 25 * s);
+    rectMode(CENTER);
+    fill(COLORS.panel);
+    rect(this.a1.x, this.y, 20 * s, 30 * s, Math.max(2, 3 * s));
     pop();
   }
 }
@@ -140,6 +189,8 @@ class Pushbutton extends Component {
     this.interactive = true;
     this.btnType = type;
     this.pressed = false;
+    const lLower = (label || "").toLowerCase();
+    this.isToggle = type === "toggle" || lLower.includes("sensor") || lLower.includes("interruptor") || lLower.includes("switch");
     this.n1 = this.addNode(id+"-1", -20, 0, "switch", type==="NO"?"3":"1");
     this.n2 = this.addNode(id+"-2", 20, 0, "switch", type==="NO"?"4":"2");
   }
@@ -151,8 +202,19 @@ class Pushbutton extends Component {
   }
   reset() { this.pressed = false; }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(this.btnType === "NC" ? COLORS.red : COLORS.green);
-    push(); fill(this.pressed ? COLORS.green : COLORS.muted); circle(this.x, this.y, 20); pop();
+    push();
+    fill(this.pressed ? COLORS.green : COLORS.muted);
+    circle(this.x, this.y, 20 * s);
+    if (this.isToggle) {
+      // Indicador visual de sensor / interruptor biestable
+      noFill();
+      stroke(this.pressed ? "#ffffff" : COLORS.cyan);
+      strokeWeight(Math.max(1.2, 1.8 * s));
+      circle(this.x, this.y, 28 * s);
+    }
+    pop();
   }
 }
 
@@ -169,8 +231,14 @@ class Motor3Phase extends Component {
     this.running = false;
   }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(this.running ? COLORS.green : COLORS.switch);
-    push(); fill(COLORS.text); textAlign(CENTER, CENTER); textSize(28); text("M", this.x, this.y); pop();
+    push();
+    fill(COLORS.text);
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(14, Math.round(28 * s)));
+    text("M", this.x, this.y);
+    pop();
   }
 }
 
@@ -239,6 +307,7 @@ class VFD extends Component {
   }
   
   draw() {
+    const { sx, sy, s } = this.getScale();
     if (this.frequency < this.targetFreq) this.frequency = Math.min(this.targetFreq, this.frequency + 0.5);
     if (this.frequency > this.targetFreq) this.frequency = Math.max(this.targetFreq, this.frequency - 0.5);
     
@@ -248,20 +317,21 @@ class VFD extends Component {
     push();
     fill(COLORS.panel);
     stroke(COLORS.muted);
+    strokeWeight(Math.max(1, 1.5 * s));
     rectMode(CENTER);
-    rect(this.x, this.y - 10, 120, 40, 5);
+    rect(this.x, this.y - 10 * sy, 120 * sx, 40 * sy, Math.max(3, 5 * s));
     fill(this.powered ? (this.running ? COLORS.green : COLORS.red) : COLORS.muted);
     noStroke();
     textAlign(CENTER, CENTER);
-    textSize(22);
-    text(this.frequency.toFixed(1) + " Hz", this.x, this.y - 10);
+    textSize(Math.max(12, Math.round(22 * s)));
+    text(this.frequency.toFixed(1) + " Hz", this.x, this.y - 10 * sy);
     
-    textSize(12);
+    textSize(Math.max(8, Math.round(12 * s)));
     fill(COLORS.text);
     if (this.running) {
-      text(this.direction === 1 ? "FWD ▶" : "◀ REV", this.x, this.y + 20);
+      text(this.direction === 1 ? "FWD ▶" : "◀ REV", this.x, this.y + 20 * sy);
     } else {
-      text("STOP", this.x, this.y + 20);
+      text("STOP", this.x, this.y + 20 * sy);
     }
     pop();
   }
@@ -283,7 +353,7 @@ class PLCLogo extends Component {
     this.q3a = this.addNode(id+"-Q3a", 60, 80, "aux", "Q3.1");
     this.q3b = this.addNode(id+"-Q3b", 90, 80, "aux", "Q3.2");
     this.powered = false; this.interactive = true;
-        this.tCoils = [false, false];
+    this.tCoils = [false, false];
     this.tContacts = [false, false];
     this.timerIds = [null, null];
     this.activeOutputs = [false, false, false, false];
@@ -354,17 +424,19 @@ class PLCLogo extends Component {
   }
   
   draw() {
+    const { sx, sy, s } = this.getScale();
     this.drawBox(this.powered ? COLORS.cyan : COLORS.switch);
     push();
     fill(COLORS.switch);
     stroke(COLORS.muted);
+    strokeWeight(Math.max(1, 1.5 * s));
     rectMode(CENTER);
-    rect(this.x, this.y, 80, 50, 4);
+    rect(this.x, this.y, 80 * sx, 50 * sy, Math.max(3, 4 * s));
     if (this.powered) {
       fill(COLORS.green);
       noStroke();
       textAlign(CENTER, CENTER);
-      textSize(12);
+      textSize(Math.max(9, Math.round(12 * s)));
       text("RUN", this.x, this.y);
     }
     pop();
@@ -432,11 +504,16 @@ class Timer extends Component {
   }
   
   draw() {
+    const { sx, sy, s } = this.getScale();
     this.drawBox(this.contactsActive ? COLORS.amber : (this.coilEnergized ? COLORS.cyan : COLORS.switch));
-    push(); stroke(this.contactsActive ? COLORS.amber : COLORS.muted); strokeWeight(2);
-    rectMode(CENTER); fill(COLORS.panel); rect(this.a1.x, this.y, 20, 30);
-    line(this.a1.x-10, this.y-15, this.a1.x+10, this.y+15);
-    line(this.a1.x+10, this.y-15, this.a1.x-10, this.y+15);
+    push();
+    stroke(this.contactsActive ? COLORS.amber : COLORS.muted);
+    strokeWeight(Math.max(1.5, 2 * s));
+    rectMode(CENTER);
+    fill(COLORS.panel);
+    rect(this.a1.x, this.y, 20 * sx, 30 * sy, Math.max(2, 3 * s));
+    line(this.a1.x - 10 * sx, this.y - 15 * sy, this.a1.x + 10 * sx, this.y + 15 * sy);
+    line(this.a1.x + 10 * sx, this.y - 15 * sy, this.a1.x - 10 * sx, this.y + 15 * sy);
     pop();
   }
 }
@@ -461,11 +538,16 @@ class PanelSolar extends Component {
     this.neg = this.addNode(id+"-neg", -40, -40, "source-N", "-");
   }
   draw() {
+    const { sx, sy, s } = this.getScale();
     this.drawBox(COLORS.cyan);
-    push(); stroke(COLORS.muted); fill(COLORS.panel); 
-    rectMode(CENTER); rect(this.x, this.y, 120, 40, 4); 
-    line(this.x - 20, this.y - 20, this.x - 20, this.y + 20);
-    line(this.x + 20, this.y - 20, this.x + 20, this.y + 20);
+    push();
+    stroke(COLORS.muted);
+    strokeWeight(Math.max(1, 1.5 * s));
+    fill(COLORS.panel); 
+    rectMode(CENTER);
+    rect(this.x, this.y, 120 * sx, 40 * sy, Math.max(3, 4 * s)); 
+    line(this.x - 20 * sx, this.y - 20 * sy, this.x - 20 * sx, this.y + 20 * sy);
+    line(this.x + 20 * sx, this.y - 20 * sy, this.x + 20 * sx, this.y + 20 * sy);
     pop();
   }
 }
@@ -479,8 +561,14 @@ class ControladorCarga extends Component {
     this.bNeg = this.addNode(id+"-bneg", 30, -40, "load", "BAT-");
   }
   draw() {
+    const { sx, s } = this.getScale();
     this.drawBox(COLORS.panel);
-    push(); fill(COLORS.green); noStroke(); circle(this.x - 45, this.y, 10); circle(this.x + 15, this.y, 10); pop();
+    push();
+    fill(COLORS.green);
+    noStroke();
+    circle(this.x - 45 * sx, this.y, 10 * s);
+    circle(this.x + 15 * sx, this.y, 10 * s);
+    pop();
   }
 }
 
@@ -493,8 +581,15 @@ class Inversor extends Component {
     this.acNeutro = this.addNode(id+"-acneutro", 70, -50, "source-N", "AC N");
   }
   draw() {
+    const { sx, s } = this.getScale();
     this.drawBox(COLORS.amber);
-    push(); fill(COLORS.bg); noStroke(); textAlign(CENTER,CENTER); textSize(12); text("220V AC", this.x + 55, this.y); pop();
+    push();
+    fill(COLORS.bg);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(9, Math.round(12 * s)));
+    text("220V AC", this.x + 55 * sx, this.y);
+    pop();
   }
 }
 class Bateria extends Component {
@@ -509,19 +604,192 @@ class Bateria extends Component {
     }
   }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(COLORS.amber);
-    push(); fill(COLORS.bg); noStroke(); textAlign(CENTER, CENTER); textSize(12); text("12V", this.x, this.y); pop();
+    push();
+    fill(COLORS.bg);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(9, Math.round(12 * s)));
+    text("12V", this.x, this.y);
+    pop();
+  }
+}
+
+class TermomagneticoIndustrial extends Component {
+  constructor(id, x, y, label="Disyuntor Magnetotérmico 3P+N", rating="32A") {
+    super(id, x, y, label, 160, 100);
+    this.isBoard = true;
+    this.interactive = true;
+    this.closed = true;
+    this.rating = rating;
+    // Bornes superiores (Entrada de línea)
+    this.inL1 = this.addNode(id+"-in-l1", -50, -40, "main", "L1-IN");
+    this.inL2 = this.addNode(id+"-in-l2", -20, -40, "main", "L2-IN");
+    this.inL3 = this.addNode(id+"-in-l3", 20, -40, "main", "L3-IN");
+    this.inN  = this.addNode(id+"-in-n",  50, -40, "main", "N-IN");
+    // Bornes inferiores (Salida protegida)
+    this.outL1 = this.addNode(id+"-out-l1", -50, 40, "main", "L1-OUT");
+    this.outL2 = this.addNode(id+"-out-l2", -20, 40, "main", "L2-OUT");
+    this.outL3 = this.addNode(id+"-out-l3", 20, 40, "main", "L3-OUT");
+    this.outN  = this.addNode(id+"-out-n",  50, 40, "main", "N-OUT");
+  }
+  internalEdges() {
+    if (!this.closed) return [];
+    return [
+      [this.inL1, this.outL1],
+      [this.inL2, this.outL2],
+      [this.inL3, this.outL3],
+      [this.inN, this.outN]
+    ];
+  }
+  onPress() {
+    this.closed = !this.closed;
+    analizarCircuito();
+  }
+  reset() { this.closed = true; }
+  draw() {
+    const { sx, sy, s } = this.getScale();
+    this.drawBox(this.closed ? COLORS.green : COLORS.red);
+    push();
+    rectMode(CENTER);
+    // Palanca industrial
+    fill(this.closed ? "#10b981" : "#ef4444");
+    stroke(COLORS.panel);
+    strokeWeight(Math.max(1, 1.5 * s));
+    rect(this.x, this.y, 40 * sx, 20 * sy, Math.max(2, 4 * s));
+    noStroke();
+    fill("#ffffff");
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(8, Math.round(11 * s)));
+    text(this.closed ? "ON (I)" : "OFF (O)", this.x, this.y);
+    pop();
+  }
+}
+
+class DisyuntorDiferencialIndustrial extends Component {
+  constructor(id, x, y, label="Interruptor Diferencial 4P 30mA", rating="40A 30mA") {
+    super(id, x, y, label, 160, 100);
+    this.isBoard = true;
+    this.interactive = true;
+    this.closed = true;
+    this.rating = rating;
+    // Entradas
+    this.inL1 = this.addNode(id+"-in-l1", -50, -40, "main", "L1-IN");
+    this.inL2 = this.addNode(id+"-in-l2", -20, -40, "main", "L2-IN");
+    this.inL3 = this.addNode(id+"-in-l3", 20, -40, "main", "L3-IN");
+    this.inN  = this.addNode(id+"-in-n",  50, -40, "main", "N-IN");
+    // Salidas
+    this.outL1 = this.addNode(id+"-out-l1", -50, 40, "main", "L1-OUT");
+    this.outL2 = this.addNode(id+"-out-l2", -20, 40, "main", "L2-OUT");
+    this.outL3 = this.addNode(id+"-out-l3", 20, 40, "main", "L3-OUT");
+    this.outN  = this.addNode(id+"-out-n",  50, 40, "main", "N-OUT");
+  }
+  internalEdges() {
+    if (!this.closed) return [];
+    return [
+      [this.inL1, this.outL1],
+      [this.inL2, this.outL2],
+      [this.inL3, this.outL3],
+      [this.inN, this.outN]
+    ];
+  }
+  onPress(mx, my) {
+    const { sx, s } = this.getScale();
+    // Botón de test
+    if (dist(mx, my, this.x + 50 * sx, this.y) < Math.max(10, 14 * s)) {
+      this.closed = false;
+    } else {
+      this.closed = !this.closed;
+    }
+    analizarCircuito();
+  }
+  reset() { this.closed = true; }
+  draw() {
+    const { sx, sy, s } = this.getScale();
+    this.drawBox(this.closed ? COLORS.cyan : COLORS.red);
+    push();
+    rectMode(CENTER);
+    // Palanca
+    fill(this.closed ? "#0ea5e9" : "#ef4444");
+    stroke(COLORS.panel);
+    strokeWeight(Math.max(1, 1.5 * s));
+    rect(this.x - 15 * sx, this.y, 35 * sx, 20 * sy, Math.max(2, 4 * s));
+    fill("#ffffff");
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(8, Math.round(10 * s)));
+    text(this.closed ? "I" : "O", this.x - 15 * sx, this.y);
+
+    // Botón de Test "T"
+    stroke("#d97706");
+    fill("#fef3c7");
+    rect(this.x + 50 * sx, this.y, 22 * sx, 20 * sy, Math.max(2, 4 * s));
+    fill("#b45309");
+    noStroke();
+    text("T", this.x + 50 * sx, this.y);
+    pop();
+  }
+}
+
+class ReleTermico extends Component {
+  constructor(id, x, y, label="Relé Térmico F2") {
+    super(id, x, y, label, 140, 100);
+    this.interactive = true;
+    this.tripped = false;
+    // Potencia principal
+    this.l1 = this.addNode(id+"-L1", -40, -40, "main", "1");
+    this.l2 = this.addNode(id+"-L2", 0, -40, "main", "3");
+    this.l3 = this.addNode(id+"-L3", 40, -40, "main", "5");
+    this.t1 = this.addNode(id+"-T1", -40, 40, "main", "2");
+    this.t2 = this.addNode(id+"-T2", 0, 40, "main", "4");
+    this.t3 = this.addNode(id+"-T3", 40, 40, "main", "6");
+    // Contactos auxiliares de mando
+    this.nc95 = this.addNode(id+"-95", -50, 0, "aux", "95");
+    this.nc96 = this.addNode(id+"-96", -25, 0, "aux", "96");
+    this.no97 = this.addNode(id+"-97", 25, 0, "aux", "97");
+    this.no98 = this.addNode(id+"-98", 50, 0, "aux", "98");
+  }
+  internalEdges() {
+    let edges = [ [this.l1, this.t1], [this.l2, this.t2], [this.l3, this.t3] ];
+    if (!this.tripped) {
+      edges.push([this.nc95, this.nc96]);
+    } else {
+      edges.push([this.no97, this.no98]);
+    }
+    return edges;
+  }
+  onPress() {
+    this.tripped = !this.tripped;
+    analizarCircuito();
+  }
+  reset() { this.tripped = false; }
+  draw() {
+    const { sx, sy, s } = this.getScale();
+    this.drawBox(this.tripped ? COLORS.red : COLORS.panel);
+    push();
+    rectMode(CENTER);
+    fill(this.tripped ? COLORS.red : COLORS.muted);
+    noStroke();
+    rect(this.x, this.y, 24 * sx, 12 * sy, Math.max(2, 3 * s));
+    fill("#ffffff");
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(7, Math.round(9 * s)));
+    text(this.tripped ? "TRIP" : "RESET", this.x, this.y);
+    pop();
   }
 }
 
 class BarraTetrapolar extends Component {
-  constructor(id, x, y) {
-    super(id, x, y, "Barra Tetrapolar", 240, 100);
+  constructor(id, x, y, label="Barra de Distribución Tetrapolar") {
+    super(id, x, y, label, 240, 100);
+    this.isBoard = true;
     this.bars = [];
+    const busLabels = ["Neutro (N)", "Fase L1 (R)", "Fase L2 (S)", "Fase L3 (T)"];
     for (let i=0; i<4; i++) {
-      let b1 = this.addNode(`${id}-b${i}-1`, -80, -30 + i*20, "bar", `Piso ${i+1}`);
-      let b2 = this.addNode(`${id}-b${i}-2`, 0, -30 + i*20, "bar", `Piso ${i+1}`);
-      let b3 = this.addNode(`${id}-b${i}-3`, 80, -30 + i*20, "bar", `Piso ${i+1}`);
+      let b1 = this.addNode(`${id}-b${i}-1`, -80, -30 + i*20, "bar", `${busLabels[i]} 1`);
+      let b2 = this.addNode(`${id}-b${i}-2`, 0, -30 + i*20, "bar", `${busLabels[i]} 2`);
+      let b3 = this.addNode(`${id}-b${i}-3`, 80, -30 + i*20, "bar", `${busLabels[i]} 3`);
       this.bars.push([b1, b2, b3]);
     }
   }
@@ -534,26 +802,40 @@ class BarraTetrapolar extends Component {
     return edges;
   }
   draw() { 
+    const { sx, sy, s } = this.getScale();
     this.drawBox(COLORS.panel); 
     push();
-    stroke(COLORS.cyan);
-    strokeWeight(4);
+    rectMode(CENTER);
     for(let i=0; i<4; i++) {
-      line(this.x - 90, this.y - 30 + i*20, this.x + 90, this.y - 30 + i*20);
+      const busY = this.y + (-30 + i*20) * sy;
+      // Barra de cobre/conductora proporcional y pulida
+      fill(i === 0 ? "#475569" : (i === 1 ? "#d97706" : (i === 2 ? "#b45309" : "#92400e")));
+      stroke(COLORS.cyan);
+      strokeWeight(Math.max(1, 1.8 * s));
+      rect(this.x, busY, this.w - 20 * sx, Math.max(6, 11 * sy), Math.max(2, 3 * s));
+      
+      // Bornes visuales de conexión
+      fill("#0f172a");
+      stroke(COLORS.cyan);
+      strokeWeight(1);
+      circle(this.bars[i][0].x, busY, Math.max(6, 8 * s));
+      circle(this.bars[i][1].x, busY, Math.max(6, 8 * s));
+      circle(this.bars[i][2].x, busY, Math.max(6, 8 * s));
     }
     pop();
   }
 }
 
-
 class BarraBipolar extends Component {
-  constructor(id, x, y, label="Barra Bipolar 5V") {
+  constructor(id, x, y, label="Barra de Distribución Bipolar") {
     super(id, x, y, label, 200, 80);
+    this.isBoard = true;
     this.bars = [];
+    const busLabels = ["0V / Neutro", "5V / Fase"];
     for (let i=0; i<2; i++) {
-      let b1 = this.addNode(`${id}-b${i}-1`, -60, -15 + i*30, "bar", `Piso ${i+1}`);
-      let b2 = this.addNode(`${id}-b${i}-2`, 0, -15 + i*30, "bar", `Piso ${i+1}`);
-      let b3 = this.addNode(`${id}-b${i}-3`, 60, -15 + i*30, "bar", `Piso ${i+1}`);
+      let b1 = this.addNode(`${id}-b${i}-1`, -60, -15 + i*30, "bar", `${busLabels[i]} 1`);
+      let b2 = this.addNode(`${id}-b${i}-2`, 0, -15 + i*30, "bar", `${busLabels[i]} 2`);
+      let b3 = this.addNode(`${id}-b${i}-3`, 60, -15 + i*30, "bar", `${busLabels[i]} 3`);
       this.bars.push([b1, b2, b3]);
     }
   }
@@ -565,7 +847,27 @@ class BarraBipolar extends Component {
     }
     return edges;
   }
-  draw() { this.drawBox(COLORS.panel); }
+  draw() { 
+    const { sx, sy, s } = this.getScale();
+    this.drawBox(COLORS.panel); 
+    push();
+    rectMode(CENTER);
+    for(let i=0; i<2; i++) {
+      const busY = this.y + (-15 + i*30) * sy;
+      fill(i === 0 ? "#475569" : "#d97706");
+      stroke(COLORS.cyan);
+      strokeWeight(Math.max(1, 1.8 * s));
+      rect(this.x, busY, this.w - 20 * sx, Math.max(8, 12 * sy), Math.max(2, 3 * s));
+      
+      fill("#0f172a");
+      stroke(COLORS.cyan);
+      strokeWeight(1);
+      circle(this.bars[i][0].x, busY, Math.max(6, 8 * s));
+      circle(this.bars[i][1].x, busY, Math.max(6, 8 * s));
+      circle(this.bars[i][2].x, busY, Math.max(6, 8 * s));
+    }
+    pop();
+  }
 }
 
 class LM2596 extends Component {
@@ -607,8 +909,14 @@ class Turbina extends Component {
     return this.running !== wasRunning;
   }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(this.running ? COLORS.green : COLORS.switch);
-    push(); fill(COLORS.text); textAlign(CENTER, CENTER); textSize(24); text("Turbina", this.x, this.y); pop();
+    push();
+    fill(COLORS.text);
+    textAlign(CENTER, CENTER);
+    textSize(Math.max(12, Math.round(24 * s)));
+    text("Turbina", this.x, this.y);
+    pop();
   }
 }
 
@@ -627,10 +935,16 @@ class MotorDC extends Component {
     return changed;
   }
   draw() {
+    const { s } = this.getScale();
     this.drawBox(this.running ? COLORS.green : COLORS.switch);
-    push(); fill(COLORS.bg); circle(this.x, this.y, 40); 
+    push();
+    fill(COLORS.bg);
+    circle(this.x, this.y, 40 * s); 
     if(this.running) {
-        fill(COLORS.text); textAlign(CENTER,CENTER); textSize(12); text("RUN", this.x, this.y);
+        fill(COLORS.text);
+        textAlign(CENTER,CENTER);
+        textSize(Math.max(8, Math.round(12 * s)));
+        text("RUN", this.x, this.y);
     }
     pop();
   }
@@ -638,58 +952,200 @@ class MotorDC extends Component {
 
 const LEVELS = [
   {
+    id: "arranque-directo",
+    headline: "1 · Arranque Directo con Tablero y Barras",
+    objective: "Tablero Principal de Fuerza y Control:\n1. Conecta la Alimentación (L1, L2, L3, N) a las entradas del Magnetotérmico (TM).\n2. De la salida del Magnetotérmico pasa al Diferencial (DIF).\n3. Desde la salida del Diferencial alimenta los 4 pisos de la Barra de Distribución Tetrapolar (Piso 1=N, Piso 2=L1, Piso 3=L2, Piso 4=L3).\n4. Desde las Barras alimenta el Contactor K1 (L1, L2, L3) y comanda la bobina A1-A2 con los pulsadores Start/Stop y retención (13-14).\n5. De la salida del Contactor (T1, T2, T3) alimenta el Motor 3~ (U1, V1, W1).",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80, "Magnetotérmico General");
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80, "Diferencial General");
+      const bus = new BarraTetrapolar("bus", 920, 110, "Barras Distribución 3P+N");
+      
+      const pStop = new Pushbutton("pStop", 200, 300, "Parada (NC)", "NC");
+      const pStart = new Pushbutton("pStart", 350, 300, "Marcha (NO)", "NO");
+      const k1 = new Contactor("k1", 580, 360, "Contactor K1");
+      const m1 = new Motor3Phase("m1", 920, 360, "Motor Trifásico M1");
+      
+      return { check: () => k1.active && m1.running };
+    }
+  },
+  {
+    id: "control-fuerza-2",
+    headline: "2 · Arranque desde dos estaciones con Tablero y Barras",
+    objective: "Mando desde 2 Estaciones (Botoneras Dobles):\n1. Cablea la protección general (Red -> Termomagnético -> Diferencial -> Barras Tetrapolares).\n2. Conecta dos botones de parada (NC) en serie.\n3. Conecta dos botones de marcha (NO) en paralelo entre sí y en paralelo con la retención 13-14 de K1.\n4. Al pulsar cualquier marcha, el motor debe arrancar y mantenerse enclavado.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const s0a = new Pushbutton("s0a", 150, 260, "Parada 1", "NC");
+      const s0b = new Pushbutton("s0b", 280, 260, "Parada 2", "NC");
+      const s1a = new Pushbutton("s1a", 150, 400, "Marcha 1", "NO");
+      const s1b = new Pushbutton("s1b", 280, 400, "Marcha 2", "NO");
+      const k1 = new Contactor("k1", 580, 360, "Contactor K1");
+      const m1 = new Motor3Phase("m1", 920, 360, "Motor M1");
+
+      return { check: () => k1.active && m1.running };
+    }
+  },
+  {
+    id: "control-fuerza-3",
+    headline: "3 · Inversión de Giro Manual (K1 Horario / K2 Antihorario)",
+    objective: "Inversor de Giro con Enclavamiento Cruzado:\n1. Alimenta las Barras Tetrapolares a través de las protecciones.\n2. Conecta K1 para giro horario directo (L1->U1, L2->V1, L3->W1).\n3. Conecta K2 permutando dos fases (L1->W1, L2->V1, L3->U1).\n4. Comanda las bobinas para activar el sentido de giro deseado con protección de contactores.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const pStop = new Pushbutton("pStop", 150, 260, "Parada General", "NC");
+      const pFwd = new Pushbutton("pFwd", 280, 260, "Marcha FWD", "NO");
+      const pRev = new Pushbutton("pRev", 280, 400, "Marcha REV", "NO");
+      const k1 = new Contactor("k1", 500, 360, "K1 (Horario)");
+      const k2 = new Contactor("k2", 700, 360, "K2 (Antihorario)");
+      const m1 = new Motor3Phase("m1", 960, 360, "Motor 3~");
+
+      return { check: () => (k1.active || k2.active) && m1.running };
+    }
+  },
+  {
+    id: "control-fuerza-4",
+    headline: "4 · Arranque Secuencial Temporizado (2 Motores)",
+    objective: "Secuencia Automática de 2 Motores:\n1. Alimenta las Barras de Distribución Tetrapolares mediante el Tablero.\n2. Al presionar Marcha se energiza K1 y el temporizador T1.\n3. Tras el retardo de T1, su contacto activa K2 para arrancar el Motor 2.\n4. Ambos motores quedan operando protegidos desde las barras.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const pStop = new Pushbutton("pStop", 150, 260, "Parada", "NC");
+      const pStart = new Pushbutton("pStart", 280, 260, "Marcha", "NO");
+      const k1 = new Contactor("k1", 480, 340, "K1 (Motor 1)");
+      const timer = new Timer("t1", 660, 340, "Timer 2s", 2000);
+      const k2 = new Contactor("k2", 840, 340, "K2 (Motor 2)");
+      const m1 = new Motor3Phase("m1", 480, 560, "Motor M1");
+      const m2 = new Motor3Phase("m2", 840, 560, "Motor M2");
+
+      return { check: () => k1.active && k2.active };
+    }
+  },
+  {
+    id: "control-fuerza-5",
+    headline: "5 · Arranque Estrella-Triángulo (Y-Δ)",
+    objective: "Arranque a Tensión Reducida Y-Δ:\n1. Alimenta la Barra Tetrapolar desde el Tablero de Protecciones.\n2. Conecta el Contactor de Línea K1 y el Contactor Estrella K3.\n3. El Temporizador desconecta la Estrella y conecta el Contactor Triángulo K2.\n4. Verifica que el contactor K1 y K2 o K3 queden activos.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const pStart = new Pushbutton("pStart", 180, 280, "Start", "NO");
+      const k1 = new Contactor("k1", 380, 360, "K1 Línea");
+      const k2 = new Contactor("k2", 580, 360, "K2 Triángulo");
+      const k3 = new Contactor("k3", 780, 360, "K3 Estrella");
+      const m1 = new Motor3Phase("m1", 1000, 360, "Motor 3~");
+
+      return { check: () => k1.active && (k2.active || k3.active) };
+    }
+  },
+  {
+    id: "control-fuerza-6",
+    headline: "6 · Tablero de Distribución Tetrapolar con 2 Cargas",
+    objective: "Distribución Equilibrada con Barras Tetrapolares:\n1. Lleva los 3 conductores de fase y neutro al tablero de protección (TM + DIF).\n2. Conecta la salida a la Barra Tetrapolar principal de 4 niveles.\n3. Reparte alimentación trifásica independiente para el Motor M1 y Motor M2 desde las barras.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const k1 = new Contactor("k1", 400, 340, "K1 Bomba 1");
+      const k2 = new Contactor("k2", 700, 340, "K2 Bomba 2");
+      const m1 = new Motor3Phase("m1", 400, 560, "Bomba 1");
+      const m2 = new Motor3Phase("m2", 700, 560, "Bomba 2");
+
+      return { check: () => k1.active || k2.active || m1.running || m2.running };
+    }
+  },
+  {
+    id: "plc-1",
+    headline: "25 · Automatización PLC 1: Marcha / Paro Básico",
+    objective: "Control Automatizado con Siemens LOGO!:\n1. Alimenta el PLC (L1 y N) desde la Barra Tetrapolar o Tablero.\n2. Conecta el pulsador de marcha a la entrada digital I1 del PLC.\n3. Conecta la salida a relé Q1 para activar el Contactor K1 del motor.\n4. Carga el programa Ladder: I1 -> ( Q1 ).",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+
+      const sStart = new Pushbutton("sStart", 200, 280, "Pulsador I1", "NO");
+      const plc = new PLCLogo("plc", 520, 300, "LOGO! 230RC");
+      const k1 = new Contactor("k1", 820, 300, "Contactor K1");
+      const m1 = new Motor3Phase("m1", 1080, 300, "Motor M1");
+
+      return { check: () => plc.powered && (k1.active || m1.running) };
+    }
+  },
+  {
+    id: "plc-2",
+    headline: "26 · Automatización PLC 2: Control con 2 Sensores",
+    objective: "Lógica Condicional PLC:\n1. Alimenta el PLC y cablea los sensores digitales S1 (I1) y S2 (I2).\n2. Conecta la bobina de mando a la salida Q1.\n3. Configura en el editor Ladder la condición de arranque combinada.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const bus = new BarraTetrapolar("bus", 450, 80);
+      const s1 = new Pushbutton("s1", 180, 260, "Sensor I1", "NO");
+      const s2 = new Pushbutton("s2", 180, 420, "Sensor I2", "NO");
+      const plc = new PLCLogo("plc", 520, 320, "LOGO! 24V");
+      const k1 = new Contactor("k1", 850, 320, "Contactor K1");
+      const m1 = new Motor3Phase("m1", 1080, 320, "Motor M1");
+
+      return { check: () => plc.powered && k1.active };
+    }
+  },
+  {
+    id: "plc-3",
+    headline: "27 · Automatización PLC 3: Enclavamiento Interno",
+    objective: "Auto-retención por Software:\n1. Cablea la alimentación del PLC y los pulsadores de Marcha (I1) y Paro (I2).\n2. El relé de salida Q1 debe alimentar la carga motriz.\n3. Realiza la auto-retención dentro de la tabla Ladder sin relés físicos externos.",
+    build() {
+      const src = new Source3Phase(180, 80);
+      const bus = new BarraTetrapolar("bus", 450, 80);
+      const pStop = new Pushbutton("pStop", 180, 260, "Paro (I2)", "NC");
+      const pStart = new Pushbutton("pStart", 180, 420, "Marcha (I1)", "NO");
+      const plc = new PLCLogo("plc", 520, 320, "LOGO! 24V");
+      const k1 = new Contactor("k1", 850, 320, "Contactor K1");
+      const m1 = new Motor3Phase("m1", 1080, 320, "Motor M1");
+
+      return { check: () => plc.powered && k1.active };
+    }
+  },
+  {
     id: "plc-13",
-    headline: "Variador de Frecuencia (VFD)",
-    objective: "El Variador de Frecuencia permite arrancar el motor suavemente.\n1. Alimenta el VFD conectando L1, L2 y L3 desde la fuente trifásica.\n2. Conecta U, V y W del VFD a los bornes U1, V1 y W1 del motor.\n3. Usa la salida de 24V del VFD para alimentar un botón pulsador (FWD).\n4. Conecta el retorno del botón a la entrada DI1 del VFD para giro a la derecha.",
+    headline: "37 · Variador de Frecuencia (VFD) y Motor",
+    objective: "Control Electrónico de Velocidad:\n1. Alimenta el VFD conectando L1, L2 y L3 desde la fuente o barra trifásica.\n2. Conecta U, V y W del VFD a los bornes U1, V1 y W1 del motor.\n3. Usa la salida de 24V del VFD para alimentar un botón pulsador (FWD).\n4. Conecta el retorno del botón a la entrada DI1 del VFD para giro a la derecha.",
     build() {
       const source = new Source3Phase(200, 150);
       const vfd = new VFD("vfd", 500, 350);
       const m1 = new Motor3Phase("m1", 800, 400);
-      const pFwd = new Pushbutton("pFwd", 200, 400, "Start", "NO");
+      const pFwd = new Pushbutton("pFwd", 200, 400, "Start FWD", "NO");
       
       return { check: () => vfd.running && m1.running };
     }
   },
   {
-    id: "arranque-directo",
-    headline: "Arranque Directo con Enclavamiento",
-    objective: "Cablea el circuito de control. Conecta Fase (L1) al botón NC (Parada), luego al botón NO (Marcha), y de ahí a A1. El neutro a A2. Finalmente, pon en paralelo el contacto 13-14 del contactor con el botón NO para lograr la auto-retención.",
-    build() {
-      const source = new Source3Phase(500, 100);
-      const k1 = new Contactor("k1", 500, 400, "K1");
-      const pStop = new Pushbutton("pStop", 300, 250, "Parada", "NC");
-      const pStart = new Pushbutton("pStart", 300, 400, "Marcha", "NO");
-      const m1 = new Motor3Phase("m1", 700, 600, "Motor");
-      
-      return {
-        check: () => k1.active
-      };
-    }
-  },
-
-    {
     id: "plc-escuela",
-    headline: "Tablero Escuela Proyecto Futuro (Turbina 5V)",
-    objective: `SISTEMA HÍBRIDO, BARRAS DE DISTRIBUCIÓN Y TURBINA 5V:
-
-1. Baterías a Barra 24V: Conecta las baterías (Batería 1 y 2) en serie (puente entre BAT1+ y BAT2-). Lleva el (-) de BAT1 al Piso 1 (0V) y el (+) de BAT2 al Piso 3 (24V) de la Barra Tetrapolar.
-2. Inversor y Panel: Conecta el panel al Inversor, y los bornes de batería del Inversor a la Barra Tetrapolar (24V y 0V).
-3. Step-Down LM2596: Alimenta el IN+ con 24V (Piso 3) y el IN- con 0V (Piso 1). Su salida OUT+ llévala al Piso 2 de la Barra Bipolar 5V, y el OUT- al Piso 1 de la Barra Bipolar 5V.
-4. PLC LOGO!: Aliméntalo con 24V (L1) y 0V (N) desde la Barra Tetrapolar.
-5. Potencia de Turbina: Saca un cable de 5V (Piso 2 Barra Bipolar) hacia Q1.1 del PLC. Desde Q1.2 conecta al (+) de la Turbina. El (-) de la Turbina va al 0V de la Barra Bipolar.
-6. PLC Ladder: Configura el Generador de Impulsos para la Turbina.`, 
-        build() {
-            const panel = new PanelSolar("panel", 120, 80);
+    headline: "38 · Tablero Escuela Proyecto Futuro (Híbrido + Barras)",
+    objective: "SISTEMA HÍBRIDO, BARRAS DE DISTRIBUCIÓN Y TURBINA 5V:\n1. Baterías a Barra 24V: Conecta Batería 1 y 2 en serie (+BAT1 a -BAT2). Lleva el (-) de BAT1 al Piso 1 (0V) y el (+) de BAT2 al Piso 3 (24V) de la Barra Tetrapolar.\n2. Inversor y Panel: Conecta el panel al Inversor/MPPT y los bornes de batería a la Barra Tetrapolar.\n3. Step-Down LM2596: Alimenta IN+ con 24V (Piso 3) e IN- con 0V (Piso 1). OUT+ al Piso 2 (5V) y OUT- al Piso 1 (0V) de la Barra Bipolar.\n4. PLC LOGO!: Aliméntalo con 24V y 0V desde la Barra Tetrapolar.\n5. Turbina 5V: Desde Piso 2 (5V) de la Barra Bipolar a Q1.1 del PLC, de Q1.2 al (+) de la Turbina, y (-) al 0V de la Barra Bipolar.\n6. PLC Ladder: Configura el bucle o temporizador para poner en marcha la Turbina.",
+    build() {
+      const panel = new PanelSolar("panel", 120, 80);
       const mppt = new ControladorCarga("mppt", 350, 80);
       const inv = new Inversor("inv", 600, 80);
       
       const b1 = new Bateria("b1", 120, 250, "Batería 1", "1");
       const b2 = new Bateria("b2", 120, 450, "Batería 2", "2");
-      const barraDC = new BarraTetrapolar("barradc", 380, 280);
-      const barraAC = new BarraTetrapolar("barraac", 650, 650);
+      const barraDC = new BarraTetrapolar("barradc", 380, 280, "Barra Tetrapolar DC (24V/0V)");
+      const barraAC = new BarraTetrapolar("barraac", 650, 650, "Barra Tetrapolar AC (220V)");
       
       const stepDown = new LM2596("stepdown", 200, 580);
-      const barra5V = new BarraBipolar("barra5v", 400, 580);
+      const barra5V = new BarraBipolar("barra5v", 400, 580, "Barra Bipolar 5V");
       
       const plc = new PLCLogo("plc", 650, 300, "LOGO! 24V");
       const m1 = new Turbina("m1", 650, 550);
@@ -699,6 +1155,36 @@ const LEVELS = [
     }
   }
 ];
+
+function generateLevelFallback(id) {
+  const isPLC = id.startsWith("plc");
+  const num = id.replace(/\D/g, "") || "1";
+  return {
+    id: id,
+    headline: isPLC ? `Automatización PLC Industrial ${num}` : `Control & Fuerza Industrial ${num}`,
+    objective: `Plantilla Industrial ${num}:\n1. Alimenta el Tablero con Termomagnético y Diferencial.\n2. Distribuye la energía mediante la Barra Tetrapolar.\n3. Cablea el circuito de mando y fuerza para activar el actuador motriz.`,
+    build() {
+      const src = new Source3Phase(180, 80);
+      const tm = new TermomagneticoIndustrial("tm", 400, 80);
+      const dif = new DisyuntorDiferencialIndustrial("dif", 620, 80);
+      const bus = new BarraTetrapolar("bus", 920, 110);
+      
+      if (isPLC) {
+        const s1 = new Pushbutton("s1", 200, 320, "Start", "NO");
+        const plc = new PLCLogo("plc", 520, 340, "LOGO! Industrial");
+        const k1 = new Contactor("k1", 820, 340, "Contactor K1");
+        const m1 = new Motor3Phase("m1", 1080, 340, "Motor 3~");
+        return { check: () => plc.powered && (k1.active || m1.running) };
+      } else {
+        const pStop = new Pushbutton("pStop", 200, 320, "Stop", "NC");
+        const pStart = new Pushbutton("pStart", 350, 320, "Start", "NO");
+        const k1 = new Contactor("k1", 600, 360, "Contactor K1");
+        const m1 = new Motor3Phase("m1", 940, 360, "Motor 3~");
+        return { check: () => k1.active && m1.running };
+      }
+    }
+  };
+}
 
 function analizarCircuito() {
   circuitAnalysis = { short: false, shortDetails: "", complete: false };
@@ -782,8 +1268,20 @@ function analizarCircuito() {
 }
 
 function setup() {
+  pixelDensity(typeof window !== "undefined" && window.devicePixelRatio ? Math.min(window.devicePixelRatio, 2) : 1);
   const canvas = createCanvas(1300, 950);
   canvas.parent("simulator-canvas");
+  
+  // Link toolbar buttons
+  const exportBtn = document.getElementById("btn-export-pdf");
+  if (exportBtn) exportBtn.addEventListener("click", () => exportDiagramPDF());
+  const copyDiagBtn = document.getElementById("btn-copy-diag");
+  if (copyDiagBtn) copyDiagBtn.addEventListener("click", () => copySystemReport());
+  const autoBtn = document.getElementById("btn-autocomplete");
+  if (autoBtn) autoBtn.addEventListener("click", () => autocompleteCurrentLevel());
+  const nextBtn = document.getElementById("next-level");
+  if (nextBtn) nextBtn.addEventListener("click", () => nextLevelTemplate());
+
   loadLevel("arranque-directo");
   
   document.querySelectorAll(".wire-tool").forEach(btn => {
@@ -810,6 +1308,8 @@ function setup() {
     
     document.querySelectorAll(".tier-tabs button").forEach((button) => {
       button.addEventListener("click", () => {
+        document.querySelectorAll(".tier-tabs button").forEach(b => b.setAttribute("aria-pressed", "false"));
+        button.setAttribute("aria-pressed", "true");
         const current = select.selectedOptions[0];
         if (!current || current.dataset.tier !== button.dataset.tier) {
           select.value = button.dataset.first;
@@ -820,9 +1320,19 @@ function setup() {
   }
 }
 
+function nextLevelTemplate() {
+  const select = document.getElementById("level-select");
+  if (!select) return;
+  const currentIndex = select.selectedIndex;
+  const nextIndex = (currentIndex + 1) % select.options.length;
+  select.selectedIndex = nextIndex;
+  loadLevel(select.value);
+}
+
 function loadLevel(id) {
-  const def = LEVELS.find(l => l.id === id) || LEVELS[0];
+  const def = LEVELS.find(l => l.id === id) || generateLevelFallback(id);
   nodes = []; wires = []; components = []; draggingFrom = null;
+  activePLC = null; plcGridData = [];
   activeLevel = { id: def.id, headline: def.headline, objective: def.objective, rules: def.build() };
     
   const titleEl = document.getElementById("level-title");
@@ -833,6 +1343,24 @@ function loadLevel(id) {
     select.value = activeLevel.id;
   }
   
+  // Update difficulty indicator and active tier tab
+  if (select && select.selectedOptions[0]) {
+    const opt = select.selectedOptions[0];
+    const diffEl = document.getElementById("level-difficulty");
+    if (diffEl) {
+      diffEl.textContent = `${opt.dataset.tierLabel || 'Control'} · plantilla ${opt.dataset.index || 1} de ${select.options.length}`;
+      diffEl.setAttribute("data-tier", opt.dataset.tier || "control");
+    }
+    const blurbEl = document.getElementById("tier-blurb");
+    const activeTab = document.querySelector(`.tier-tabs button[data-tier="${opt.dataset.tier}"]`);
+    if (blurbEl) {
+      blurbEl.textContent = (activeTab && activeTab.dataset ? activeTab.dataset.blurb : "") || "Automatización y tableros industriales.";
+    }
+    document.querySelectorAll(".tier-tabs button").forEach(b => {
+      b.setAttribute("aria-pressed", b.dataset && b.dataset.tier === opt.dataset.tier ? "true" : "false");
+    });
+  }
+
   document.getElementById("level-objective").textContent = activeLevel.objective || "";
   const tut = document.getElementById("level-tutorial");
   if (tut) {
@@ -906,8 +1434,8 @@ function mouseReleased() {
   }
   if (draggingComponent) {
     draggingComponent = null;
-    // Release pushbuttons
-    components.filter(c => c instanceof Pushbutton).forEach(c => {
+    // Release momentary pushbuttons (preserve toggle sensors/switches)
+    components.filter(c => c instanceof Pushbutton && !c.isToggle).forEach(c => {
       if (c.pressed) { c.pressed = false; analizarCircuito(); }
     });
     return false;
@@ -921,9 +1449,6 @@ function mouseReleased() {
     }
     draggingFrom = null;
   }
-  components.filter(c => c instanceof Pushbutton).forEach(c => {
-    if (c.pressed) { c.pressed = false; analizarCircuito(); }
-  });
 }
 
 function mouseDragged() {
@@ -933,8 +1458,7 @@ function mouseDragged() {
   if (resizingComponent) {
     const nw = Math.max(80, resizeStart.w + (mouseX - resizeStart.mx) * 2);
     const nh = Math.max(80, resizeStart.h + (mouseY - resizeStart.my) * 2);
-    resizingComponent.w = nw;
-    resizingComponent.h = nh;
+    resizingComponent.resize(nw, nh);
     return false;
   }
   
@@ -1056,12 +1580,124 @@ function handleCellClick(r, c) {
   renderPLCGrid();
 }
 
+function getLadderForLevel(levelId) {
+  // Retorna una matriz 4x6 de ladder adaptada a los requerimientos de cada plantilla PLC
+  const emptyGrid = () => [
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+  ];
+
+  if (levelId === "plc-escuela") {
+    // Oscilador/Reloj con T1 y T2 que comanda la salida de la Turbina Q1
+    return [
+      [ {type: 'NC', operand: 'T2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T1'} ],
+      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T2'} ],
+      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-1") {
+    // Marcha directa con auto-enclavamiento en Ladder: I1 o Q1 activan Q1
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-2") {
+    // Condición AND de 2 sensores: I1 e I2 activan Q1
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-3") {
+    // Enclavamiento / Auto-retención por software:
+    // Rama 1: I1 (Marcha) en serie con I2 (Paro) activa Q1
+    // Rama 2: Q1 (Retención) en serie con I2 mantiene Q1
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-4") {
+    // Lógica OR de seguridad / 2 Pulsadores alternativos con auto-enclavamiento:
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-5") {
+    // Temporizador a la conexión: I1 activa T1; T1 activa Q1 (con retención de Q1)
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T1'} ],
+      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-6") {
+    // Enclavamiento de giro cruzado (Inversión K1/Q1 vs K2/Q2):
+    // Q1 con contacto NC de Q2; Q2 con contacto NC de Q1
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'NC', operand: 'Q2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'I2'}, {type: 'NC', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q2'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-7" || levelId === "plc-8") {
+    // Cascada secuencial de 2 motores con retención: I1 arranca Q1; Q1 arranca Q2
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q2'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  } else if (levelId === "plc-9" || levelId === "plc-10") {
+    // Arranque secuencial con temporizador T1 y retención: I1 activa Q1 y T1; T1 activa Q2
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T1'} ],
+      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q2'} ]
+    ];
+  } else if (levelId === "plc-11" || levelId === "plc-12") {
+    // Mando multietapa con parada de emergencia NC (I2): I1 con retención Q1 condicionado a no Paro I2
+    return [
+      [ {type: 'NO', operand: 'I1'}, {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'NO', operand: 'I2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+      [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q2'} ],
+      [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+    ];
+  }
+
+  // Fallback por defecto para cualquier otra plantilla PLC con auto-enclavamiento:
+  return [
+    [ {type: 'NO', operand: 'I1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+    [ {type: 'NO', operand: 'Q1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ],
+    [ {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'} ]
+  ];
+}
+
+function autocompleteLadderEditor() {
+  const currentLevelId = (activeLevel && activeLevel.id) ? activeLevel.id : "plc-1";
+  plcGridData = getLadderForLevel(currentLevelId);
+  renderPLCGrid();
+}
+window.autocompleteLadderEditor = autocompleteLadderEditor;
+
 function openPLCEditor(plcComp) {
   activePLC = plcComp;
-  if (plcGridData.length === 0) initPLCEditor();
-  // We could try to decompile plc.program, but for now we just show the grid as is (preserves state per session).
-  // Ideally, if it's the first time, we could populate it based on the level, but let's start blank for them to program!
-  // Wait, if the level has a pre-programmed lambda, and they open it, it's blank. Let's let it be blank, so they HAVE to program it!
+  if (plcComp.ladderGrid && Array.isArray(plcComp.ladderGrid)) {
+    plcGridData = JSON.parse(JSON.stringify(plcComp.ladderGrid));
+  } else if (plcGridData.length === 0) {
+    const currentLevelId = (activeLevel && activeLevel.id) ? activeLevel.id : "plc-1";
+    plcGridData = getLadderForLevel(currentLevelId);
+  }
   
   document.getElementById("plc-modal").classList.remove("hidden");
   document.getElementById("plc-splash").style.display = "flex";
@@ -1081,6 +1717,7 @@ function openPLCEditor(plcComp) {
 const initPLCEvents = () => {
   const tools = document.querySelectorAll("#plc-toolbar button");
   tools.forEach(btn => {
+    if (btn.id === "btn-plc-autocomplete") return;
     btn.addEventListener("click", () => {
       tools.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
@@ -1088,75 +1725,33 @@ const initPLCEvents = () => {
     });
   });
   
+  document.getElementById("btn-plc-autocomplete")?.addEventListener("click", () => {
+    autocompleteLadderEditor();
+  });
+
   document.getElementById("plc-close")?.addEventListener("click", () => {
-    document.getElementById("plc-modal").classList.add("hidden");
-    activePLC = null;
+    closePLC();
   });
   
   document.getElementById("plc-save")?.addEventListener("click", () => {
-    if (!activePLC) return;
-    
-    // Compile Grid to a Function!
-    // We capture a snapshot of the grid
-    const gridSnap = JSON.parse(JSON.stringify(plcGridData));
-    
-    activePLC.program = (inputs, prevOutputs, prevTimers) => {
-      let qStates = [false, false, false, false];
-      
-      const getVal = (op) => {
-        if (op === 'I1') return inputs[0];
-        if (op === 'I2') return inputs[1];
-        if (op === 'I3') return inputs[2];
-        if (op === 'I4') return inputs[3];
-        if (op === 'Q1') return prevOutputs[0];
-        if (op === 'Q2') return prevOutputs[1];
-        if (op === 'Q3') return prevOutputs[2];
-        if (op === 'Q4') return prevOutputs[3];
-        return false;
-      };
-      
-      for(let r=0; r<4; r++) {
-        const rung = gridSnap[r];
-        const coil = rung[5];
-        if (coil.type !== 'COIL') continue;
-        
-        let pathTrue = true;
-        for(let c=0; c<5; c++) {
-          const cell = rung[c];
-          if (cell.type === 'EMPTY') { pathTrue = false; break; }
-          if (cell.type === 'WIRE') continue;
-          
-          const val = getVal(cell.operand);
-          if (cell.type === 'NO' && !val) { pathTrue = false; break; }
-          if (cell.type === 'NC' && val) { pathTrue = false; break; }
-        }
-        
-        if (pathTrue) {
-          if (coil.operand === 'Q1') qStates[0] = true;
-          if (coil.operand === 'Q2') qStates[1] = true;
-          if (coil.operand === 'Q3') qStates[2] = true;
-          if (coil.operand === 'Q4') qStates[3] = true;
-        }
-      }
-      return { q: qStates, t: tStates };
-    };
-    
-    analizarCircuito();
-    document.getElementById("plc-modal").classList.add("hidden");
-    activePLC = null;
+    savePLC();
   });
 };
 
 initPLCEvents();
 
 
-window.closePLC = function() {
-  document.getElementById("plc-modal").classList.add("hidden");
+function closePLC() {
+  const modal = document.getElementById("plc-modal");
+  if (modal) modal.classList.add("hidden");
   activePLC = null;
-};
-window.savePLC = function() {
+}
+window.closePLC = closePLC;
+
+function savePLC() {
   if (!activePLC) return;
   const gridSnap = JSON.parse(JSON.stringify(plcGridData));
+  activePLC.ladderGrid = gridSnap;
   activePLC.program = (inputs, prevOutputs, prevTimers) => {
     let qStates = [false, false, false, false];
     let tStates = [false, false];
@@ -1199,7 +1794,15 @@ window.savePLC = function() {
   };
   analizarCircuito();
   closePLC();
-};
+
+  const statEl = document.getElementById("circuit-status");
+  if (statEl) {
+    const prevText = statEl.textContent;
+    statEl.textContent = "⚡ Programa Ladder compilado y cargado en PLC";
+    setTimeout(() => { analizarCircuito(); }, 1200);
+  }
+}
+window.savePLC = savePLC;
 
 
 // Theme Management
@@ -1229,228 +1832,384 @@ function syncColors() {
 
 document.addEventListener("DOMContentLoaded", syncColors);
 
-// --- LOGIC FOR DIAGNOSTIC REPORT ---
-setTimeout(() => {
-  const btn = document.createElement("button");
-  btn.textContent = "Copiar Reporte al Portapapeles";
-  btn.style.position = "absolute";
-  btn.style.bottom = "20px";
-  btn.style.right = "20px";
-  btn.style.padding = "10px 15px";
-  btn.style.backgroundColor = "#0ea5e9";
-  btn.style.color = "white";
-  btn.style.border = "none";
-  btn.style.borderRadius = "5px";
-  btn.style.cursor = "pointer";
-  btn.style.zIndex = "9999";
-  btn.style.fontWeight = "bold";
-  document.body.appendChild(btn);
-
-  btn.onclick = () => {
-    let report = "--- REPORTE DE SISTEMA SNOCOMM ---\n";
-    components.forEach(c => {
-      report += `\n[ ${c.label} ] (ID: ${c.id})\n`;
-      if (c instanceof PLCLogo) {
-          report += `  Estado: ${c.powered ? 'ENCENDIDO (Recibe Fase y Neutro)' : 'APAGADO'}\n`;
-      }
-      if (c instanceof MotorDC) {
-          report += `  Estado: ${c.running ? 'GIRANDO' : 'DETENIDO'}\n`;
-      }
-      c.nodes.forEach(n => {
-        let connectedWires = wires.filter(w => w.from === n || w.to === n);
-        let conns = connectedWires.map(w => {
-          let other = w.from === n ? w.to : w.from;
-          let otherComp = components.find(comp => comp.nodes.includes(other));
-          return `${otherComp ? otherComp.label : '?'}(${other.label})`;
-        });
-        let pots = Array.from(n.potentials).join(",");
-        report += `  - Borne "${n.label}": Energía=(${pots || 'vacio'}) -> Conectado a: ${conns.join(", ") || "Nada"}\n`;
-      });
-    });
-    
-    navigator.clipboard.writeText(report).then(() => {
-      btn.textContent = "¡Copiado!";
-      setTimeout(() => btn.textContent = "Copiar Reporte al Portapapeles", 2000);
-    }).catch(err => {
-      console.log(report);
-      alert("Error al copiar. Abre la consola (F12) para ver el reporte.");
-    });
-  };
-}, 1000);
-
-// --- BUTTON FOR LEVEL AUTOCOMPLETE ---
-setTimeout(() => {
-  const autoBtn = document.createElement("button");
-  autoBtn.textContent = "Autocompletar Nivel (SOLUCIÓN)";
-  autoBtn.style.position = "absolute";
-  autoBtn.style.bottom = "65px";
-  autoBtn.style.right = "20px";
-  autoBtn.style.padding = "10px 15px";
-  autoBtn.style.backgroundColor = "#10b981";
-  autoBtn.style.color = "white";
-  autoBtn.style.border = "none";
-  autoBtn.style.borderRadius = "5px";
-  autoBtn.style.cursor = "pointer";
-  autoBtn.style.zIndex = "9999";
-  autoBtn.style.fontWeight = "bold";
-  document.body.appendChild(autoBtn);
-
-  autoBtn.onclick = () => {
-    wires = []; // clear all wires
-    
-    
-    // Find components
-    const getC = (lbl) => components.find(c => c.id === lbl);
-    const panel = getC("panel");
-    const mppt = getC("mppt");
-    const b1 = getC("b1");
-    const b2 = getC("b2");
-    const barradc = getC("barradc");
-    const inv = getC("inv");
-    const stepdown = getC("stepdown");
-    const barra5v = getC("barra5v");
-    const plc = getC("plc");
-    const m1 = getC("m1");
-    
-    if(!barradc) { alert("Error: Componentes no encontrados."); return; }
-    
-    const connectNodes = (n1, n2) => wires.push(new Wire(n1, n2));
-    
-    // 1. Panel a MPPT
-    connectNodes(panel.pos, mppt.pPos);
-    connectNodes(panel.neg, mppt.pNeg);
-    
-    // 2. Baterías a Barra DC (Serie para 24V)
-    connectNodes(b1.neg, barradc.bars[0][0]); // 0V -> Piso 1
-    connectNodes(b2.pos, barradc.bars[2][0]); // 24V -> Piso 3
-    connectNodes(b1.pos, b2.neg); // Jumper Serie
-    
-    // 3. MPPT a Barra DC
-    connectNodes(mppt.bPos, barradc.bars[2][1]);
-    connectNodes(mppt.bNeg, barradc.bars[0][1]);
-    
-    // 4. Inversor
-    connectNodes(inv.dcPos, barradc.bars[2][2]);
-    connectNodes(inv.dcNeg, barradc.bars[0][2]);
-    
-    // 5. Step-Down LM2596
-    connectNodes(barradc.bars[2][0], stepdown.inPos);
-    connectNodes(barradc.bars[0][0], stepdown.inNeg);
-    
-    // 6. Barra Bipolar 5V
-    connectNodes(stepdown.outPos, barra5v.bars[1][0]); // 5V al Piso 2
-    connectNodes(stepdown.outNeg, barra5v.bars[0][0]); // 0V al Piso 1
-    
-    // 7. Alimentación PLC (24V)
-    connectNodes(barradc.bars[2][1], plc.l1); 
-    connectNodes(barradc.bars[0][1], plc.n);  
-    
-    // 8. Turbina y Salida PLC (5V aislado)
-    connectNodes(barra5v.bars[1][1], plc.q1a); // 5V al relé Q1.1
-    connectNodes(plc.q1b, m1.pos); // Q1.2 a la turbina
-    connectNodes(m1.neg, barra5v.bars[0][1]); // Turbina al 0V de la barra 5V
-
-    // 9. PLC Ladder Logic (Generador Impulsos / Bucle)
-    plcGridData = [
-      [ {type: 'NC', operand: 'T2'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T1'} ],
-      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'T2'} ],
-      [ {type: 'NO', operand: 'T1'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'WIRE'}, {type: 'COIL', operand: 'Q1'} ],
-      [ {type: 'EMPTY'}, {type: 'EMPTY'}, {type: 'EMPTY'}, {type: 'EMPTY'}, {type: 'EMPTY'}, {type: 'EMPTY'} ]
-    ];
-    
-    activePLC = plc;
-    window.savePLC(); 
-    
-    alert("¡Nivel autocompletado con Step-Down y Turbina de 5V!");
-
-  };
-}, 1500);
-
-// --- BUTTON FOR PDF EXPORT ---
-setTimeout(() => {
-  const pdfBtn = document.createElement("button");
-  pdfBtn.textContent = "Exportar Diagrama a PDF";
-  pdfBtn.style.position = "absolute";
-  pdfBtn.style.bottom = "110px";
-  pdfBtn.style.right = "20px";
-  pdfBtn.style.padding = "10px 15px";
-  pdfBtn.style.backgroundColor = "#ef4444"; // Red
-  pdfBtn.style.color = "white";
-  pdfBtn.style.border = "none";
-  pdfBtn.style.borderRadius = "5px";
-  pdfBtn.style.cursor = "pointer";
-  pdfBtn.style.zIndex = "9999";
-  pdfBtn.style.fontWeight = "bold";
-  document.body.appendChild(pdfBtn);
-
-  pdfBtn.onclick = () => {
-    // Capture canvas
-    const canvas = document.querySelector('canvas');
-    if (!canvas) {
-        alert("No se encontró el lienzo del diagrama.");
-        return;
+function copySystemReport() {
+  const btn = document.getElementById("btn-copy-diag");
+  let report = "--- REPORTE DE DIAGNÓSTICO INDUSTRIAL ---\n";
+  components.forEach(c => {
+    report += `\n[ ${c.label} ] (ID: ${c.id})\n`;
+    if (c instanceof PLCLogo) {
+      report += `  Estado: ${c.powered ? 'ENCENDIDO (Alimentación OK)' : 'APAGADO'}\n`;
     }
-    const imgData = canvas.toDataURL("image/png");
-    
-    // Build Wiring Table
-    let tableHTML = `
-      <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-family: sans-serif;">
-        <thead>
-          <tr style="background-color: #f3f4f6; border-bottom: 2px solid #d1d5db;">
-            <th style="padding: 10px; text-align: left;">Origen</th>
-            <th style="padding: 10px; text-align: left;">Borne</th>
-            <th style="padding: 10px; text-align: left;">Destino</th>
-            <th style="padding: 10px; text-align: left;">Borne</th>
-          </tr>
-        </thead>
-        <tbody>
-    `;
-    
-    wires.forEach(w => {
-      let fromComp = components.find(c => c.nodes.includes(w.from));
-      let toComp = components.find(c => c.nodes.includes(w.to));
-      tableHTML += `
-        <tr style="border-bottom: 1px solid #e5e7eb;">
-          <td style="padding: 8px;">${fromComp ? fromComp.label : '?'}</td>
-          <td style="padding: 8px; font-weight: bold;">${w.from.label}</td>
-          <td style="padding: 8px;">${toComp ? toComp.label : '?'}</td>
-          <td style="padding: 8px; font-weight: bold;">${w.to.label}</td>
-        </tr>
-      `;
+    if (c instanceof Motor3Phase) {
+      report += `  Estado Motor 3~: ${c.running ? 'GIRANDO A VELOCIDAD NOMINAL' : 'DETENIDO'}\n`;
+    }
+    if (c instanceof VFD) {
+      report += `  Variador VFD: ${c.running ? `OPERANDO (${c.frequency.toFixed(1)} Hz, Dir: ${c.direction})` : 'DETENIDO'}\n`;
+    }
+    if (c instanceof Turbina || c instanceof MotorDC) {
+      report += `  Estado Carga DC/Hidro: ${c.running ? 'OPERANDO' : 'DETENIDO'}\n`;
+    }
+    c.nodes.forEach(n => {
+      let connectedWires = wires.filter(w => w.from === n || w.to === n);
+      let conns = connectedWires.map(w => {
+        let other = w.from === n ? w.to : w.from;
+        let otherComp = components.find(comp => comp.nodes.includes(other));
+        return `${otherComp ? otherComp.label : '?'}(${other.label})`;
+      });
+      let pots = Array.from(n.potentials).join(",");
+      report += `  - Borne "${n.label}": Potenciales=(${pots || 'sin tensión'}) -> Conectado a: ${conns.join(", ") || "Ninguno"}\n`;
     });
-    tableHTML += `</tbody></table>`;
-    
-    // Print Window
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-      <html>
-        <head>
-          <title>Reporte de Diagrama - Proyecto Futuro</title>
-          <style>
-            body { font-family: Arial, sans-serif; padding: 20px; }
-            h1 { color: #1e293b; text-align: center; }
-            .img-container { text-align: center; margin: 20px 0; }
-            img { max-width: 100%; height: auto; border: 1px solid #ccc; }
-          </style>
-        </head>
-        <body>
-          <h1>Diagrama de Conexiones - Tablero Escuela</h1>
-          <div class="img-container">
-            <img src="${imgData}" alt="Diagrama de Canvas" />
-          </div>
-          <h2>Tabla de Cableado (Netlist)</h2>
-          ${tableHTML}
-          <script>
-            window.onload = () => {
-              setTimeout(() => {
-                  window.print();
-                  window.close();
-              }, 500);
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    printWindow.document.close();
+  });
+  
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(report).then(() => {
+      if (btn) {
+        const orig = btn.textContent;
+        btn.textContent = "✓ Copiado";
+        setTimeout(() => btn.textContent = orig, 2000);
+      }
+    }).catch(err => {
+      alert("Reporte copiado a consola (F12).");
+      console.log(report);
+    });
+  } else {
+    console.log(report);
+    alert("Reporte impreso en consola de desarrollador.");
+  }
+}
+
+function exportDiagramPDF() {
+  const canvas = document.querySelector('canvas');
+  if (!canvas) {
+    alert("No se encontró el lienzo del diagrama.");
+    return;
+  }
+  const imgData = canvas.toDataURL("image/png");
+  let tableHTML = `
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-family: sans-serif;">
+      <thead>
+        <tr style="background-color: #f3f4f6; border-bottom: 2px solid #d1d5db;">
+          <th style="padding: 10px; text-align: left;">Componente Origen</th>
+          <th style="padding: 10px; text-align: left;">Borne</th>
+          <th style="padding: 10px; text-align: left;">Componente Destino</th>
+          <th style="padding: 10px; text-align: left;">Borne</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  
+  wires.forEach(w => {
+    let fromComp = components.find(c => c.nodes.includes(w.from));
+    let toComp = components.find(c => c.nodes.includes(w.to));
+    tableHTML += `
+      <tr style="border-bottom: 1px solid #e5e7eb;">
+        <td style="padding: 8px;">${fromComp ? fromComp.label : '?'}</td>
+        <td style="padding: 8px; font-weight: bold;">${w.from.label}</td>
+        <td style="padding: 8px;">${toComp ? toComp.label : '?'}</td>
+        <td style="padding: 8px; font-weight: bold;">${w.to.label}</td>
+      </tr>
+    `;
+  });
+  tableHTML += `</tbody></table>`;
+  
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert("Permite las ventanas emergentes (popups) para exportar el diagrama.");
+    return;
+  }
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Reporte de Diagrama - ${activeLevel ? activeLevel.headline : 'Tablero Industrial'}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 25px; color: #1e293b; }
+          h1 { color: #0f172a; border-bottom: 2px solid #0284c7; padding-bottom: 8px; }
+          .img-container { text-align: center; margin: 20px 0; }
+          img { max-width: 100%; height: auto; border: 1px solid #cbd5e1; border-radius: 8px; }
+        </style>
+      </head>
+      <body>
+        <h1>Diagrama Unilineal / Multifilar Industrial</h1>
+        <p><strong>Plantilla:</strong> ${activeLevel ? activeLevel.headline : ''}</p>
+        <div class="img-container">
+          <img src="${imgData}" alt="Diagrama de Canvas" />
+        </div>
+        <h2>Tabla de Cableado y Conexiones (Netlist)</h2>
+        ${tableHTML}
+        <script>
+          window.onload = () => {
+            setTimeout(() => {
+              window.print();
+              window.close();
+            }, 500);
+          };
+        </script>
+      </body>
+    </html>
+  `);
+  printWindow.document.close();
+}
+
+function autocompleteCurrentLevel() {
+  if (!activeLevel) return;
+  wires = [];
+  const getC = (lbl) => components.find(c => c.id === lbl);
+  const connect = (n1, n2, type="L1") => {
+    if (n1 && n2) wires.push(new Wire(n1, n2, type));
   };
-}, 1800);
+
+  if (activeLevel.id === "plc-escuela") {
+    const panel = getC("panel"), mppt = getC("mppt"), b1 = getC("b1"), b2 = getC("b2");
+    const barradc = getC("barradc"), inv = getC("inv"), stepdown = getC("stepdown");
+    const barra5v = getC("barra5v"), plc = getC("plc"), m1 = getC("m1");
+    if (barradc && b1 && b2 && panel && mppt) {
+      connect(panel.pos, mppt.pPos, "L1");
+      connect(panel.neg, mppt.pNeg, "N");
+      connect(b1.neg, barradc.bars[0][0], "N");
+      connect(b2.pos, barradc.bars[2][0], "L1");
+      connect(b1.pos, b2.neg, "L2");
+      connect(mppt.bPos, barradc.bars[2][1], "L1");
+      connect(mppt.bNeg, barradc.bars[0][1], "N");
+      if (inv) {
+        connect(inv.dcPos, barradc.bars[2][2], "L1");
+        connect(inv.dcNeg, barradc.bars[0][2], "N");
+      }
+      if (stepdown && barra5v) {
+        connect(barradc.bars[2][0], stepdown.inPos, "L1");
+        connect(barradc.bars[0][0], stepdown.inNeg, "N");
+        connect(stepdown.outPos, barra5v.bars[1][0], "L3");
+        connect(stepdown.outNeg, barra5v.bars[0][0], "N");
+      }
+      if (plc) {
+        connect(barradc.bars[2][1], plc.l1, "L1");
+        connect(barradc.bars[0][1], plc.n, "N");
+        if (barra5v && m1) {
+          connect(barra5v.bars[1][1], plc.q1a, "L3");
+          connect(plc.q1b, m1.pos, "L3");
+          connect(m1.neg, barra5v.bars[0][1], "N");
+        }
+      }
+      plcGridData = getLadderForLevel("plc-escuela");
+      if (plc) { activePLC = plc; window.savePLC(); }
+    }
+  } else if (activeLevel.id === "plc-13") {
+    const src = getC("source"), vfd = getC("vfd"), m1 = getC("m1"), pFwd = getC("pFwd");
+    if (src && vfd && m1) {
+      connect(src.l1, vfd.l1, "L1");
+      connect(src.l2, vfd.l2, "L2");
+      connect(src.l3, vfd.l3, "L3");
+      connect(vfd.u, m1.u1, "L1");
+      connect(vfd.v, m1.v1, "L2");
+      connect(vfd.w, m1.w1, "L3");
+      if (pFwd) {
+        connect(vfd.v24, pFwd.n1, "L1");
+        connect(pFwd.n2, vfd.di1, "L1");
+        pFwd.pressed = true;
+      }
+    }
+  } else if (components.some(c => c instanceof PLCLogo)) {
+    // Autocompletado integral para niveles con PLC LOGO! (plc-1 hasta plc-12)
+    const src = components.find(c => c instanceof Source3Phase);
+    const tm = components.find(c => c instanceof TermomagneticoIndustrial);
+    const dif = components.find(c => c instanceof DisyuntorDiferencialIndustrial);
+    const bus = components.find(c => c instanceof BarraTetrapolar);
+    const plc = components.find(c => c instanceof PLCLogo);
+    const k1 = components.find(c => c instanceof Contactor);
+    const m = components.find(c => c instanceof Motor3Phase);
+    const pStop = components.find(c => c instanceof Pushbutton && c.btnType === "NC");
+    const pStart = components.find(c => c instanceof Pushbutton && (c.btnType === "NO" || !c.btnType));
+    const allButtons = components.filter(c => c instanceof Pushbutton);
+
+    // 1. Red -> TM -> DIF -> Barras Tetrapolares (o Red directa a Barras si no hay protecciones en el nivel)
+    if (src && tm && dif && bus) {
+      connect(src.l1, tm.inL1, "L1"); connect(src.l2, tm.inL2, "L2"); connect(src.l3, tm.inL3, "L3"); connect(src.n, tm.inN, "N");
+      connect(tm.outL1, dif.inL1, "L1"); connect(tm.outL2, dif.inL2, "L2"); connect(tm.outL3, dif.inL3, "L3"); connect(tm.outN, dif.inN, "N");
+      connect(dif.outN, bus.bars[0][0], "N");
+      connect(dif.outL1, bus.bars[1][0], "L1");
+      connect(dif.outL2, bus.bars[2][0], "L2");
+      connect(dif.outL3, bus.bars[3][0], "L3");
+    } else if (src && bus) {
+      connect(src.n, bus.bars[0][0], "N");
+      connect(src.l1, bus.bars[1][0], "L1");
+      connect(src.l2, bus.bars[2][0], "L2");
+      connect(src.l3, bus.bars[3][0], "L3");
+    }
+
+    // 2. Alimentación del PLC (Fase L1 a Borne L1, Neutro a Borne N)
+    const pFeed = bus ? bus.bars[1][1] : (src ? src.l1 : null);
+    const nFeed = bus ? bus.bars[0][1] : (src ? src.n : null);
+    if (plc && pFeed && nFeed) {
+      connect(pFeed, plc.l1, "L1");
+      connect(nFeed, plc.n, "N");
+    }
+
+    // 3. Entradas Digitales (Pulsadores / Sensores)
+    const pFeedIn = bus ? bus.bars[1][2] : (src ? src.l1 : null);
+    if (pStart && pStop) {
+      connect(pFeedIn, pStart.n1, "L1");
+      connect(pStart.n2, plc.i1, "L1");
+      connect(pFeedIn, pStop.n1, "L1");
+      connect(pStop.n2, plc.i2, "L1");
+      pStart.pressed = true;
+      pStop.pressed = false;
+    } else if (allButtons.length >= 2) {
+      connect(pFeedIn, allButtons[0].n1, "L1");
+      connect(allButtons[0].n2, plc.i1, "L1");
+      connect(pFeedIn, allButtons[1].n1, "L1");
+      connect(allButtons[1].n2, plc.i2, "L1");
+      allButtons[0].pressed = true;
+      allButtons[1].pressed = true;
+    } else if (allButtons.length === 1) {
+      connect(pFeedIn, allButtons[0].n1, "L1");
+      connect(allButtons[0].n2, plc.i1, "L1");
+      allButtons[0].pressed = true;
+    }
+
+    // 4. Salida a Relé Q1 -> Bobina A1/A2 del Contactor K1
+    const pFeedQ = bus ? bus.bars[1][2] : (src ? src.l1 : null);
+    const nFeedQ = bus ? bus.bars[0][2] : (src ? src.n : null);
+    if (plc && k1) {
+      if (pFeedQ) connect(pFeedQ, plc.q1a, "L1");
+      connect(plc.q1b, k1.a1, "L1");
+      if (nFeedQ) connect(k1.a2, nFeedQ, "N");
+    }
+
+    // 5. Potencia Trifásica al Contactor y Motor 3~
+    if (k1 && m) {
+      if (bus) {
+        connect(bus.bars[1][0], k1.l1, "L1");
+        connect(bus.bars[2][0], k1.l2, "L2");
+        connect(bus.bars[3][0], k1.l3, "L3");
+      } else if (src) {
+        connect(src.l1, k1.l1, "L1");
+        connect(src.l2, k1.l2, "L2");
+        connect(src.l3, k1.l3, "L3");
+      }
+      connect(k1.t1, m.u1, "L1");
+      connect(k1.t2, m.v1, "L2");
+      connect(k1.t3, m.w1, "L3");
+    }
+
+    // 6. Programación Ladder e inyección en el LOGO!
+    if (plc) {
+      plcGridData = getLadderForLevel(activeLevel.id);
+      activePLC = plc;
+      window.savePLC();
+    }
+  } else if (activeLevel.id === "control-fuerza-4") {
+    const src = getC("source"), tm = getC("tm"), dif = getC("dif"), bus = getC("bus");
+    const pStop = getC("pStop"), pStart = getC("pStart"), k1 = getC("k1"), t1 = getC("t1"), k2 = getC("k2"), m1 = getC("m1"), m2 = getC("m2");
+    if (src && tm && dif && bus) {
+      connect(src.l1, tm.inL1, "L1"); connect(src.l2, tm.inL2, "L2"); connect(src.l3, tm.inL3, "L3"); connect(src.n, tm.inN, "N");
+      connect(tm.outL1, dif.inL1, "L1"); connect(tm.outL2, dif.inL2, "L2"); connect(tm.outL3, dif.inL3, "L3"); connect(tm.outN, dif.inN, "N");
+      connect(dif.outN, bus.bars[0][0], "N");
+      connect(dif.outL1, bus.bars[1][0], "L1");
+      connect(dif.outL2, bus.bars[2][0], "L2");
+      connect(dif.outL3, bus.bars[3][0], "L3");
+
+      connect(bus.bars[1][1], k1.l1, "L1"); connect(bus.bars[2][1], k1.l2, "L2"); connect(bus.bars[3][1], k1.l3, "L3");
+      connect(k1.t1, m1.u1, "L1"); connect(k1.t2, m1.v1, "L2"); connect(k1.t3, m1.w1, "L3");
+
+      connect(bus.bars[1][1], k2.l1, "L1"); connect(bus.bars[2][1], k2.l2, "L2"); connect(bus.bars[3][1], k2.l3, "L3");
+      connect(k2.t1, m2.u1, "L1"); connect(k2.t2, m2.v1, "L2"); connect(k2.t3, m2.w1, "L3");
+
+      connect(bus.bars[1][2], pStop.n1, "L1");
+      connect(pStop.n2, pStart.n1, "L1");
+      connect(pStart.n2, k1.a1, "L1");
+      connect(k1.a1, t1.a1, "L1");
+      connect(k1.a2, bus.bars[0][1], "N");
+      connect(t1.a2, bus.bars[0][1], "N");
+      connect(pStart.n1, k1.no13, "L1");
+      connect(pStart.n2, k1.no14, "L1");
+      pStart.pressed = true;
+
+      connect(pStop.n2, t1.no1, "L1");
+      connect(t1.no2, k2.a1, "L1");
+      connect(k2.a2, bus.bars[0][2], "N");
+    }
+  } else if (activeLevel.id === "control-fuerza-5") {
+    const src = getC("source"), tm = getC("tm"), dif = getC("dif"), bus = getC("bus");
+    const pStart = getC("pStart"), k1 = getC("k1"), k2 = getC("k2"), k3 = getC("k3"), m1 = getC("m1");
+    if (src && tm && dif && bus && k1 && k3) {
+      connect(src.l1, tm.inL1, "L1"); connect(src.l2, tm.inL2, "L2"); connect(src.l3, tm.inL3, "L3"); connect(src.n, tm.inN, "N");
+      connect(tm.outL1, dif.inL1, "L1"); connect(tm.outL2, dif.inL2, "L2"); connect(tm.outL3, dif.inL3, "L3"); connect(tm.outN, dif.inN, "N");
+      connect(dif.outN, bus.bars[0][0], "N");
+      connect(dif.outL1, bus.bars[1][0], "L1");
+      connect(dif.outL2, bus.bars[2][0], "L2");
+      connect(dif.outL3, bus.bars[3][0], "L3");
+
+      connect(bus.bars[1][2], pStart.n1, "L1");
+      connect(pStart.n2, k1.a1, "L1");
+      connect(pStart.n2, k3.a1, "L1");
+      connect(k1.a2, bus.bars[0][1], "N");
+      connect(k3.a2, bus.bars[0][1], "N");
+      pStart.pressed = true;
+    }
+  } else {
+    // Autocompletado estándar para tableros industriales con contactor y motor
+    const src = components.find(c => c instanceof Source3Phase);
+    const tm = components.find(c => c instanceof TermomagneticoIndustrial);
+    const dif = components.find(c => c instanceof DisyuntorDiferencialIndustrial);
+    const bus = components.find(c => c instanceof BarraTetrapolar);
+    const k1 = components.find(c => c instanceof Contactor);
+    const m = components.find(c => c instanceof Motor3Phase);
+    const pStop = components.find(c => c instanceof Pushbutton && c.btnType === "NC");
+    const pStart = components.find(c => c instanceof Pushbutton && c.btnType === "NO");
+
+    if (src && tm && dif && bus) {
+      // 1. Red -> TM
+      connect(src.l1, tm.inL1, "L1"); connect(src.l2, tm.inL2, "L2"); connect(src.l3, tm.inL3, "L3"); connect(src.n, tm.inN, "N");
+      // 2. TM -> Diferencial
+      connect(tm.outL1, dif.inL1, "L1"); connect(tm.outL2, dif.inL2, "L2"); connect(tm.outL3, dif.inL3, "L3"); connect(tm.outN, dif.inN, "N");
+      // 3. Diferencial -> Barras
+      connect(dif.outN, bus.bars[0][0], "N");
+      connect(dif.outL1, bus.bars[1][0], "L1");
+      connect(dif.outL2, bus.bars[2][0], "L2");
+      connect(dif.outL3, bus.bars[3][0], "L3");
+
+      if (k1 && m) {
+        // Fuerza a contactor y motor
+        connect(bus.bars[1][1], k1.l1, "L1");
+        connect(bus.bars[2][1], k1.l2, "L2");
+        connect(bus.bars[3][1], k1.l3, "L3");
+        connect(k1.t1, m.u1, "L1");
+        connect(k1.t2, m.v1, "L2");
+        connect(k1.t3, m.w1, "L3");
+        // Mando a bobina
+        if (pStop && pStart) {
+          connect(bus.bars[1][2], pStop.n1, "L1");
+          connect(pStop.n2, pStart.n1, "L1");
+          connect(pStart.n2, k1.a1, "L1");
+          connect(k1.a2, bus.bars[0][1], "N");
+          // Retención
+          connect(pStart.n1, k1.no13, "L1");
+          connect(pStart.n2, k1.no14, "L1");
+          pStart.pressed = true;
+        } else {
+          connect(bus.bars[1][2], k1.a1, "L1");
+          connect(k1.a2, bus.bars[0][1], "N");
+        }
+      }
+    } else if (k1 && src) {
+      if (pStop && pStart) {
+        connect(src.l1, pStop.n1, "L1");
+        connect(pStop.n2, pStart.n1, "L1");
+        connect(pStart.n2, k1.a1, "L1");
+        connect(k1.a2, src.n, "N");
+        connect(pStart.n1, k1.no13, "L1");
+        connect(pStart.n2, k1.no14, "L1");
+        pStart.pressed = true;
+      }
+      if (m) {
+        connect(src.l1, k1.l1, "L1");
+        connect(src.l2, k1.l2, "L2");
+        connect(src.l3, k1.l3, "L3");
+        connect(k1.t1, m.u1, "L1");
+        connect(k1.t2, m.v1, "L2");
+        connect(k1.t3, m.w1, "L3");
+      }
+    }
+  }
+
+  analizarCircuito();
+}

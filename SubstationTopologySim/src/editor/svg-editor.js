@@ -97,7 +97,207 @@ export class SvgEditor {
     this.svg.appendChild(this.viewportGroup);
     this.container.appendChild(this.svg);
 
+    this.initNavBars();
     this.applyViewportTransform();
+  }
+
+  /**
+   * Inicializa las barras de navegación / desplazamiento del lienzo.
+   */
+  initNavBars() {
+    this.navBarH = document.createElement('div');
+    this.navBarH.className = 'canvas-nav-bar canvas-nav-bar-h';
+    this.navBarH.innerHTML = `
+      <div class="canvas-nav-track" id="nav-track-h">
+        <div class="canvas-nav-thumb" id="nav-thumb-h" title="Desplazar vista horizontal"></div>
+      </div>
+    `;
+
+    this.navBarV = document.createElement('div');
+    this.navBarV.className = 'canvas-nav-bar canvas-nav-bar-v';
+    this.navBarV.innerHTML = `
+      <div class="canvas-nav-track" id="nav-track-v">
+        <div class="canvas-nav-thumb" id="nav-thumb-v" title="Desplazar vista vertical"></div>
+      </div>
+    `;
+
+    this.container.appendChild(this.navBarH);
+    this.container.appendChild(this.navBarV);
+
+    this.thumbH = this.navBarH.querySelector('#nav-thumb-h');
+    this.trackH = this.navBarH.querySelector('#nav-track-h');
+    this.thumbV = this.navBarV.querySelector('#nav-thumb-v');
+    this.trackV = this.navBarV.querySelector('#nav-track-v');
+
+    this.isDraggingNavH = false;
+    this.isDraggingNavV = false;
+    this.navDragStart = { mouse: 0, initialVal: 0 };
+
+    this.bindNavBarEvents();
+  }
+
+  /**
+   * Enlaza eventos interactivos de las barras de navegación.
+   */
+  bindNavBarEvents() {
+    if (!this.thumbH || !this.thumbV) return;
+
+    this.thumbH.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.isDraggingNavH = true;
+      this.thumbH.classList.add('dragging');
+      this.navDragStart = { mouse: e.clientX, initialVal: this.stateStore.viewport.x };
+    });
+
+    this.trackH.addEventListener('mousedown', (e) => {
+      if (e.target === this.thumbH) return;
+      e.stopPropagation();
+      const rect = this.trackH.getBoundingClientRect();
+      const clickRatio = (e.clientX - rect.left) / rect.width;
+      this.panToRatioX(clickRatio);
+    });
+
+    this.thumbV.addEventListener('mousedown', (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      this.isDraggingNavV = true;
+      this.thumbV.classList.add('dragging');
+      this.navDragStart = { mouse: e.clientY, initialVal: this.stateStore.viewport.y };
+    });
+
+    this.trackV.addEventListener('mousedown', (e) => {
+      if (e.target === this.thumbV) return;
+      e.stopPropagation();
+      const rect = this.trackV.getBoundingClientRect();
+      const clickRatio = (e.clientY - rect.top) / rect.height;
+      this.panToRatioY(clickRatio);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (this.isDraggingNavH) {
+        const deltaPx = e.clientX - this.navDragStart.mouse;
+        const trackW = this.trackH.clientWidth;
+        if (trackW > 0) {
+          const worldBounds = this.getWorldNavBounds();
+          const totalW = worldBounds.maxX - worldBounds.minX;
+          const deltaWorld = (deltaPx / trackW) * totalW;
+          const newX = this.navDragStart.initialVal - deltaWorld * this.stateStore.viewport.zoom;
+          this.stateStore.setViewport(newX, this.stateStore.viewport.y, this.stateStore.viewport.zoom);
+          this.applyViewportTransform();
+        }
+      } else if (this.isDraggingNavV) {
+        const deltaPx = e.clientY - this.navDragStart.mouse;
+        const trackH = this.trackV.clientHeight;
+        if (trackH > 0) {
+          const worldBounds = this.getWorldNavBounds();
+          const totalH = worldBounds.maxY - worldBounds.minY;
+          const deltaWorld = (deltaPx / trackH) * totalH;
+          const newY = this.navDragStart.initialVal - deltaWorld * this.stateStore.viewport.zoom;
+          this.stateStore.setViewport(this.stateStore.viewport.x, newY, this.stateStore.viewport.zoom);
+          this.applyViewportTransform();
+        }
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (this.isDraggingNavH) {
+        this.isDraggingNavH = false;
+        this.thumbH.classList.remove('dragging');
+      }
+      if (this.isDraggingNavV) {
+        this.isDraggingNavV = false;
+        this.thumbV.classList.remove('dragging');
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      this.updateNavBars();
+    });
+  }
+
+  /**
+   * Obtiene los límites espaciales del mundo eléctrico para cálculo de navegación.
+   */
+  getWorldNavBounds() {
+    const comps = this.networkModel ? this.networkModel.getAllComponents() : [];
+    let minX = -200, maxX = 1800, minY = -100, maxY = 1200;
+    if (comps && comps.length > 0) {
+      minX = Infinity; maxX = -Infinity; minY = Infinity; maxY = -Infinity;
+      for (const c of comps) {
+        minX = Math.min(minX, c.position.x);
+        minY = Math.min(minY, c.position.y);
+        maxX = Math.max(maxX, c.position.x + (c.dimensions.width || 60));
+        maxY = Math.max(maxY, c.position.y + (c.dimensions.height || 60));
+      }
+      minX = Math.min(-200, minX - 300);
+      maxX = Math.max(1600, maxX + 300);
+      minY = Math.min(-150, minY - 200);
+      maxY = Math.max(1000, maxY + 200);
+    }
+    return { minX, maxX, minY, maxY };
+  }
+
+  panToRatioX(ratio) {
+    const bounds = this.getWorldNavBounds();
+    const totalW = bounds.maxX - bounds.minX;
+    const targetWorldX = bounds.minX + ratio * totalW;
+    const rect = this.svg.getBoundingClientRect();
+    const newX = (rect.width / 2) - targetWorldX * this.stateStore.viewport.zoom;
+    this.stateStore.setViewport(newX, this.stateStore.viewport.y, this.stateStore.viewport.zoom);
+    this.applyViewportTransform();
+  }
+
+  panToRatioY(ratio) {
+    const bounds = this.getWorldNavBounds();
+    const totalH = bounds.maxY - bounds.minY;
+    const targetWorldY = bounds.minY + ratio * totalH;
+    const rect = this.svg.getBoundingClientRect();
+    const newY = (rect.height / 2) - targetWorldY * this.stateStore.viewport.zoom;
+    this.stateStore.setViewport(this.stateStore.viewport.x, newY, this.stateStore.viewport.zoom);
+    this.applyViewportTransform();
+  }
+
+  /**
+   * Actualiza el tamaño y posición de los deslizadores de navegación según el viewport actual.
+   */
+  updateNavBars() {
+    if (!this.thumbH || !this.thumbV || !this.svg) return;
+
+    const rect = this.svg.getBoundingClientRect();
+    if (rect.width <= 0 || rect.height <= 0) return;
+
+    const { x, y, zoom } = this.stateStore.viewport;
+    const bounds = this.getWorldNavBounds();
+
+    const visLeft = -x / zoom;
+    const visRight = (rect.width - x) / zoom;
+    const visTop = -y / zoom;
+    const visBottom = (rect.height - y) / zoom;
+
+    const worldLeft = Math.min(bounds.minX, visLeft);
+    const worldRight = Math.max(bounds.maxX, visRight);
+    const worldTop = Math.min(bounds.minY, visTop);
+    const worldBottom = Math.max(bounds.maxY, visBottom);
+
+    const totalW = worldRight - worldLeft;
+    const totalH = worldBottom - worldTop;
+
+    if (totalW > 0) {
+      const visW = visRight - visLeft;
+      const thumbW = Math.max(6, Math.min(100, (visW / totalW) * 100));
+      const thumbLeft = Math.max(0, Math.min(100 - thumbW, ((visLeft - worldLeft) / totalW) * 100));
+      this.thumbH.style.width = `${thumbW}%`;
+      this.thumbH.style.left = `${thumbLeft}%`;
+    }
+
+    if (totalH > 0) {
+      const visH = visBottom - visTop;
+      const thumbH = Math.max(6, Math.min(100, (visH / totalH) * 100));
+      const thumbTop = Math.max(0, Math.min(100 - thumbH, ((visTop - worldTop) / totalH) * 100));
+      this.thumbV.style.height = `${thumbH}%`;
+      this.thumbV.style.top = `${thumbTop}%`;
+    }
   }
 
   /**
@@ -107,6 +307,7 @@ export class SvgEditor {
     const { x, y, zoom } = this.stateStore.viewport;
     this.viewportGroup.setAttribute('transform', `translate(${x}, ${y}) scale(${zoom})`);
     this.gridRect.style.display = this.stateStore.grid.enabled ? 'block' : 'none';
+    this.updateNavBars();
   }
 
   /**

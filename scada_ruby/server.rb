@@ -4,7 +4,6 @@ require 'json'
 # ¡Clave para Termux en Android! 
 # Apagamos los logs para que la consola no se sature y crashee por falta de memoria
 set :logging, false 
-set :server, :puma
 
 # Configuración del servidor para que escuche en tu red local (el TP-Link)
 set :bind, '0.0.0.0'

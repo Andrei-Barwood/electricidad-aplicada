@@ -2014,12 +2014,55 @@ const PRESET_BUILDERS = {
 };
 
 /**
+ * Aplica una transformación de espaciado geométrico a una colección de componentes.
+ * Separa de manera holgada y proporcional las bahías (X) y niveles jerárquicos (Y)
+ * para evitar colisiones entre etiquetas de texto y bornes galvánicos contiguos.
+ * @param {Array<Object>} components
+ * @param {Array<Object>} connections
+ * @param {Object} [options]
+ * @returns {{ components: Array<Object>, connections: Array<Object> }}
+ */
+export function applyLayoutSpacing(components, connections, options = {}) {
+  if (!components || components.length === 0) return { components, connections };
+
+  const scaleX = options.scaleX ?? 1.6;
+  const scaleY = options.scaleY ?? 1.45;
+
+  let minX = Infinity;
+  let minY = Infinity;
+  for (const c of components) {
+    if (c.position.x < minX) minX = c.position.x;
+    if (c.position.y < minY) minY = c.position.y;
+  }
+  if (!isFinite(minX)) minX = 0;
+  if (!isFinite(minY)) minY = 0;
+
+  const originX = minX;
+  const originY = minY;
+
+  for (const c of components) {
+    const oldX = c.position.x;
+    const oldY = c.position.y;
+
+    c.position.x = Math.round(originX + (oldX - originX) * scaleX);
+    c.position.y = Math.round(originY + (oldY - originY) * scaleY);
+
+    if (c.type === ComponentType.BUSBAR) {
+      c.dimensions.width = Math.round(c.dimensions.width * scaleX);
+    }
+  }
+
+  return { components, connections };
+}
+
+/**
  * Carga una topología predefinida en el NetworkModel activo.
  * @param {import('./network-model.js').NetworkModel} networkModel
  * @param {string} presetKey
+ * @param {Object} [options]
  * @returns {{ metadata: Object, componentsCount: number, connectionsCount: number }}
  */
-export function loadTopologyPreset(networkModel, presetKey) {
+export function loadTopologyPreset(networkModel, presetKey, options = {}) {
   const builder = PRESET_BUILDERS[presetKey];
   if (!builder) {
     throw new Error(`[TopologyPresets] Topología predefinida '${presetKey}' no reconocida.`);
@@ -2028,7 +2071,8 @@ export function loadTopologyPreset(networkModel, presetKey) {
   const metadata = TOPOLOGY_PRESETS_METADATA[presetKey];
   networkModel.clear();
 
-  const { components, connections } = builder();
+  const rawPreset = builder();
+  const { components, connections } = applyLayoutSpacing(rawPreset.components, rawPreset.connections, options);
 
   // Agregar componentes
   for (const comp of components) {

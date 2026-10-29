@@ -186,6 +186,14 @@ export class PresetsPanel {
       // Actualizar Ficha Técnica
       this.updateTechSheet(res.metadata);
 
+      // Actualizar selector rápido superior si existe
+      const quickSelect = document.getElementById('quick-preset-select');
+      if (quickSelect && quickSelect.value !== presetKey) {
+        quickSelect.value = presetKey;
+      }
+
+      this.eventBus.emit('preset:loaded', { presetKey, metadata: res.metadata });
+
       // Centrar viewport
       setTimeout(() => {
         this.svgEditor.zoomToFit();
@@ -222,7 +230,25 @@ export class PresetsPanel {
       this.container.querySelectorAll('.preset-card-btn').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.presetKey === presetKey);
       });
+      const quickSelect = document.getElementById('quick-preset-select');
+      if (quickSelect && quickSelect.value !== presetKey) {
+        quickSelect.value = presetKey;
+      }
       this.updateTechSheet(metadata);
     });
+
+    const quickSelect = document.getElementById('quick-preset-select');
+    if (quickSelect) {
+      quickSelect.addEventListener('change', (e) => {
+        this.selectAndLoadPreset(e.target.value);
+      });
+    }
+
+    const quickZoomFit = document.getElementById('quick-btn-zoom-fit');
+    if (quickZoomFit) {
+      quickZoomFit.addEventListener('click', () => {
+        this.svgEditor.zoomToFit();
+      });
+    }
   }
 }

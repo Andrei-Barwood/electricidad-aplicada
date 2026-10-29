@@ -1,62 +1,77 @@
 /* ==========================================================================
    Design Tokens - SubstationTopologySim
-   Paleta industrial / SCADA moderna inspirada en centros de control eléctrico.
+   Paleta Prince Blueblood adaptada para Electricidad Aplicada.
+   Soporte completo y sincronizado de dos temas: Noche (dark) y Día (light).
    ========================================================================== */
 
-:root {
-  /* Paleta base de interfaz (Dark Engineering Theme) */
-  --color-bg-base: #0f141c;
-  --color-bg-surface: #171f2c;
-  --color-bg-surface-elevated: #1f2a3a;
-  --color-bg-surface-hover: #273548;
-  --color-bg-canvas: #090d14;
-  
-  --color-border-subtle: #243042;
-  --color-border-medium: #33445c;
-  --color-border-active: #3b82f6;
+:root, html[data-theme="night"] {
+  color-scheme: dark;
+
+  /* Superficies y fondos */
+  --color-bg-base: #1c1c28;
+  --color-bg-surface: #262636;
+  --color-bg-surface-elevated: #303030;
+  --color-bg-surface-hover: #3a3a48;
+  --color-bg-canvas: #161622;
+  --color-card-bg: linear-gradient(180deg, rgba(79, 79, 79, 0.94), rgba(72, 81, 153, 0.52));
+
+  /* Líneas divisorias y bordes */
+  --color-border-subtle: rgba(195, 206, 222, 0.18);
+  --color-border-medium: rgba(195, 206, 222, 0.28);
+  --color-border-active: #0ED1FF;
 
   /* Tipografía y textos */
-  --font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --font-family-mono: "JetBrains Mono", "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-family-sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-family-mono: "IBM Plex Mono", "SF Mono", "JetBrains Mono", ui-monospace, Menlo, Monaco, Consolas, monospace;
 
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-text-inverse: #090d14;
+  --color-text-primary: #EAEEF4;
+  --color-text-secondary: #ADBAD1;
+  --color-text-muted: #8391a8;
+  --color-text-inverse: #1c1c28;
 
-  /* Estados eléctricos y de maniobra (IEC / IEEE con doble codificación: color + símbolo) */
-  --color-state-closed: #ef4444;       /* Rojo: circuito cerrado / energizado / vivo */
-  --color-state-open: #10b981;         /* Verde: circuito abierto / aislado / seguro para tocar */
-  --color-state-energized: #ef4444;    /* Energizado activo */
-  --color-state-deenergized: #475569;  /* Desenergizado inactivo */
-  --color-state-grounded: #eab308;     /* Puesta a tierra */
-  --color-state-maintenance: #f97316;  /* Fuera de servicio / Bloqueo enclavado */
-  --color-state-fault: #dc2626;        /* Falla / Disparo */
+  /* Estados eléctricos SCADA normalizados */
+  --color-state-closed: #ED4329;       /* Rojo: circuito cerrado / energizado / vivo */
+  --color-state-open: #92C21D;         /* Verde: circuito abierto / aislado / seguro */
+  --color-state-energized: #ED4329;
+  --color-state-deenergized: #5A64BF;
+  --color-state-grounded: #E3CA75;
+  --color-state-maintenance: #f97316;
+  --color-state-fault: #ED4329;
 
   /* Niveles de tensión unifilares típicos */
   --voltage-500kv: #e11d48;
-  --voltage-220kv: #f97316;
-  --voltage-110kv: #eab308;
-  --voltage-66kv:  #10b981;
-  --voltage-23kv:  #06b6d4;
-  --voltage-13kv:  #3b82f6;
-  --voltage-default: #38bdf8;
+  --voltage-220kv: #0ED1FF;
+  --voltage-110kv: #E3CA75;
+  --voltage-66kv:  #92C21D;
+  --voltage-23kv:  #A5E1FA;
+  --voltage-13kv:  #5A64BF;
+  --voltage-default: #0ED1FF;
 
   /* Rejilla y guía CAD */
-  --grid-line-major: rgba(255, 255, 255, 0.08);
-  --grid-line-minor: rgba(255, 255, 255, 0.03);
-  --canvas-selection-box: rgba(59, 130, 246, 0.2);
-  --canvas-selection-border: #3b82f6;
+  --grid-line-major: rgba(195, 206, 222, 0.12);
+  --grid-line-minor: rgba(195, 206, 222, 0.05);
+  --canvas-selection-box: rgba(14, 209, 255, 0.18);
+  --canvas-selection-border: #0ED1FF;
 
   /* UI Interacciones */
-  --color-accent: #2563eb;
-  --color-accent-hover: #1d4ed8;
-  --color-accent-focus: rgba(37, 99, 235, 0.35);
+  --color-accent: #0ED1FF;
+  --color-accent-hover: #5A64BF;
+  --color-accent-focus: rgba(14, 209, 255, 0.35);
 
-  --color-danger: #dc2626;
-  --color-warning: #f59e0b;
-  --color-success: #10b981;
-  --color-info: #0284c7;
+  --color-danger: #ED4329;
+  --color-warning: #E3CA75;
+  --color-success: #92C21D;
+  --color-info: #0ED1FF;
+
+  /* Scrollbars / Barras de navegación */
+  --scrollbar-track: rgba(22, 22, 34, 0.6);
+  --scrollbar-thumb: rgba(173, 186, 209, 0.35);
+  --scrollbar-thumb-hover: #0ED1FF;
+
+  /* Sombras y elevaciones */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 14px 30px rgba(0, 0, 0, 0.5);
 
   /* Espaciado y radios */
   --space-2xs: 2px;
@@ -70,14 +85,77 @@
   --radius-md: 6px;
   --radius-lg: 8px;
 
-  /* Elevaciones */
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.25);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.45);
-
   /* Tamaños fijos de paneles */
   --header-height: 52px;
+  --top-nav-height: 38px;
   --sidebar-left-width: 260px;
   --sidebar-right-width: 370px;
   --statusbar-height: 32px;
+}
+
+html[data-theme="day"] {
+  color-scheme: light;
+
+  /* Superficies y fondos */
+  --color-bg-base: #EAEEF4;
+  --color-bg-surface: #FFFFFF;
+  --color-bg-surface-elevated: #F0F4F8;
+  --color-bg-surface-hover: #E4ECF5;
+  --color-bg-canvas: #F8FAFD;
+  --color-card-bg: linear-gradient(180deg, #FFFFFF, #EAEEF4);
+
+  /* Líneas divisorias y bordes */
+  --color-border-subtle: rgba(72, 81, 153, 0.18);
+  --color-border-medium: rgba(72, 81, 153, 0.28);
+  --color-border-active: #485199;
+
+  /* Textos */
+  --color-text-primary: #303030;
+  --color-text-secondary: #63627C;
+  --color-text-muted: #8887A0;
+  --color-text-inverse: #FFFFFF;
+
+  /* Estados eléctricos SCADA normalizados */
+  --color-state-closed: #DD100F;       /* Rojo: vivo / cerrado */
+  --color-state-open: #6A882F;         /* Verde: abierto / seguro */
+  --color-state-energized: #DD100F;
+  --color-state-deenergized: #8887A0;
+  --color-state-grounded: #CEB143;
+  --color-state-maintenance: #f97316;
+  --color-state-fault: #DD100F;
+
+  /* Niveles de tensión unifilares */
+  --voltage-500kv: #c0153a;
+  --voltage-220kv: #0284c7;
+  --voltage-110kv: #CEB143;
+  --voltage-66kv:  #6A882F;
+  --voltage-23kv:  #0891b2;
+  --voltage-13kv:  #485199;
+  --voltage-default: #0284c7;
+
+  /* Rejilla y guía CAD */
+  --grid-line-major: rgba(72, 81, 153, 0.18);
+  --grid-line-minor: rgba(72, 81, 153, 0.08);
+  --canvas-selection-box: rgba(72, 81, 153, 0.15);
+  --canvas-selection-border: #485199;
+
+  /* UI Interacciones */
+  --color-accent: #485199;
+  --color-accent-hover: #3a3a48;
+  --color-accent-focus: rgba(72, 81, 153, 0.25);
+
+  --color-danger: #DD100F;
+  --color-warning: #CEB143;
+  --color-success: #6A882F;
+  --color-info: #0284c7;
+
+  /* Scrollbars / Barras de navegación */
+  --scrollbar-track: rgba(234, 238, 244, 0.8);
+  --scrollbar-thumb: rgba(99, 98, 124, 0.35);
+  --scrollbar-thumb-hover: #485199;
+
+  /* Sombras y elevaciones */
+  --shadow-sm: 0 1px 3px rgba(72, 81, 153, 0.08);
+  --shadow-md: 0 6px 16px rgba(72, 81, 153, 0.12);
+  --shadow-lg: 0 14px 30px rgba(72, 81, 153, 0.16);
 }

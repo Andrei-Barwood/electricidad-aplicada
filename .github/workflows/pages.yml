@@ -25,6 +25,9 @@ jobs:
           cp favicon.jpeg dist/
           cp -R vendor dist/
           cp -R magia dist/
+          cp -R SubstationTopologySim dist/
+          cp industrial.js dist/ 2>/dev/null || true
+          cp electricidad-aplicada.html dist/ 2>/dev/null || true
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

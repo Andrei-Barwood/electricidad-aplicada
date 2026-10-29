@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SubstationTopologySim — Simulador de Topologías de Subestaciones Eléctricas</title>
   
+  <script>
+    (function () {
+      var t;
+      try { t = localStorage.getItem("ea-theme"); } catch (e) { t = null; }
+      if (t !== "day" && t !== "night") {
+        t = window.matchMedia("(prefers-color-scheme: light)").matches ? "day" : "night";
+      }
+      document.documentElement.setAttribute("data-theme", t);
+    })();
+  </script>
+
   <!-- Hojas de estilo modulares -->
   <link rel="stylesheet" href="./src/styles/tokens.css">
   <link rel="stylesheet" href="./src/styles/layout.css">
@@ -24,6 +35,11 @@
       </div>
 
       <div class="header-actions">
+        <button id="btn-toggle-theme" class="btn" title="Alternar tema Noche / Día">
+          <span id="theme-btn-icon">☀️</span>
+          <span id="theme-btn-label">Modo Día</span>
+        </button>
+        <div style="width: 1px; height: 24px; background: var(--color-border-subtle); margin: 0 4px;"></div>
         <button id="btn-save-project" class="btn" title="Guardar proyecto localmente">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
@@ -158,6 +174,53 @@
 
       <!-- Panel Central: Lienzo SVG y Controles de Navegación -->
       <section class="canvas-container" id="canvas-container">
+        <!-- Barra superior de navegación rápida del unifilar -->
+        <div class="canvas-top-navbar" id="canvas-top-navbar">
+          <div class="canvas-nav-group">
+            <span class="canvas-nav-label">Topología:</span>
+            <select id="quick-preset-select" class="nav-select" title="Seleccionar esquema unifilar normalizado">
+              <optgroup label="⚡ Transmisión AT / EAT (9)">
+                <option value="SINGLE_BUS">Barra Simple (220 kV)</option>
+                <option value="MAIN_TRANSFER">Barra Principal + Transferencia</option>
+                <option value="SECTIONALIZED_BUS">Barra Seccionada / Partida</option>
+                <option value="DOUBLE_BUS_SINGLE_BREAKER">Doble Barra con Acoplamiento</option>
+                <option value="DOUBLE_BUS_TRANSFER">Doble Barra con Transferencia</option>
+                <option value="RING_BUS">Barra en Anillo (4 CB)</option>
+                <option value="RING_BUS_6CB">Barra en Anillo Ampliado (6 CB)</option>
+                <option value="BREAKER_AND_A_HALF">Interruptor y Medio (1 1/2)</option>
+                <option value="DOUBLE_BUS_DOUBLE_BREAKER">Doble Barra con Doble Interruptor</option>
+              </optgroup>
+              <optgroup label="🏙️ Distribución MT y Compactas (5)">
+                <option value="H_SCHEME_BRIDGE">Esquema en H (Puente)</option>
+                <option value="LINE_BRIDGE">Puente de Línea / Trafo</option>
+                <option value="DUAL_RADIAL">Doble Radial con Transferencia Automática</option>
+                <option value="OPEN_RING_DISTRIBUTION">Anillo Abierto de Distribución</option>
+                <option value="GIS_COMPACT">Subestación GIS Compacta SF6</option>
+              </optgroup>
+              <optgroup label="🏭 Renovables & Industria (4)">
+                <option value="SOLAR_PV_COLLECTOR">Colectora Solar Fotovoltaica (23 kV)</option>
+                <option value="WIND_FARM_EVACUATION">Evacuación Parque Eólico con STATCOM</option>
+                <option value="HEAVY_INDUSTRIAL">Industrial Pesada Minera / Siderúrgica</option>
+                <option value="MISSION_CRITICAL_DATA_CENTER">Data Center Tier IV (2N)</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="canvas-nav-actions">
+            <button id="quick-btn-zoom-fit" class="btn btn-sm" title="Ajustar diagrama al espacio de trabajo">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 3 21 3 21 9"/>
+                <polyline points="9 21 3 21 3 15"/>
+                <line x1="21" y1="3" x2="14" y2="10"/>
+                <line x1="3" y1="21" x2="10" y2="14"/>
+              </svg>
+              Encuadrar
+            </button>
+            <button id="quick-btn-toggle-theme" class="btn btn-sm" title="Alternar Modo Día / Noche">
+              <span id="quick-theme-icon">☀️</span> <span id="quick-theme-text">Tema</span>
+            </button>
+          </div>
+        </div>
+
         <!-- Controles flotantes en la esquina inferior derecha -->
         <div class="canvas-floating-controls">
           <div class="btn-group">
@@ -296,6 +359,68 @@
       </div>
     </footer>
   </div>
+
+  <!-- Sincronización y alternador de tema Día / Noche -->
+  <script>
+    (function () {
+      function updateThemeUI(t) {
+        const isDay = t === "day";
+        const icon = isDay ? "🌙" : "☀️";
+        const label = isDay ? "Modo Noche" : "Modo Día";
+
+        const btnTopIcon = document.getElementById("theme-btn-icon");
+        const btnTopLabel = document.getElementById("theme-btn-label");
+        if (btnTopIcon) btnTopIcon.textContent = icon;
+        if (btnTopLabel) btnTopLabel.textContent = label;
+
+        const quickIcon = document.getElementById("quick-theme-icon");
+        const quickText = document.getElementById("quick-theme-text");
+        if (quickIcon) quickIcon.textContent = icon;
+        if (quickText) quickText.textContent = isDay ? "Noche" : "Día";
+      }
+
+      function setTheme(t) {
+        document.documentElement.setAttribute("data-theme", t);
+        try { localStorage.setItem("ea-theme", t); } catch (e) {}
+        updateThemeUI(t);
+
+        // Notificar a la ventana padre si está embebido en iframe
+        try {
+          if (window.parent && window.parent !== window) {
+            window.parent.postMessage({ type: "EA_SUBSTAT_THEME_CHANGE", theme: t }, "*");
+          }
+        } catch (e) {}
+      }
+
+      window.toggleSubstatTheme = function () {
+        const cur = document.documentElement.getAttribute("data-theme") === "day" ? "day" : "night";
+        const next = cur === "day" ? "night" : "day";
+        setTheme(next);
+      };
+
+      // Escuchar eventos de la barra superior y navbar
+      document.getElementById("btn-toggle-theme")?.addEventListener("click", window.toggleSubstatTheme);
+      document.getElementById("quick-btn-toggle-theme")?.addEventListener("click", window.toggleSubstatTheme);
+
+      // Sincronizar al recibir mensaje del sitio principal
+      window.addEventListener("message", function (e) {
+        if (e.data && e.data.type === "EA_THEME_CHANGE" && e.data.theme) {
+          setTheme(e.data.theme);
+        }
+      });
+
+      // Sincronizar en cambios de almacenamiento local
+      window.addEventListener("storage", function (e) {
+        if (e.key === "ea-theme" && (e.newValue === "day" || e.newValue === "night")) {
+          setTheme(e.newValue);
+        }
+      });
+
+      // Inicializar texto de botones
+      const curTheme = document.documentElement.getAttribute("data-theme") || "night";
+      updateThemeUI(curTheme);
+    })();
+  </script>
 
   <!-- Entrada del Módulo ES -->
   <script type="module" src="./src/main.js"></script>
