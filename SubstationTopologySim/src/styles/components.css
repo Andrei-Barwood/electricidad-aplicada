@@ -311,11 +311,75 @@
   font-family: var(--font-family-mono);
 }
 
+.presets-filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: var(--space-sm);
+}
+
+.presets-search-input {
+  width: 100%;
+  padding: 6px 10px;
+  background-color: var(--color-bg-main);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-main);
+  font-size: 11px;
+  font-family: var(--font-family-sans);
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.presets-search-input:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.2);
+}
+
+.presets-category-tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.preset-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  background-color: var(--color-bg-surface-elevated);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s ease;
+}
+
+.preset-tab-btn:hover {
+  background-color: var(--color-bg-surface-hover);
+  color: var(--color-text-main);
+}
+
+.preset-tab-btn.active {
+  background-color: rgba(56, 189, 248, 0.15);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
 .presets-grid {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 2px;
   margin-bottom: var(--space-md);
+  scrollbar-width: thin;
 }
 
 .preset-card-btn {
@@ -357,6 +421,22 @@
   font-size: 11px;
   font-weight: 700;
   color: #f1f5f9;
+}
+
+.preset-card-badges {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.preset-card-voltage {
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 4px;
+  border-radius: var(--radius-sm);
+  background: rgba(148, 163, 184, 0.15);
+  color: #cbd5e1;
+  font-family: var(--font-family-mono);
 }
 
 .preset-card-badge {

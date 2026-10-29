@@ -116,7 +116,7 @@ describe('Fase 7: Exportador CAD ASCII DXF (DxfExporter)', () => {
     assert.ok(srcY > loadY, `El equipo superior en pantalla debe tener mayor Y en CAD (srcY=${srcY} > loadY=${loadY})`);
   });
 
-  it('debe exportar exitosamente a CAD DXF las 6 topologías normalizadas predefinidas', () => {
+  it('debe exportar exitosamente a CAD DXF las 18 topologías normalizadas predefinidas', () => {
     const model = new NetworkModel();
 
     for (const key of Object.values(TOPOLOGY_PRESET_KEYS)) {

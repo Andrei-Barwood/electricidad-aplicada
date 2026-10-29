@@ -1,10 +1,12 @@
 /**
  * PresetsPanel - SubstationTopologySim
- * Controlador del selector de topologías predefinidas e inspector de ficha técnica.
+ * Controlador del selector de 18 topologías normalizadas e inspector de ficha técnica.
+ * Soporta filtrado por categoría (Transmisión, Distribución, Renovables/Industria) y búsqueda interactiva.
  */
 
 import { 
   TOPOLOGY_PRESET_KEYS, 
+  TOPOLOGY_CATEGORIES,
   TOPOLOGY_PRESETS_METADATA, 
   loadTopologyPreset 
 } from '../model/topology-presets.js';
@@ -24,6 +26,8 @@ export class PresetsPanel {
     this.eventBus = eventBus;
     this.selectionManager = selectionManager;
     this.activePresetKey = null;
+    this.activeCategoryFilter = 'ALL';
+    this.searchQuery = '';
 
     this.render();
     this.subscribe();
@@ -33,12 +37,30 @@ export class PresetsPanel {
     this.container.innerHTML = `
       <div class="panel-header">
         <span class="panel-title">Topologías Normalizadas</span>
-        <span class="preset-tag-badge">Fase 3</span>
+        <span class="preset-tag-badge">18 Plantillas</span>
       </div>
       <div class="panel-subtitle">
-        Carga instantánea de unifilares estándar (IEEE / IEC):
+        Catálogo unifilar estándar (IEEE / IEC / CIGRE):
       </div>
 
+      <!-- Filtros y Búsqueda -->
+      <div class="presets-filter-container">
+        <input 
+          type="text" 
+          class="presets-search-input" 
+          id="presets-search-input" 
+          placeholder="Buscar configuración (ej. Anillo, 500 kV, Solar)..."
+          autocomplete="off"
+        />
+        <div class="presets-category-tabs" id="presets-category-tabs">
+          <button class="preset-tab-btn active" data-category="ALL">Todas (18)</button>
+          <button class="preset-tab-btn" data-category="${TOPOLOGY_CATEGORIES.TRANSMISSION.id}">⚡ Transmisión (9)</button>
+          <button class="preset-tab-btn" data-category="${TOPOLOGY_CATEGORIES.DISTRIBUTION.id}">🏙️ Distribución (5)</button>
+          <button class="preset-tab-btn" data-category="${TOPOLOGY_CATEGORIES.GENERATION_INDUSTRY.id}">🏭 Industria (4)</button>
+        </div>
+      </div>
+
+      <!-- Grid de Tarjetas de Topología -->
       <div class="presets-grid" id="presets-buttons-grid"></div>
 
       <!-- Ficha Técnica de la Topología Activa -->
@@ -71,17 +93,71 @@ export class PresetsPanel {
       </div>
     `;
 
-    const grid = this.container.querySelector('#presets-buttons-grid');
-    const presetsList = Object.values(TOPOLOGY_PRESETS_METADATA);
+    // Eventos de Pestañas de Categoría
+    const tabsContainer = this.container.querySelector('#presets-category-tabs');
+    tabsContainer.querySelectorAll('.preset-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabsContainer.querySelectorAll('.preset-tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.activeCategoryFilter = btn.dataset.category;
+        this.renderPresetButtons();
+      });
+    });
 
-    for (const preset of presetsList) {
+    // Evento de Búsqueda
+    const searchInput = this.container.querySelector('#presets-search-input');
+    searchInput.addEventListener('input', (e) => {
+      this.searchQuery = e.target.value.toLowerCase().trim();
+      this.renderPresetButtons();
+    });
+
+    this.renderPresetButtons();
+  }
+
+  renderPresetButtons() {
+    const grid = this.container.querySelector('#presets-buttons-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    const allPresets = Object.values(TOPOLOGY_PRESETS_METADATA);
+    const filtered = allPresets.filter(preset => {
+      const matchesCategory = this.activeCategoryFilter === 'ALL' || preset.category === this.activeCategoryFilter;
+      if (!matchesCategory) return false;
+
+      if (!this.searchQuery) return true;
+      const q = this.searchQuery;
+      return (
+        preset.name.toLowerCase().includes(q) ||
+        preset.englishName.toLowerCase().includes(q) ||
+        preset.description.toLowerCase().includes(q) ||
+        `${preset.voltageLevel} kv`.includes(q) ||
+        preset.reliabilityLevel.toLowerCase().includes(q)
+      );
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = `
+        <div style="font-size: 11px; color: var(--color-text-muted); text-align: center; padding: 16px 8px;">
+          No se encontraron topologías que coincidan con la búsqueda.
+        </div>
+      `;
+      return;
+    }
+
+    for (const preset of filtered) {
       const btn = document.createElement('button');
       btn.className = 'preset-card-btn';
+      if (this.activePresetKey === preset.key) {
+        btn.classList.add('active');
+      }
       btn.dataset.presetKey = preset.key;
       btn.innerHTML = `
         <div class="preset-card-top">
           <span class="preset-card-name">${preset.name}</span>
-          <span class="preset-card-badge" style="background: ${preset.badgeColor}20; color: ${preset.badgeColor}; border: 1px solid ${preset.badgeColor}60;">${preset.reliabilityLevel}</span>
+          <div class="preset-card-badges">
+            <span class="preset-card-voltage">${preset.voltageLevel} kV</span>
+            <span class="preset-card-badge" style="background: ${preset.badgeColor}20; color: ${preset.badgeColor}; border: 1px solid ${preset.badgeColor}60;">${preset.reliabilityLevel}</span>
+          </div>
         </div>
         <div class="preset-card-sub">${preset.englishName}</div>
       `;
@@ -127,7 +203,7 @@ export class PresetsPanel {
     if (!sheet) return;
 
     sheet.style.display = 'block';
-    this.container.querySelector('#tech-sheet-title').textContent = metadata.name;
+    this.container.querySelector('#tech-sheet-title').textContent = `${metadata.name} (${metadata.voltageLevel} kV)`;
     this.container.querySelector('#tech-sheet-std').textContent = metadata.standard;
     this.container.querySelector('#tech-sheet-desc').textContent = metadata.description;
     this.container.querySelector('#tech-sheet-rel').textContent = metadata.reliabilityLevel;

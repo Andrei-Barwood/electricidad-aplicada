@@ -64,13 +64,13 @@ describe('Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine)', () => {
     );
   });
 
-  test('debe ejecutar el Benchmark Tecnoeconómico de las 6 topologías comparando CAPEX vs CENS', () => {
+  test('debe ejecutar el Benchmark Tecnoeconómico de las 18 topologías comparando CAPEX vs CENS', () => {
     const model = new NetworkModel(new EventBus());
     loadTopologyPreset(model, TOPOLOGY_PRESET_KEYS.SINGLE_BUS);
 
     const benchmark = EconomicEngine.benchmarkAllTopologiesEconomics(model);
 
-    assert.equal(benchmark.length, 6, 'Debe evaluar las 6 topologías normalizadas');
+    assert.equal(benchmark.length, 18, 'Debe evaluar las 18 topologías normalizadas');
 
     const singleBus = benchmark.find(b => b.key === TOPOLOGY_PRESET_KEYS.SINGLE_BUS);
     const doubleBus = benchmark.find(b => b.key === TOPOLOGY_PRESET_KEYS.DOUBLE_BUS_DOUBLE_BREAKER);

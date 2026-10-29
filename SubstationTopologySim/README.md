@@ -16,13 +16,11 @@
    - Grafo de red explícito con terminales polares por activo.
    - Enrutamiento ortogonal dinámico a 90° para ramas y conductores.
    - Validador topológico por exploración de grafos (BFS) para propagación de energización y detección automática de deslastre de carga.
-3. **Topologías Predefinidas Normalizadas (IEEE / IEC):**
-   - Barra Simple (*Single Bus*)
-   - Barra Principal + Transferencia (*Main & Transfer Bus*)
-   - Barra Seccionada (*Sectionalized Bus*)
-   - Barra en Anillo (*Ring Bus*)
-   - Interruptor y Medio (*Breaker-and-a-Half*)
-   - Doble Barra con Doble Interruptor (*Double Bus Double Breaker*)
+3. **Catálogo de 18 Topologías Normalizadas (IEEE / IEC / CIGRE):**
+   - **Transmisión AT / EAT (9 Esquemas):** Barra Simple (220 kV), Barra Principal y Transferencia (220 kV), Barra Seccionada / Partida (220 kV), Doble Barra con Acoplamiento Bus Tie (220 kV), Doble Barra con Transferencia / Triple Barra (220 kV), Barra en Anillo 4-CB (220 kV), Barra en Anillo Ampliado 6-CB (220 kV), Interruptor y Medio $1\,\frac{1}{2}$ CB (500 kV), Doble Barra con Doble Interruptor (500 kV).
+   - **Distribución MT y Compactas (5 Esquemas):** Puente en H / *H-Scheme* (66/23 kV), Puente de Línea con Seccionamiento (66/23 kV), Doble Radial con Transferencia Automática ATS (23 kV), Distribución Urbana en Bucle Abierto (23 kV), Subestación Encapsulada GIS en $\text{SF}_6$ (110/23 kV).
+   - **Renovables e Industria Crítica (4 Esquemas):** Colectora Parque Solar Fotovoltaico con GSU (23/110 kV), Evacuación Parque Eólico con STATCOM (33/220 kV), Industrial Pesada Minera/Siderúrgica con mitigación de flicker (220/23 kV), Data Center Tier IV con redundancia activa 2N (23 kV).
+   - Pestañas de filtrado por categoría (`Todas`, `Transmisión`, `Distribución`, `Industria`), buscador en tiempo real, distintivos de tensión/confiabilidad y ficha técnica comparativa con ventajas, limitaciones y multiplicador CAPEX.
 4. **Motor de Enclavamientos de Seguridad Operacional (IEC 62271-102):**
    - Bloqueo estricto de maniobras de seccionadores bajo carga.
    - Secuencia segura de energización y consignación de seguridad LOTO (`OUT_OF_SERVICE`).
@@ -63,7 +61,7 @@ Visite `http://localhost:3000` en su navegador.
 ```bash
 npm test
 ```
-Ejecuta la suite completa de 49 pruebas unitarias y de integración sobre Node.js test runner nativo (`node:test`).
+Ejecuta la suite completa de 50 pruebas unitarias y de integración sobre Node.js test runner nativo (`node:test`).
 
 ---
 

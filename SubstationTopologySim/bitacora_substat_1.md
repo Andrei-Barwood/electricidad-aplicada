@@ -326,12 +326,58 @@ Se ejecutó la suite completa de pruebas (`node --test tests/*.test.js`), alcanz
 
 ---
 
-## 6. Conclusión del Proyecto y Cierre de Ingeniería
+## 7. Catálogo Extendido de 18 Topologías Normalizadas (Actualización Mayor)
 
-**ESTADO FINAL: PROYECTO CULMINADO AL 100% (RELEASE OFICIAL v1.0.0)**  
-Todas las 8 fases del Plan Maestro de Desarrollo han sido diseñadas, implementadas, integradas y verificadas mediante pruebas automatizadas con un 100% de aprobación. El código fuente es modular, extensible y se encuentra listo para distribución y utilización en entornos de ingeniería y académicos.
+Para ampliar la capacidad pedagógica y de análisis comparativo del simulador, se incorporó un catálogo completo de **18 configuraciones unifilares estandarizadas** según normas internacionales (IEEE Std C37.100, IEC 61936-1 y CIGRE WG B3).
+
+### 7.1 Estructura por Categorías Técnicas
+1. **Grupo A: Transmisión en Alta y Extra Alta Tensión (AT / EAT - 9 Esquemas):**
+   - `SINGLE_BUS`: Barra Simple (220 kV) — Confiabilidad Baja, Factor CAPEX 1.00x.
+   - `MAIN_TRANSFER`: Barra Principal y Transferencia (220 kV) — Confiabilidad Media, Factor CAPEX 1.30x.
+   - `SECTIONALIZED_BUS`: Barra Seccionada / Partida (220 kV) — Confiabilidad Media-Alta, Factor CAPEX 1.25x.
+   - `DOUBLE_BUS_SINGLE_BREAKER`: Doble Barra con Acoplamiento Bus Tie (220 kV) — Confiabilidad Alta, Factor CAPEX 1.45x.
+   - `DOUBLE_BUS_TRANSFER`: Doble Barra con Transferencia / Triple Barra (220 kV) — Confiabilidad Muy Alta, Factor CAPEX 1.65x.
+   - `RING_BUS`: Barra en Anillo 4-CB (220 kV) — Confiabilidad Alta (N-1), Factor CAPEX 1.40x.
+   - `RING_BUS_6CB`: Barra en Anillo Ampliado 6-CB (220 kV) — Confiabilidad Muy Alta, Factor CAPEX 1.55x.
+   - `BREAKER_AND_A_HALF`: Interruptor y Medio ($1\,\frac{1}{2}$ CB) (500 kV) — Confiabilidad Máxima, Factor CAPEX 1.70x.
+   - `DOUBLE_BUS_DOUBLE_BREAKER`: Doble Barra con Doble Interruptor (500 kV) — Confiabilidad Extrema, Factor CAPEX 1.95x.
+
+2. **Grupo B: Distribución en Media Tensión y Subestaciones Compactas (MT - 5 Esquemas):**
+   - `H_SCHEME_BRIDGE`: Subestación Transformadora Puente en H (66/23 kV) — Confiabilidad Media-Alta, Factor CAPEX 1.15x.
+   - `LINE_BRIDGE`: Puente de Línea con Seccionamiento (66/23 kV) — Confiabilidad Media, Factor CAPEX 1.10x.
+   - `DUAL_RADIAL`: Doble Radial con Transferencia Automática ATS (23 kV) — Confiabilidad Alta, Factor CAPEX 1.20x.
+   - `OPEN_RING_DISTRIBUTION`: Distribución Urbana en Bucle Abierto (23 kV) — Confiabilidad Media-Alta, Factor CAPEX 1.25x.
+   - `GIS_COMPACT`: Subestación Encapsulada en Gas SF6 (110/23 kV) — Confiabilidad Muy Alta, Factor CAPEX 1.80x.
+
+3. **Grupo C: Generación Renovable e Industria Crítica (4 Esquemas):**
+   - `SOLAR_PV_COLLECTOR`: Colectora Parque Solar Fotovoltaico con GSU (23/110 kV) — Confiabilidad Media-Alta, Factor CAPEX 1.35x.
+   - `WIND_FARM_EVACUATION`: Evacuación Parque Eólico con Compensación STATCOM (33/220 kV) — Confiabilidad Alta, Factor CAPEX 1.50x.
+   - `HEAVY_INDUSTRIAL`: Subestación Industrial Pesada Minera/Siderúrgica con filtro armónico (220/23 kV) — Confiabilidad Muy Alta, Factor CAPEX 1.75x.
+   - `MISSION_CRITICAL_DATA_CENTER`: Data Center Tier IV con redundancia activa 2N (23 kV) — Confiabilidad Extrema, Factor CAPEX 1.90x.
+
+### 7.2 Interfaz y Experiencia de Usuario (Presets Panel)
+- **Filtro por Categorías:** Pestañas superiores para conmutar entre `Todas (18)`, `⚡ Transmisión (9)`, `🏙️ Distribución (5)` y `🏭 Industria (4)`.
+- **Buscador en Tiempo Real:** Entrada de texto con filtrado dinámico por nombre, norma, nivel de tensión o nivel de confiabilidad.
+- **Distintivos Técnicos:** Cada tarjeta exhibe el nivel de tensión en kV, nivel de confiabilidad cromático y denominación internacional en inglés.
+- **Ficha Técnica Expandida:** Al hacer clic en cualquier topología, el unifilar se dibuja al instante, se ejecuta el zoom automático óptimo y se despliegan en el panel lateral sus especificaciones: norma, descripción operativa, métricas de confiabilidad, multiplicador de inversión CAPEX, ventajas y limitaciones de diseño.
+
+### 7.3 Verificación de Pruebas Automatizadas
+- Suite ejecutada: `50 pruebas en 11 suites` pasando al 100% (0 errores).
+- Pruebas añadidas:
+  - Verificación de metadatos exhaustivos en los 18 esquemas.
+  - Carga y validación galvánica/topológica sin errores en los 18 esquemas.
+  - Exportación completa a CAD DXF de las 18 topologías.
+  - Ejecución integral de Benchmark de Confiabilidad (EENS) sobre los 18 esquemas.
+  - Ejecución integral de Benchmark Tecnoeconómico (CAPEX vs CENS) sobre los 18 esquemas.
 
 ---
 
-*Fin del registro de bitácora oficial — SubstationTopologySim v1.0.0.*  
+## 8. Conclusión del Proyecto y Cierre de Ingeniería
+
+**ESTADO FINAL: CATÁLOGO DE 18 PLANTILLAS OPERATIVO AL 100%**  
+El simulador cuenta ahora con un abanico completo para comparar y observar topologías desde esquemas elementales de distribución hasta complejas subestaciones troncales de 500 kV, minería y centros de datos de misión crítica.
+
+---
+
+*Fin del registro de bitácora oficial — SubstationTopologySim.*  
 *El archivo ha quedado persistido en [bitacora_substat_1.md](file:///Users/andreibarwood/Documents/CFT/electricidad_aplicada/bitacora_substat_1.md).*

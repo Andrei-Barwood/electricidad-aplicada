@@ -66,13 +66,13 @@ describe('Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine
     assert.equal(bb2Cont.lostPowerMW, 0, 'Pérdida de BB-2 no debe deslastrar cargas en doble barra');
   });
 
-  test('debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS', () => {
+  test('debe ejecutar el Benchmark comparativo de las 18 topologías ordenado por EENS', () => {
     const model = new NetworkModel(new EventBus());
     loadTopologyPreset(model, TOPOLOGY_PRESET_KEYS.SINGLE_BUS);
 
     const benchmark = ReliabilityEngine.benchmarkAllTopologies(model);
 
-    assert.equal(benchmark.length, 6, 'Debe evaluar las 6 topologías normalizadas');
+    assert.equal(benchmark.length, 18, 'Debe evaluar las 18 topologías normalizadas');
 
     // Debe estar ordenado de menor a mayor EENS (más confiable primero)
     for (let i = 0; i < benchmark.length - 1; i++) {

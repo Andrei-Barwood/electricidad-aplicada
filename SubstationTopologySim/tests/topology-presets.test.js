@@ -17,9 +17,9 @@ import { EventBus } from '../src/app/event-bus.js';
 import { OperationalState } from '../src/model/components.js';
 
 describe('Fase 3: Módulo de Topologías Predefinidas (Presets)', () => {
-  test('debe contener los 6 esquemas normalizados en los metadatos', () => {
+  test('debe contener los 18 esquemas normalizados en los metadatos organizados en 3 categorías', () => {
     const keys = Object.values(TOPOLOGY_PRESET_KEYS);
-    assert.equal(keys.length, 6);
+    assert.equal(keys.length, 18);
 
     for (const key of keys) {
       const meta = TOPOLOGY_PRESETS_METADATA[key];
@@ -28,10 +28,23 @@ describe('Fase 3: Módulo de Topologías Predefinidas (Presets)', () => {
       assert.ok(meta.englishName, `Falta englishName para ${key}`);
       assert.ok(meta.standard, `Falta standard para ${key}`);
       assert.ok(meta.description, `Falta descripción para ${key}`);
+      assert.ok(meta.category, `Falta category para ${key}`);
+      assert.ok(meta.voltageLevel, `Falta voltageLevel para ${key}`);
       assert.ok(Array.isArray(meta.advantages), `Ventajas debe ser array en ${key}`);
       assert.ok(Array.isArray(meta.disadvantages), `Desventajas debe ser array en ${key}`);
       assert.ok(meta.reliabilityLevel, `Falta nivel de confiabilidad en ${key}`);
       assert.ok(typeof meta.relativeCost === 'number', `Falta costo relativo en ${key}`);
+    }
+  });
+
+  test('debe cargar exitosamente todas las 18 plantillas sin errores topológicos', () => {
+    const keys = Object.values(TOPOLOGY_PRESET_KEYS);
+    for (const key of keys) {
+      const model = new NetworkModel(new EventBus());
+      const res = loadTopologyPreset(model, key);
+      assert.ok(res.componentsCount > 5, `Componentes insuficientes en ${key}`);
+      assert.ok(res.connectionsCount > 5, `Conexiones insuficientes en ${key}`);
+      assert.equal(model.lastTopologyAnalysis.errors.length, 0, `Errores topológicos en ${key}`);
     }
   });
 
