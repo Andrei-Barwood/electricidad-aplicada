@@ -15,6 +15,7 @@ import { PresetsPanel } from '../ui/presets-panel.js';
 import { SoePanel } from '../ui/soe-panel.js';
 import { ReliabilityPanel } from '../ui/reliability-panel.js';
 import { EconomicsPanel } from '../ui/economics-panel.js';
+import { DxfExporter } from '../model/dxf-exporter.js';
 import { TOPOLOGY_PRESET_KEYS } from '../model/topology-presets.js';
 import { SequenceOfEvents } from '../model/sequence-of-events.js';
 import { InterlockingEngine } from '../model/interlocking-engine.js';
@@ -116,7 +117,7 @@ export class Application {
       this.loadInitialSchematic();
     }
 
-    console.info('[SubstationTopologySim] Fase 6 inicializada: Análisis Tecnoeconómico LCC activo.');
+    console.info('[SubstationTopologySim] Fase 7 inicializada: Exportador CAD DXF activo.');
   }
 
   /**
@@ -227,6 +228,12 @@ export class Application {
 
     document.getElementById('btn-load-project')?.addEventListener('click', () => {
       this.loadFromLocalStorage();
+    });
+
+    // Exportación estándar CAD (ASCII DXF)
+    document.getElementById('btn-export-dxf')?.addEventListener('click', () => {
+      const presetKey = this.presetsPanel?.currentPresetKey || 'subestacion';
+      DxfExporter.downloadDXF(this.networkModel, `${presetKey}_unifilar.dxf`);
     });
   }
 
