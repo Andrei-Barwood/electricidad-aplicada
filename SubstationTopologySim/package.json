@@ -1,6 +1,6 @@
 {
   "name": "substation-topology-sim",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Simulador interactivo de topologías de subestaciones eléctricas, maniobras operacionales, confiabilidad y exportación CAD",
   "type": "module",
   "scripts": {

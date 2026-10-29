@@ -117,7 +117,7 @@ export class Application {
       this.loadInitialSchematic();
     }
 
-    console.info('[SubstationTopologySim] Fase 7 inicializada: Exportador CAD DXF activo.');
+    console.info('[SubstationTopologySim] v1.0.0 inicializado: Suite completa de simulación, confiabilidad, economía y CAD DXF activa.');
   }
 
   /**

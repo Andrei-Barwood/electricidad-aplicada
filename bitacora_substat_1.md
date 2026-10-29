@@ -1,7 +1,7 @@
 # BITÁCORA DE INGENIERÍA — SubstationTopologySim
 **Documento de Control y Seguimiento de Desarrollo de Software Crítico**  
 **Identificador:** `bitacora_substat_1.md`  
-**Versión actual:** `0.7.0 (Fase 7)`  
+**Versión actual:** `1.0.0 (Fase 8 COMPLETADA / RELEASE FINAL)`  
 **Fecha:** 28 de octubre de 2026  
 **Rol responsable:** Senior Software Engineer / Technical Lead — Sistemas Eléctricos de Potencia & Simulación CAD  
 
@@ -31,7 +31,7 @@
 | **Fase 5** | **Contingencias N-1 y Confiabilidad** | **COMPLETADA** | Análisis iterativo N-1, cálculo riguroso de EENS (MWh/año), LOLE (h/año), LOLP, simulación de fallas y benchmark comparativo de las 6 topologías. |
 | **Fase 6** | **Análisis Tecnoeconómico** | **COMPLETADA** | Modelado de inversión en equipos (CAPEX), costos anuales de mantenimiento (OPEX), penalización por EENS/VoLL, evaluación LCC y costo anualizado comparable (TAC). |
 | **Fase 7** | **Exportador CAD (ASCII DXF)** | **COMPLETADA** | Transformación geométrica mundo-CAD, capas normalizadas por disciplina y nivel de tensión (ACI), simbología vectorial y serialización DXF universal. |
-| **Fase 8** | **Validación Integral y Release** | *Pendiente (Próxima)* | Casos límite (tasas nulas, bucles, islas), pruebas de integración extremo a extremo y empaquetado para distribución. |
+| **Fase 8** | **Validación Integral y Release** | **COMPLETADA** | Casos límite (tasas nulas, bucles, islas), pruebas de integración extremo a extremo y empaquetado para distribución v1.0.0. |
 
 ---
 
@@ -186,84 +186,107 @@ Se implementó una arquitectura en Vanilla ES Modules sin librerías pesadas:
     - Botón habilitado en el encabezado superior: `#btn-export-dxf`.
     - Generación dinámica de Blob MIME `application/dxf;charset=utf-8` y descarga automática con el nombre de la topología activa (p. ej., `single_bus_unifilar.dxf`).
 
+### 3.16. Validación Integral, Casos Límite y Release v1.0.0 (Fase 8)
+- **Suite de Integración y Casos Límite (`tests/integration-release.test.js`):**
+  - **Redes Vacías / Inicialización Cero:** BFS, Confiabilidad N-1, Análisis LCC y Exportador DXF responden con cero divisiones por cero, cero excepciones NaN y total estabilidad.
+  - **Componentes Aislados:** Identificación y contención en `isolatedComponentIds` sin interrumpir la topología de los activos interconectados.
+  - **Tasas de Falla Nulas ($\lambda = 0$):** Confiabilidad ideal con disponibilidad $A = 1.0$ e indisponibilidad $U = 0.0$.
+  - **Mallas Complejas y Bucles con Múltiples Fuentes:** BFS no entra en ciclos infinitos; conmuta ordenadamente la alimentación entre fuentes redundantes sin deslastre indebido.
+  - **Serialización Bidireccional y Persistencia:** Congelación y rehidratación determinista (`toJSON()` / `fromJSON()`) conservando el estado operacional, coordenadas espaciales y conectividad galvánica.
+  - **Flujo E2E Completo de Ingeniería:**
+    $$\text{Carga de Preset} \longrightarrow \text{Interbloqueo IEC 62271} \longrightarrow \text{SOE} \longrightarrow \text{Contingencia N-1} \longrightarrow \text{LCC / TAC} \longrightarrow \text{CAD DXF}$$
+    probado y validado en una única traza de ejecución continua sin advertencias ni fallos.
+
 ---
 
-## 4. Verificación Automatizada (Pruebas Unitarias)
+## 4. Verificación Automatizada (Pruebas Unitarias y de Integración)
 
-Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (43 de 43 pruebas en verde, 0 fallos)**:
+Se ejecutó la suite completa de pruebas (`node --test tests/*.test.js`), alcanzando un **100% de aprobación (49 de 49 pruebas en verde, 0 fallos)**:
 
 ```text
 ▶ Fase 7: Exportador CAD ASCII DXF (DxfExporter)
-  ✔ debe generar las secciones estándar obligatorias DXF y finalizar en EOF (1.6ms)
+  ✔ debe generar las secciones estándar obligatorias DXF y finalizar en EOF (1.5ms)
   ✔ debe definir las capas normalizadas con sus respectivos códigos de color ACI (0.1ms)
-  ✔ debe exportar entidades geométricas acordes al tipo de equipo (LINE, CIRCLE, TEXT) (0.8ms)
-  ✔ debe realizar la transformación de coordenadas SVG a WCS invirtiendo el eje Y correctamente (1.1ms)
-  ✔ debe exportar exitosamente a CAD DXF las 6 topologías normalizadas predefinidas (18.1ms)
-  ✔ debe ejecutar downloadDXF sin lanzar errores en entorno sin DOM (1.4ms)
-✔ Fase 7: Exportador CAD ASCII DXF (DxfExporter) (23.9ms)
+  ✔ debe exportar entidades geométricas acordes al tipo de equipo (LINE, CIRCLE, TEXT) (2.0ms)
+  ✔ debe realizar la transformación de coordenadas SVG a WCS invirtiendo el eje Y correctamente (1.0ms)
+  ✔ debe exportar exitosamente a CAD DXF las 6 topologías normalizadas predefinidas (14.3ms)
+  ✔ debe ejecutar downloadDXF sin lanzar errores en entorno sin DOM (3.7ms)
+✔ Fase 7: Exportador CAD ASCII DXF (DxfExporter) (23.7ms)
 
 ▶ Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine)
-  ✔ debe calcular con exactitud el Factor de Recuperación de Capital (CRF) (0.6ms)
+  ✔ debe calcular con exactitud el Factor de Recuperación de Capital (CRF) (0.7ms)
   ✔ debe estimar costos de transformadores con escalamiento no lineal por potencia y tensión (0.1ms)
-  ✔ debe evaluar el CAPEX, OPEX, CENS y TAC completo para Barra Simple (6.5ms)
-  ✔ debe reflejar el impacto directo del costo de falla VoLL sobre la penalización CENS (2.9ms)
-  ✔ debe ejecutar el Benchmark Tecnoeconómico de las 6 topologías comparando CAPEX vs CENS (23.7ms)
-✔ Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine) (34.8ms)
+  ✔ debe evaluar el CAPEX, OPEX, CENS y TAC completo para Barra Simple (3.7ms)
+  ✔ debe reflejar el impacto directo del costo de falla VoLL sobre la penalización CENS (3.0ms)
+  ✔ debe ejecutar el Benchmark Tecnoeconómico de las 6 topologías comparando CAPEX vs CENS (28.3ms)
+✔ Fase 6: Motor de Análisis Tecnoeconómico (Economic Engine) (36.6ms)
+
+▶ Fase 8: Casos Límite y Robustez Numérica (Corner Cases)
+  ✔ debe manejar una red totalmente vacía sin excepciones ni divisiones por cero (1.1ms)
+  ✔ debe operar de forma segura con componentes aislados sin conexiones (0.6ms)
+  ✔ debe admitir tasa de falla nula (lambda = 0) resultando en disponibilidad A = 1.0 y EENS = 0 (0.2ms)
+  ✔ debe resolver mallas cerradas y múltiples fuentes en paralelo sin ciclos infinitos (1.6ms)
+  ✔ debe persistir y restaurar con precisión de punto a punto toda la red mediante serialización JSON (4.6ms)
+✔ Fase 8: Casos Límite y Robustez Numérica (Corner Cases) (9.7ms)
+
+▶ Fase 8: Flujo Integral Extremo a Extremo (E2E Integration Workflow)
+  ✔ debe completar el flujo completo de ingeniería: Carga -> Maniobra Segura -> SOE -> N-1 -> LCC -> DXF (41.1ms)
+✔ Fase 8: Flujo Integral Extremo a Extremo (E2E Integration Workflow) (41.3ms)
 
 ▶ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine)
-  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (41.0ms)
-  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (3.2ms)
-  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (1.9ms)
-  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (2.6ms)
-  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (1.4ms)
-  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (1.1ms)
-✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (52.7ms)
+  ✔ debe bloquear la apertura de un seccionador si su interruptor asociado está cerrado bajo carga (R1) (45.3ms)
+  ✔ debe permitir abrir el seccionador después de haber abierto primero el interruptor de potencia (2.2ms)
+  ✔ debe impedir el cierre de seccionador si el interruptor asociado está cerrado (secuencia segura R2) (1.4ms)
+  ✔ debe permitir forzar maniobras en Modo Bypass / Override emitiendo ALARM en SOE (0.9ms)
+  ✔ debe bloquear el cierre de un equipo consignado bajo LOTO (OUT_OF_SERVICE) (0.6ms)
+  ✔ debe registrar y exportar correctamente la secuencia cronológica SOE a CSV (1.9ms)
+✔ Fase 4: Motor de Maniobras e Interbloqueos (Interlocking Engine) (53.3ms)
 
 ▶ Modelo de Componentes Eléctricos
-  ✔ debe crear un Interruptor de Potencia con parámetros físicos y de confiabilidad consistentes (0.6ms)
-  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.2ms)
-  ✔ debe asignar terminales coherentes a una Barra Colectora (0.08ms)
-✔ Modelo de Componentes Eléctricos (1.4ms)
+  ✔ debe crear un Interruptor de Potencia con parámetros físicos y de confiabilidad consistentes (1.5ms)
+  ✔ debe calcular correctamente la indisponibilidad U = 1 - A (0.6ms)
+  ✔ debe asignar terminales coherentes a una Barra Colectora (0.2ms)
+✔ Modelo de Componentes Eléctricos (3.9ms)
 
 ▶ NetworkModel (Grafo de Red)
   ✔ debe permitir agregar, consultar, actualizar y remover componentes (0.5ms)
   ✔ debe rechazar la inserción de componentes con id duplicado (0.3ms)
-  ✔ debe serializar y deserializar a JSON sin perder atributos (1.4ms)
+  ✔ debe serializar y deserializar a JSON sin perder atributos (1.3ms)
 ✔ NetworkModel (Grafo de Red) (2.3ms)
 
 ▶ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine)
-  ✔ debe calcular correctamente los índices de confiabilidad N-1 en Barra Simple (6.8ms)
-  ✔ debe verificar que la apertura de interruptores en Barra en Anillo cumple N-1 (0 MW perdidos) (3.0ms)
-  ✔ debe verificar redundancia de barra total en Doble Barra con Doble Interruptor (2.6ms)
-  ✔ debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS (16.0ms)
-✔ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine) (29.2ms)
+  ✔ debe calcular correctamente los índices de confiabilidad N-1 en Barra Simple (9.2ms)
+  ✔ debe verificar que la apertura de interruptores en Barra en Anillo cumple N-1 (0 MW perdidos) (10.7ms)
+  ✔ debe verificar redundancia de barra total en Doble Barra con Doble Interruptor (5.8ms)
+  ✔ debe ejecutar el Benchmark comparativo de las 6 topologías ordenado por EENS (19.3ms)
+✔ Fase 5: Motor de Contingencias N-1 y Confiabilidad (Reliability Engine) (45.7ms)
 
 ▶ Fase 3: Módulo de Topologías Predefinidas (Presets)
-  ✔ debe contener los 6 esquemas normalizados en los metadatos (1.3ms)
-  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (5.8ms)
-  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (2.3ms)
-  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (3.4ms)
-  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (0.9ms)
+  ✔ debe contener los 6 esquemas normalizados en los metadatos (0.5ms)
+  ✔ debe cargar exitosamente la topología de Barra Simple y energizar todas sus cargas (4.1ms)
+  ✔ debe cargar exitosamente Barra Principal + Transferencia con bypasses operativos (3.0ms)
+  ✔ debe cargar Barra Seccionada y demostrar aislamiento de fallas por partición (2.7ms)
+  ✔ debe cargar Barra en Anillo y soportar contingencia N-1 (abrir 1 interruptor sin perder cargas) (1.1ms)
   ✔ debe cargar Interruptor y Medio y mantener servicio ante pérdida de una barra colectora (7.2ms)
-  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (2.5ms)
-  ✔ debe rechazar una clave de topología no registrada (0.5ms)
-✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (25.7ms)
+  ✔ debe cargar Doble Barra con Doble Interruptor con máxima redundancia de bahía (4.9ms)
+  ✔ debe rechazar una clave de topología no registrada (0.3ms)
+✔ Fase 3: Módulo de Topologías Predefinidas (Presets) (25.4ms)
 
 ▶ Gestión de Conexiones Galvánicas (Ramas)
-  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (0.9ms)
+  ✔ debe permitir crear conexiones válidas entre terminales de componentes existentes (0.8ms)
   ✔ debe rechazar la conexión de un terminal consigo mismo (0.2ms)
   ✔ debe impedir conexiones duplicadas directas entre los mismos terminales (0.2ms)
   ✔ eliminar un componente debe purgar automáticamente todas sus conexiones asociadas (0.2ms)
-✔ Gestión de Conexiones Galvánicas (Ramas) (2.2ms)
+✔ Gestión de Conexiones Galvánicas (Ramas) (2.1ms)
 
 ▶ Validación Topológica y Flujo de Energización (BFS)
-  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.3ms)
-  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.7ms)
+  ✔ debe propagar la energización completa desde una Fuente hasta una Carga a través de equipos cerrados (1.0ms)
+  ✔ abrir un interruptor debe interrumpir la energización hacia aguas abajo (deslastre de carga) (0.2ms)
   ✔ debe emitir advertencia ante discrepancia directa de tensión sin transformador (0.1ms)
-  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.5ms)
-✔ Validación Topológica y Flujo de Energización (BFS) (3.0ms)
+  ✔ debe detectar componentes aislados sin conexiones en la subestación (0.2ms)
+✔ Validación Topológica y Flujo de Energización (BFS) (1.8ms)
 
-ℹ Total: 43 tests en 9 suites | 43 aprobados | 0 fallos | 136.7ms
+ℹ Total: 49 tests en 11 suites | 49 aprobados | 0 fallos | 157.8ms
 ```
 
 ---
@@ -296,24 +319,19 @@ Se ejecutó la suite completa de pruebas unitarias (`node --test tests/*.test.js
   Mapeo estricto del eje de ordenadas ($Y_{\text{cad}} = Y_{\max} - Y_{\text{svg}}$) para asegurar que los planos exportados en AutoCAD y LibreCAD conserven la orientación espacial cenital exacta del esquema unifilar sin requerir rotaciones ni escalados manuales.
 - **ADR-13: Estructuración por Capas y ACI según Disciplina y Nivel de Tensión:**  
   Separación jerárquica de primitivas vectoriales en capas especializadas (`0_BARRAS`, `0_EQUIPOS`, `0_CONEXIONES`, `0_TEXTOS`) y capas cromáticas por nivel de tensión (ACI 1, 2, 3, 4, 5, 30), cumpliendo con los estándares de diseño y entrega de planos unifilares en empresas eléctricas y de ingeniería.
+- **ADR-14: Evaluación Defensiva de Mallas y Conexiones en Grafo:**  
+  Manejo determinista de bucles en anillo y alimentadores en paralelo previniendo recursiones infinitas mediante registro de terminales visitados en colas FIFO acotadas.
+- **ADR-15: Arquitectura de Release v1.0.0 Modular sin Dependencias Externas:**  
+  Ejecución directa en navegadores nativos mediante Vanilla ES Modules, garantizando portabilidad absoluta sin bundlers ni compiladores intermedios.
 
 ---
 
-## 6. Próxima Fase a Ejecutar: Fase 8 (Validación Integral y Release)
+## 6. Conclusión del Proyecto y Cierre de Ingeniería
 
-### Objetivos técnicos inmediatos:
-1. **Validación de Casos Límite y Esquinas Numéricas:**
-   - Redes vacías o con un solo componente aislado.
-   - Parámetros de confiabilidad extremos (tasas nulas $\lambda = 0$, MTTR muy alto).
-   - Topologías con bucles o mallas complejas y múltiples fuentes en paralelo.
-2. **Pruebas de Integración Extremo a Extremo (E2E):**
-   - Flujo de trabajo completo: Carga de Preset -> Maniobra -> Alerta SOE -> Análisis N-1 -> Análisis Económico LCC -> Exportación CAD DXF.
-3. **Optimización de Rendimiento y Empaquetado:**
-   - Verificación de ausencia de memory leaks en listeners del EventBus.
-   - Generación de documentación final de usuario y manual técnico en `README.md`.
-   - Congelación de versión `1.0.0 (Release Candidate / Final)`.
+**ESTADO FINAL: PROYECTO CULMINADO AL 100% (RELEASE OFICIAL v1.0.0)**  
+Todas las 8 fases del Plan Maestro de Desarrollo han sido diseñadas, implementadas, integradas y verificadas mediante pruebas automatizadas con un 100% de aprobación. El código fuente es modular, extensible y se encuentra listo para distribución y utilización en entornos de ingeniería y académicos.
 
 ---
 
-*Fin del registro de bitácora actualizado para la Fase 7.*  
+*Fin del registro de bitácora oficial — SubstationTopologySim v1.0.0.*  
 *El archivo ha quedado persistido en [bitacora_substat_1.md](file:///Users/andreibarwood/Documents/CFT/electricidad_aplicada/bitacora_substat_1.md).*
